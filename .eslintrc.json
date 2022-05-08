@@ -1,0 +1,86 @@
+{
+    "env": {
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "react-native",
+		"react-hooks",
+		"import",
+		"import-newlines"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            2
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": 2,
+        "react/no-array-index-key": 0,
+		"react/jsx-one-expression-per-line": 0,
+		"react-native/no-unused-styles": 1,
+		"react-native/split-platform-components": 2,
+		"react-native/no-inline-styles": 1,
+		"react-native/no-color-literals": 0,
+		"react-native/no-raw-text": 0,
+		"react-native/no-single-element-style-arrays": 2,
+		"react-hooks/exhaustive-deps": 0,
+        "react/jsx-filename-extension": "off",
+        "no-use-before-define": "off",
+        "react/prop-types": "off",
+		"padded-blocks": "off",
+		"arrow-body-style": "off",
+        "no-trailing-spaces": 2,
+        "eol-last": 2,
+        "space-before-blocks": 2,
+        "arrow-spacing": [2, { "before": true, "after": true }],
+		"space-before-function-paren": [2, {
+			"anonymous": "always",
+			"named": "never",
+			"asyncArrow": "always"
+		}],
+		"eqeqeq": [2, "smart"],
+		"space-infix-ops": 2,
+		"object-shorthand": 2,
+		"prefer-destructuring": [2, { "object": true, "array": false }],
+		"prefer-template": 2,
+		"template-curly-spacing": 2,
+		"import-newlines/enforce": [2, { "items": 6, "semi": true }],
+		"object-curly-spacing": [2, "always"],
+		"comma-dangle": [2, "never"],
+        "import/no-extraneous-dependencies": 2,
+		"import/extensions": ["error", "never", { "svg": "always", "png": "always" }],
+		"import/no-named-as-default-member": 1,
+		"import/order": ["error"],
+		"import/no-duplicates": 2,
+		"import/no-useless-path-segments": 2,
+		"import/prefer-default-export": 0,
+		"import/no-anonymous-default-export": 1,
+		"import/named": 0,
+		"import/namespace": 0,
+		"import/default": 0,
+		"import/no-named-as-default": 0,
+		"import/no-cycle": 2,
+		"import/no-unused-modules": 0,
+		"import/no-deprecated": 0
+    }
+}
