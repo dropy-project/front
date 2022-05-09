@@ -13,7 +13,7 @@
 
 - Intaller les dépendances : `npm i`
 
-- Installer les dépendances cocoapods (IOS) : `cd ios && pod install`
+- Installer les dépendances cocoapods (IOS) : `sudo gem install cocoapods`
 
 - Lancer xcode et ouvrir le **dossier ios** qui se trouve dans le projet.
 
