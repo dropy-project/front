@@ -31,6 +31,8 @@
   
   - ![](./assets/2022-05-08-15-51-05-image.png)
 
+- Lancer la commande `ln -s $(which node) /usr/local/bin/node`
+
 - Lancer une build
   
   - ![](./assets/2022-05-08-15-51-24-image.png)
