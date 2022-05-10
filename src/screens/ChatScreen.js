@@ -1,11 +1,5 @@
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
+import React from 'react';
+import { StyleSheet, Text, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 
 const ChatScreen = ({ navigation }) => {
   return (
@@ -13,10 +7,10 @@ const ChatScreen = ({ navigation }) => {
       <Text style={styles.text}>Dropy chat</Text>
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate('Home')}
       >
         <Image
-          source={require("../assets/icons/left-arrow.png")}
+          source={require('../assets/icons/left-arrow.png')}
           style={styles.arrow}
         />
       </TouchableOpacity>
@@ -29,23 +23,23 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   text: {
-    color: "blue",
+    color: 'blue',
     fontSize: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   backButton: {
-    position: "absolute",
+    position: 'absolute',
     top: 40,
-    left: 0,
+    left: 0
   },
   arrow: {
     width: 30,
-    height: 30,
-  },
+    height: 30
+  }
 });
