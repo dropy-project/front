@@ -2,15 +2,15 @@ import React from "react";
 import {
   StyleSheet,
   Text,
-  Image,
   TouchableOpacity,
+  Image,
   SafeAreaView,
 } from "react-native";
 
 const ChatScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Dropy chat</Text>
+      <Text style={styles.text}>Dropy Museum</Text>
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.navigate("Home")}
@@ -36,8 +36,6 @@ const styles = StyleSheet.create({
   text: {
     color: "blue",
     fontSize: 20,
-    alignItems: "center",
-    justifyContent: "center",
   },
   backButton: {
     position: "absolute",

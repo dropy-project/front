@@ -1,10 +1,12 @@
 import React from "react";
-import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
-
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ChatScreen from "../screens/ChatScreen";
-import SettingsScreen from "../screens/SettingsScreen";
 import HomeScreen from "../screens/HomeScreen";
+import MuseumScreen from "../screens/MuseumScreen";
+import Svg1 from "../assets/svgs/add_drop_1.svg";
+import Svg2 from "../assets/svgs/add_drop_2.svg";
+import Svg3 from "../assets/svgs/add_drop_3.svg";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,8 +26,12 @@ const CustomTabarButton = ({ children, onPress }) => (
         height: 70,
         borderRadius: 35,
         backgroundColor: "#7B6DCD",
+        overflow: "hidden",
       }}
     >
+      <Svg1 height={70} width={70} style={{ ...style.svg, top: 10 }} />
+      <Svg2 height={70} width={70} style={style.svg} />
+      <Svg3 height={70} width={70} style={style.svg} />
       {children}
     </View>
   </TouchableOpacity>
@@ -51,8 +57,8 @@ const Tabs = () => {
       }}
     >
       <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
+        name="Chat"
+        component={ChatScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <View
@@ -68,7 +74,7 @@ const Tabs = () => {
                 style={{
                   width: 35,
                   height: 35,
-                  tintColor: focused ? "#e32f45" : "#748c94",
+                  tintColor: focused ? "#a877af" : "#C4C4C4",
                 }}
               />
             </View>
@@ -79,13 +85,13 @@ const Tabs = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: () => (
             <Image
               source={require("../assets/icons/plus.png")}
-              resizeMode="contain"
               style={{
-                width: 35,
-                height: 35,
+                width: 30,
+                height: 30,
+                tintColor: "white",
               }}
             />
           ),
@@ -93,8 +99,8 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
+        name="Museum"
+        component={MuseumScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <View
@@ -110,7 +116,7 @@ const Tabs = () => {
                 style={{
                   width: 35,
                   height: 35,
-                  tintColor: focused ? "#e32f45" : "#748c94",
+                  tintColor: focused ? "#a877af" : "#C4C4C4",
                 }}
               />
             </View>
@@ -133,5 +139,8 @@ const style = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  svg: {
+    position: "absolute",
   },
 });
