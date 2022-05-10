@@ -1,6 +1,6 @@
 ## Setup projet :
 
-### MacOS
+### MacOS pour IOS
 
 - Installer nvm (node version manager) : `brew install nvm`
   
@@ -9,11 +9,13 @@
 
 - Installer Xcode depuis l'app store
 
+- Installer cocoapods (Gestionnaire de package pour apps IOS) : `sudo gem install cocoapods`
+
 - Clone le projet
 
 - Intaller les dépendances : `npm i`
 
-- Installer les dépendances cocoapods (IOS) : `sudo gem install cocoapods`
+- Installer les dépendances cocoapods (IOS) : `cd ios && pod install`
 
 - Lancer xcode et ouvrir le **dossier ios** qui se trouve dans le projet.
 
