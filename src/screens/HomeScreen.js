@@ -1,18 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Alert, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Dimensions } from 'react-native';
 import Styles from '../styles/Styles';
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
+import Map from '../assets/svgs/map';
 
 const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
-        <Text style={styles.text}>Dropy Home</Text>
-        <Button
-          title="Je suis le bouton"
-          onPress={() => Alert.alert('Je me suis fait cliqué !')}
-        />
+        <Map height={Dimensions.get('window').height} width={Dimensions.get('window').width} />
       </SafeAreaView>
       <HomeScreenTabBar />
     </View>
@@ -31,9 +28,5 @@ const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
     ...Styles.center
-  },
-  text: {
-    color: 'blue',
-    fontSize: 20
   }
 });
