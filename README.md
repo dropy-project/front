@@ -1,6 +1,6 @@
 ## Setup projet :
 
-### MacOS
+### MacOS pour IOS
 
 - Installer nvm (node version manager) : `brew install nvm`
   
@@ -8,6 +8,8 @@
   - `nvm alias default system` Pour dire que la version par défaut de nvm est celle sur le système
 
 - Installer Xcode depuis l'app store
+
+- Installer cocoapods (Gestionnaire de package pour apps IOS) : `sudo gem install cocoapods`
 
 - Clone le projet
 
@@ -30,6 +32,8 @@
 - Sélectionner un simulateur 
   
   - ![](./assets/readmeIcons/2022-05-08-15-51-05-image.png)
+
+- Lancer la commande `ln -s $(which node) /usr/local/bin/node`
 
 - Lancer une build
   
