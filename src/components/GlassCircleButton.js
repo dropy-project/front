@@ -4,7 +4,7 @@ import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import Svg1 from '../assets/svgs/add_drop_1.svg';
 import Svg2 from '../assets/svgs/add_drop_2.svg';
 import Svg3 from '../assets/svgs/add_drop_3.svg';
-import Styles from '../styles/Styles';
+import Styles, { Colors } from '../styles/Styles';
 
 const GlassCircleButton = ({ children, onPress, size = 70 }) => (
   <TouchableOpacity
@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
     top: -50,
     justifyContent: 'center',
     alignItems: 'center',
-    ...Styles.softShadows
+    ...Styles.hardShadows,
+    shadowColor: Colors.purple1
   },
   contentContainer: {
     borderRadius: 35,

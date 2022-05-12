@@ -86,7 +86,7 @@
         "import-newlines/enforce": [
             2,
             {
-                "items": 6,
+                "items": 5,
                 "semi": true
             }
         ],
