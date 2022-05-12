@@ -41,12 +41,14 @@ export const Colors = {
   purple2: '#8CB6F6',
   purple3: '#B7C1F7',
   purple4: '#EB9CA5',
+  purple5: '#C4BED7',
 
   white: '#FFFFFF',
 
   grey: '#7D86A9',
   lightGrey: '#abb2c9',
-  darkGrey: '#59607a'
+  darkGrey: '#59607a',
+  lighterGrey: '#E5ECF1'
 };
 
 export const Fonts = {
