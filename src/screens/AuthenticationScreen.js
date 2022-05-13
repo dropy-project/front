@@ -23,7 +23,7 @@ const AuthenticationScreen = ({ navigation }) => {
       </View>
       <SafeAreaView style={styles.content} >
         <Text style={{ ...Fonts.bold(50, Colors.white) }}>Dropy</Text>
-        <TextInput style={styles.textInput} placeholder="What's your name ?" placeholderTextColor={Colors.purple5} />
+        <TextInput style={{ ...Fonts.bold(15, Colors.purple5), ...styles.textInput }} placeholder="What's your name ?" placeholderTextColor={Colors.purple5} />
         <Button title="Learn More"
           color="#841584"></Button>
       </SafeAreaView>
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 14,
     padding: 15,
-    color: Colors.purple5,
     backgroundColor: Colors.lighterGrey
   },
   svg: {
