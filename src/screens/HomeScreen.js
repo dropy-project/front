@@ -1,50 +1,46 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import Styles from '../styles/Styles';
-import HomeScreenTabBar from '../components/HomeScreenTabBar';
+import { StyleSheet, View, Text } from 'react-native';
 
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+
+import Styles from '../styles/Styles';
 import mapStyle from '../assets/mapStyle.json';
+
+import HomeScreenTabBar from '../components/HomeScreenTabBar';
 import GlassCircleButton from '../components/GlassCircleButton';
+import useMapViewSyncronizer from '../hooks/useMapViewSyncronizer';
 
 const HomeScreen = () => {
-
   const mapRef = useRef(null);
 
-  const setMapCameraPosition = () => {
-    mapRef.current.animateCamera({
-      center: {
-        latitude: 44.84521905626495,
-        longitude: -0.5712756393745136
-      },
-      pitch: 10,
-      heading: -10,
-      zoom: 17
-    }, { duration: 1000 });
-  };
+  const { userCoordinates, compassHeading } = useMapViewSyncronizer(mapRef);
 
   return (
     <View style={styles.container}>
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 44.84521905626495,
-          longitude: -0.5712756393745136,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05
-        }}
         customMapStyle={mapStyle}
         style={StyleSheet.absoluteFillObject}
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}
-        onMapLoaded={setMapCameraPosition}
       />
       <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
         <GlassCircleButton disabled size={15} />
       </View>
       <HomeScreenTabBar />
+      <DebugView userCoordinates={userCoordinates} compassHeading={compassHeading} />
+    </View>
+  );
+};
+
+const DebugView = ({ userCoordinates, compassHeading }) => {
+  return (
+    <View style={{ position: 'absolute', bottom: 200 }}>
+      <Text>Latitude : {userCoordinates?.latitude}</Text>
+      <Text>Longitude : {userCoordinates?.longitude}</Text>
+      <Text>Compass : {compassHeading}</Text>
     </View>
   );
 };

@@ -11,6 +11,7 @@
     "dependencies": {
         "@expo-google-fonts/space-grotesk": "^0.2.2",
         "@expo/vector-icons": "^13.0.0",
+        "@react-native-community/geolocation": "^2.1.0",
         "@react-native-masked-view/masked-view": "^0.2.6",
         "@react-navigation/bottom-tabs": "^6.3.1",
         "@react-navigation/native": "^6.0.10",
@@ -23,6 +24,7 @@
         "react": "17.0.2",
         "react-dom": "17.0.2",
         "react-native": "0.68.1",
+        "react-native-compass-heading": "^1.4.0",
         "react-native-gesture-handler": "^2.4.2",
         "react-native-maps": "0.30.1",
         "react-native-navigation": "^7.27.1",
