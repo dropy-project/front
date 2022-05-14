@@ -5,6 +5,7 @@ import Styles from '../styles/Styles';
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
 
 import mapStyle from '../assets/mapStyle.json';
+import GlassCircleButton from '../components/GlassCircleButton';
 
 const HomeScreen = () => {
 
@@ -40,6 +41,9 @@ const HomeScreen = () => {
         scrollEnabled={false}
         onMapLoaded={setMapCameraPosition}
       />
+      <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
+        <GlassCircleButton disabled size={15} />
+      </View>
       <HomeScreenTabBar />
     </View>
   );
