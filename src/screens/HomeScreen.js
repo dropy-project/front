@@ -1,205 +1,45 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView, View, Text } from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import Styles, { Colors, Fonts } from '../styles/Styles';
+import Styles from '../styles/Styles';
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
-import Map from '../assets/svgs/map';
 
-const mapStyle = [
-  {
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#f5f5f5'
-      }
-    ]
-  },
-  {
-    'elementType': 'labels.icon',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#616161'
-      }
-    ]
-  },
-  {
-    'elementType': 'labels.text.stroke',
-    'stylers': [
-      {
-        'color': '#f5f5f5'
-      }
-    ]
-  },
-  {
-    'featureType': 'administrative.land_parcel',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#bdbdbd'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#eeeeee'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#757575'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.park',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#e5e5e5'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.park',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#9e9e9e'
-      }
-    ]
-  },
-  {
-    'featureType': 'road',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#ffffff'
-      }
-    ]
-  },
-  {
-    'featureType': 'road.arterial',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#757575'
-      }
-    ]
-  },
-  {
-    'featureType': 'road.highway',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#dadada'
-      }
-    ]
-  },
-  {
-    'featureType': 'road.highway',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#616161'
-      }
-    ]
-  },
-  {
-    'featureType': 'road.local',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#9e9e9e'
-      }
-    ]
-  },
-  {
-    'featureType': 'transit.line',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#e5e5e5'
-      }
-    ]
-  },
-  {
-    'featureType': 'transit.station',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#eeeeee'
-      }
-    ]
-  },
-  {
-    'featureType': 'water',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#c9c9c9'
-      }
-    ]
-  },
-  {
-    'featureType': 'water',
-    'elementType': 'geometry.fill',
-    'stylers': [
-      {
-        'color': '#83a5a9'
-      }
-    ]
-  },
-  {
-    'featureType': 'water',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#9e9e9e'
-      }
-    ]
-  }
-];
+import mapStyle from '../assets/mapStyle.json';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
+
+  const mapRef = useRef(null);
+
+  const setMapCameraPosition = () => {
+    mapRef.current.animateCamera({
+      center: {
+        latitude: 44.84521905626495,
+        longitude: -0.5712756393745136
+      },
+      pitch: 10,
+      heading: -10,
+      zoom: 17
+    }, { duration: 1000 });
+  };
 
   return (
     <View style={styles.container}>
       <MapView
-        // provider={PROVIDER_GOOGLE}
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
+          latitude: 44.84521905626495,
+          longitude: -0.5712756393745136,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05
         }}
-        // customMapStyle={mapStyle}
+        customMapStyle={mapStyle}
         style={StyleSheet.absoluteFillObject}
-        width={'100%'} />
-      <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.textContainer}>
-          <Text style={{ ...Fonts.ligth(18, Colors.primary) }}>Je suis un texte light</Text>
-          <Text style={{ ...Fonts.regular() }}>Je suis un texte regular</Text>
-          <Text style={{ ...Fonts.bold() }}>Je suis un texte bold</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Je suis un texte bleu et bold</Text>
-        </View>
-      </SafeAreaView>
+        pitchEnabled={false}
+        rotateEnabled={false}
+        scrollEnabled={false}
+        onMapLoaded={setMapCameraPosition}
+      />
       <HomeScreenTabBar />
     </View>
   );
@@ -213,18 +53,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     ...Styles.center,
     ...Styles.hardShadows
-  },
-  safeAreaView: {
-    flex: 1,
-    ...Styles.center
-  },
-  textContainer: {
-    ...Styles.center,
-    ...Styles.hardShadows,
-    backgroundColor: Colors.white,
-    borderRadius: 20,
-    marginVertical: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 10
   }
 });
