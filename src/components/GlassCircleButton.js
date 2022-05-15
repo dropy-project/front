@@ -14,9 +14,9 @@ const GlassCircleButton = ({ style, children, onPress, size = 70 }) => (
     <View
       style={{ ...styles.contentContainer, width: size, height: size }}
     >
-      <Svg1 height={size} width={size} style={{ ...styles.svg, top: size - 60 }} />
-      <Svg2 height={size} width={size} style={{ ...styles.svg }} />
-      <Svg3 height={size} width={size} style={{ ...styles.svg }} />
+      <Svg1 height={size * 1.5} width={size * 1.5} style={{ ...styles.svg, bottom: -size / 2.5 }} />
+      <Svg2 height={size * 1.5} width={size * 1.5} style={{ ...styles.svg, top: -size / 2 }} />
+      <Svg3 height={size * 1.5} width={size * 1.5} style={{ ...styles.svg, top: -size / 1.5 }} />
       {children}
     </View>
   </TouchableOpacity>
@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
   container: {
     ...Styles.center,
     ...Styles.hardShadows,
+    shadowOpacity: 0.7,
+    shadowRadius: 8,
     shadowColor: Colors.purple1
   },
   contentContainer: {
@@ -38,6 +40,9 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   svg: {
-    position:'absolute'
+    position:'absolute',
+    ...Styles.softShadows,
+    shadowColor: Colors.purple1,
+    shadowOpacity: 0.2
   }
 });
