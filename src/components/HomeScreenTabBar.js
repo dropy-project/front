@@ -1,26 +1,36 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Alert, View, Text } from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  View,
+  Text,
+  StatusBar
+} from 'react-native';
+
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Svg, { Path } from 'react-native-svg';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import GlassCircle from './GlassCircleButton';
 
 
-const mainButtonSize = 64;
+const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;
 
 const HomeScreenTabBar = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <Svg
         height="100%"
         width={responsiveWidth(100)}
         viewBox="0 0 375 87"
         style={styles.backgroundSvg}
+        preserveAspectRatio="none"
       >
         <Path
           d={d}
@@ -67,7 +77,7 @@ export default HomeScreenTabBar;
 
 const styles = StyleSheet.create({
   container: {
-    height: 90,
+    height: responsiveHeight(11),
     position: 'absolute',
     bottom: 0,
     right: 0,
@@ -86,7 +96,8 @@ const styles = StyleSheet.create({
   tabsContainer: {
     width: '120%',
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    marginBottom: 12
   },
   tabBtn: {
     alignItems: 'center',

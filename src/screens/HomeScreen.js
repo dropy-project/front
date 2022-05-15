@@ -1,25 +1,46 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView, View, Text } from 'react-native';
-import Styles, { Colors, Fonts } from '../styles/Styles';
-import HomeScreenTabBar from '../components/HomeScreenTabBar';
-import Map from '../assets/svgs/map';
+import React, { useRef } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 
-const HomeScreen = ({ navigation }) => {
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+
+import Styles from '../styles/Styles';
+import mapStyle from '../assets/mapStyle.json';
+
+import HomeScreenTabBar from '../components/HomeScreenTabBar';
+import GlassCircleButton from '../components/GlassCircleButton';
+import useMapViewSyncronizer from '../hooks/useMapViewSyncronizer';
+
+const HomeScreen = () => {
+  const mapRef = useRef(null);
+
+  const { userCoordinates, compassHeading } = useMapViewSyncronizer(mapRef);
 
   return (
     <View style={styles.container}>
-      <Map style={StyleSheet.absoluteFillObject} width={'100%'} />
-      <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.textContainer}>
-          <Text style={{ ...Fonts.ligth(18, Colors.primary) }}>Je suis un texte light</Text>
-          <Text style={{ ...Fonts.regular() }}>Je suis un texte regular</Text>
-          <Text style={{ ...Fonts.bold() }}>Je suis un texte bold</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Je suis un texte bleu et bold</Text>
-        </View>
-      </SafeAreaView>
+      <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        customMapStyle={mapStyle}
+        style={StyleSheet.absoluteFillObject}
+        pitchEnabled={false}
+        rotateEnabled={false}
+        scrollEnabled={false}
+      />
+      <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
+        <GlassCircleButton disabled size={15} />
+      </View>
       <HomeScreenTabBar />
+      <DebugView userCoordinates={userCoordinates} compassHeading={compassHeading} />
+    </View>
+  );
+};
+
+const DebugView = ({ userCoordinates, compassHeading }) => {
+  return (
+    <View style={{ position: 'absolute', bottom: 200 }}>
+      <Text>Latitude : {userCoordinates?.latitude}</Text>
+      <Text>Longitude : {userCoordinates?.longitude}</Text>
+      <Text>Compass : {compassHeading}</Text>
     </View>
   );
 };
@@ -32,18 +53,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     ...Styles.center,
     ...Styles.hardShadows
-  },
-  safeAreaView: {
-    flex: 1,
-    ...Styles.center
-  },
-  textContainer: {
-    ...Styles.center,
-    ...Styles.hardShadows,
-    backgroundColor: Colors.white,
-    borderRadius: 20,
-    marginVertical: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 10
   }
 });

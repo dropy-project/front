@@ -104,7 +104,8 @@
             "never",
             {
                 "svg": "always",
-                "png": "always"
+                "png": "always",
+                "json": "always"
             }
         ],
         "import/no-named-as-default-member": 1,
