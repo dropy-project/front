@@ -46,7 +46,9 @@ export const Colors = {
 
   grey: '#7D86A9',
   lightGrey: '#abb2c9',
-  darkGrey: '#59607a'
+  darkGrey: '#59607a',
+
+  red: '#f28888'
 };
 
 export const Fonts = {
