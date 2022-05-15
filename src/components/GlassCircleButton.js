@@ -6,10 +6,10 @@ import Svg2 from '../assets/svgs/add_drop_2.svg';
 import Svg3 from '../assets/svgs/add_drop_3.svg';
 import Styles, { Colors } from '../styles/Styles';
 
-const GlassCircleButton = ({ children, onPress, size = 70 }) => (
+const GlassCircleButton = ({ style, children, onPress, size = 70 }) => (
   <TouchableOpacity
     onPress={onPress}
-    style={styles.container}
+    style={{ ...styles.container, ...style }}
   >
     <View
       style={{ ...styles.contentContainer, width: size, height: size }}
@@ -26,9 +26,7 @@ export default GlassCircleButton;
 
 const styles = StyleSheet.create({
   container: {
-    top: -50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...Styles.center,
     ...Styles.hardShadows,
     shadowColor: Colors.purple1
   },
