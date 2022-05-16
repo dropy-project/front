@@ -1,7 +1,7 @@
 import { getUniqueId } from 'react-native-device-info';
 import Axios from 'axios';
 
-const SERVER_BASE_URL = 'http://localhost:3000';
+const SERVER_BASE_URL = 'http://90.120.22.77:3000';
 
 const axios = Axios.create({
   baseURL: SERVER_BASE_URL

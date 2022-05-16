@@ -3,8 +3,11 @@ import { StyleSheet, SafeAreaView, View, Text } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
 import Map from '../assets/svgs/map';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 const HomeScreen = ({ navigation }) => {
+
+  const { user } = useCurrentUser();
 
   return (
     <View style={styles.container}>
@@ -16,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={{ ...Fonts.bold() }}>Je suis un texte bold</Text>
         </View>
         <View style={styles.textContainer}>
-          <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Je suis un texte bleu et bold</Text>
+          <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Bonjour {user?.userName ?? 'Je suis un texte sans le user'}</Text>
         </View>
       </SafeAreaView>
       <HomeScreenTabBar />

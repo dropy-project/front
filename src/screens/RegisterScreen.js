@@ -22,10 +22,10 @@ const RegisterScreen = ({ navigation }) => {
       const userInfos = await API.register(name);
       await API.login();
       setUser(userInfos);
+      navigation.navigate('Home');
     } catch (error) {
       console.error(error.response.data);
     }
-    navigation.navigate('Home');
   };
 
   return (
