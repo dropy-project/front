@@ -9,7 +9,7 @@ const LargeRectangleButton = ({ onPress, buttonText, style, disabled }) => (
   <TouchableOpacity disabled={disabled} onPress={onPress} style={{ ...styles.container, ...style }} >
     <Svg1 width={'100%'} height={'100%'} style={{ ...styles.svg }} />
     <Svg2 width={'100%'} height={'100%'} style={{ ...styles.svg, left: '-17%' }} />
-    <Text style={{ ...Fonts.bold(34, Colors.white), letterSpacing: 12 }}>{buttonText}</Text>
+    <Text style={{ ...Fonts.bold(27, Colors.white), letterSpacing: 7 }}>{buttonText}</Text>
   </TouchableOpacity>
 );
 

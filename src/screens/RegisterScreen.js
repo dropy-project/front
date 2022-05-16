@@ -2,13 +2,31 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, SafeAreaView } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import { Colors, Fonts } from '../styles/Styles';
-import LargeRectangleButton from '../components/LargeRectangleButton';
+import GlassButton from '../components/GlassButton';
 import Svg1 from '../assets/svgs/background_auth_1.svg';
 import Svg2 from '../assets/svgs/background_auth_2.svg';
 import Svg3 from '../assets/svgs/background_auth_3.svg';
+import API from '../services/API';
+import useCurrentUser from '../hooks/useCurrentUser';
 
-const AuthenticationScreen = ({ navigation }) => {
+
+const RegisterScreen = ({ navigation }) => {
   const [name, setNameValue] = useState('');
+
+  const { setUser } = useCurrentUser();
+
+  const register = async () => {
+    if(name.length === 0)
+      return;
+    try {
+      const userInfos = await API.register(name);
+      await API.login();
+      setUser(userInfos);
+    } catch (error) {
+      console.error(error.response.data);
+    }
+    navigation.navigate('Home');
+  };
 
   return (
     <View style={styles.container}>
@@ -19,14 +37,19 @@ const AuthenticationScreen = ({ navigation }) => {
       </View>
       <SafeAreaView style={styles.content} >
         <Text style={{ ...Fonts.bold(50, Colors.white) }}>Dropy</Text>
-        <TextInput onChange={(text) => setNameValue(text)} style={{ ...Fonts.bold(15, Colors.purple5), ...styles.textInput }} placeholder="What's your name ?" placeholderTextColor={Colors.purple5} />
-        <LargeRectangleButton disabled={name.length === 0} style={styles.largeButton} buttonText={'start'} onPress={() => navigation.navigate('Home')} />
+        <TextInput onChangeText={(text) => setNameValue(text)} style={{ ...Fonts.bold(15, Colors.purple5), ...styles.textInput }} placeholder="What's your name ?" placeholderTextColor={Colors.purple5} />
+        <GlassButton
+          disabled={name.length === 0}
+          style={styles.largeButton}
+          buttonText={'start'}
+          onPress={register}
+        />
       </SafeAreaView>
     </View>
-  )
+  );
 };
 
-export default AuthenticationScreen;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
