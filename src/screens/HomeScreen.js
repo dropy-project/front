@@ -35,7 +35,7 @@ const HomeScreen = () => {
       </View>
       <HomeScreenTabBar />
       <DebugView userCoordinates={userCoordinates} compassHeading={compassHeading} />
-      <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Bonjour {user?.userName ?? 'Je suis un texte sans le user'}</Text>
+      <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Bonjour {user?.username ?? 'Je suis un texte sans le user'}</Text>
     </View>
   );
 };
