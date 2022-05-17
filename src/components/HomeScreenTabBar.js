@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
   Alert,
   View,
   Text,
-  StatusBar
+  Animated
 } from 'react-native';
 
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
@@ -14,17 +14,33 @@ import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimen
 import Svg, { Path } from 'react-native-svg';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import GlassCircle from './GlassCircleButton';
-
+import GlassCircleButton from './GlassCircleButton';
 
 const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;
 
 const HomeScreenTabBar = () => {
+  const [dropyMenuIsOpen, setDropyMenuIsOpen] = useState(false);
+
+  const menuAnimatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const anim = Animated.timing(menuAnimatedValue, {
+      toValue: dropyMenuIsOpen ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true
+    });
+    anim.start();
+    return anim.stop;
+  }, [dropyMenuIsOpen]);
+
+  const plusIconRotation = menuAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '45deg']
+  });
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
       <Svg
         height="100%"
         width={responsiveWidth(100)}
@@ -32,26 +48,35 @@ const HomeScreenTabBar = () => {
         style={styles.backgroundSvg}
         preserveAspectRatio="none"
       >
-        <Path
-          d={d}
-          fill="white"
-        />
+        <Path d={d} fill="white" />
       </Svg>
-      <GlassCircle
-        style={styles.mainButton}
-        size={mainButtonSize}
-        onPress={() => Alert.alert('Je me suis fait touché')}
-      >
-        <FontAwesome5 name="plus" size={20} color="white" />
-      </GlassCircle>
       <View style={styles.tabsContainer}>
         <TabBarItem text="Drops" routeName="Museum">
-          <Ionicons name="md-bookmark-outline" size={iconsSize} color={Colors.grey} />
+          <Ionicons
+            name="md-bookmark-outline"
+            size={iconsSize}
+            color={Colors.grey}
+          />
         </TabBarItem>
         <TabBarItem text="Chat" routeName="Chat" showStatusDot>
-          <Ionicons name="md-chatbubble-outline" size={iconsSize} color={Colors.grey} style={styles.icons} />
+          <Ionicons
+            name="md-chatbubble-outline"
+            size={iconsSize}
+            color={Colors.grey}
+            style={styles.icons}
+          />
         </TabBarItem>
       </View>
+      <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
+      <GlassCircleButton
+        style={styles.mainButton}
+        size={mainButtonSize}
+        onPress={() => setDropyMenuIsOpen(!dropyMenuIsOpen)}
+      >
+        <Animated.View style={{ transform: [{ rotate: plusIconRotation }] }}>
+          <FontAwesome5 name="plus" size={20} color="white" />
+        </Animated.View>
+      </GlassCircleButton>
     </View>
   );
 };
@@ -83,6 +108,13 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     ...Styles.center
+  },
+  backgroundOverlay: {
+    position: 'absolute',
+    height: responsiveHeight(100),
+    width: responsiveWidth(100),
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.8)'
   },
   backgroundSvg: {
     position: 'absolute',

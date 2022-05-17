@@ -3,6 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
+import { StatusBar } from 'expo-status-bar';
 import mapStyle from '../assets/mapStyle.json';
 import Styles, { Fonts, Colors } from '../styles/Styles';
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
@@ -19,6 +20,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
@@ -33,7 +35,7 @@ const HomeScreen = () => {
       </View>
       <HomeScreenTabBar />
       <DebugView userCoordinates={userCoordinates} compassHeading={compassHeading} />
-      <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Bonjour {user?.username ?? 'Je suis un texte sans le user'}</Text>
+      <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Bonjour {user?.userName ?? 'Je suis un texte sans le user'}</Text>
     </View>
   );
 };
