@@ -16,7 +16,8 @@ const Splash = ({ navigation }) => {
       navigation.navigate('Home');
     } catch (error) {
       console.log(error);
-      navigation.navigate('Register');
+      if (error.includes('409'))
+        navigation.navigate('Register');
     }
   };
 
