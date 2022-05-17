@@ -11,6 +11,7 @@ import {
 } from '@expo-google-fonts/space-grotesk';
 
 import Navigation from './src/navigation/Navigation';
+import UserProvider from './src/states/UserContextProvider';
 
 export default function App() {
 
@@ -27,7 +28,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Navigation />
+      <UserProvider>
+        <Navigation />
+      </UserProvider>
     </NavigationContainer>
   );
 }
