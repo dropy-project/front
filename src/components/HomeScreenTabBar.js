@@ -1,30 +1,44 @@
-import React from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  View,
-  Text,
-  StatusBar
-} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View, Text, Animated } from 'react-native';
 
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons, Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Svg, { Path } from 'react-native-svg';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import GlassCircle from './GlassCircleButton';
-
+import GlassCircleButton from './GlassCircleButton';
 
 const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;
 
 const HomeScreenTabBar = () => {
+  const [dropyMenuIsOpen, setDropyMenuIsOpen] = useState(false);
+  const [renderMenuOverlay, setRenderMenuOverlay] = useState(false);
+
+  const menuAnimatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    setRenderMenuOverlay(true);
+    const anim = Animated.timing(menuAnimatedValue, {
+      toValue: dropyMenuIsOpen ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true
+    });
+    anim.start(({ finished }) => {
+      if (finished && !dropyMenuIsOpen)
+        setRenderMenuOverlay(false);
+    });
+    return anim.stop;
+  }, [dropyMenuIsOpen]);
+
+  const plusIconRotation = menuAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '45deg']
+  });
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
       <Svg
         height="100%"
         width={responsiveWidth(100)}
@@ -32,26 +46,87 @@ const HomeScreenTabBar = () => {
         style={styles.backgroundSvg}
         preserveAspectRatio="none"
       >
-        <Path
-          d={d}
-          fill="white"
-        />
+        <Path d={d} fill="white" />
       </Svg>
-      <GlassCircle
-        style={styles.mainButton}
-        size={mainButtonSize}
-        onPress={() => Alert.alert('Je me suis fait touché')}
-      >
-        <FontAwesome5 name="plus" size={20} color="white" />
-      </GlassCircle>
       <View style={styles.tabsContainer}>
         <TabBarItem text="Drops" routeName="Museum">
-          <Ionicons name="md-bookmark-outline" size={iconsSize} color={Colors.grey} />
+          <Ionicons
+            name="md-bookmark-outline"
+            size={iconsSize}
+            color={Colors.grey}
+          />
         </TabBarItem>
         <TabBarItem text="Chat" routeName="Chat" showStatusDot>
-          <Ionicons name="md-chatbubble-outline" size={iconsSize} color={Colors.grey} style={styles.icons} />
+          <Ionicons
+            name="md-chatbubble-outline"
+            size={iconsSize}
+            color={Colors.grey}
+            style={styles.icons}
+          />
         </TabBarItem>
       </View>
+      {renderMenuOverlay && (
+        <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
+      )}
+      <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={menuAnimatedValue}>
+        <TouchableOpacity style={styles.dropySelectionButton}>
+          <SimpleLineIcons name="picture" size={30} color={Colors.grey} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.dropySelectionButton}>
+          <MaterialCommunityIcons name="format-text" size={30} color={Colors.grey} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.dropySelectionButton}>
+          <Entypo name="camera" size={30} color={Colors.grey} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.dropySelectionButton}>
+          <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} />
+        </TouchableOpacity>
+      </DropyWheel>
+      <GlassCircleButton
+        style={styles.mainButton}
+        size={mainButtonSize}
+        onPress={() => setDropyMenuIsOpen(!dropyMenuIsOpen)}
+      >
+        <Animated.View style={{ transform: [{ rotate: plusIconRotation }] }}>
+          <FontAwesome5 name="plus" size={20} color="white" />
+        </Animated.View>
+      </GlassCircleButton>
+    </View>
+  );
+};
+
+const DropyWheel = ({ menuAnimatedValue, children }) => {
+  return (
+    <Animated.View style={{ ...styles.dropyWheelContainer, transform: [{ scale: menuAnimatedValue }] }}>
+      {children.map((child, index) => (
+        <DropyWheelItem key={index} index={index} childCount={children.length} size={100}>{child}</DropyWheelItem>
+      ))}
+    </Animated.View>
+  );
+};
+
+const DropyWheelItem = ({ children, index, childCount, size }) => {
+
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+
+  const handleLayout = (event) => {
+    const { layout } = event.nativeEvent;
+
+    const angle = index * Math.PI / (childCount - 1) + Math.PI / 2;
+
+    let x = (Math.sin(angle) * size);
+    let y = (Math.cos(angle) * size);
+
+    x += responsiveWidth(100) / 2 - layout.width / 2;
+    y += 100 - layout.height / 2;
+
+    setCoords({ x, y });
+  };
+
+  return (
+    // eslint-disable-next-line react-native/no-inline-styles
+    <View onLayout={handleLayout} key={index} style={{ position: 'absolute', top: coords.y, left: coords.x }}>
+      {children}
     </View>
   );
 };
@@ -83,6 +158,13 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     ...Styles.center
+  },
+  backgroundOverlay: {
+    position: 'absolute',
+    height: responsiveHeight(100),
+    width: responsiveWidth(100),
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.8)'
   },
   backgroundSvg: {
     position: 'absolute',
@@ -120,6 +202,20 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: '42%'
+  },
+  dropyWheelContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: responsiveWidth(100),
+    height: '200%'
+  },
+  dropySelectionButton: {
+    backgroundColor: 'white',
+    width: 60,
+    height: 60,
+    borderRadius: 100,
+    ...Styles.center,
+    ...Styles.hardShadows
   }
 });
 

@@ -9,7 +9,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     if (user == null)
       return;
-    console.log('Current user is', user?.userName);
+    console.log('Current user is', user?.username);
   }, [user]);
 
   return (
