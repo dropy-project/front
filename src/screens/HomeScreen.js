@@ -1,22 +1,63 @@
-import React, { useRef } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { StatusBar } from 'expo-status-bar';
+import { launchImageLibrary } from 'react-native-image-picker';
 import mapStyle from '../assets/mapStyle.json';
-import Styles, { Fonts, Colors } from '../styles/Styles';
+import Styles, { Colors } from '../styles/Styles';
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
 import useCurrentUser from '../hooks/useCurrentUser';
 import GlassCircleButton from '../components/GlassCircleButton';
 import useMapViewSyncronizer from '../hooks/useMapViewSyncronizer';
+import API from '../services/API';
+import useGeolocation from '../hooks/useGeolocation';
+import DropyMapMarker from '../components/DropyMapMarker';
 
 const HomeScreen = () => {
   const mapRef = useRef(null);
 
-  const { userCoordinates, compassHeading } = useMapViewSyncronizer(mapRef);
+  const { userCoordinates } = useGeolocation();
+
+  useMapViewSyncronizer(mapRef);
 
   const { user } = useCurrentUser();
+
+  const [dropiesAround, setDropiesAround] = useState([]);
+
+  useEffect(() => {
+    getDropies();
+  }, [userCoordinates]);
+
+  const addMedia = async () => {
+    try {
+      const result = await launchImageLibrary({
+        mediaType: 'photo'
+      });
+      const dropy = await API.createDropy(user.id, userCoordinates.latitude, userCoordinates.longitude);
+      const filePath = result.assets[0].uri;
+      const mediaResult = await API.postDropyMediaFromPath(dropy.id, filePath, 'picture');
+      console.log(mediaResult);
+    } catch (error) {
+      console.log('Erreur', error?.response?.data || error);
+    }
+  };
+
+  const getDropies = async () => {
+    try {
+      if(userCoordinates == null) return;
+      const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);
+      console.log(result.data);
+      setDropiesAround(result.data ?? []);
+    } catch (error) {
+      console.log(error?.response?.data || error);
+    }
+  };
+
+  const lootMedia = (dropy) => {
+    console.log('loot media', dropy);
+  };
 
   return (
     <View style={styles.container}>
@@ -29,23 +70,13 @@ const HomeScreen = () => {
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}
-      />
-      <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
-        <GlassCircleButton disabled size={15} />
-      </View>
-      <HomeScreenTabBar />
-      <DebugView userCoordinates={userCoordinates} compassHeading={compassHeading} />
-      <Text style={{ ...Fonts.bold(18, Colors.mainBlue) }}>Bonjour {user?.username ?? 'Je suis un texte sans le user'}</Text>
-    </View>
-  );
-};
-
-const DebugView = ({ userCoordinates, compassHeading }) => {
-  return (
-    <View style={{ position: 'absolute', bottom: 200 }}>
-      <Text>Latitude : {userCoordinates?.latitude}</Text>
-      <Text>Longitude : {userCoordinates?.longitude}</Text>
-      <Text>Compass : {compassHeading}</Text>
+      >
+        {dropiesAround.map((dropy, index) => (
+          <DropyMapMarker key={index} dropy={dropy} onPress={() => lootMedia(dropy)}/>
+        ))}
+      </MapView>
+      <GlassCircleButton disabled size={15} />
+      <HomeScreenTabBar addMedia={addMedia} />
     </View>
   );
 };
@@ -55,7 +86,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     ...Styles.center,
     ...Styles.hardShadows
   }

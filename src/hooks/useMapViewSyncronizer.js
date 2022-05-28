@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
-
-import Geolocation from '@react-native-community/geolocation';
-import CompassHeading from 'react-native-compass-heading';
+import { useEffect } from 'react';
+import useGeolocation from './useGeolocation';
 
 /**
  * Syncronize the given map view with the actual phone
@@ -10,43 +8,19 @@ import CompassHeading from 'react-native-compass-heading';
  */
 const useMapViewSyncronizer = (mapViewRef) => {
 
-  const [userCoordinates, setUserCoordinates] = useState(null);
-  const [compassHeading, setCompassHeading] = useState(0);
-
-  useEffect(() => {
-    const geolocationWatchId = registerGeolocationListener();
-    registerCompassListener();
-
-    return () => {
-      Geolocation.clearWatch(geolocationWatchId);
-      CompassHeading.stop();
-    };
-  }, []);
-
-  const registerGeolocationListener = () => Geolocation.watchPosition(
-    (infos) => {
-      const { coords } = infos;
-      setUserCoordinates(coords);
-    },
-    console.error,
-    {
-      enableHighAccuracy: true,
-      distanceFilter: 10
-    }
-  );
-
-  const registerCompassListener = () => CompassHeading.start(10, (infos) => {
-    const { heading } = infos;
-    setCompassHeading(heading);
-  });
+  const { userCoordinates, compassHeading } = useGeolocation();
 
   useEffect(() => {
     setMapCameraPosition();
   }, [userCoordinates, compassHeading]);
 
-  const setMapCameraPosition = () => {
+  const setMapCameraPosition = async () => {
     if(mapViewRef?.current == null) return;
     if (userCoordinates == null) return;
+
+    const currentCamera = await mapViewRef.current.getCamera();
+    const distanceBetweenCameraAndPosition = calculateDistance(currentCamera.center, userCoordinates);
+    const duration = distanceBetweenCameraAndPosition > 0.5 ? 0 : 2000;
 
     mapViewRef.current.animateCamera(
       {
@@ -58,11 +32,15 @@ const useMapViewSyncronizer = (mapViewRef) => {
         heading: compassHeading,
         zoom: 17
       },
-      { duration: 200 }
+      { duration }
     );
   };
 
-  return { userCoordinates, compassHeading };
+  const calculateDistance = (coord1, coord2) => {
+    const x = Math.pow(coord1.latitude - coord2.latitude, 2);
+    const y = Math.pow(coord1.longitude - coord2.longitude, 2);
+    return Math.sqrt(x + y);
+  };
 };
 
 export default useMapViewSyncronizer;

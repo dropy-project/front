@@ -9,7 +9,6 @@ import Svg3 from '../assets/svgs/background_auth_3.svg';
 import API from '../services/API';
 import useCurrentUser from '../hooks/useCurrentUser';
 
-
 const RegisterScreen = ({ navigation }) => {
   const [name, setNameValue] = useState('');
 
