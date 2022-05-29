@@ -38,6 +38,11 @@ const HomeScreenTabBar = ({ addMedia }) => {
     outputRange: ['0deg', '45deg']
   });
 
+  const handleAddPicture = () => {
+    addMedia();
+    setDropyMenuIsOpen(false);
+  };
+
   return (
     <View style={styles.container}>
       <Svg
@@ -70,7 +75,7 @@ const HomeScreenTabBar = ({ addMedia }) => {
         <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
       )}
       <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={menuAnimatedValue}>
-        <TouchableOpacity style={styles.dropySelectionButton} onPress={addMedia}>
+        <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
           <SimpleLineIcons name="picture" size={30} color={Colors.grey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.dropySelectionButton}>

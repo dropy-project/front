@@ -18,16 +18,15 @@ import DropyMapMarker from '../components/DropyMapMarker';
 const HomeScreen = () => {
   const mapRef = useRef(null);
 
+  const [dropiesAround, setDropiesAround] = useState([]);
+
   const { userCoordinates } = useGeolocation();
+  const { user } = useCurrentUser();
 
   useMapViewSyncronizer(mapRef);
 
-  const { user } = useCurrentUser();
-
-  const [dropiesAround, setDropiesAround] = useState([]);
-
   useEffect(() => {
-    getDropies();
+    getDropiesAround();
   }, [userCoordinates]);
 
   const addMedia = async () => {
@@ -38,13 +37,15 @@ const HomeScreen = () => {
       const dropy = await API.createDropy(user.id, userCoordinates.latitude, userCoordinates.longitude);
       const filePath = result.assets[0].uri;
       const mediaResult = await API.postDropyMediaFromPath(dropy.id, filePath, 'picture');
+
+      getDropiesAround();
       console.log(mediaResult);
     } catch (error) {
       console.log('Erreur', error?.response?.data || error);
     }
   };
 
-  const getDropies = async () => {
+  const getDropiesAround = async () => {
     try {
       if(userCoordinates == null) return;
       const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);

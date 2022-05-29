@@ -3,6 +3,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
+import DropyPopup from '../assets/svgs/dropyPopup.svg';
+
 const DropyMapMarker = ({ dropy, onPress }) => {
 
   const getDropTimeString = () => {
@@ -31,18 +33,17 @@ const DropyMapMarker = ({ dropy, onPress }) => {
       onPress={onPress}
     >
       <View style={styles.container}>
-        <View style={styles.markerContainer}>
-          {dropy.isUserDropy ? (
-            <View style={styles.userDropyContainer}>
-              <Text style={Fonts.bold(10, Colors.lightGrey)}>DROP</Text>
-              <Text style={Fonts.bold(12, Colors.grey)}>{getDropTimeString()} ago</Text>
-            </View>
-          ) : (
-            <View style={styles.markerButton}>
-              <Text style={Fonts.bold(12, Colors.white)}>PICK UP</Text>
-            </View>
-          )}
-        </View>
+        <DropyPopup style={styles.svgBackground}></DropyPopup>
+        {dropy.isUserDropy ? (
+          <View style={styles.userDropyContainer}>
+            <Text style={Fonts.bold(8, Colors.lightGrey)}>DROP</Text>
+            <Text style={Fonts.bold(11, Colors.grey)}>{getDropTimeString()} ago</Text>
+          </View>
+        ) : (
+          <View style={styles.markerButton}>
+            <Text style={Fonts.bold(10, Colors.white)}>PICK UP</Text>
+          </View>
+        )}
       </View>
     </MapView.Marker>
   );
@@ -52,25 +53,25 @@ export default DropyMapMarker;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 100,
+    height: 60,
+    width: 100,
     ...Styles.center
+  },
+  svgBackground: {
+    ...Styles.blueShadow,
+    position: 'absolute',
+    top: 0
   },
   userDropyContainer: {
-    ...Styles.center
-  },
-  markerContainer: {
-    backgroundColor: Colors.white,
     ...Styles.center,
-    ...Styles.hardShadows,
-    padding: 7,
-    borderRadius: 15,
-    height: 40,
-    width: 80
+    width: '60%'
   },
   markerButton: {
+    width: '60%',
     backgroundColor: Colors.mainBlue,
-    borderRadius: 10,
-    paddingVertical: 4,
-    paddingHorizontal: 7
+    borderRadius: 7,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    ...Styles.center
   }
 });
