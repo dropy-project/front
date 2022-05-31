@@ -25,7 +25,7 @@ const GeolocationProvider = ({ children }) => {
       const { coords } = infos;
       setUserCoordinates(coords);
     },
-    console.error,
+    console.warn,
     {
       enableHighAccuracy: true,
       distanceFilter: 1

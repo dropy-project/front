@@ -71,8 +71,8 @@ const HomeScreen = () => {
         rotateEnabled={false}
         scrollEnabled={false}
       >
-        {dropiesAround.map((dropy, index) => (
-          <DropyMapMarker key={index} dropy={dropy} onPress={() => lootMedia(dropy)}/>
+        {dropiesAround.map((dropy) => (
+          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => lootMedia(dropy)}/>
         ))}
       </MapView>
       <GlassCircleButton disabled size={15} />
