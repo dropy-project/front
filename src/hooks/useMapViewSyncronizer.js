@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { coordinatesDistance } from '../utils/coordinates';
 import useGeolocation from './useGeolocation';
 
 /**
@@ -19,8 +20,8 @@ const useMapViewSyncronizer = (mapViewRef) => {
     if (userCoordinates == null) return;
 
     const currentCamera = await mapViewRef.current.getCamera();
-    const distanceBetweenCameraAndPosition = calculateDistance(currentCamera.center, userCoordinates);
-    const duration = distanceBetweenCameraAndPosition > 0.5 ? 0 : 2000;
+    const distanceBetweenCameraAndPosition = coordinatesDistance(currentCamera.center, userCoordinates);
+    const duration = distanceBetweenCameraAndPosition > 100 ? 0 : 2000;
 
     mapViewRef.current.animateCamera(
       {
@@ -34,12 +35,6 @@ const useMapViewSyncronizer = (mapViewRef) => {
       },
       { duration }
     );
-  };
-
-  const calculateDistance = (coord1, coord2) => {
-    const x = Math.pow(coord1.latitude - coord2.latitude, 2);
-    const y = Math.pow(coord1.longitude - coord2.longitude, 2);
-    return Math.sqrt(x + y);
   };
 };
 

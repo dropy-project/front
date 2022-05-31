@@ -3,10 +3,7 @@ import { GeolocationContext } from '../states/GeolocationContextProvider';
 
 const useGeolocation = () => {
   const { userCoordinates, compassHeading } = useContext(GeolocationContext);
-  return {
-    userCoordinates,
-    compassHeading
-  };
+  return { userCoordinates, compassHeading };
 };
 
 export default useGeolocation;

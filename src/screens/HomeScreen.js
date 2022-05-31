@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -14,6 +14,7 @@ import useMapViewSyncronizer from '../hooks/useMapViewSyncronizer';
 import API from '../services/API';
 import useGeolocation from '../hooks/useGeolocation';
 import DropyMapMarker from '../components/DropyMapMarker';
+import useTravelDistanceCallback from '../hooks/useTravelDistanceCallback';
 
 const HomeScreen = () => {
   const mapRef = useRef(null);
@@ -25,9 +26,7 @@ const HomeScreen = () => {
 
   useMapViewSyncronizer(mapRef);
 
-  useEffect(() => {
-    getDropiesAround();
-  }, [userCoordinates]);
+  useTravelDistanceCallback(() => fetchDropiesAround(), 60);
 
   const addMedia = async () => {
     try {
@@ -38,14 +37,14 @@ const HomeScreen = () => {
       const filePath = result.assets[0].uri;
       const mediaResult = await API.postDropyMediaFromPath(dropy.id, filePath, 'picture');
 
-      getDropiesAround();
+      fetchDropiesAround();
       console.log(mediaResult);
     } catch (error) {
       console.log('Erreur', error?.response?.data || error);
     }
   };
 
-  const getDropiesAround = async () => {
+  const fetchDropiesAround = async () => {
     try {
       if(userCoordinates == null) return;
       const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);

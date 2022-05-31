@@ -1,34 +1,13 @@
-import { getUniqueId } from 'react-native-device-info';
-import Axios from 'axios';
 import { Platform } from 'react-native';
+import { getUniqueId } from 'react-native-device-info';
 
-const SERVER_BASE_URL = 'http://38.242.199.26:3000';
-// const SERVER_BASE_URL = 'http://localhost:3000';
+import Axios from 'axios';
+
+const SERVER_BASE_URL = 'https://api.dropy-app.com';
 
 const axios = Axios.create({
   baseURL: SERVER_BASE_URL
 });
-
-// axios.interceptors.request.use(
-//   function (config) {
-//     console.log(config.method, config.url, config.params || config.data || {}, config.headers);
-//     return config;
-//   },
-//   function (error) {
-//     return Promise.reject(error);
-//   }
-// );
-
-// axios.interceptors.response.use(
-//   function (response) {
-//     console.log(response.data);
-//     return response;
-//   },
-//   function (error) {
-//     console.log(error.response?.data || error);
-//     return Promise.reject(error);
-//   }
-// );
 
 const register = async (displayName) => {
   const uid = getUniqueId();
@@ -45,7 +24,6 @@ const login = async () => {
     uid
   });
   const token = response.headers['set-cookie'];
-  console.log(`Received token : ${token}`);
   axios.defaults.headers.common['Authorization'] = token;
 };
 
@@ -83,6 +61,10 @@ const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
   return response;
 };
 
+const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
+  // TODO
+};
+
 const getDropiesAround = async (userId, latitude, longitude) => {
   const result = await axios.post('/dropy/findAround', {
     latitude,
@@ -97,6 +79,7 @@ const API = {
   login,
   getUser,
   createDropy,
+  postDropyMediaData,
   postDropyMediaFromPath,
   getDropiesAround
 };
