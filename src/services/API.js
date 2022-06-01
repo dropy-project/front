@@ -1,7 +1,9 @@
+import { Platform } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
+
 import Axios from 'axios';
 
-const SERVER_BASE_URL = 'http://localhost:3000';
+const SERVER_BASE_URL = 'https://api.dropy-app.com';
 
 const axios = Axios.create({
   baseURL: SERVER_BASE_URL
@@ -21,19 +23,65 @@ const login = async () => {
   const response = await axios.post('/login', {
     uid
   });
-  axios.defaults.headers.common['Authorization'] = response.headers['set-cookie'];
+  const token = response.headers['set-cookie'];
+  axios.defaults.headers.common['Authorization'] = token;
 };
 
 const getUser = async () => {
   const uid = getUniqueId();
-  const response = await axios.get(`/users/${uid}`);
+
+  const response = await axios.get(`/user/${uid}`);
   return response.data;
+};
+
+const createDropy = async (userId, latitude, longitude) => {
+  const response = await axios.post('/dropy/add', {
+    emitterId: userId,
+    latitude,
+    longitude
+  });
+  return response.data;
+};
+
+const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
+  // eslint-disable-next-line no-undef
+  var data = new FormData();
+  data.append(mediaType, {
+    uri: Platform.OS === 'android' ? mediaPath : mediaPath.replace('file://', ''),
+    name: `${mediaType}-${dropyId}`
+  });
+
+  const response = await axios.post(`/dropy/add/${dropyId}/media`, data,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data; '
+      }
+    }
+  );
+  return response;
+};
+
+const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
+  // TODO
+};
+
+const getDropiesAround = async (userId, latitude, longitude) => {
+  const result = await axios.post('/dropy/findAround', {
+    latitude,
+    longitude,
+    userId
+  });
+  return result;
 };
 
 const API = {
   register,
   login,
-  getUser
+  getUser,
+  createDropy,
+  postDropyMediaData,
+  postDropyMediaFromPath,
+  getDropiesAround
 };
 
 export default API;

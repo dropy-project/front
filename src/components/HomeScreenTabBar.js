@@ -12,11 +12,12 @@ import GlassCircleButton from './GlassCircleButton';
 const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;
 
-const HomeScreenTabBar = () => {
+const HomeScreenTabBar = ({ addMedia }) => {
   const [dropyMenuIsOpen, setDropyMenuIsOpen] = useState(false);
   const [renderMenuOverlay, setRenderMenuOverlay] = useState(false);
 
   const menuAnimatedValue = useRef(new Animated.Value(0)).current;
+
 
   useEffect(() => {
     setRenderMenuOverlay(true);
@@ -36,6 +37,11 @@ const HomeScreenTabBar = () => {
     inputRange: [0, 1],
     outputRange: ['0deg', '45deg']
   });
+
+  const handleAddPicture = () => {
+    addMedia();
+    setDropyMenuIsOpen(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -69,7 +75,7 @@ const HomeScreenTabBar = () => {
         <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
       )}
       <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={menuAnimatedValue}>
-        <TouchableOpacity style={styles.dropySelectionButton}>
+        <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
           <SimpleLineIcons name="picture" size={30} color={Colors.grey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.dropySelectionButton}>

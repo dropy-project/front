@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 import Svg1 from '../assets/svgs/rectangle_button_1.svg';

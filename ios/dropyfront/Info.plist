@@ -55,5 +55,11 @@
 		<string>Allow $(PRODUCT_NAME) to use the location</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>Allow $(PRODUCT_NAME) to use the location</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Allow $(PRODUCT_NAME) to acces your photo library</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Allow $(PRODUCT_NAME) to acces your camera</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Allow $(PRODUCT_NAME) to acces your microphone</string>
 	</dict>
 </plist>
