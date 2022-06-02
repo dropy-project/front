@@ -63,7 +63,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay = () => {}, dropyC
     outputRange: [0.8, 1],
   });
 
-  if(!render) return null;
+  if(!render || dropyCreateParams == null) return null;
 
   return (
     <Animated.View style={{ ...StyleSheet.absoluteFillObject, opacity: fadeAnimatedValue }}>
