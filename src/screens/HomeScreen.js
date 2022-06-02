@@ -46,7 +46,7 @@ const HomeScreen = () => {
 
   const fetchDropiesAround = async () => {
     try {
-      if(userCoordinates == null) return;
+      if (userCoordinates == null) return;
       const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);
       console.log(result.data);
       setDropiesAround(result.data ?? []);
@@ -70,9 +70,10 @@ const HomeScreen = () => {
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}
+        zoomEnabled={false}
       >
         {dropiesAround.map((dropy) => (
-          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => lootMedia(dropy)}/>
+          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => lootMedia(dropy)} />
         ))}
       </MapView>
       <GlassCircleButton disabled size={15} />
