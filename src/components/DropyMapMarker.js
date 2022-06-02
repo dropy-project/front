@@ -68,16 +68,16 @@ const styles = StyleSheet.create({
   container: {
     height: 60,
     width: 100,
-    ...Styles.center
+    ...Styles.center,
   },
   svgBackground: {
     ...Styles.blueShadow,
     position: 'absolute',
-    top: 0
+    top: 0,
   },
   userDropyContainer: {
     ...Styles.center,
-    width: '60%'
+    width: '60%',
   },
   markerButton: {
     width: '60%',
@@ -85,6 +85,6 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     paddingVertical: 3,
     paddingHorizontal: 6,
-    ...Styles.center
-  }
+    ...Styles.center,
+  },
 });

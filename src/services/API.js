@@ -6,14 +6,14 @@ import Axios from 'axios';
 const SERVER_BASE_URL = 'https://api.dropy-app.com';
 
 const axios = Axios.create({
-  baseURL: SERVER_BASE_URL
+  baseURL: SERVER_BASE_URL,
 });
 
 const register = async (displayName) => {
   const uid = getUniqueId();
   const response = await axios.post('/register', {
     uid,
-    displayName
+    displayName,
   });
   return response.data;
 };
@@ -21,7 +21,7 @@ const register = async (displayName) => {
 const login = async () => {
   const uid = getUniqueId();
   const response = await axios.post('/login', {
-    uid
+    uid,
   });
   const token = response.headers['set-cookie'];
   axios.defaults.headers.common['Authorization'] = token;
@@ -38,7 +38,7 @@ const createDropy = async (userId, latitude, longitude) => {
   const response = await axios.post('/dropy/add', {
     emitterId: userId,
     latitude,
-    longitude
+    longitude,
   });
   return response.data;
 };
@@ -48,14 +48,14 @@ const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
   var data = new FormData();
   data.append(mediaType, {
     uri: Platform.OS === 'android' ? mediaPath : mediaPath.replace('file://', ''),
-    name: `${mediaType}-${dropyId}`
+    name: `${mediaType}-${dropyId}`,
   });
 
   const response = await axios.post(`/dropy/add/${dropyId}/media`, data,
     {
       headers: {
-        'Content-Type': 'multipart/form-data; '
-      }
+        'Content-Type': 'multipart/form-data; ',
+      },
     }
   );
   return response;
@@ -69,7 +69,7 @@ const getDropiesAround = async (userId, latitude, longitude) => {
   const result = await axios.post('/dropy/findAround', {
     latitude,
     longitude,
-    userId
+    userId,
   });
   return result;
 };
@@ -81,7 +81,7 @@ const API = {
   createDropy,
   postDropyMediaData,
   postDropyMediaFromPath,
-  getDropiesAround
+  getDropiesAround,
 };
 
 export default API;

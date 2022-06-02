@@ -19,12 +19,13 @@ export const Colors = {
   lightGrey: '#abb2c9',
   darkGrey: '#59607a',
   lighterGrey: '#E5ECF1',
-  red: '#f28888'
+
+  red: '#f28888',
 };
 
 const Styles = {
   hardShadows: {
-    shadowColor: '#000',
+    shadowColor: Colors.mainBlue,
 
     shadowOpacity: 0.2,
     shadowRadius: 12,
@@ -32,19 +33,19 @@ const Styles = {
     elevation: 3,
     shadowOffset: {
       width: 0,
-      height: Platform.OS !== 'ios' ? 0 : 5
-    }
+      height: Platform.OS !== 'ios' ? 0 : 5,
+    },
   },
   softShadows: {
-    shadowColor: '#000',
+    shadowColor: Colors.mainBlue,
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 15,
     elevation: 5,
 
     shadowOffset: {
       width: 0,
-      height: Platform.OS !== 'ios' ? 0 : 5
-    }
+      height: Platform.OS !== 'ios' ? 0 : 5,
+    },
   },
   blueShadow: {
     shadowColor: Colors.mainBlue,
@@ -54,31 +55,31 @@ const Styles = {
 
     shadowOffset: {
       width: 0,
-      height: 3
-    }
+      height: 3,
+    },
   },
   center: {
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 };
 
 export const Fonts = {
   ligth: (fontSize = 15, fontColor = Colors.lightGrey) => ({
     fontSize: scaleFromFigma(fontSize),
     fontFamily: 'SpaceGrotesk_300Light',
-    color: fontColor
+    color: fontColor,
   }),
   regular: (fontSize = 15, fontColor = Colors.lightGrey) => ({
     fontSize: scaleFromFigma(fontSize),
     fontFamily: 'SpaceGrotesk_400Regular',
-    color: fontColor
+    color: fontColor,
   }),
   bold: (fontSize = 15, fontColor = Colors.lightGrey) => ({
     fontSize: scaleFromFigma(fontSize),
     fontFamily: 'SpaceGrotesk_600SemiBold',
-    color: fontColor
-  })
+    color: fontColor,
+  }),
 };
 
 export default Styles;

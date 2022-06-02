@@ -21,7 +21,7 @@ export default function App() {
     SpaceGrotesk_400Regular,
     SpaceGrotesk_500Medium,
     SpaceGrotesk_600SemiBold,
-    SpaceGrotesk_700Bold
+    SpaceGrotesk_700Bold,
   });
 
   if(!fontsLoaded)

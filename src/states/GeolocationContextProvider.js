@@ -28,7 +28,7 @@ const GeolocationProvider = ({ children }) => {
     console.warn,
     {
       enableHighAccuracy: true,
-      distanceFilter: 1
+      distanceFilter: 1,
     }
   );
 
@@ -40,7 +40,7 @@ const GeolocationProvider = ({ children }) => {
   return (
     <GeolocationContext.Provider value={{
       userCoordinates,
-      compassHeading
+      compassHeading,
     }}>
       {children}
     </GeolocationContext.Provider>

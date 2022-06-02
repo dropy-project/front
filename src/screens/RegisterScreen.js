@@ -52,12 +52,12 @@ export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   content: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
   textInput: {
     marginBottom: responsiveHeight(20),
@@ -65,15 +65,15 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 14,
     padding: 15,
-    backgroundColor: Colors.lighterGrey
+    backgroundColor: Colors.lighterGrey,
   },
   largeButton: {
     position: 'absolute',
     bottom: responsiveHeight(7),
     width: 228,
-    height: 57
+    height: 57,
   },
   svg: {
-    position: 'absolute'
-  }
+    position: 'absolute',
+  },
 });
