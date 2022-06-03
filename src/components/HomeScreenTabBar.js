@@ -17,7 +17,7 @@ const HomeScreenTabBar = ({ addMedia }) => {
   const [renderMenuOverlay, setRenderMenuOverlay] = useState(false);
 
   const menuAnimatedValue = useRef(new Animated.Value(0)).current;
-
+  const navigation = useNavigation();
 
   useEffect(() => {
     setRenderMenuOverlay(true);
@@ -40,6 +40,11 @@ const HomeScreenTabBar = ({ addMedia }) => {
 
   const handleAddPicture = () => {
     addMedia();
+    setDropyMenuIsOpen(false);
+  };
+
+  const handleAddText = () => {
+    navigation.navigate('CreateDropyText');
     setDropyMenuIsOpen(false);
   };
 
@@ -78,8 +83,8 @@ const HomeScreenTabBar = ({ addMedia }) => {
         <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
           <SimpleLineIcons name="picture" size={30} color={Colors.grey} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.dropySelectionButton}>
-          <MaterialCommunityIcons name="format-text" size={30} color={Colors.grey} />
+        <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddText}>
+          <MaterialCommunityIcons name="format-text" size={30} color={Colors.grey}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.dropySelectionButton}>
           <Entypo name="camera" size={30} color={Colors.grey} />
