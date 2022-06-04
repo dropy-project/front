@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { launchImageLibrary } from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
+import MEDIA_TYPES from '../utils/mediaTypes';
 
 const CreateDropyFromLibrary = ({ navigation }) => {
 
@@ -25,10 +26,13 @@ const CreateDropyFromLibrary = ({ navigation }) => {
   };
 
   const resizeImageAndValidate = async (imageUri) => {
-    await ImageResizer.createResizedImage(imageUri, 500, 600, 'JPEG', 60, 0, imageUri);
+    await ImageResizer.createResizedImage(imageUri, 500, 600, 'JPEG', 10, 0, imageUri);
+
     const params = {
       dropyFilePath: imageUri,
       dropyData: null,
+      mediaType: MEDIA_TYPES.PICTURE,
+      originRoute: 'CreateDropyFromLibrary',
     };
 
     navigation.reset({

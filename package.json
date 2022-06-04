@@ -28,6 +28,7 @@
     "react-native-compass-heading": "^1.4.0",
     "react-native-device-info": "^8.7.1",
     "react-native-gesture-handler": "^2.4.2",
+    "react-native-haptic-feedback": "^1.13.1",
     "react-native-image-picker": "^4.8.3",
     "react-native-image-resizer": "^1.4.5",
     "react-native-linear-gradient": "^2.5.6",

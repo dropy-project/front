@@ -62,7 +62,18 @@ const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
 };
 
 const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
-  // TODO
+  // eslint-disable-next-line no-undef
+  var data = new FormData();
+  data.append(mediaType, mediaData);
+
+  const response = await axios.post(`/dropy/add/${dropyId}/media`, data,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data; ',
+      },
+    }
+  );
+  return response;
 };
 
 const getDropiesAround = async (userId, latitude, longitude) => {

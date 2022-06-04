@@ -6,14 +6,19 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import LinearGradient from 'react-native-linear-gradient';
+import Haptic from 'react-native-haptic-feedback';
 
+
+import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import { mediaIsFile } from '../utils/mediaTypes';
 import API from '../services/API';
 
 import useCurrentUser from '../hooks/useCurrentUser';
@@ -21,8 +26,11 @@ import useGeolocation from '../hooks/useGeolocation';
 
 import GlassButton from './GlassButton';
 import GoBackHeader from './GoBackHeader';
+import ProfileAvatar from './ProfileAvatar';
 
-const ConfirmDropOverlay = ({ visible = false, onCloseOverlay = () => {}, dropyCreateParams }) => {
+const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams }) => {
+
+  const navigation = useNavigation();
 
   const [render, setRender] = useState(visible);
   const fadeAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -48,13 +56,28 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay = () => {}, dropyC
 
   const sendDrop = async () => {
     try {
+      Haptic.trigger('impactMedium');
+
       const dropy = await API.createDropy(user.id, userCoordinates.latitude, userCoordinates.longitude);
-      const mediaResult = await API.postDropyMediaFromPath(dropy.id, dropyCreateParams.dropyFilePath, 'picture');
-      console.log('API response', mediaResult.data);
+
+      if(mediaIsFile(dropyCreateParams.mediaType)) {
+        const mediaResult = await API.postDropyMediaFromPath(dropy.id, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
+        console.log('[File upload] API response', mediaResult.data);
+      } else {
+        const mediaResult = await API.postDropyMediaData(dropy.id, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
+        console.log('[Data upload] API response', mediaResult.data);
+      }
     } catch (error) {
       console.log('Error while creating dropy', error?.response?.data || error);
     } finally {
-      onCloseOverlay();
+      closeOverlay();
+    }
+  };
+
+  const goBackToOriginRoute = () => {
+    if(dropyCreateParams.originRoute != null) {
+      closeOverlay();
+      navigation.navigate(dropyCreateParams.originRoute);
     }
   };
 
@@ -69,19 +92,24 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay = () => {}, dropyC
     <Animated.View style={{ ...StyleSheet.absoluteFillObject, opacity: fadeAnimatedValue }}>
       <LinearGradient colors={['rgba(255, 255, 255, 0)', Colors.white]} end={{ x: 0.5, y: 0.85 }} style={StyleSheet.absoluteFillObject}>
         <SafeAreaView style={styles.container}>
-          <GoBackHeader onPressGoBack={onCloseOverlay}/>
-          <Animated.View style={{ ...styles.dropyPreviewContainer, transform: [{ scale : animatedScale }] }}>
-            {dropyCreateParams.dropyFilePath != null ? (
-              <>
-                <Image source={{ uri: dropyCreateParams.dropyFilePath }} style={styles.previewImage} />
-                <View style={styles.previewImageOverlay} />
-                <Ionicons name="ios-camera-outline" size={80} color={Colors.white} style={styles.cameraIcon}/>
-              </>
-            ) : (
-              <MaterialCommunityIcons name="draw-pen" size={80} color={Colors.mainBlue} style={Styles.blueShadow}/>
-            )}
-          </Animated.View>
+          <GoBackHeader onPressGoBack={closeOverlay}/>
+          <TouchableOpacity onPress={goBackToOriginRoute}>
+            <Animated.View style={{ ...styles.dropyPreviewContainer, transform: [{ scale : animatedScale }] }}>
+              {dropyCreateParams.dropyFilePath != null ? (
+                <>
+                  <Image source={{ uri: dropyCreateParams.dropyFilePath }} style={styles.previewImage} />
+                  <View style={styles.previewImageOverlay} />
+                  <Ionicons name="ios-camera-outline" size={80} color={Colors.white} style={styles.cameraIcon}/>
+                </>
+              ) : (
+                <MaterialCommunityIcons name="draw-pen" size={80} color={Colors.mainBlue} style={Styles.blueShadow}/>
+              )}
+            </Animated.View>
+          </TouchableOpacity>
           <View style={styles.avatarsContainer}>
+            <ProfileAvatar size={100} style={{ transform: [{ rotate: '-30deg' }] }} />
+            <Entypo name="plus" size={35} color={Colors.lightGrey} />
+            <ProfileAvatar size={100} style={{ transform: [{ rotate: '30deg' }] }} showQuestionMark />
           </View>
           <Animated.View style={{ ...styles.bottomContainer, transform: [{ scale : animatedScale }] }}>
             <Text style={styles.dropText}>{'It\'s time to drop this into the unkown'}</Text>
@@ -119,7 +147,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 200,
     height: 200,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    backgroundColor: 'rgba(0, 0, 0, 0.10)',
+    borderRadius: 15,
   },
   cameraIcon: {
     position: 'absolute',
@@ -127,6 +156,9 @@ const styles = StyleSheet.create({
   avatarsContainer: {
     width: '100%',
     height: 150,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
   bottomContainer: {
     marginBottom: responsiveHeight(3),
