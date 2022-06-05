@@ -166,7 +166,7 @@
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 8N96HD7JAL;
+						DevelopmentTeam = YY34HY6EU5;
 						LastSwiftMigration = 1250;
 					};
 				};
@@ -303,7 +303,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8N96HD7JAL;
+				DEVELOPMENT_TEAM = YY34HY6EU5;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -333,7 +333,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8N96HD7JAL;
+				DEVELOPMENT_TEAM = YY34HY6EU5;
 				INFOPLIST_FILE = dropyfront/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
