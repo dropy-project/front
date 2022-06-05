@@ -25,19 +25,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   text: {
     color: 'blue',
-    fontSize: 20
+    fontSize: 20,
   },
   backButton: {
     position: 'absolute',
     top: 40,
-    left: 0
+    left: 0,
   },
   arrow: {
     width: 30,
-    height: 30
-  }
+    height: 30,
+  },
 });

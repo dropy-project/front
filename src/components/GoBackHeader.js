@@ -16,19 +16,18 @@ const GoBackHeader = ({ onPressGoBack, text, style }) => {
 };
 
 export default GoBackHeader;
-
 const styles = StyleSheet.create({
   container: {
     height: 40,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   tipsStyle: {
-    ...Fonts.regular(15, '#949494')
+    ...Fonts.regular(15, '#949494'),
   },
   headerStyle:{
     position: 'absolute',
-    width: '100%' }
+    width: '100%' },
 });

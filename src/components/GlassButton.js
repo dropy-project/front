@@ -6,24 +6,24 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import Svg1 from '../assets/svgs/rectangle_button_1.svg';
 import Svg2 from '../assets/svgs/rectangle_button_2.svg';
 
-const LargeRectangleButton = ({ onPress, buttonText, style, disabled }) => (
+const GlassButton = ({ onPress, buttonText, style, disabled, fontSize = 25 }) => (
   <TouchableOpacity disabled={disabled} onPress={onPress} style={{ ...styles.container, ...style }} >
-    <Svg1 width={'100%'} height={'100%'} style={{ ...styles.svg }} />
-    <Svg2 width={'100%'} height={'100%'} style={{ ...styles.svg, left: '-17%' }} />
-    <Text style={{ ...Fonts.bold(27, Colors.white), letterSpacing: 7 }}>{buttonText}</Text>
+    <Svg1 width={'80%'} style={{ ...styles.svg, right: '-3%', top: '-35%' }} />
+    <Svg2 width={'80%'} style={{ ...styles.svg, left: '-17%' }} />
+    <Text style={{ ...Fonts.bold(fontSize, Colors.white), letterSpacing: 4 }}>{buttonText}</Text>
   </TouchableOpacity>
 );
 
-export default LargeRectangleButton;
+export default GlassButton;
 
 const styles = StyleSheet.create({
   container: {
     borderRadius: 18,
     backgroundColor: Colors.purple1,
     overflow: 'hidden',
-    ...Styles.center
+    ...Styles.center,
   },
   svg: {
-    position: 'absolute'
-  }
+    position: 'absolute',
+  },
 });

@@ -1,11 +1,12 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import RegisterScreen from '../screens/RegisterScreen';
 import ChatScreen from '../screens/ChatScreen';
 import HomeScreen from '../screens/HomeScreen';
 import MuseumScreen from '../screens/MuseumScreen';
 import Splash from '../screens/Splash';
 import CreateDropyTextScreen from '../screens/CreateDropyTextScreen';
+import CreateDropyFromLibrary from '../screens/CreateDropyFromLibrary';
 
 const MainStack = createStackNavigator();
 
@@ -13,7 +14,10 @@ export default function Navigation() {
   return (
     <MainStack.Navigator
       screenOptions={{
-        headerShown: false
+        headerShown: false,
+        cardStyle: {
+          backgroundColor: 'transparent',
+        },
       }}
     >
       <MainStack.Screen name="Splash" component={Splash} />
@@ -22,6 +26,7 @@ export default function Navigation() {
       <MainStack.Screen name="Chat" component={ChatScreen} />
       <MainStack.Screen name="Museum" component={MuseumScreen} />
       <MainStack.Screen name="CreateDropyText" component={CreateDropyTextScreen} />
+      <MainStack.Screen name="CreateDropyFromLibrary" component={CreateDropyFromLibrary} options={{ ...TransitionPresets.ModalSlideFromBottomIOS }} />
     </MainStack.Navigator>
   );
 }

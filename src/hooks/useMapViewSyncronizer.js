@@ -27,11 +27,11 @@ const useMapViewSyncronizer = (mapViewRef) => {
       {
         center: {
           latitude: userCoordinates.latitude,
-          longitude: userCoordinates.longitude
+          longitude: userCoordinates.longitude,
         },
         pitch: 10,
         heading: compassHeading,
-        zoom: 17
+        zoom: 17,
       },
       { duration }
     );
