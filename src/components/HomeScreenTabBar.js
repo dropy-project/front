@@ -26,8 +26,6 @@ const HomeScreenTabBar = () => {
   const [renderMenuOverlay, setRenderMenuOverlay] = useState(false);
 
   const menuAnimatedValue = useRef(new Animated.Value(0)).current;
-  const navigation = useNavigation();
-
   useEffect(() => {
     setRenderMenuOverlay(true);
     const anim = Animated.timing(menuAnimatedValue, {

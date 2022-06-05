@@ -77,7 +77,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
   const goBackToOriginRoute = () => {
     if(dropyCreateParams.originRoute != null) {
       closeOverlay();
-      navigation.navigate(dropyCreateParams.originRoute);
+      navigation.navigate(dropyCreateParams.originRoute, { dropyData: dropyCreateParams?.dropyData });
     }
   };
 
