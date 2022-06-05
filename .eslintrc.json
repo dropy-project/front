@@ -96,7 +96,13 @@
         ],
         "comma-dangle": [
             2,
-            "never"
+            {
+                "arrays": "never",
+                "objects": "always-multiline",
+                "imports": "never",
+                "exports": "never",
+                "functions": "never"
+            }
         ],
         "import/no-extraneous-dependencies": 2,
         "import/extensions": [

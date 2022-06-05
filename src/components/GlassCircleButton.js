@@ -30,19 +30,19 @@ const styles = StyleSheet.create({
     ...Styles.hardShadows,
     shadowOpacity: 0.7,
     shadowRadius: 8,
-    shadowColor: Colors.purple1
+    shadowColor: Colors.purple1,
   },
   contentContainer: {
     borderRadius: 35,
     backgroundColor: '#7B6DCD',
     overflow: 'hidden',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   svg: {
     position:'absolute',
     ...Styles.softShadows,
     shadowColor: Colors.purple1,
-    shadowOpacity: 0.2
-  }
+    shadowOpacity: 0.2,
+  },
 });
