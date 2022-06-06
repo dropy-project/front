@@ -79,6 +79,14 @@ const getDropiesAround = async (userId, latitude, longitude) => {
   return result;
 };
 
+const retrieveDropy = async (retrieverId, dropyId) => {
+  const result = await axios.post('/dropy/retrieve', {
+    retrieverId,
+    dropyId,
+  });
+  return result;
+};
+
 const API = {
   register,
   login,
@@ -86,6 +94,7 @@ const API = {
   postDropyMediaData,
   postDropyMediaFromPath,
   getDropiesAround,
+  retrieveDropy,
 };
 
 export default API;
