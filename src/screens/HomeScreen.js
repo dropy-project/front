@@ -63,8 +63,13 @@ const HomeScreen = ({ navigation, route }) => {
     }
   };
 
-  const lootMedia = (dropy) => {
-    console.log('loot media', dropy);
+  const lootMedia = async (dropy) => {
+    try {
+      if (userCoordinates == null) return;
+      await API.retrieveDropy(user.id, dropy.id);
+    } catch (error) {
+      console.log(error?.response?.data);
+    }
   };
 
   return (
