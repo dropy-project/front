@@ -55,6 +55,10 @@ const HomeScreenTabBar = () => {
     navigation.navigate('CreateDropyText');
     setDropyMenuIsOpen(false);
   };
+  const handleGetDropy = () => {
+    navigation.navigate('GetDropy');
+    setDropyMenuIsOpen(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -98,7 +102,7 @@ const HomeScreenTabBar = () => {
           <Entypo name="camera" size={30} color={Colors.grey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.dropySelectionButton}>
-          <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} />
+          <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} onPress={handleGetDropy} />
         </TouchableOpacity>
       </DropyWheel>
       <GlassCircleButton
