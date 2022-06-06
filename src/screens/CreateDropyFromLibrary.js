@@ -8,7 +8,6 @@ const CreateDropyFromLibrary = ({ navigation }) => {
   useEffect(() => {
     openImageLibraryAndValidate();
   }, []);
-
   const openImageLibraryAndValidate = async () => {
     try {
       const result = await launchImageLibrary({
@@ -26,10 +25,10 @@ const CreateDropyFromLibrary = ({ navigation }) => {
   };
 
   const resizeImageAndValidate = async (imageUri) => {
-    await ImageResizer.createResizedImage(imageUri, 500, 600, 'JPEG', 10, 0, imageUri);
+    const response = await ImageResizer.createResizedImage(imageUri, 772, 1029, 'JPEG', 50, 0);
 
     const params = {
-      dropyFilePath: imageUri,
+      dropyFilePath: response.path,
       dropyData: null,
       mediaType: MEDIA_TYPES.PICTURE,
       originRoute: 'CreateDropyFromLibrary',
