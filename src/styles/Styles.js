@@ -18,6 +18,7 @@ export const Colors = {
   grey: '#7D86A9',
   lightGrey: '#abb2c9',
   darkGrey: '#59607a',
+  darkerGrey: '#525252',
   inputGrey: '#F8F8F8',
   lighterGrey: '#E5ECF1',
 
@@ -28,10 +29,10 @@ const Styles = {
   hardShadows: {
     shadowColor: Colors.mainBlue,
 
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.5,
     shadowRadius: 12,
 
-    elevation: 3,
+    elevation: 7,
     shadowOffset: {
       width: 0,
       height: Platform.OS !== 'ios' ? 0 : 5,

@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import FooterConfirmation from '../components/FooterConfirmation';
 
 const ChatScreen = ({ navigation }) => {
   return (
@@ -14,6 +15,7 @@ const ChatScreen = ({ navigation }) => {
           style={styles.arrow}
         />
       </TouchableOpacity>
+      <FooterConfirmation />
     </SafeAreaView>
   );
 };
