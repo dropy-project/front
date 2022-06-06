@@ -3,8 +3,12 @@ import { StyleSheet, SafeAreaView, View, Text } from 'react-native';
 import GoBackHeader from '../components/GoBackHeader';
 import DropyLogo from '../assets/svgs/dropy_logo.svg';
 import { Colors, Fonts } from '../styles/Styles';
+import FooterConfirmation from '../components/FooterConfirmation';
 
-const GetDropyScreen = ({ navigation }) => {
+const GetDropyScreen = ({ navigation, route }) => {
+
+  const { dropy = null } = route.params || {};
+
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')}/>
@@ -20,6 +24,7 @@ const GetDropyScreen = ({ navigation }) => {
       <View style={styles.littlerCircle}/>
       <View style={styles.littleCircle}/>
       <View style={styles.circle}/>
+      <FooterConfirmation dropy={dropy}/>
     </SafeAreaView>
   );
 };

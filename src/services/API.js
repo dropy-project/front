@@ -87,6 +87,11 @@ const retrieveDropy = async (retrieverId, dropyId) => {
   return result;
 };
 
+const getDropy = async (dropyId) => {
+  const result = await axios.get(`/dropy/${dropyId}`);
+  return result;
+};
+
 const API = {
   register,
   login,
@@ -95,6 +100,7 @@ const API = {
   postDropyMediaFromPath,
   getDropiesAround,
   retrieveDropy,
+  getDropy,
 };
 
 export default API;
