@@ -25,12 +25,6 @@ const login = async () => {
   });
   const token = response.headers['set-cookie'];
   axios.defaults.headers.common['Authorization'] = token;
-};
-
-const getUser = async () => {
-  const uid = getUniqueId();
-
-  const response = await axios.get(`/user/${uid}`);
   return response.data;
 };
 
@@ -96,7 +90,6 @@ const retrieveDropy = async (retrieverId, dropyId) => {
 const API = {
   register,
   login,
-  getUser,
   createDropy,
   postDropyMediaData,
   postDropyMediaFromPath,
