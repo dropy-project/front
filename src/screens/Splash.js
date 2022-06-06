@@ -10,8 +10,7 @@ const Splash = ({ navigation }) => {
 
   const autoLogin = async () => {
     try {
-      await API.login();
-      const user = await API.getUser();
+      const user = await API.login();
       setUser(user);
       navigation.navigate('Home');
     } catch (error) {
