@@ -12,8 +12,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
+		B361BF4BEE84003EEE5AB955 /* libPods-dropyfront.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AAA3EB689CB5069191AEEEA /* libPods-dropyfront.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		C0E8D4F614CA2F51C04837A0 /* libPods-dropyfront.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4565EB8B5F998DFB7C611BD2 /* libPods-dropyfront.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,11 +24,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = dropyfront/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = dropyfront/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = dropyfront/main.m; sourceTree = "<group>"; };
-		174FB62E687299AF8702539E /* Pods-dropyfront.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropyfront.debug.xcconfig"; path = "Target Support Files/Pods-dropyfront/Pods-dropyfront.debug.xcconfig"; sourceTree = "<group>"; };
-		4565EB8B5F998DFB7C611BD2 /* libPods-dropyfront.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dropyfront.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		96B64855FFC7473F8A3C015B /* Pods-dropyfront.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropyfront.release.xcconfig"; path = "Target Support Files/Pods-dropyfront/Pods-dropyfront.release.xcconfig"; sourceTree = "<group>"; };
+		1F9EE9530CCA53DEB0CBF41B /* Pods-dropyfront.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropyfront.release.xcconfig"; path = "Target Support Files/Pods-dropyfront/Pods-dropyfront.release.xcconfig"; sourceTree = "<group>"; };
+		5AAA3EB689CB5069191AEEEA /* libPods-dropyfront.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dropyfront.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = dropyfront/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		CBE3247A8CF14AA67181431F /* Pods-dropyfront.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropyfront.debug.xcconfig"; path = "Target Support Files/Pods-dropyfront/Pods-dropyfront.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-dropyfront/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -38,7 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0E8D4F614CA2F51C04837A0 /* libPods-dropyfront.a in Frameworks */,
+				B361BF4BEE84003EEE5AB955 /* libPods-dropyfront.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,7 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				4565EB8B5F998DFB7C611BD2 /* libPods-dropyfront.a */,
+				5AAA3EB689CB5069191AEEEA /* libPods-dropyfront.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -119,8 +119,8 @@
 		D65327D7A22EEC0BE12398D9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				174FB62E687299AF8702539E /* Pods-dropyfront.debug.xcconfig */,
-				96B64855FFC7473F8A3C015B /* Pods-dropyfront.release.xcconfig */,
+				CBE3247A8CF14AA67181431F /* Pods-dropyfront.debug.xcconfig */,
+				1F9EE9530CCA53DEB0CBF41B /* Pods-dropyfront.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -140,13 +140,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "dropyfront" */;
 			buildPhases = (
-				352FD3D5E5EA2A2BF28BEF92 /* [CP] Check Pods Manifest.lock */,
+				013C8FE1FDDB82D4E248063C /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				C3EFC08EE2824D28F323F48D /* [CP] Copy Pods Resources */,
+				DC27C1D6E289F35F48D01EFE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -166,7 +166,7 @@
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = JXTNJTXG2X;
+						DevelopmentTeam = YY34HY6EU5;
 						LastSwiftMigration = 1250;
 					};
 				};
@@ -217,7 +217,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\n`node --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n";
 		};
-		352FD3D5E5EA2A2BF28BEF92 /* [CP] Check Pods Manifest.lock */ = {
+		013C8FE1FDDB82D4E248063C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -239,7 +239,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C3EFC08EE2824D28F323F48D /* [CP] Copy Pods Resources */ = {
+		DC27C1D6E289F35F48D01EFE /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -298,12 +298,12 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 174FB62E687299AF8702539E /* Pods-dropyfront.debug.xcconfig */;
+			baseConfigurationReference = CBE3247A8CF14AA67181431F /* Pods-dropyfront.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JXTNJTXG2X;
+				DEVELOPMENT_TEAM = YY34HY6EU5;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -318,7 +318,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = michel;
+				PRODUCT_BUNDLE_IDENTIFIER = "dropy-dront.com";
 				PRODUCT_NAME = dropyfront;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -328,12 +328,12 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 96B64855FFC7473F8A3C015B /* Pods-dropyfront.release.xcconfig */;
+			baseConfigurationReference = 1F9EE9530CCA53DEB0CBF41B /* Pods-dropyfront.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JXTNJTXG2X;
+				DEVELOPMENT_TEAM = YY34HY6EU5;
 				INFOPLIST_FILE = dropyfront/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -343,7 +343,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = michel;
+				PRODUCT_BUNDLE_IDENTIFIER = "dropy-dront.com";
 				PRODUCT_NAME = dropyfront;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
