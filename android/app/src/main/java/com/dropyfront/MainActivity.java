@@ -7,8 +7,6 @@ import com.reactnativenavigation.NavigationActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 
-import expo.modules.ReactActivityDelegateWrapper;
-
 public class MainActivity extends NavigationActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -17,15 +15,6 @@ public class MainActivity extends NavigationActivity {
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
     super.onCreate(null);
-  }
-
-  
-
-  @Override
-  protected ReactActivityDelegate createReactActivityDelegate() {
-    return new ReactActivityDelegateWrapper(this,
-      new ReactActivityDelegate(this, getMainComponentName())
-    );
   }
 
   /**
