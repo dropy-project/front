@@ -5,6 +5,7 @@ import ChatScreen from '../screens/ChatScreen';
 import HomeScreen from '../screens/HomeScreen';
 import MuseumScreen from '../screens/MuseumScreen';
 import Splash from '../screens/Splash';
+import CreateDropyTextScreen from '../screens/CreateDropyTextScreen';
 import CreateDropyFromLibrary from '../screens/CreateDropyFromLibrary';
 
 const MainStack = createStackNavigator();
@@ -24,6 +25,7 @@ export default function Navigation() {
       <MainStack.Screen name="Home" component={HomeScreen} />
       <MainStack.Screen name="Chat" component={ChatScreen} />
       <MainStack.Screen name="Museum" component={MuseumScreen} />
+      <MainStack.Screen name="CreateDropyText" component={CreateDropyTextScreen} />
       <MainStack.Screen name="CreateDropyFromLibrary" component={CreateDropyFromLibrary} options={{ ...TransitionPresets.ModalSlideFromBottomIOS }} />
     </MainStack.Navigator>
   );

@@ -25,8 +25,8 @@ import useCurrentUser from '../hooks/useCurrentUser';
 import useGeolocation from '../hooks/useGeolocation';
 
 import GlassButton from './GlassButton';
-import GoBackHeader from './GoBackHeader';
 import ProfileAvatar from './ProfileAvatar';
+import GoBackHeader from './GoBackHeader';
 
 const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams }) => {
 
@@ -77,7 +77,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
   const goBackToOriginRoute = () => {
     if(dropyCreateParams.originRoute != null) {
       closeOverlay();
-      navigation.navigate(dropyCreateParams.originRoute);
+      navigation.navigate(dropyCreateParams.originRoute, { dropyData: dropyCreateParams?.dropyData });
     }
   };
 
