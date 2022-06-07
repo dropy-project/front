@@ -8,6 +8,7 @@
 
 #import <React/RCTAppSetupUtils.h>
 
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
 #import <GoogleMaps/GoogleMaps.h>
 
 #if RCT_NEW_ARCH_ENABLED
@@ -56,6 +57,8 @@
   [self.window makeKeyAndVisible];
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
+
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   return YES;
 }
