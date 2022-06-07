@@ -71,20 +71,20 @@ const GetDropyScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')}/>
+      <GoBackHeader onPressGoBack={() => navigation.navigate('Home')} />
       <View style={styles.containerImage}>
         <Text style={styles.topText}>{'You\'ve juste found'}</Text>
-        <DropyLogo height={87} width={87}/>
+        <DropyLogo height={87} width={87} />
         <Text style={styles.bottomText}>A new Drop</Text>
-        <Animated.View style={{ ...styles.largeCircle, transform: [{ scale: Animated.multiply(breathing, circleAnimation) }] }}/>
-        <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle ) }] }}/>
-        <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle ) }] }}/>
+        <Animated.View style={{ ...styles.largeCircle, transform: [{ scale: Animated.multiply(breathing, circleAnimation) }] }} />
+        <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle) }] }} />
+        <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle) }] }} />
       </View>
       <View style={styles.mediumDot}></View>
-      <View style={styles.littlerDot}/>
-      <View style={styles.littleDot}/>
-      <View style={styles.dot}/>
-      <FooterConfirmation/>
+      <View style={styles.littlerDot} />
+      <View style={styles.littleDot} />
+      <View style={styles.dot} />
+      <FooterConfirmation dropy={dropy} nextPage={'DisplayDropyMedia'} />
     </SafeAreaView>
   );
 };

@@ -8,6 +8,7 @@ import Splash from '../screens/Splash';
 import CreateDropyTextScreen from '../screens/CreateDropyTextScreen';
 import CreateDropyFromLibrary from '../screens/CreateDropyFromLibrary';
 import GetDropyScreen from '../screens/GetDropyScreen';
+import DisplayDropyMedia from '../screens/DisplayDropyMedia';
 
 const MainStack = createStackNavigator();
 
@@ -29,6 +30,7 @@ export default function Navigation() {
       <MainStack.Screen name="CreateDropyText" component={CreateDropyTextScreen} />
       <MainStack.Screen name="CreateDropyFromLibrary" component={CreateDropyFromLibrary} options={{ ...TransitionPresets.ModalSlideFromBottomIOS }} />
       <MainStack.Screen name="GetDropy" component={GetDropyScreen} />
+      <MainStack.Screen name="DisplayDropyMedia" component={DisplayDropyMedia} />
     </MainStack.Navigator>
   );
 }
