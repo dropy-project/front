@@ -9,6 +9,10 @@ const axios = Axios.create({
   baseURL: SERVER_BASE_URL,
 });
 
+const getHeaders = () => {
+  return axios.defaults.headers.common;
+};
+
 const register = async (displayName) => {
   const uid = getUniqueId();
   const response = await axios.post('/register', {
@@ -98,6 +102,7 @@ const getDropy = async (dropyId) => {
 };
 
 const API = {
+  getHeaders,
   register,
   login,
   createDropy,
