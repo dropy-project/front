@@ -1,5 +1,12 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView, View, Text } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Text,
+  Animated,
+  Easing
+} from 'react-native';
 import GoBackHeader from '../components/GoBackHeader';
 import DropyLogo from '../assets/svgs/dropy_logo.svg';
 import { Colors, Fonts } from '../styles/Styles';
@@ -9,6 +16,59 @@ const GetDropyScreen = ({ navigation, route }) => {
 
   const { dropy = null } = route.params || {};
 
+  const circleAnimation = useRef(new Animated.Value(0)).current;
+  const circleBreathing = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const anim =
+      Animated.sequence([
+        Animated.timing(circleAnimation, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+          easing: Easing.elastic(1.2),
+        }),
+        Animated.delay(1500)
+      ]);
+    anim.start();
+    return anim.stop;
+  }, []);
+
+  useEffect(() => {
+    const anim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(circleBreathing, {
+          toValue: 1,
+          duration: 1700,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        }),
+        Animated.timing(circleBreathing, {
+          toValue: 0,
+          duration: 1700,
+          useNativeDriver: true,
+          easing: Easing.linear,
+        })
+      ])
+    );
+    anim.start();
+    return anim.stop;
+  }, []);
+
+  const bigCircle = circleAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.2, 1],
+  });
+  const largeCircle = circleAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.4, 1],
+  });
+
+  const breathing = circleBreathing.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.97, 1],
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')}/>
@@ -16,15 +76,15 @@ const GetDropyScreen = ({ navigation, route }) => {
         <Text style={styles.topText}>{'You\'ve juste found'}</Text>
         <DropyLogo height={87} width={87}/>
         <Text style={styles.bottomText}>A new Drop</Text>
-        <View style={styles.largeCircle}/>
-        <View style={styles.largerCircle}/>
-        <View style={styles.bigCircle}/>
+        <Animated.View style={{ ...styles.largeCircle, transform: [{ scale: Animated.multiply(breathing, circleAnimation) }] }}/>
+        <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle ) }] }}/>
+        <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle ) }] }}/>
       </View>
-      <View style={styles.mediumCircle}/>
-      <View style={styles.littlerCircle}/>
-      <View style={styles.littleCircle}/>
-      <View style={styles.circle}/>
-      <FooterConfirmation dropy={dropy}/>
+      <View style={styles.mediumDot}></View>
+      <View style={styles.littlerDot}/>
+      <View style={styles.littleDot}/>
+      <View style={styles.dot}/>
+      <FooterConfirmation/>
     </SafeAreaView>
   );
 };
@@ -50,7 +110,7 @@ const styles = StyleSheet.create({
     ...Fonts.bold(18, '#7B6DCD'),
     marginTop: 30,
   },
-  mediumCircle: {
+  mediumDot: {
     position: 'absolute',
     backgroundColor: '#94B2DE',
     width: 14,
@@ -59,7 +119,7 @@ const styles = StyleSheet.create({
     top: 298,
     borderRadius: 7,
   },
-  littlerCircle: {
+  littlerDot: {
     position: 'absolute',
     backgroundColor: '#94B2DE',
     width: 8,
@@ -68,7 +128,7 @@ const styles = StyleSheet.create({
     top: 361,
     borderRadius: 10,
   },
-  littleCircle: {
+  littleDot: {
     position: 'absolute',
     backgroundColor: '#94B2DE',
     width: 10,
@@ -77,7 +137,7 @@ const styles = StyleSheet.create({
     top: 146,
     borderRadius: 10,
   },
-  circle: {
+  dot: {
     position: 'absolute',
     backgroundColor: '#94B2DE',
     width: 14,

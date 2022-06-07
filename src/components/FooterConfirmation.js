@@ -1,27 +1,47 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, View, Image } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { StyleSheet, Text, View, Animated, Easing } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import YouriPicture from '../assets/svgs/youri.svg';
 import { createDropTimeString } from '../utils/time';
 import GlassButton from './GlassButton';
 
 
-const FooterConfirmation = (dropy) => {
-  console.log('DROPY', dropy.dropy.emitterDisplayName);
+const FooterConfirmation = () => {
+
+  const displayAnimation = useRef(new Animated.Value(0)).current;
+  const breathing = useRef(new Animated.Value(0)).current;
+
+
+  useEffect(() => {
+    const anim = Animated.timing(displayAnimation, {
+      toValue: 1,
+      delay: 500,
+      duration: 1000,
+      useNativeDriver: true,
+      easing: Easing.elastic(1),
+    });
+    anim.start();
+    return anim.stop;
+  }, []);
+
+  const displayCardAnimation = displayAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [200, 0],
+  });
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={{ ...styles.container, transform: [{ translateY:displayCardAnimation }] }}>
       <View style={styles.infoContainer}>
         <View style={styles.pictureContainer}>
           <YouriPicture style={styles.profilePicture} width={65} height={65} />
         </View>
         <View style={styles.infoDropy}>
-          <Text style={styles.profileName}>@ {dropy.dropy.emitterDisplayName}</Text>
-          <Text style={styles.dropyDate}>Dropped here {createDropTimeString(new Date() - new Date(dropy.dropy.creationDate))} ago</Text>
+          <Text style={styles.profileName}>@ ouistiti</Text>
+          <Text style={styles.dropyDate}>Dropped here long time ago</Text>
         </View>
       </View>
       <GlassButton buttonText={'Open !'} style={{ height: 50 }} />
-    </View >
+    </Animated.View >
   );
 };
 

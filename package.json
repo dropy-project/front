@@ -34,6 +34,7 @@
     "react-native-linear-gradient": "^2.5.6",
     "react-native-maps": "0.30.1",
     "react-native-navigation": "^7.27.1",
+    "react-native-particles": "^0.0.8",
     "react-native-responsive-dimensions": "^3.1.1",
     "react-native-safe-area-context": "^4.2.5",
     "react-native-screens": "^3.13.1",
