@@ -66,6 +66,7 @@ const HomeScreen = ({ navigation, route }) => {
   const lootMedia = async (dropy) => {
     try {
       if (userCoordinates == null) return;
+      if (dropy.isUserDropy) return;
       await API.retrieveDropy(user.id, dropy.id);
       const result = await API.getDropy(dropy.id);
       const dropyCustom = result.data;
