@@ -24,6 +24,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-native": "0.68.1",
+    "react-native-background-fetch": "^4.1.0",
     "react-native-background-geolocation": "^4.7.1",
     "react-native-compass-heading": "^1.4.0",
     "react-native-device-info": "^8.7.1",

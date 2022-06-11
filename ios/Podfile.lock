@@ -362,6 +362,8 @@ PODS:
     - React-Core
     - React-RCTImage
     - React-RCTText
+  - RNBackgroundFetch (4.1.0):
+    - React-Core
   - RNBackgroundGeolocation (4.7.1):
     - CocoaLumberjack (~> 3.7.2)
     - React-Core
@@ -430,6 +432,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
+  - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - RNBackgroundGeolocation (from `../node_modules/react-native-background-geolocation`)
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -542,6 +545,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeNavigation:
     :path: "../node_modules/react-native-navigation"
+  RNBackgroundFetch:
+    :path: "../node_modules/react-native-background-fetch"
   RNBackgroundGeolocation:
     :path: "../node_modules/react-native-background-geolocation"
   RNCMaskedView:
@@ -612,6 +617,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 7285b499d0339104b2813a1f58ad1ada4adbd6c0
   ReactCommon: bf2888a826ceedf54b99ad1b6182d1bc4a8a3984
   ReactNativeNavigation: 94979dd1572a3f093fc85d4599360530a1bed8c8
+  RNBackgroundFetch: 1f47e8f793ad7a1ae7f0e3db5437f4feaf887a03
   RNBackgroundGeolocation: 7dde1b7d63266d91efd5a5aea60f3879a38d4335
   RNCMaskedView: c298b644a10c0c142055b3ae24d83879ecb13ccd
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa

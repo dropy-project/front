@@ -12,12 +12,11 @@ const GeolocationProvider = ({ children }) => {
 
   const { user } = useContext(UserContext);
 
-  const [geolocationReady, setGeoloactionReady] = useState(false);
   const [userCoordinates, setUserCoordinates] = useState(null);
   const [compassHeading, setCompassHeading] = useState(0);
 
   useEffect(() => {
-    registerInAppCompassListener();
+    registerCompassListener();
     return () => {
       CompassHeading.stop();
     };
@@ -32,7 +31,7 @@ const GeolocationProvider = ({ children }) => {
     return unsubscribeBackgroundGeolocation;
   }, [user]);
 
-  const registerInAppCompassListener = () => CompassHeading.start(10, (infos) => {
+  const registerCompassListener = () => CompassHeading.start(10, (infos) => {
     const { heading } = infos;
     setCompassHeading(heading);
   });
@@ -60,7 +59,7 @@ const GeolocationProvider = ({ children }) => {
     BackgroundGeolocation.ready({
       // Geolocation Config
       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-      distanceFilter: 10,
+      distanceFilter: 5,
       // Activity Recognition
       stopTimeout: 5,
       // Application config
@@ -68,6 +67,7 @@ const GeolocationProvider = ({ children }) => {
       logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
       stopOnTerminate: false,   // <-- Allow the background-service to continue tracking when user closes the app.
       startOnBoot: true,        // <-- Auto start tracking when device is powered-up.
+
       url: 'https://api.dropy-app.com/locations',
       batchSync: false,       // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
       autoSync: true,         // <-- [Default: true] Set true to sync each location to server as it arrives.
@@ -76,7 +76,6 @@ const GeolocationProvider = ({ children }) => {
       },
     }).then(() => {
       console.log('Background geoloc ready');
-      // if(geolocationReady)
       BackgroundGeolocation.start();
     });
 
