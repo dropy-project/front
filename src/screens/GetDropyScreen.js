@@ -84,7 +84,7 @@ const GetDropyScreen = ({ navigation, route }) => {
       <View style={styles.littlerDot} />
       <View style={styles.littleDot} />
       <View style={styles.dot} />
-      <FooterConfirmation dropy={dropy} nextPage={'DisplayDropyMedia'} />
+      <FooterConfirmation dropy={dropy} onPress={() => navigation.navigate('DisplayDropyMedia', { dropy })} />
     </SafeAreaView>
   );
 };

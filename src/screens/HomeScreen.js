@@ -69,9 +69,8 @@ const HomeScreen = ({ navigation, route }) => {
       if (dropy.isUserDropy) return;
       await API.retrieveDropy(user.id, dropy.id);
       const result = await API.getDropy(dropy.id);
-      const dropyCustom = result.data;
       await fetchDropiesAround();
-      navigation.navigate('GetDropy', { dropy: dropyCustom });
+      navigation.navigate('GetDropy', { dropy: result.data });
     } catch (error) {
       console.log(error?.response?.data);
     }

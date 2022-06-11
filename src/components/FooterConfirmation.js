@@ -1,14 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Animated, Easing } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import YouriPicture from '../assets/svgs/youri.svg';
 import { createDropTimeString } from '../utils/time';
 import GlassButton from './GlassButton';
 
 
-const FooterConfirmation = (dropy) => {
-  const navigation = useNavigation();
+const FooterConfirmation = ({ dropy, onPress }) => {
 
   const displayAnimation = useRef(new Animated.Value(0)).current;
 
@@ -37,11 +35,11 @@ const FooterConfirmation = (dropy) => {
           <YouriPicture style={styles.profilePicture} width={65} height={65} />
         </View>
         <View style={styles.infoDropy}>
-          <Text style={styles.profileName}>@{dropy.dropy.emitterDisplayName}</Text>
-          <Text style={styles.dropyDate}>Dropped here {createDropTimeString(new Date() - new Date(dropy.dropy.creationDate))} ago</Text>
+          <Text style={styles.profileName}>@{dropy.emitterDisplayName}</Text>
+          <Text style={styles.dropyDate}>Dropped here {createDropTimeString(new Date() - new Date(dropy.creationDate))} ago</Text>
         </View>
       </View>
-      <GlassButton onPress={() => navigation.navigate('DisplayDropyMedia')} buttonText={'Open !'} style={{ height: 50 }} />
+      <GlassButton onPress={onPress} buttonText={'Open !'} style={{ height: 50 }} />
     </Animated.View >
   );
 };
