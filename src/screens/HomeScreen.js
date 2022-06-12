@@ -9,7 +9,6 @@ import Styles, { Colors } from '../styles/Styles';
 
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
 import useCurrentUser from '../hooks/useCurrentUser';
-import GlassCircleButton from '../components/GlassCircleButton';
 import ConfirmDropOverlay from '../components/ConfirmDropOverlay';
 import DropyMapMarker from '../components/DropyMapMarker';
 
@@ -19,6 +18,7 @@ import useTravelDistanceCallback from '../hooks/useTravelDistanceCallback';
 
 import API from '../services/API';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
+import Sonar from '../components/Sonar';
 
 const HomeScreen = ({ navigation, route }) => {
 
@@ -91,7 +91,7 @@ const HomeScreen = ({ navigation, route }) => {
           <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => lootMedia(dropy)} />
         ))}
       </MapView>
-      <GlassCircleButton disabled size={15} />
+      <Sonar />
       <HomeScreenTabBar />
       <ConfirmDropOverlay
         dropyCreateParams={dropyCreateParams}
