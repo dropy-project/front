@@ -270,6 +270,8 @@ PODS:
     - glog
   - react-native-compass-heading (1.4.0):
     - React
+  - react-native-geolocation (2.1.0):
+    - React-Core
   - react-native-google-maps (0.30.1):
     - Google-Maps-iOS-Utils (= 3.10.3)
     - GoogleMaps (= 5.1.0)
@@ -414,6 +416,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-compass-heading (from `../node_modules/react-native-compass-heading`)
+  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
@@ -509,6 +512,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-compass-heading:
     :path: "../node_modules/react-native-compass-heading"
+  react-native-geolocation:
+    :path: "../node_modules/@react-native-community/geolocation"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-image-picker:
@@ -599,6 +604,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 218a2503198ff28a085f8e16622a8d8f507c8019
   React-logger: f79dd3cc0f9b44f5611c6c7862badd891a862cf8
   react-native-compass-heading: f3a8fcfcd578b26ab97283e5c0fb0f02a764013e
+  react-native-geolocation: 69f4fd37650b8e7fee91816d395e62dd16f5ab8d
   react-native-google-maps: 17432eb7412df3c65d7c7c52ede085d0f5624f77
   react-native-image-picker: e95b4785b685cfc06609bc50ed6fb55b59990c99
   react-native-image-resizer: d9fb629a867335bdc13230ac2a58702bb8c8828f

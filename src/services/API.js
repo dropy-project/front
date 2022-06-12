@@ -91,6 +91,10 @@ const retrieveDropy = async (retrieverId, dropyId) => {
   return result;
 };
 
+const userLocationPingUrl = (userId) => {
+  return `https://api.dropy-app.com/user/${userId}/ping`;
+};
+
 const API = {
   getHeaders,
   register,
@@ -100,6 +104,7 @@ const API = {
   postDropyMediaFromPath,
   getDropiesAround,
   retrieveDropy,
+  userLocationPingUrl,
 };
 
 export default API;
