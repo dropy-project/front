@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useMapViewSyncronizer(mapRef);
 
-  useTravelDistanceCallback(() => fetchDropiesAround(), 60);
+  useTravelDistanceCallback(() => fetchDropiesAround(), 60, 15);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -67,8 +67,11 @@ const HomeScreen = ({ navigation, route }) => {
   const lootMedia = async (dropy) => {
     try {
       if (userCoordinates == null) return;
+      if (dropy.isUserDropy) return;
       await API.retrieveDropy(user.id, dropy.id);
+      const result = await API.getDropy(dropy.id);
       await fetchDropiesAround();
+      navigation.navigate('GetDropy', { dropy: result.data });
     } catch (error) {
       console.log(error?.response?.data);
     }

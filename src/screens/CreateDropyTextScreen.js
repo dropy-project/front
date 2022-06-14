@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  Text,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard

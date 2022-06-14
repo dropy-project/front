@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "dropy-front",
-    "slug": "dropy-front",
+    "name": "dropy",
+    "slug": "dropy",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ]
   },
-  "name": "dropy-front"
+  "name": "dropy"
 }
