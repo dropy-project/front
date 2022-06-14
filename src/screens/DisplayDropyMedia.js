@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 import FooterConfirmation from '../components/FooterConfirmation';
 import GoBackHeader from '../components/GoBackHeader';
 import MEDIA_TYPES from '../utils/mediaTypes';
@@ -10,14 +17,15 @@ import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const GetDropyScreen = ({ navigation, route }) => {
-  const { dropy = '' } = route.params || {};
+  const { dropy } = route.params || {};
 
   const [imageSource, setImageSource] = useState(null);
   const [dropyText, setDropyText] = useState('');
 
   useEffect(() => {
+    console.log(dropy.mediaType);
     switch (dropy.mediaType) {
-    case MEDIA_TYPES.IMAGE:
+    case MEDIA_TYPES.PICTURE:
       loadImageSource();
       break;
     case MEDIA_TYPES.TEXT:
@@ -45,22 +53,21 @@ const GetDropyScreen = ({ navigation, route }) => {
 
 
   return (
-    <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
+    <SafeAreaView style={styles.container}>
       <GoBackHeader onPressGoBack={() => navigation.navigate('Home')} />
       {dropy.mediaType === MEDIA_TYPES.PICTURE ? (
-        <>
+        <View style={StyleSheet.absoluteFill}>
           <Image
-            resizeMode="cover"
-            style={StyleSheet.absoluteFill}
+            style={{ ...styles.displayImage }}
             source={imageSource}
           ></Image>
-        </>
+        </View>
       ) : (
         <ScrollView style={styles.textContainer} contentContainerStyle={styles.textContentContainer}>
           <Text style={styles.dropyText}>{dropyText}</Text>
         </ScrollView>
       )}
-      <FooterConfirmation dropy={dropy} nextPage={'Chat'} />
+      <FooterConfirmation dropy={dropy} nextPage={'Chat'} textButton="Let's chat !" />
     </SafeAreaView>
   );
 };
@@ -68,6 +75,12 @@ const GetDropyScreen = ({ navigation, route }) => {
 export default GetDropyScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    alignItems: 'center',
+  },
+
   textContainer: {
     flex: 1,
   },
@@ -79,5 +92,10 @@ const styles = StyleSheet.create({
     ...Fonts.bold(17, Colors.darkerGrey),
     marginHorizontal: responsiveWidth(7),
     textAlign: 'justify',
+  },
+  displayImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
 });

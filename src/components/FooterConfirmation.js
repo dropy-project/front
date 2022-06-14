@@ -6,7 +6,7 @@ import { createDropTimeString } from '../utils/time';
 import GlassButton from './GlassButton';
 
 
-const FooterConfirmation = ({ dropy, onPress }) => {
+const FooterConfirmation = ({ dropy, onPress, textButton }) => {
 
   const displayAnimation = useRef(new Animated.Value(0)).current;
 
@@ -39,7 +39,7 @@ const FooterConfirmation = ({ dropy, onPress }) => {
           <Text style={styles.dropyDate}>Dropped here {createDropTimeString(new Date() - new Date(dropy.creationDate))} ago</Text>
         </View>
       </View>
-      <GlassButton onPress={onPress} buttonText={'Open !'} style={{ height: 50 }} />
+      <GlassButton onPress={onPress} buttonText={textButton} style={{ height: 50 }} />
     </Animated.View >
   );
 };
