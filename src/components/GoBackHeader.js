@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
+    zIndex: 2,
   },
   tipsStyle: {
     ...Fonts.regular(15, '#949494'),

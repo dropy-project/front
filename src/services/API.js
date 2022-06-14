@@ -9,6 +9,10 @@ const axios = Axios.create({
   baseURL: SERVER_BASE_URL,
 });
 
+const getHeaders = () => {
+  return axios.defaults.headers.common;
+};
+
 const register = async (displayName) => {
   const uid = getUniqueId();
   const response = await axios.post('/register', {
@@ -87,7 +91,18 @@ const retrieveDropy = async (retrieverId, dropyId) => {
   return result;
 };
 
+const getDropyMedia = async (dropyId) => {
+  const result = await axios.get(`/dropy/${dropyId}/media`);
+  return result;
+};
+
+const getDropy = async (dropyId) => {
+  const result = await axios.get(`/dropy/${dropyId}`);
+  return result;
+};
+
 const API = {
+  getHeaders,
   register,
   login,
   createDropy,
@@ -95,6 +110,8 @@ const API = {
   postDropyMediaFromPath,
   getDropiesAround,
   retrieveDropy,
+  getDropyMedia,
+  getDropy,
 };
 
 export default API;

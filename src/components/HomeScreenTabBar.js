@@ -68,7 +68,7 @@ const HomeScreenTabBar = () => {
         <Path d={d} fill="white" />
       </Svg>
       <View style={styles.tabsContainer}>
-        <TabBarItem text="Drops" routeName="Museum">
+        <TabBarItem text="Drops" routeName="Home">
           <Ionicons
             name="md-bookmark-outline"
             size={iconsSize}
@@ -98,7 +98,7 @@ const HomeScreenTabBar = () => {
           <Entypo name="camera" size={30} color={Colors.grey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.dropySelectionButton}>
-          <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} />
+          <Ionicons name="musical-notes-outline" size={30} color={Colors.grey}/>
         </TouchableOpacity>
       </DropyWheel>
       <GlassCircleButton
