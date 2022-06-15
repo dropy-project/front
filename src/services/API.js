@@ -91,6 +91,11 @@ const retrieveDropy = async (retrieverId, dropyId) => {
   return result;
 };
 
+const userLocationPingUrl = (userId) => {
+  return `https://api.dropy-app.com/user/${userId}/ping`;
+
+};
+
 const getDropyMedia = async (dropyId) => {
   const result = await axios.get(`/dropy/${dropyId}/media`);
   return result;
@@ -110,6 +115,7 @@ const API = {
   postDropyMediaFromPath,
   getDropiesAround,
   retrieveDropy,
+  userLocationPingUrl,
   getDropyMedia,
   getDropy,
 };

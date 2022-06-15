@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { StatusBar } from 'expo-status-bar';
@@ -17,6 +17,7 @@ import useMapViewSyncronizer from '../hooks/useMapViewSyncronizer';
 import useTravelDistanceCallback from '../hooks/useTravelDistanceCallback';
 
 import API from '../services/API';
+import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import Sonar from '../components/Sonar';
 
 const HomeScreen = ({ navigation, route }) => {
@@ -100,11 +101,23 @@ const HomeScreen = ({ navigation, route }) => {
         visible={confirmDropOverlayVisible}
         onCloseOverlay={closeConfirmDropOverlay}
       />
+      <ToggleBackgroundGeolocation />
     </View>
   );
 };
 
 export default HomeScreen;
+
+// TEMPORARY
+const ToggleBackgroundGeolocation = () => {
+  const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
+  return (
+    <View style={{ position: 'absolute', top: '10%', flexDirection: 'row', alignItems: 'center' }}>
+      <Text>Background Geolocation [ {backgroundGeolocationEnabled ? 'ON' : 'OFF'} ]  </Text>
+      <Switch value={backgroundGeolocationEnabled} onValueChange={setBackgroundGeolocationEnabled}></Switch>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

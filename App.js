@@ -13,6 +13,7 @@ import {
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
 import GeolocationProvider from './src/states/GeolocationContextProvider';
+import BackgroundGolocationContextProvider from './src/states/BackgroundGolocationContextProvider';
 
 export default function App() {
 
@@ -30,9 +31,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <UserProvider>
-        <GeolocationProvider>
-          <Navigation />
-        </GeolocationProvider>
+        <BackgroundGolocationContextProvider>
+          <GeolocationProvider>
+            <Navigation />
+          </GeolocationProvider>
+        </BackgroundGolocationContextProvider>
       </UserProvider>
     </NavigationContainer>
   );
