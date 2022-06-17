@@ -43,9 +43,9 @@ const BackgroundGolocationProvider = ({ children }) => {
   }, [user]);
 
   const initializeBackgroundGeolocation = async () => {
-    const storedUserId = parseInt(await Storage.getItem('@background_geolocation_user_id'));
+    const storedUserId = await Storage.getItem('@background_geolocation_user_id');
 
-    if(Number.isNaN(storedUserId) && user == null) {
+    if(storedUserId == null && user == null) {
       log('Could not initialize as no user is stored or logged in');
       return;
     }
