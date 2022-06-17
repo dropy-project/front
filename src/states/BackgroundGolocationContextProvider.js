@@ -1,62 +1,114 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+/*
+Philosophy of Operation
+
+https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philosophy-of-Operation
+*/
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { AppState } from 'react-native';
 
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import API from '../services/API';
+import Storage from '../utils/storage';
+
 import { UserContext } from './UserContextProvider';
+
+const log = (...params) => {
+  console.log('\x1b[36m[ BackgroundGeolocation ]\x1b[0m', ...params);
+};
 
 export const BackgroundGeolocationContext = createContext(null);
 
 const BackgroundGolocationProvider = ({ children }) => {
-
   const { user } = useContext(UserContext);
 
+  const appState = useRef(AppState.currentState);
+
   const [backgroundGeolocationEnabled, setBackgroundGeolocationEnabled] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if(user == null) {
-      BackgroundGeolocation.stop();
+    const appStateListener = AppState.addEventListener('change', nextAppState => {
+      appState.current = nextAppState;
+    });
+    return () => {
+      appStateListener.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    initializeBackgroundGeolocation().catch(error => {
+      log('LOADING ERROR', error);
+    });
+  }, [user]);
+
+  const initializeBackgroundGeolocation = async () => {
+    const storedUserId = parseInt(await Storage.getItem('@background_geolocation_user_id'));
+
+    if(Number.isNaN(storedUserId) && user == null) {
+      log('Could not initialize as no user is stored or logged in');
       return;
     }
 
-    const onLocation = BackgroundGeolocation.onLocation(() => {});
-    const onMotionChange = BackgroundGeolocation.onMotionChange(() => {});
-    const onActivityChange = BackgroundGeolocation.onActivityChange(() => {});
-    const onProviderChange = BackgroundGeolocation.onProviderChange(() => {});
+    if(user != null) {
+      log('Stored userId updated for user with id:', user.id);
+      Storage.setItem('@background_geolocation_user_id', user.id);
+    }
 
-    BackgroundGeolocation.ready({
-      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-      distanceFilter: 20,
+    if(initialized === true) {
+      return;
+    }
+
+    const userId = storedUserId ?? user.id;
+
+    await BackgroundGeolocation.ready({
+      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
+      distanceFilter: 10,
       stopTimeout: 5,
 
       logLevel: BackgroundGeolocation.LOG_LEVEL_INFO,
+
       stopOnTerminate: false,
       startOnBoot: true,
+
+      preventSuspend: true, // Warning : high battery usage (Force the app to be opened in background)
+      heartbeatInterval: 60,
+
       batchSync: false,
       autoSync: true,
 
-      url: API.userLocationPingUrl(user.id),
+      url: API.userLocationPingUrl(userId),
       headers: API.getHeaders(),
-    }).then((state) => {
-      setBackgroundGeolocationEnabled(state.enabled);
     });
 
-    return () => {
-      onLocation.remove();
-      onMotionChange.remove();
-      onActivityChange.remove();
-      onProviderChange.remove();
-    };
-  }, [user]);
+    const enabledByUser = await Storage.getItem('@background_geolocation_enabled');
+    setBackgroundGeolocationEnabled(enabledByUser ?? false);
+    log('Initialized with state : ', enabledByUser);
+
+    setInitialized(true);
+  };
 
   useEffect(() => {
-    console.log('[BACKGROUND GEOLOCATION ACTIVE]', backgroundGeolocationEnabled);
+    if(!initialized) {
+      return;
+    }
+
+    log('Background state : ', backgroundGeolocationEnabled);
+
     if (backgroundGeolocationEnabled) {
       BackgroundGeolocation.start();
     } else {
       BackgroundGeolocation.stop();
     }
+
+    Storage.setItem('@background_geolocation_enabled', backgroundGeolocationEnabled);
   }, [backgroundGeolocationEnabled]);
+
+  if(appState.current === 'background') {
+    // L'appli lancée en background (par la librairie au moment de ping)
+    // n'a pas besoin de render le reste.
+    return null;
+  }
 
   return (
     <BackgroundGeolocationContext.Provider value={{
