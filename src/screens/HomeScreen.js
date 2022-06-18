@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useMapViewSyncronizer(mapRef);
 
-  useTravelDistanceCallback(() => fetchDropiesAround(), 60, 15);
+  useTravelDistanceCallback(() => fetchDropiesAround(), 60, 15000);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
