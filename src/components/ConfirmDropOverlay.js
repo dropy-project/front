@@ -13,7 +13,7 @@ import {
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import LinearGradient from 'react-native-linear-gradient';
-import Haptic from 'react-native-haptic-feedback';
+// import Haptic from 'react-native-haptic-feedback';
 
 
 import { useNavigation } from '@react-navigation/native';
@@ -56,7 +56,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
 
   const sendDrop = async () => {
     try {
-      Haptic.trigger('impactMedium');
+      // Haptic.trigger('impactMedium');
 
       const dropy = await API.createDropy(user.id, userCoordinates.latitude, userCoordinates.longitude);
 
