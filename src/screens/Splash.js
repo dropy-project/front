@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useCurrentUser from '../hooks/useCurrentUser';
 import API from '../services/API';
 
 const Splash = ({ navigation }) => {
 
   const { setUser, user } = useCurrentUser();
+
+  const [isInitialised, setIsInitialised] = useState(false);
 
   const autoLogin = async () => {
     try {
@@ -18,8 +20,10 @@ const Splash = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if(user != null)
+    if(user != null && isInitialised === false) {
       navigation.navigate('Home');
+      setIsInitialised(true);
+    }
   }, [user]);
 
   useEffect(() => {
