@@ -4,12 +4,11 @@ import API from '../services/API';
 
 const Splash = ({ navigation }) => {
 
-  const { setUser } = useCurrentUser();
+  const { setUser, user } = useCurrentUser();
 
   const autoLogin = async () => {
     try {
       const user = await API.login();
-      navigation.navigate('Home');
       setUser(user);
     } catch (error) {
       console.log(error.response);
@@ -17,6 +16,11 @@ const Splash = ({ navigation }) => {
         navigation.navigate('Register');
     }
   };
+
+  useEffect(() => {
+    if(user != null)
+      navigation.navigate('Home');
+  }, [user]);
 
   useEffect(() => {
     autoLogin();
