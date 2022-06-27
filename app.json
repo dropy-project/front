@@ -1,11 +1,4 @@
 {
-  "expo": {
-    "name": "dropy",
-    "slug": "dropy",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
-  },
-  "name": "dropy"
+  "name": "dropy",
+  "displayName": "dropy"
 }

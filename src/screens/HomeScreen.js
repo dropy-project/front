@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { StyleSheet, Switch, Text, View, StatusBar } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { StatusBar } from 'expo-status-bar';
 
 import mapStyle from '../assets/mapStyle.json';
 import Styles, { Colors } from '../styles/Styles';
@@ -79,7 +78,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style='dark' />
+      <StatusBar barStyle='dark-content' />
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
