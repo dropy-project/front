@@ -1,19 +1,21 @@
 import { useEffect } from 'react';
 import { Notifications } from 'react-native-notifications';
+import useCurrentUser from '../hooks/useCurrentUser';
+import API from '../services/API';
 
 const NotificationProvider = ({ children }) => {
 
+  const { user } = useCurrentUser();
+
   useEffect(() => {
-    setupNotifications();
-  }, []);
+    if(user != null)
+      setupNotifications();
+  }, [user]);
 
   const setupNotifications = () => {
     Notifications.registerRemoteNotifications();
 
-    Notifications.events().registerRemoteNotificationsRegistered((event) => {
-      // TODO: Send the token to my server so it could send back push notifications...
-      console.log('Device Token Received', event.deviceToken);
-    });
+    sendDeviceToken();
 
     Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
       console.error(event);
@@ -28,6 +30,16 @@ const NotificationProvider = ({ children }) => {
       console.log(`Notification opened: ${notification.payload}`);
       completion();
     });
+  };
+
+  const sendDeviceToken = async () => {
+    try {
+      const registerEvent = await Notifications.events().registerRemoteNotificationsRegistered();
+      const deviceTokenResponse = await API.postUserToken(user.id, registerEvent.deviceToken);
+      console.log('Register device token response', deviceTokenResponse);
+    } catch (error) {
+      console.error('Send device token error', error);
+    }
   };
 
   return children;
