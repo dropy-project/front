@@ -59,7 +59,7 @@ const HomeScreen = ({ navigation, route }) => {
       const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);
       setDropiesAround(result.data ?? []);
     } catch (error) {
-      console.log(error?.response?.data || error);
+      console.log('fetchDropiesError' ,error?.response?.data || error);
     }
   };
 
