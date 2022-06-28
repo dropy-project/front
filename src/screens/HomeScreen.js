@@ -1,9 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Switch, Text, View, StatusBar } from 'react-native';
+import {
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+  StatusBar,
+  Platform
+} from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
-import mapStyle from '../assets/mapStyle.json';
+import mapStyleAndroid from '../assets/mapStyleAndroid.json';
+import mapStyleIOS from '../assets/mapStyleIOS.json';
+
 import Styles, { Colors } from '../styles/Styles';
 
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
@@ -33,7 +42,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useMapViewSyncronizer(mapRef);
 
-  useTravelDistanceCallback(() => fetchDropiesAround(), 60, 15);
+  useTravelDistanceCallback(() => fetchDropiesAround(), 60, 15000);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -59,7 +68,7 @@ const HomeScreen = ({ navigation, route }) => {
       const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);
       setDropiesAround(result.data ?? []);
     } catch (error) {
-      console.log(error?.response?.data || error);
+      console.log('fetchDropiesError' ,error?.response?.data || error);
     }
   };
 
@@ -82,7 +91,7 @@ const HomeScreen = ({ navigation, route }) => {
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
-        customMapStyle={mapStyle}
+        customMapStyle={Platform.OS === 'ios' ? mapStyleIOS : mapStyleAndroid}
         style={StyleSheet.absoluteFillObject}
         pitchEnabled={false}
         rotateEnabled={false}
