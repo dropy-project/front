@@ -61,6 +61,11 @@ const HomeScreenTabBar = () => {
     setDropyMenuIsOpen(false);
   };
 
+  const handleMusic = () => {
+    navigation.navigate('OverlayProvider');
+    setDropyMenuIsOpen(false);
+  };
+
   return (
     <View style={styles.container}>
       <Svg
@@ -73,7 +78,7 @@ const HomeScreenTabBar = () => {
         <Path d={d} fill="white" />
       </Svg>
       <View style={styles.tabsContainer}>
-        <TabBarItem text="Drops" routeName="OverlayProvider">
+        <TabBarItem text="Drops">
           <Ionicons
             name="md-bookmark-outline"
             size={iconsSize}
@@ -103,7 +108,7 @@ const HomeScreenTabBar = () => {
           <Entypo name="camera" size={30} color={Colors.grey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.dropySelectionButton}>
-          <Ionicons name="musical-notes-outline" size={30} color={Colors.grey}/>
+          <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} onPress={handleMusic}/>
         </TouchableOpacity>
       </DropyWheel>
       <GlassCircleButton
