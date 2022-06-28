@@ -35,12 +35,27 @@ const DropyMapMarker = ({ dropy, onPress }) => {
         <DropyPopup style={styles.svgBackground}></DropyPopup>
         {dropy.isUserDropy ? (
           <View style={styles.userDropyContainer}>
-            <Text style={Fonts.bold(8, Colors.lightGrey)}>DROP</Text>
-            <Text style={Fonts.bold(11, Colors.grey)}>{dropTimeString} ago</Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="clip"
+              style={{ ...Fonts.bold(8, Colors.lightGrey), fontSize: 7 }}>
+                DROP
+            </Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="clip"
+              style={{ ...Fonts.bold(11, Colors.grey), fontSize: 12 }}>
+              {dropTimeString} ago
+            </Text>
           </View>
         ) : (
           <View style={styles.markerButton}>
-            <Text style={Fonts.bold(10, Colors.white)}>PICK UP</Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="clip"
+              style={{ ...Fonts.bold(10, Colors.white), fontSize: 12 }}>
+                PICK UP
+            </Text>
           </View>
         )}
       </View>
@@ -48,6 +63,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
   );
 };
 
+// eslint-disable-next-line react/display-name
 export default React.memo(DropyMapMarker, (prevProps, nextProps) => {
   return prevProps.dropy.id === nextProps.dropy.id;
 });
@@ -69,6 +85,7 @@ const styles = StyleSheet.create({
   },
   markerButton: {
     width: '60%',
+    height: '35%',
     backgroundColor: Colors.mainBlue,
     borderRadius: 7,
     paddingVertical: 3,
