@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import  { Colors, Fonts } from '../styles/Styles';
 
-const GoBackHeader = ({ onPressGoBack, text, textStyle, color = Colors.white }) => {
+const GoBackHeader = ({ onPressGoBack, text, textStyle, color = Colors.darkGrey }) => {
 
   return (
     <View style={styles.container}>

@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import ImageResizer from 'react-native-image-resizer';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import GoBackHeader from '../components/GoBackHeader';
 import MEDIA_TYPES from '../utils/mediaTypes';
+import { compressImage } from '../utils/files';
 
 const CreateDropyTakePicture = ({ navigation }) => {
 
@@ -36,10 +36,13 @@ const CreateDropyTakePicture = ({ navigation }) => {
 
   const takePicture = async () => {
     const picture = await cameraRef.current.takePictureAsync();
-    const resizedImage = await ImageResizer.createResizedImage(picture?.uri, 772, 1029, 'JPEG', 50, 0);
+
+    if(picture?.uri == null) {
+      return;
+    }
 
     const params = {
-      dropyFilePath: resizedImage.path,
+      dropyFilePath: await compressImage(picture?.uri),
       dropyData: null,
       mediaType: MEDIA_TYPES.PICTURE,
       originRoute: 'CreateDropyTakePicture',
@@ -70,7 +73,7 @@ const CreateDropyTakePicture = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'}></StatusBar>
-      <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} text={'Tips: open your heart !'}/>
+      <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} color={Colors.white} text={'Tips: smile !'}/>
       <Camera ref={cameraRef} style={StyleSheet.absoluteFillObject} type={cameraType} onMountError={console.error}>
         <View style={styles.bottomContainer}>
           <View style={styles.recordBtnContainer}>
