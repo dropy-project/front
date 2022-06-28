@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "729001496179",
+    "project_id": "dropy-9c743",
+    "storage_bucket": "dropy-9c743.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729001496179:android:3fb1f1ab7ac1729185e406",
+        "android_client_info": {
+          "package_name": "com.dropy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "729001496179-o8902476cusdi3h3a90jtgdssda7sddf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwAitEDMePau2THOC8SlPcn4HxARirJoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "729001496179-o8902476cusdi3h3a90jtgdssda7sddf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
