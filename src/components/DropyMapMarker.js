@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import MapView from 'react-native-maps';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     ...Styles.center,
   },
   svgBackground: {
-    ...Styles.blueShadow,
+    ...(Platform.OS === 'ios' ?  Styles.blueShadow : ''),
     position: 'absolute',
     top: 0,
   },
