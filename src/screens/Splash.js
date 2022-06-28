@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import useCurrentUser from '../hooks/useCurrentUser';
 import API from '../services/API';
+import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const Splash = ({ navigation }) => {
 
@@ -30,7 +32,18 @@ const Splash = ({ navigation }) => {
     autoLogin();
   }, []);
 
-  return null;
+  return (
+    <View style={styles.container}>
+      <Text style={{ ...Fonts.regular(15, Colors.darkGrey) }}>Loading ...</Text>
+    </View>
+  );
 };
 
 export default Splash;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    ...Styles.center,
+  },
+});
