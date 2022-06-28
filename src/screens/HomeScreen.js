@@ -1,10 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import {
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+  StatusBar,
+  Platform
+} from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { StatusBar } from 'expo-status-bar';
 
-import mapStyle from '../assets/mapStyle.json';
+import mapStyleAndroid from '../assets/mapStyleAndroid.json';
+import mapStyleIOS from '../assets/mapStyleIOS.json';
+
 import Styles, { Colors } from '../styles/Styles';
 
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
@@ -17,6 +25,7 @@ import useMapViewSyncronizer from '../hooks/useMapViewSyncronizer';
 import useTravelDistanceCallback from '../hooks/useTravelDistanceCallback';
 
 import API from '../services/API';
+import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import Sonar from '../components/Sonar';
 
 const HomeScreen = ({ navigation, route }) => {
@@ -33,7 +42,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useMapViewSyncronizer(mapRef);
 
-  useTravelDistanceCallback(() => fetchDropiesAround(), 60, 15);
+  useTravelDistanceCallback(() => fetchDropiesAround(), 60, 15000);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -59,7 +68,7 @@ const HomeScreen = ({ navigation, route }) => {
       const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);
       setDropiesAround(result.data ?? []);
     } catch (error) {
-      console.log(error?.response?.data || error);
+      console.log('fetchDropiesError' ,error?.response?.data || error);
     }
   };
 
@@ -78,11 +87,11 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style='dark' />
+      <StatusBar barStyle='dark-content' />
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
-        customMapStyle={mapStyle}
+        customMapStyle={Platform.OS === 'ios' ? mapStyleIOS : mapStyleAndroid}
         style={StyleSheet.absoluteFillObject}
         pitchEnabled={false}
         rotateEnabled={false}
@@ -100,11 +109,23 @@ const HomeScreen = ({ navigation, route }) => {
         visible={confirmDropOverlayVisible}
         onCloseOverlay={closeConfirmDropOverlay}
       />
+      <ToggleBackgroundGeolocation />
     </View>
   );
 };
 
 export default HomeScreen;
+
+// TEMPORARY
+const ToggleBackgroundGeolocation = () => {
+  const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
+  return (
+    <View style={{ position: 'absolute', top: '10%', flexDirection: 'row', alignItems: 'center' }}>
+      <Text>Background Geolocation [ {backgroundGeolocationEnabled ? 'ON' : 'OFF'} ]  </Text>
+      <Switch value={backgroundGeolocationEnabled} onValueChange={setBackgroundGeolocationEnabled}></Switch>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

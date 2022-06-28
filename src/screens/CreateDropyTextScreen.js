@@ -42,7 +42,7 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
       ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <TextInput placeholder="What do you want to tell anybody ? "
             multiline={true}
-            placeholderTextColor={Colors.purple5}
+            placeholderTextColor={Colors.lightGrey}
             style={styles.textInput}
             blurOnSubmit
             autoFocus
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   textInput: {
     padding: 10,
     fontSize: 15,
-    ...Fonts.bold(12, Colors.purple5),
+    ...Fonts.bold(12, Colors.grey),
     paddingTop: 20,
     backgroundColor: Colors.lighterGrey,
     width: 300,

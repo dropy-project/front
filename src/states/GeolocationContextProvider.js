@@ -27,7 +27,7 @@ const GeolocationProvider = ({ children }) => {
     },
     console.warn,
     {
-      enableHighAccuracy: true,
+      enableHighAccuracy: false,
       distanceFilter: 1,
     }
   );

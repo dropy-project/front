@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 
 import Axios from 'axios';
@@ -45,14 +44,15 @@ const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
   // eslint-disable-next-line no-undef
   var data = new FormData();
   data.append(mediaType, {
-    uri: Platform.OS === 'android' ? mediaPath : mediaPath.replace('file://', ''),
+    uri: mediaPath,
     name: `${mediaType}-${dropyId}`,
+    type: 'image/jpeg',
   });
 
   const response = await axios.post(`/dropy/add/${dropyId}/media`, data,
     {
       headers: {
-        'Content-Type': 'multipart/form-data; ',
+        'Content-Type': 'multipart/form-data',
       },
     }
   );
@@ -67,7 +67,7 @@ const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
   const response = await axios.post(`/dropy/add/${dropyId}/media`, data,
     {
       headers: {
-        'Content-Type': 'multipart/form-data; ',
+        'Content-Type': 'multipart/form-data',
       },
     }
   );
@@ -76,9 +76,9 @@ const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
 
 const getDropiesAround = async (userId, latitude, longitude) => {
   const result = await axios.post('/dropy/findAround', {
+    userId,
     latitude,
     longitude,
-    userId,
   });
   return result;
 };
@@ -89,6 +89,10 @@ const retrieveDropy = async (retrieverId, dropyId) => {
     dropyId,
   });
   return result;
+};
+
+const userBackgroundGeolocationPingUrl = (userId) => {
+  return `${SERVER_BASE_URL}/user/${userId}/backgroundGeolocationPing`;
 };
 
 const getDropyMedia = async (dropyId) => {
@@ -110,6 +114,7 @@ const API = {
   postDropyMediaFromPath,
   getDropiesAround,
   retrieveDropy,
+  userBackgroundGeolocationPingUrl,
   getDropyMedia,
   getDropy,
 };

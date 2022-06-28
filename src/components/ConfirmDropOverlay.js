@@ -13,7 +13,7 @@ import {
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import LinearGradient from 'react-native-linear-gradient';
-import Haptic from 'react-native-haptic-feedback';
+// import Haptic from 'react-native-haptic-feedback';
 
 
 import { useNavigation } from '@react-navigation/native';
@@ -56,10 +56,8 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
 
   const sendDrop = async () => {
     try {
-      Haptic.trigger('impactMedium');
-
+      // Haptic.trigger('impactMedium');
       const dropy = await API.createDropy(user.id, userCoordinates.latitude, userCoordinates.longitude);
-
       if(mediaIsFile(dropyCreateParams.mediaType)) {
         const mediaResult = await API.postDropyMediaFromPath(dropy.id, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
         console.log('[File upload] API response', mediaResult.data);
@@ -77,7 +75,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
   const goBackToOriginRoute = () => {
     if(dropyCreateParams.originRoute != null) {
       closeOverlay();
-      navigation.navigate(dropyCreateParams.originRoute, { dropyData: dropyCreateParams?.dropyData });
+      navigation.navigate(dropyCreateParams.originRoute, { ...dropyCreateParams });
     }
   };
 
@@ -97,7 +95,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
             <Animated.View style={{ ...styles.dropyPreviewContainer, transform: [{ scale : animatedScale }] }}>
               {dropyCreateParams.dropyFilePath != null ? (
                 <>
-                  <Image source={{ uri: dropyCreateParams.dropyFilePath }} style={styles.previewImage} />
+                  <Image source={{ uri: dropyCreateParams.dropyFilePath }} style={styles.previewImage}/>
                   <View style={styles.previewImageOverlay} />
                   <Ionicons name="ios-camera-outline" size={80} color={Colors.white} style={styles.cameraIcon}/>
                 </>

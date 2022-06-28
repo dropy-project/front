@@ -56,6 +56,11 @@ const HomeScreenTabBar = () => {
     setDropyMenuIsOpen(false);
   };
 
+  const handleTakePicture = () => {
+    navigation.navigate('CreateDropyTakePicture');
+    setDropyMenuIsOpen(false);
+  };
+
   return (
     <View style={styles.container}>
       <Svg
@@ -94,7 +99,7 @@ const HomeScreenTabBar = () => {
         <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddText}>
           <MaterialCommunityIcons name="format-text" size={30} color={Colors.grey}/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.dropySelectionButton}>
+        <TouchableOpacity style={styles.dropySelectionButton} onPress={handleTakePicture}>
           <Entypo name="camera" size={30} color={Colors.grey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.dropySelectionButton}>

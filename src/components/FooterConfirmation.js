@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   profileName: {
-    ...Fonts.bold(20, Colors.darkerGrey),
+    ...Fonts.bold(20, Colors.darkGrey),
   },
   dropyDate: {
     ...Fonts.regular(14, Colors.darkGrey),
