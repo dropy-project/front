@@ -98,8 +98,8 @@ const postUserToken = (userId, deviceToken) => {
   return result;
 };
 
-const userLocationPingUrl = (userId) => {
-  return `https://api.dropy-app.com/user/${userId}/ping`;
+const userBackgroundGeolocationPingUrl = (userId) => {
+  return `${SERVER_BASE_URL}/user/${userId}/backgroundGeolocationPing`;
 };
 
 const getDropyMedia = async (dropyId) => {
@@ -121,7 +121,7 @@ const API = {
   postDropyMediaFromPath,
   getDropiesAround,
   retrieveDropy,
-  userLocationPingUrl,
+  userBackgroundGeolocationPingUrl,
   getDropyMedia,
   getDropy,
   postUserToken,
