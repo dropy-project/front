@@ -11,6 +11,7 @@ import GoBackHeader from '../components/GoBackHeader';
 import DropyLogo from '../assets/svgs/dropy_logo.svg';
 import { Colors, Fonts } from '../styles/Styles';
 import FooterConfirmation from '../components/FooterConfirmation';
+import ParticleEmitter from '../components/ParticleEmitter';
 
 const GetDropyScreen = ({ navigation, route }) => {
 
@@ -72,6 +73,7 @@ const GetDropyScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader onPressGoBack={() => navigation.navigate('Home')} />
+      <ParticleEmitter particlesColor={Colors.lighterGrey}></ParticleEmitter>
       <View style={styles.containerImage}>
         <Text style={styles.topText}>{'You\'ve juste found'}</Text>
         <DropyLogo height={87} width={87} />
@@ -80,10 +82,6 @@ const GetDropyScreen = ({ navigation, route }) => {
         <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle) }] }} />
         <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle) }] }} />
       </View>
-      <View style={styles.mediumDot}></View>
-      <View style={styles.littlerDot} />
-      <View style={styles.littleDot} />
-      <View style={styles.dot} />
       <FooterConfirmation dropy={dropy} onPress={() => navigation.navigate('DisplayDropyMedia', { dropy })} textButton="Open !"/>
     </SafeAreaView>
   );
@@ -109,42 +107,6 @@ const styles = StyleSheet.create({
   bottomText: {
     ...Fonts.bold(18, '#7B6DCD'),
     marginTop: 30,
-  },
-  mediumDot: {
-    position: 'absolute',
-    backgroundColor: '#94B2DE',
-    width: 14,
-    height: 14,
-    left: 25,
-    top: 298,
-    borderRadius: 7,
-  },
-  littlerDot: {
-    position: 'absolute',
-    backgroundColor: '#94B2DE',
-    width: 8,
-    height: 8,
-    left: 321,
-    top: 361,
-    borderRadius: 10,
-  },
-  littleDot: {
-    position: 'absolute',
-    backgroundColor: '#94B2DE',
-    width: 10,
-    height: 10,
-    left: 176,
-    top: 146,
-    borderRadius: 10,
-  },
-  dot: {
-    position: 'absolute',
-    backgroundColor: '#94B2DE',
-    width: 14,
-    height: 14,
-    left: 293,
-    top: 527,
-    borderRadius: 7,
   },
   largeCircle: {
     position: 'absolute',
