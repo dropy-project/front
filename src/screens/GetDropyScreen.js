@@ -73,7 +73,7 @@ const GetDropyScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader onPressGoBack={() => navigation.navigate('Home')} />
-      <ParticleEmitter particlesColor={Colors.lighterGrey}></ParticleEmitter>
+      <ParticleEmitter particlesColor={Colors.lighterGrey} />
       <View style={styles.containerImage}>
         <Text style={styles.topText}>{'You\'ve juste found'}</Text>
         <DropyLogo height={87} width={87} />
