@@ -36,7 +36,11 @@ const RegisterScreen = ({ navigation }) => {
       </View>
       <SafeAreaView style={styles.content} >
         <Text style={{ ...Fonts.bold(50, Colors.white) }}>Dropy</Text>
-        <TextInput onChangeText={(text) => setNameValue(text)} style={{ ...Fonts.bold(15, Colors.purple5), ...styles.textInput }} placeholder="What's your name ?" placeholderTextColor={Colors.purple5} />
+        <TextInput
+          onChangeText={(text) => setNameValue(text)}
+          style={{ ...Fonts.bold(15, Colors.grey), ...styles.textInput }}
+          placeholder="What's your name ?" placeholderTextColor={Colors.lighterGrey}
+        />
         <GlassButton
           disabled={name.length === 0}
           style={styles.largeButton}

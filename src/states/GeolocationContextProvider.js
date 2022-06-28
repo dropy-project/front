@@ -9,7 +9,7 @@ const GeolocationProvider = ({ children }) => {
 
   const [userCoordinates, setUserCoordinates] = useState(null);
   const [compassHeading, setCompassHeading] = useState(0);
- 
+
   useEffect(() => {
     const geolocationWatchId = registerGeolocationListener();
     registerCompassListener();
