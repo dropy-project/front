@@ -4,7 +4,7 @@ https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philo
 */
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Alert, AppState } from 'react-native';
+import { Alert } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import API from '../services/API';
@@ -19,17 +19,6 @@ const BackgroundGolocationProvider = ({ children }) => {
 
   const [backgroundGeolocationEnabled, _setBackgroundGeolocationEnabled] = useState(false);
   const [initialized, setInitialized] = useState(false);
-
-  const [appState, setAppState] = useState(AppState.currentState);
-
-  useEffect(() => {
-    const appStateListener = AppState.addEventListener('change', nextAppState => {
-      setAppState(nextAppState);
-    });
-    return () => {
-      appStateListener.remove();
-    };
-  }, []);
 
   useEffect(() => {
     initializeBackgroundGeolocation().catch(error => {
@@ -114,12 +103,6 @@ const BackgroundGolocationProvider = ({ children }) => {
       Alert.alert('dropy needs permissions', 'Please enable location services as \'Always\' for this app in settings.');
     }
   };
-
-  if(appState === 'background') {
-    // L'appli lancée par la librairie en background au moment de ping n'a pas
-    // besoin de render le reste.
-    return null;
-  }
 
   return (
     <BackgroundGeolocationContext.Provider value={{

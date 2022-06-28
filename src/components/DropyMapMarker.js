@@ -48,6 +48,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
   );
 };
 
+// eslint-disable-next-line react/display-name
 export default React.memo(DropyMapMarker, (prevProps, nextProps) => {
   return prevProps.dropy.id === nextProps.dropy.id;
 });
