@@ -27,6 +27,7 @@ import useTravelDistanceCallback from '../hooks/useTravelDistanceCallback';
 import API from '../services/API';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import Sonar from '../components/Sonar';
+import Haptics from '../utils/haptics';
 
 const HomeScreen = ({ navigation, route }) => {
 
@@ -68,17 +69,18 @@ const HomeScreen = ({ navigation, route }) => {
       const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);
       setDropiesAround(result.data ?? []);
     } catch (error) {
-      console.log('fetchDropiesError' ,error?.response?.data || error);
+      console.log('fetchDropiesError', error?.response?.data || error);
     }
   };
 
-  const lootMedia = async (dropy) => {
+  const retreiveDropy = async (dropy) => {
+    Haptics.impactHeavy();
     try {
       if (userCoordinates == null) return;
       if (dropy.isUserDropy) return;
       await API.retrieveDropy(user.id, dropy.id);
       const result = await API.getDropy(dropy.id);
-      await fetchDropiesAround();
+      fetchDropiesAround();
       navigation.navigate('GetDropy', { dropy: result.data });
     } catch (error) {
       console.log(error?.response?.data);
@@ -99,7 +101,7 @@ const HomeScreen = ({ navigation, route }) => {
         zoomEnabled={false}
       >
         {dropiesAround.map((dropy) => (
-          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => lootMedia(dropy)} />
+          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => retreiveDropy(dropy)} />
         ))}
       </MapView>
       <Sonar />
