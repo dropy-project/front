@@ -17,7 +17,7 @@ import Styles, { Colors } from '../styles/Styles';
 
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
 import useCurrentUser from '../hooks/useCurrentUser';
-import ConfirmDropOverlay from '../components/ConfirmDropOverlay';
+import ConfirmDropyOverlay from '../components/ConfirmDropyOverlay';
 import DropyMapMarker from '../components/DropyMapMarker';
 
 import useGeolocation from '../hooks/useGeolocation';
@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation, route }) => {
     }
   };
 
-  const retreiveDropy = async (dropy) => {
+  const retrieveDropy = async (dropy) => {
     Haptics.impactHeavy();
     try {
       if (userCoordinates == null) return;
@@ -101,12 +101,12 @@ const HomeScreen = ({ navigation, route }) => {
         zoomEnabled={false}
       >
         {dropiesAround.map((dropy) => (
-          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => retreiveDropy(dropy)} />
+          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => retrieveDropy(dropy)} />
         ))}
       </MapView>
       <Sonar />
       <HomeScreenTabBar />
-      <ConfirmDropOverlay
+      <ConfirmDropyOverlay
         dropyCreateParams={dropyCreateParams}
         visible={confirmDropOverlayVisible}
         onCloseOverlay={closeConfirmDropOverlay}

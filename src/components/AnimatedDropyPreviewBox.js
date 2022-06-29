@@ -20,15 +20,12 @@ export const OVERLAY_STATE = {
   HIDDEN: 'HIDDEN',
   CONFIRMATION_PENDING: 'CONFIRMATION_PENDING',
   LOADING_POST: 'LOADING_POST',
-  POST_SUCCESS: 'POST_SUCCESS',
-  POST_FAILURE: 'POST_FAILURE',
 };
 
-const AnimatedDropPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIRMATION_PENDING, onPress }) => {
+const AnimatedDropyPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIRMATION_PENDING, onPress }) => {
 
-  const scaleAnimatedValue = useRef(new Animated.Value(0.5)).current;
-  const rotationAnimatedValue = useRef(new Animated.Value(0)).current;
-  const opacityAnimatedValue = useRef(new Animated.Value(0)).current;
+  const previewScaleAnimatedValue = useRef(new Animated.Value(0.5)).current;
+  const previewOpacityAnimatedValue = useRef(new Animated.Value(0)).current;
   const previewTranslateYAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const dropyPopupRotationAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -48,18 +45,17 @@ const AnimatedDropPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIRM
   }, [overlayState]);
 
   const openAnimation = () => {
-    scaleAnimatedValue.setValue(0.5);
-    rotationAnimatedValue.setValue(0);
+    previewScaleAnimatedValue.setValue(0.5);
     previewTranslateYAnimatedValue.setValue(0);
     const anim = Animated.parallel([
-      Animated.timing(scaleAnimatedValue, {
+      Animated.timing(previewScaleAnimatedValue, {
         toValue: 1,
         duration: 300,
         delay: 600,
         useNativeDriver: true,
         easing: Easing.elastic(1.4),
       }),
-      Animated.timing(opacityAnimatedValue, {
+      Animated.timing(previewOpacityAnimatedValue, {
         toValue: 1,
         duration: 300,
         delay: 600,
@@ -77,7 +73,7 @@ const AnimatedDropPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIRM
 
   const loadingAnimationLoop = () => {
     Animated.parallel([
-      Animated.timing(scaleAnimatedValue, {
+      Animated.timing(previewScaleAnimatedValue, {
         toValue: 0,
         duration: 400,
         useNativeDriver: true,
@@ -87,7 +83,7 @@ const AnimatedDropPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIRM
         duration: 500,
         useNativeDriver: true,
       }),
-      Animated.timing(opacityAnimatedValue, {
+      Animated.timing(previewOpacityAnimatedValue, {
         toValue: 0,
         delay: 200,
         duration: 300,
@@ -140,8 +136,8 @@ const AnimatedDropPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIRM
     <TouchableOpacity style={previewStyles.container} onPress={onPress}>
       <Animated.View style={{
         ...previewStyles.dropyPreviewContainer,
-        opacity: opacityAnimatedValue,
-        transform: [{ translateY: previewTranslateY }, { scale : scaleAnimatedValue }] }}
+        opacity: previewOpacityAnimatedValue,
+        transform: [{ translateY: previewTranslateY }, { scale : previewScaleAnimatedValue }] }}
       >
         {filePath != null ? (
           <>
@@ -165,7 +161,7 @@ const AnimatedDropPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIRM
   );
 };
 
-export default AnimatedDropPreviewBox;
+export default AnimatedDropyPreviewBox;
 
 const previewStyles = StyleSheet.create({
   container: {

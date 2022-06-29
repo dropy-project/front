@@ -25,9 +25,9 @@ import Haptics from '../utils/haptics';
 import GlassButton from './GlassButton';
 import ProfileAvatar from './ProfileAvatar';
 import GoBackHeader from './GoBackHeader';
-import AnimatedDropPreviewBox, { OVERLAY_STATE } from './AnimatedDropPreviewBox';
+import AnimatedDropyPreviewBox, { OVERLAY_STATE } from './AnimatedDropyPreviewBox';
 
-const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams }) => {
+const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams }) => {
 
   const navigation = useNavigation();
 
@@ -68,7 +68,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
       toValue: overlayState === OVERLAY_STATE.CONFIRMATION_PENDING ? 1 : 0,
       delay: overlayState === OVERLAY_STATE.CONFIRMATION_PENDING ? 600 : 0,
       duration: 400,
-      easing: OVERLAY_STATE.CONFIRMATION_PENDING ? Easing.elastic(1.2) : undefined,
+      easing: overlayState === OVERLAY_STATE.CONFIRMATION_PENDING ? Easing.elastic(1.2) : Easing.linear,
       useNativeDriver: true,
     });
     anim.start();
@@ -119,7 +119,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
         <SafeAreaView style={styles.container}>
           <GoBackHeader onPressGoBack={closeOverlay}/>
           <View style={[StyleSheet.absoluteFillObject, Styles.center]}>
-            <AnimatedDropPreviewBox filePath={dropyCreateParams.dropyFilePath} overlayState={overlayState} onPress={goBackToOriginRoute} />
+            <AnimatedDropyPreviewBox filePath={dropyCreateParams.dropyFilePath} overlayState={overlayState} onPress={goBackToOriginRoute} />
           </View>
           <Animated.View style={{ ...styles.avatarsContainer, transform: [{ scale: bottomContainerScaleAnimatedValue }] }}>
             <ProfileAvatar size={100} style={{ transform: [{ rotate: '-30deg' }] }} />
@@ -136,7 +136,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
   );
 };
 
-export default ConfirmDropOverlay;
+export default ConfirmDropyOverlay;
 
 const styles = StyleSheet.create({
   container: {
