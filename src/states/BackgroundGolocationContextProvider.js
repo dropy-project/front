@@ -41,27 +41,18 @@ const BackgroundGolocationProvider = ({ children }) => {
   }, [backgroundGeolocationEnabled]);
 
   const initializeBackgroundGeolocation = async () => {
-    // On garde en storage le userId car il est requis pour ping, or en background on
-    // ne peut pas se permettre de se relogin et d'aller récupérer les données
-    // de l'utilisateur.
-    const storedUserId = await Storage.getItem('@background_geolocation_user_id');
-
-    if(storedUserId == null && user == null) {
-      log('Could not initialize as no user is stored or logged in');
-      return;
-    }
-
-    if(user != null) {
-      log('Stored userId updated for user with id:', user.id);
-      Storage.setItem('@background_geolocation_user_id', user.id);
-    }
-
     if(initialized === true) {
       return;
     }
 
-    const userId = storedUserId ?? user.id;
-    await setupBackgroundGeolocationForUser(userId);
+    const authTokens = await Storage.getItem('@auth_tokens');
+
+    if(authTokens == null) {
+      log('Could not initialize : no auth tokens');
+      return;
+    }
+
+    await setupBackgroundGeolocationForUser(authTokens);
 
     const enabledByUser = await Storage.getItem('@background_geolocation_enabled');
     setBackgroundGeolocationEnabled(enabledByUser ?? false);
@@ -70,7 +61,7 @@ const BackgroundGolocationProvider = ({ children }) => {
     setInitialized(true);
   };
 
-  const setupBackgroundGeolocationForUser = async (userId) => {
+  const setupBackgroundGeolocationForUser = async (authTokens) => {
     await BackgroundGeolocation.ready({
       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
       distanceFilter: 10,
@@ -85,8 +76,10 @@ const BackgroundGolocationProvider = ({ children }) => {
       batchSync: false,
       autoSync: true,
 
-      url: API.userBackgroundGeolocationPingUrl(userId),
-      headers: API.getHeaders(),
+      url: API.userBackgroundGeolocationPingUrl(),
+      headers: {
+        'Authorization': authTokens,
+      },
     });
   };
 

@@ -16,7 +16,6 @@ import mapStyleIOS from '../assets/mapStyleIOS.json';
 import Styles, { Colors } from '../styles/Styles';
 
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
-import useCurrentUser from '../hooks/useCurrentUser';
 import ConfirmDropOverlay from '../components/ConfirmDropOverlay';
 import DropyMapMarker from '../components/DropyMapMarker';
 
@@ -38,7 +37,6 @@ const HomeScreen = ({ navigation, route }) => {
   const [dropiesAround, setDropiesAround] = useState([]);
 
   const { userCoordinates } = useGeolocation();
-  const { user } = useCurrentUser();
 
   useMapViewSyncronizer(mapRef);
 
@@ -65,7 +63,7 @@ const HomeScreen = ({ navigation, route }) => {
   const fetchDropiesAround = async () => {
     try {
       if (userCoordinates == null) return;
-      const result = await API.getDropiesAround(user.id, userCoordinates.latitude, userCoordinates.longitude);
+      const result = await API.getDropiesAround(userCoordinates.latitude, userCoordinates.longitude);
       setDropiesAround(result.data ?? []);
     } catch (error) {
       console.log('fetchDropiesError' ,error?.response?.data || error);
@@ -76,7 +74,7 @@ const HomeScreen = ({ navigation, route }) => {
     try {
       if (userCoordinates == null) return;
       if (dropy.isUserDropy) return;
-      await API.retrieveDropy(user.id, dropy.id);
+      await API.retrieveDropy(dropy.id);
       const result = await API.getDropy(dropy.id);
       await fetchDropiesAround();
       navigation.navigate('GetDropy', { dropy: result.data });

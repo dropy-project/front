@@ -21,7 +21,6 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import { mediaIsFile } from '../utils/mediaTypes';
 import API from '../services/API';
 
-import useCurrentUser from '../hooks/useCurrentUser';
 import useGeolocation from '../hooks/useGeolocation';
 
 import GlassButton from './GlassButton';
@@ -35,7 +34,6 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
   const [render, setRender] = useState(visible);
   const fadeAnimatedValue = useRef(new Animated.Value(0)).current;
 
-  const { user } = useCurrentUser();
   const { userCoordinates } = useGeolocation();
 
   useEffect(() => {
@@ -57,7 +55,7 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
   const sendDrop = async () => {
     try {
       // Haptic.trigger('impactMedium');
-      const dropy = await API.createDropy(user.id, userCoordinates.latitude, userCoordinates.longitude);
+      const dropy = await API.createDropy(userCoordinates.latitude, userCoordinates.longitude);
       if(mediaIsFile(dropyCreateParams.mediaType)) {
         const mediaResult = await API.postDropyMediaFromPath(dropy.id, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
         console.log('[File upload] API response', mediaResult.data);
