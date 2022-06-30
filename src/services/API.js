@@ -7,6 +7,7 @@ const SERVER_BASE_URL = 'https://api.dropy-app.com';
 
 const axios = Axios.create({
   baseURL: SERVER_BASE_URL,
+  timeout: 5000,
 });
 
 const getHeaders = () => {
@@ -24,12 +25,14 @@ const register = async (displayName) => {
 
 const login = async () => {
   const uid = getUniqueId();
+  console.log(uid);
   const response = await axios.post('/login', {
     uid,
   });
+  console.log(response);
   const token = response.headers['set-cookie'];
   axios.defaults.headers.common['Authorization'] = token;
-  await Storage.setItem('@auth_tokens', token);
+  Storage.setItem('@auth_tokens', token);
   return response.data;
 };
 

@@ -37,7 +37,6 @@ const ConfirmDropOverlay = ({ visible = false, onCloseOverlay: closeOverlay = ()
   const { userCoordinates } = useGeolocation();
 
   useEffect(() => {
-    console.log(dropyCreateParams);
     setRender(true);
     const anim = Animated.timing(fadeAnimatedValue, {
       toValue: visible ? 1 : 0,

@@ -74,12 +74,14 @@ const HomeScreen = ({ navigation, route }) => {
     try {
       if (userCoordinates == null) return;
       if (dropy.isUserDropy) return;
-      await API.retrieveDropy(dropy.id);
+      const response = await API.retrieveDropy(dropy.id);
+      console.log('Retreive dropy API response', response.data);
       const result = await API.getDropy(dropy.id);
-      await fetchDropiesAround();
       navigation.navigate('GetDropy', { dropy: result.data });
     } catch (error) {
       console.log(error?.response?.data);
+    } finally {
+      await fetchDropiesAround();
     }
   };
 

@@ -28,7 +28,7 @@ const RegisterScreen = ({ navigation }) => {
       const userInfos = await API.register(name);
       await API.login();
       setUser(userInfos);
-      navigation.navigate('Home');
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
       console.error(error.response.data);
     }
