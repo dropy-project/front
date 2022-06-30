@@ -4,7 +4,7 @@ https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philo
 */
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Alert, AppState } from 'react-native';
+import { Alert } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import API from '../services/API';
@@ -19,17 +19,6 @@ const BackgroundGolocationProvider = ({ children }) => {
 
   const [backgroundGeolocationEnabled, _setBackgroundGeolocationEnabled] = useState(false);
   const [initialized, setInitialized] = useState(false);
-
-  const [appState, setAppState] = useState(AppState.currentState);
-
-  useEffect(() => {
-    const appStateListener = AppState.addEventListener('change', nextAppState => {
-      setAppState(nextAppState);
-    });
-    return () => {
-      appStateListener.remove();
-    };
-  }, []);
 
   useEffect(() => {
     initializeBackgroundGeolocation().catch(error => {
@@ -52,27 +41,18 @@ const BackgroundGolocationProvider = ({ children }) => {
   }, [backgroundGeolocationEnabled]);
 
   const initializeBackgroundGeolocation = async () => {
-    // On garde en storage le userId car il est requis pour ping, or en background on
-    // ne peut pas se permettre de se relogin et d'aller récupérer les données
-    // de l'utilisateur.
-    const storedUserId = await Storage.getItem('@background_geolocation_user_id');
-
-    if(storedUserId == null && user == null) {
-      log('Could not initialize as no user is stored or logged in');
-      return;
-    }
-
-    if(user != null) {
-      log('Stored userId updated for user with id:', user.id);
-      Storage.setItem('@background_geolocation_user_id', user.id);
-    }
-
     if(initialized === true) {
       return;
     }
 
-    const userId = storedUserId ?? user.id;
-    await setupBackgroundGeolocationForUser(userId);
+    const authTokens = await Storage.getItem('@auth_tokens');
+
+    if(authTokens == null) {
+      log('Could not initialize : no auth tokens');
+      return;
+    }
+
+    await setupBackgroundGeolocationForUser(authTokens);
 
     const enabledByUser = await Storage.getItem('@background_geolocation_enabled');
     setBackgroundGeolocationEnabled(enabledByUser ?? false);
@@ -81,7 +61,7 @@ const BackgroundGolocationProvider = ({ children }) => {
     setInitialized(true);
   };
 
-  const setupBackgroundGeolocationForUser = async (userId) => {
+  const setupBackgroundGeolocationForUser = async (authTokens) => {
     await BackgroundGeolocation.ready({
       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
       distanceFilter: 10,
@@ -96,8 +76,10 @@ const BackgroundGolocationProvider = ({ children }) => {
       batchSync: false,
       autoSync: true,
 
-      url: API.userBackgroundGeolocationPingUrl(userId),
-      headers: API.getHeaders(),
+      url: API.userBackgroundGeolocationPingUrl(),
+      headers: {
+        'Authorization': authTokens,
+      },
     });
   };
 
@@ -114,12 +96,6 @@ const BackgroundGolocationProvider = ({ children }) => {
       Alert.alert('dropy needs permissions', 'Please enable location services as \'Always\' for this app in settings.');
     }
   };
-
-  if(appState === 'background') {
-    // L'appli lancée par la librairie en background au moment de ping n'a pas
-    // besoin de render le reste.
-    return null;
-  }
 
   return (
     <BackgroundGeolocationContext.Provider value={{

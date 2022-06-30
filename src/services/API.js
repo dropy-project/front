@@ -1,6 +1,7 @@
 import { getUniqueId } from 'react-native-device-info';
 
 import Axios from 'axios';
+import Storage from '../utils/storage';
 
 const SERVER_BASE_URL = 'https://api.dropy-app.com';
 
@@ -28,12 +29,12 @@ const login = async () => {
   });
   const token = response.headers['set-cookie'];
   axios.defaults.headers.common['Authorization'] = token;
+  await Storage.setItem('@auth_tokens', token);
   return response.data;
 };
 
-const createDropy = async (userId, latitude, longitude) => {
+const createDropy = async (latitude, longitude) => {
   const response = await axios.post('/dropy/add', {
-    emitterId: userId,
     latitude,
     longitude,
   });
@@ -74,18 +75,16 @@ const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
   return response;
 };
 
-const getDropiesAround = async (userId, latitude, longitude) => {
+const getDropiesAround = async (latitude, longitude) => {
   const result = await axios.post('/dropy/findAround', {
-    userId,
     latitude,
     longitude,
   });
   return result;
 };
 
-const retrieveDropy = async (retrieverId, dropyId) => {
+const retrieveDropy = async (dropyId) => {
   const result = await axios.post('/dropy/retrieve', {
-    retrieverId,
     dropyId,
   });
   return result;
@@ -98,8 +97,8 @@ const postUserToken = (deviceToken) => {
   return result;
 };
 
-const userBackgroundGeolocationPingUrl = (userId) => {
-  return `${SERVER_BASE_URL}/user/${userId}/backgroundGeolocationPing`;
+const userBackgroundGeolocationPingUrl = () => {
+  return `${SERVER_BASE_URL}/user/backgroundGeolocationPing`;
 };
 
 const getDropyMedia = async (dropyId) => {

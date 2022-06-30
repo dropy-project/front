@@ -15,9 +15,12 @@ const Splash = ({ navigation }) => {
       const user = await API.login();
       setUser(user);
     } catch (error) {
-      console.log(error.response);
-      if (error.response?.status === 409)
+      if (error.response?.status === 409) {
+        console.log('No user found linked to this device UID');
         navigation.navigate('Register');
+      } else {
+        console.error(error?.response?.data || error);
+      }
     }
   };
 
