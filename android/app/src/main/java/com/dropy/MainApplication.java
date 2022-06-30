@@ -14,6 +14,7 @@ import com.facebook.soloader.SoLoader;
 import com.dropy.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
 // import com.mkuczera.RNReactNativeHapticFeedbackPackage;
 
 
