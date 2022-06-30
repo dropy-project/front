@@ -7,6 +7,7 @@
 
 #import <TSBackgroundFetch/TSBackgroundFetch.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import "RNNotifications.h"
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -31,6 +32,7 @@
 {
   RCTAppSetupPrepareApp(application);
 
+  [RNNotifications startMonitorNotifications];
   [GMSServices provideAPIKey:@"AIzaSyByN4eSyZgIP7cMhAYWZEAJVlniGxcmfUU"];
   RCTAppSetupPrepareApp(application);
 
@@ -61,6 +63,18 @@
   [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   return YES;
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+  [RNNotifications didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+  [RNNotifications didFailToRegisterForRemoteNotificationsWithError:error];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+  [RNNotifications didReceiveBackgroundNotification:userInfo withCompletionHandler:completionHandler];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

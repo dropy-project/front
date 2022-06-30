@@ -63,7 +63,7 @@ const BackgroundGolocationProvider = ({ children }) => {
 
   const setupBackgroundGeolocationForUser = async (authTokens) => {
     await BackgroundGeolocation.ready({
-      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
+      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
       distanceFilter: 10,
       stopTimeout: 5,
 
