@@ -91,8 +91,8 @@ const retrieveDropy = async (retrieverId, dropyId) => {
   return result;
 };
 
-const postUserToken = (userId, deviceToken) => {
-  const result = axios.post(`/user/${userId}/changeDeviceToken`, {
+const postUserToken = (deviceToken) => {
+  const result = axios.post('/user/updateDeviceToken', {
     deviceToken,
   });
   return result;

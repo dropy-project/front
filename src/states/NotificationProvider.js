@@ -35,7 +35,7 @@ const NotificationProvider = ({ children }) => {
   const sendDeviceToken = async () => {
     Notifications.events().registerRemoteNotificationsRegistered((event) => {
       console.log('Device token:', event.deviceToken);
-      API.postUserToken(user.id, event.deviceToken).then((response) => {
+      API.postUserToken(event.deviceToken).then((response) => {
         console.log('Device token sent to server:', response.data);
       }).catch((error) => {
         console.error('Send device token error', error);
