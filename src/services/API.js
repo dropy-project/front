@@ -25,11 +25,9 @@ const register = async (displayName) => {
 
 const login = async () => {
   const uid = getUniqueId();
-  console.log(uid);
   const response = await axios.post('/login', {
     uid,
   });
-  console.log(response);
   const token = response.headers['set-cookie'];
   axios.defaults.headers.common['Authorization'] = token;
   Storage.setItem('@auth_tokens', token);

@@ -69,8 +69,6 @@ PODS:
     - RNPermissions
   - Permission-LocationWhenInUse (3.3.1):
     - RNPermissions
-  - Permission-MediaLibrary (3.3.1):
-    - RNPermissions
   - Permission-Microphone (3.3.1):
     - RNPermissions
   - Permission-Motion (3.3.1):
@@ -416,7 +414,6 @@ DEPENDENCIES:
   - Permission-LocationAccuracy (from `../node_modules/react-native-permissions/ios/LocationAccuracy`)
   - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
   - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
-  - Permission-MediaLibrary (from `../node_modules/react-native-permissions/ios/MediaLibrary`)
   - Permission-Microphone (from `../node_modules/react-native-permissions/ios/Microphone`)
   - Permission-Motion (from `../node_modules/react-native-permissions/ios/Motion`)
   - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications`)
@@ -515,8 +512,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-permissions/ios/LocationAlways"
   Permission-LocationWhenInUse:
     :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
-  Permission-MediaLibrary:
-    :path: "../node_modules/react-native-permissions/ios/MediaLibrary"
   Permission-Microphone:
     :path: "../node_modules/react-native-permissions/ios/Microphone"
   Permission-Motion:
@@ -637,7 +632,6 @@ SPEC CHECKSUMS:
   Permission-LocationAccuracy: 43d7a6b3d736a90168e9fc7117a721ca44722f83
   Permission-LocationAlways: fbf36cbdcabc3101f1168ad1ec45cfc5a6448cc4
   Permission-LocationWhenInUse: 006c85c8de0c05b5d8be8e8029e4f6b813270293
-  Permission-MediaLibrary: cbc1ee191cf0fe73282d2b3f197714941783d99d
   Permission-Microphone: 13922195a81b9d46d2df8050c225006eae126d49
   Permission-Motion: db2cffebd72064294639959653f81175b1c1d354
   Permission-Notifications: 4b21cfdd5e8aab2cbb1f117aaa17b44e1f5736c4
@@ -686,6 +680,6 @@ SPEC CHECKSUMS:
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
 
-PODFILE CHECKSUM: 8e6c7b8b10dabbcb8dc9df6772cf2f3403a00387
+PODFILE CHECKSUM: 8a38a5285792a4563bea3d8981d092c39c88a2c4
 
 COCOAPODS: 1.11.3
