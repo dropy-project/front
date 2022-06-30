@@ -90,7 +90,7 @@ const retrieveDropy = async (dropyId) => {
   return result;
 };
 
-const postUserToken = (deviceToken) => {
+const postUserDeviceToken = (deviceToken) => {
   const result = axios.post('/user/updateDeviceToken', {
     deviceToken,
   });
@@ -123,7 +123,7 @@ const API = {
   userBackgroundGeolocationPingUrl,
   getDropyMedia,
   getDropy,
-  postUserToken,
+  postUserDeviceToken,
 };
 
 export default API;
