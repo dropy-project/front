@@ -13,6 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Svg, { Path } from 'react-native-svg';
 
+import Haptics from '../utils/haptics';
+
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import GlassCircleButton from './GlassCircleButton';
 
@@ -27,6 +29,7 @@ const HomeScreenTabBar = () => {
 
   const menuAnimatedValue = useRef(new Animated.Value(0)).current;
   useEffect(() => {
+    Haptics.impactLight();
     setRenderMenuOverlay(true);
     const anim = Animated.timing(menuAnimatedValue, {
       toValue: dropyMenuIsOpen ? 1 : 0,
