@@ -29,7 +29,7 @@ import AnimatedDropyPreviewBox, { OVERLAY_STATE } from './AnimatedDropyPreviewBo
 
 
 
-const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams }) => {
+const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams, createDropy }) => {
 
   const { sendBottomAlert } = useOverlay();
 
@@ -84,14 +84,17 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       Haptics.impactHeavy();
       setAntiSpamOn(true);
       setOverlayState(OVERLAY_STATE.LOADING_POST);
-      const dropy = await API.createDropy(userCoordinates.latitude, userCoordinates.longitude);
+
+      const dropyId = await createDropy(userCoordinates.latitude, userCoordinates.longitude);
+
       if(mediaIsFile(dropyCreateParams.mediaType)) {
-        const mediaResult = await API.postDropyMediaFromPath(dropy.id, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
+        const mediaResult = await API.postDropyMediaFromPath(dropyId, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
         console.log('[File upload] API response', mediaResult.data);
       } else {
-        const mediaResult = await API.postDropyMediaData(dropy.id, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
+        const mediaResult = await API.postDropyMediaData(dropyId, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
         console.log('[Data upload] API response', mediaResult.data);
       }
+
       setTimeout(() => {
         Haptics.notificationSuccess();
         closeOverlay();
@@ -101,7 +104,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
         title: 'Oh no...',
         description: 'This drop has been lost somewhere...\nCheck your internet connection!',
       });
-      console.log('Error while creating dropy', error?.response?.data || error);
+      console.error('Error while creating dropy', error?.response?.data || error);
       closeOverlay();
     }
   };

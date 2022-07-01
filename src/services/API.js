@@ -3,7 +3,8 @@ import { getUniqueId } from 'react-native-device-info';
 import Axios from 'axios';
 import Storage from '../utils/storage';
 
-const SERVER_BASE_URL = 'https://api.dropy-app.com';
+const SERVER_BASE_URL = 'http://192.168.1.11:3000';
+// const SERVER_BASE_URL = 'https://api.dropy-app.com';
 
 const axios = Axios.create({
   baseURL: SERVER_BASE_URL,
@@ -105,6 +106,10 @@ const userBackgroundGeolocationPingUrl = () => {
   return `${SERVER_BASE_URL}/user/backgroundGeolocationPing`;
 };
 
+const dropyMediaUrl = (dropyId) => {
+  return `${SERVER_BASE_URL}/dropy/${dropyId}/media`;
+};
+
 const getDropyMedia = async (dropyId) => {
   const result = await axios.get(`/dropy/${dropyId}/media`);
   return result;
@@ -128,6 +133,7 @@ const API = {
   getDropyMedia,
   getDropy,
   postUserDeviceToken,
+  dropyMediaUrl,
 };
 
 export default API;

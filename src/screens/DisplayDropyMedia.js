@@ -35,14 +35,9 @@ const GetDropyScreen = ({ navigation, route }) => {
   }, []);
 
   const loadImageSource = () => {
-    let authHeader = API.getHeaders()['Authorization'];
-    if (Array.isArray(authHeader)) {
-      authHeader = authHeader[0];
-    }
-    const headers = { Authorization: authHeader };
     setImageSource({
-      uri: `https://api.dropy-app.com/dropy/${dropy.id}/media`,
-      headers,
+      uri: API.dropyMediaUrl(dropy.id),
+      headers: API.getHeaders(),
     });
   };
 
