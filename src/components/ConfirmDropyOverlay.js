@@ -92,14 +92,17 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
         const mediaResult = await API.postDropyMediaData(dropy.id, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
         console.log('[Data upload] API response', mediaResult.data);
       }
-    } catch (error) {
-      console.log('Error while creating dropy', error?.response?.data || error);
-      sendBottomAlert();
-    } finally {
       setTimeout(() => {
         Haptics.notificationSuccess();
-        closeOverlay('Oops, we could not send this dropy into outer space...', 'We\'ll try again when your internet connection gets better' );
+        closeOverlay();
       }, 1300);
+    } catch (error) {
+      sendBottomAlert({
+        title: 'Oh no...',
+        description: 'This drop has been lost somewhere...\nCheck your internet connection!',
+      });
+      console.log('Error while creating dropy', error?.response?.data || error);
+      closeOverlay();
     }
   };
 

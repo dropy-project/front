@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
 import AlertModal from '../components/overlays/AlertModal';
 import BottomModal from '../components/overlays/BottomModal';
+import Haptics from '../utils/haptics';
 
 export const OverlayContext = createContext(null);
 
@@ -9,7 +10,16 @@ const OverlayContextProvider = ({ children }) => {
   const [showAlertModal, setShowAlertModal] = useState(null);
   const [showBottomAlert, setShowBottomAlert] = useState(null);
 
-  const sendAlert = (title = 'My alert', description = 'My description', denyText = 'Cancel', validateText = 'Ok') => {
+  const sendAlert = ({ title, description, denyText, validateText = 'Ok' }) => {
+    if(title == null) {
+      console.warn('sendAlert: title is required');
+      return;
+    }
+    if(description == null) {
+      console.warn('sendAlert: description is required');
+      return;
+    }
+    Haptics.notificationWarning();
     return new Promise((resolve) => {
       setShowAlertModal({
         title,
@@ -28,7 +38,16 @@ const OverlayContextProvider = ({ children }) => {
     });
   };
 
-  const sendBottomAlert = (title = 'truite', description = 'Vive les truites') => {
+  const sendBottomAlert = ({ title, description }) => {
+    if(title == null) {
+      console.warn('sendBottomAlert: title is required');
+      return;
+    }
+    if(description == null) {
+      console.warn('sendBottomAlert: description is required');
+      return;
+    }
+    Haptics.notificationError();
     return new Promise((resolve) => {
       setShowBottomAlert({
         title,
@@ -47,8 +66,8 @@ const OverlayContextProvider = ({ children }) => {
       sendBottomAlert,
     }}>
       {children}
-      <BottomModal visible={showBottomAlert != null} {...showBottomAlert} />
-      <AlertModal visible={showAlertModal != null} {...showAlertModal} />
+      <BottomModal visible={showBottomAlert != null} data={showBottomAlert} />
+      <AlertModal visible={showAlertModal != null} data={showAlertModal} />
     </OverlayContext.Provider>
   );
 };

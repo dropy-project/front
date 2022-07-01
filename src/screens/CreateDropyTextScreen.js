@@ -13,13 +13,37 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import GoBackHeader from '../components/GoBackHeader';
 import GlassButton from '../components/GlassButton';
 import MEDIA_TYPES from '../utils/mediaTypes';
+import useOverlay from '../hooks/useOverlay';
 
 const CreateDropyTextScreen = ({ navigation, route }) => {
+
+  const { sendAlert } = useOverlay();
 
   const { dropyData = '' } = route.params || {};
   const [text, setText] = useState(dropyData);
 
-  const handleTextSubmit = () => {
+  const handleTextSubmit = async () => {
+    Keyboard.dismiss();
+
+    if(text.length < 20) {
+      sendAlert({
+        title: 'That\'s it?',
+        description: 'Hey this is a bit short !\nBe a hero and add more details to your drop !',
+        validateText: 'OK',
+      });
+      return;
+    }
+
+    if(text.length < 100) {
+      const result = await sendAlert({
+        title: 'Short but efficient!',
+        description: 'Nothing more to say ?\nThink of who\'s gonna see this drop!',
+        denyText: 'Send anyway!',
+        validateText: 'I can do longer!',
+      });
+      if(result) return;
+    }
+
     const params = {
       dropyFilePath: null,
       dropyData: text,
