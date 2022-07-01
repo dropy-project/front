@@ -27,17 +27,18 @@ export default GlassCircleButton;
 const styles = StyleSheet.create({
   container: {
     ...Styles.center,
-    ...Styles.hardShadows,
-    shadowOpacity: 0.7,
-    shadowRadius: 8,
-    shadowColor: Colors.purple1,
   },
   contentContainer: {
     borderRadius: 35,
-    backgroundColor: '#7B6DCD',
+    backgroundColor: Colors.purple1,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
+    ...Styles.hardShadows,
+    elevation: 10,
+    shadowOpacity: 0.7,
+    shadowRadius: 8,
+    shadowColor: Colors.purple1,
   },
   svg: {
     position:'absolute',

@@ -16,6 +16,10 @@ const CreateDropyFromLibrary = ({ navigation }) => {
         presentationStyle: 'overFullScreen',
       });
 
+      if(result.didCancel) {
+        throw new Error('User cancelled image picker');
+      }
+
       const params = {
         dropyFilePath: await compressImage(result.assets[0].uri),
         dropyData: null,
