@@ -78,7 +78,7 @@ const BackgroundGolocationProvider = ({ children }) => {
 
       url: API.userBackgroundGeolocationPingUrl(),
       headers: {
-        'Authorization': authTokens,
+        'Authorization': authTokens.authTokenData.token,
       },
     });
   };
