@@ -14,6 +14,7 @@ import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
 import GeolocationProvider from './src/states/GeolocationContextProvider';
 import BackgroundGolocationContextProvider from './src/states/BackgroundGolocationContextProvider';
+import NotificationProvider from './src/states/NotificationProvider';
 
 export default function App() {
 
@@ -31,11 +32,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <UserProvider>
-        <BackgroundGolocationContextProvider>
-          <GeolocationProvider>
-            <Navigation />
-          </GeolocationProvider>
-        </BackgroundGolocationContextProvider>
+        <NotificationProvider>
+          <BackgroundGolocationContextProvider>
+            <GeolocationProvider>
+              <Navigation />
+            </GeolocationProvider>
+          </BackgroundGolocationContextProvider>
+        </NotificationProvider>
       </UserProvider>
     </NavigationContainer>
   );

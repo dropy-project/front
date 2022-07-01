@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import CompassHeading from 'react-native-compass-heading';
 
 export const GeolocationContext = createContext(null);
@@ -9,11 +8,11 @@ const GeolocationProvider = ({ children }) => {
 
   const [userCoordinates, setUserCoordinates] = useState(null);
   const [compassHeading, setCompassHeading] = useState(0);
+  const [isGeolocationEnabled, setGeolocation] = useState(false);
 
   useEffect(() => {
     const geolocationWatchId = registerGeolocationListener();
     registerCompassListener();
-
     return () => {
       Geolocation.clearWatch(geolocationWatchId);
       CompassHeading.stop();
@@ -27,8 +26,10 @@ const GeolocationProvider = ({ children }) => {
     },
     console.warn,
     {
-      enableHighAccuracy: false,
-      distanceFilter: 1,
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 1000,
+      distanceFilter: 0,
     }
   );
 
@@ -48,3 +49,4 @@ const GeolocationProvider = ({ children }) => {
 };
 
 export default GeolocationProvider;
+

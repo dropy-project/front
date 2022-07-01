@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, SafeAreaView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  SafeAreaView,
+  Platform,
+  KeyboardAvoidingView
+} from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { Colors, Fonts } from '../styles/Styles';
-import GlassButton from '../components/GlassButton';
+import Styles, { Colors, Fonts } from '../styles/Styles';
 import Svg1 from '../assets/svgs/background_auth_1.svg';
 import Svg2 from '../assets/svgs/background_auth_2.svg';
 import Svg3 from '../assets/svgs/background_auth_3.svg';
@@ -30,23 +37,26 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View>
-        <Svg2 height={500} width={450} style={{ ...styles.svg }} />
-        <Svg1 height={400} width={250} style={{ ...styles.svg }} />
-        <Svg3 height={400} width={400} style={{ ...styles.svg }} />
+        <Svg2 height={500} width={'110%'} style={{ ...styles.svg }} />
+        <Svg1 height={400} width={'60%'} style={{ ...styles.svg }} />
+        <Svg3 height={400} width={'110%'} style={{ ...styles.svg }} />
       </View>
-      <SafeAreaView style={styles.content} >
+      <SafeAreaView style={styles.content}  >
         <Text style={{ ...Fonts.bold(50, Colors.white) }}>Dropy</Text>
-        <TextInput
-          onChangeText={(text) => setNameValue(text)}
-          style={{ ...Fonts.bold(15, Colors.grey), ...styles.textInput }}
-          placeholder="What's your name ?" placeholderTextColor={Colors.lighterGrey}
-        />
-        <GlassButton
-          disabled={name.length === 0}
-          style={styles.largeButton}
-          buttonText={'start'}
-          onPress={register}
-        />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.avoidingView}
+          keyboardVerticalOffset={responsiveHeight(20)}
+        >
+          <TextInput
+            onChangeText={(text) => setNameValue(text)}
+            style={{ ...Fonts.bold(15, Colors.grey), ...styles.textInput }}
+            placeholder="What's your name ?"
+            placeholderTextColor={Colors.lightGrey}
+            returnKeyType="go"
+            onEndEditing={register}
+          />
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </View>
   );
@@ -64,20 +74,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   textInput: {
-    marginBottom: responsiveHeight(20),
     width: 267,
-    height: 45,
     borderRadius: 14,
     padding: 15,
     backgroundColor: Colors.lighterGrey,
   },
-  largeButton: {
-    position: 'absolute',
-    bottom: responsiveHeight(7),
-    width: 228,
-    height: 57,
-  },
   svg: {
     position: 'absolute',
+  },
+  avoidingView: {
+    width: '100%',
+    ...Styles.center,
   },
 });

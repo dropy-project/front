@@ -271,6 +271,11 @@ dependencies {
     
     // implementation "react-native-haptic-feedback:1.13.1"
 
+    implementation project(':react-native-notifications')
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+
+    apply plugin: 'com.google.gms.google-services'
+
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
