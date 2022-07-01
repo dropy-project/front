@@ -1,9 +1,8 @@
 import React, { createContext, useEffect, useState } from 'react';
 import Geolocation from 'react-native-geolocation-service';
 import CompassHeading from 'react-native-compass-heading';
-import { Button, Text, View } from 'react-native';
 import usePermissions from '../hooks/usePermissions';
-import Styles, { Fonts } from '../styles/Styles';
+import GeolocationModal from '../components/overlays/GeolocationModal';
 
 export const GeolocationContext = createContext(null);
 
@@ -48,12 +47,7 @@ const GeolocationProvider = ({ children }) => {
       userCoordinates,
       compassHeading,
     }}>
-      {geolocationForegroundState === 'granted' ? children : (
-        <View style={{ ...Styles.center, flex: 1 }}>
-          <Text style={{ ...Fonts.regular(20) }}>Geolocation not enabled</Text>
-          <Button title='Request' onPress={requestForegroundGeolocation}></Button>
-        </View>
-      )}
+      {geolocationForegroundState === 'granted' ? children : <GeolocationModal />}
     </GeolocationContext.Provider>
   );
 };

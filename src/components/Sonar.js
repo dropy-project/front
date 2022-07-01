@@ -44,7 +44,7 @@ const Sonar = () => {
 
   return (
     <>
-      <AnimatedSvg style={{ ...styles.container, transform: [{ scale: sonarScale }], opacity: sonarOpacity }} height="100" width="100">
+      <AnimatedSvg pointerEvents="none" style={{ ...styles.container, transform: [{ scale: sonarScale }], opacity: sonarOpacity }} height="100" width="100">
         <RadialGradient
           id="grad"
           cx="50%"

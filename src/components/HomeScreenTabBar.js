@@ -16,6 +16,7 @@ import Svg, { Path } from 'react-native-svg';
 import Haptics from '../utils/haptics';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import useOverlay from '../hooks/useOverlay';
 import GlassCircleButton from './GlassCircleButton';
 
 const mainButtonSize = responsiveHeight(7.5);
@@ -26,6 +27,8 @@ const HomeScreenTabBar = () => {
 
   const [dropyMenuIsOpen, setDropyMenuIsOpen] = useState(false);
   const [renderMenuOverlay, setRenderMenuOverlay] = useState(false);
+
+  const { sendAlert } = useOverlay();
 
   const menuAnimatedValue = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -64,9 +67,10 @@ const HomeScreenTabBar = () => {
     setDropyMenuIsOpen(false);
   };
 
-  const handleMusic = () => {
-    navigation.navigate('OverlayProvider');
+  const handleMusic = async () => {
     setDropyMenuIsOpen(false);
+    const result = await sendAlert('Bonsoir', 'Je suis une supe alert', 'fermer', 'ok super');
+    console.log('Résultat alert : ', result);
   };
 
   return (
@@ -81,14 +85,14 @@ const HomeScreenTabBar = () => {
         <Path d={d} fill="white" />
       </Svg>
       <View style={styles.tabsContainer}>
-        <TabBarItem text="Drops">
+        <TabBarItem text="Drops" routeName="Chat">
           <Ionicons
             name="md-bookmark-outline"
             size={iconsSize}
             color={Colors.grey}
           />
         </TabBarItem>
-        <TabBarItem text="Chat" routeName="OverlayProvider" showStatusDot>
+        <TabBarItem text="Chat" routeName="Chat" showStatusDot>
           <Ionicons
             name="md-chatbubble-outline"
             size={iconsSize}
@@ -98,22 +102,24 @@ const HomeScreenTabBar = () => {
         </TabBarItem>
       </View>
       {renderMenuOverlay && (
-        <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
+        <>
+          <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
+          <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={menuAnimatedValue}>
+            <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
+              <SimpleLineIcons name="picture" size={30} color={Colors.grey} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddText}>
+              <MaterialCommunityIcons name="format-text" size={30} color={Colors.grey}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.dropySelectionButton} onPress={handleTakePicture}>
+              <Entypo name="camera" size={30} color={Colors.grey} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.dropySelectionButton}>
+              <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} onPress={handleMusic}/>
+            </TouchableOpacity>
+          </DropyWheel>
+        </>
       )}
-      <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={menuAnimatedValue}>
-        <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
-          <SimpleLineIcons name="picture" size={30} color={Colors.grey} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddText}>
-          <MaterialCommunityIcons name="format-text" size={30} color={Colors.grey}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.dropySelectionButton} onPress={handleTakePicture}>
-          <Entypo name="camera" size={30} color={Colors.grey} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.dropySelectionButton}>
-          <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} onPress={handleMusic}/>
-        </TouchableOpacity>
-      </DropyWheel>
       <GlassCircleButton
         style={styles.mainButton}
         size={mainButtonSize}

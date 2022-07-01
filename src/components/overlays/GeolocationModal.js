@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import DropyLogo from '../../assets/svgs/dropy_logo.svg';
 import GlassButton from '../GlassButton';
 
 
 
-const GeolocationModal = ({ navigation }) => {
+const GeolocationModal = () => {
   return (
     <View style={styles.container}>
       <View style={styles.mainContent}>
@@ -14,7 +14,7 @@ const GeolocationModal = ({ navigation }) => {
         <Text style={styles.title}>Geolocation is not enabled</Text>
         <Text style={styles.description}>We will not be able to find anything around you if your position is unknown...</Text>
       </View>
-      <GlassButton onPress={() => navigation.navigate('Chat')} buttonText={'Open settings'} disabled={false} style={styles.openSettingsButton} fontSize={14}>
+      <GlassButton onPress={() => Linking.openSettings()} buttonText={'Open settings'} disabled={false} style={styles.openSettingsButton} fontSize={14}>
       </GlassButton>
     </View>
   );

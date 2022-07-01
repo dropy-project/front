@@ -1,29 +1,56 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import GlassButton from '../GlassButton';
 
+const AlertModal = ({ visible, title, description, denyText, validateText, onPressValidate, onPressDeny }) => {
 
-const AlertModal = ({ navigation, title, description }) => {
+  const [render, setRender] = useState(false);
+  const animatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    setRender(true);
+    const anim = Animated.timing(animatedValue, {
+      toValue: visible ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    });
+    anim.start(({ finished }) => {
+      if (finished) {
+        setRender(visible);
+      }
+    });
+    return anim.stop;
+  }, [visible]);
+
+  const scaleValue = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.5, 1],
+  });
+
+  if(!render) return null;
+
   return (
-    <View style={styles.backgroundContainer}>
-      <View style={styles.container}>
-        {/* <Text style={styles.title}>Receive notifications while walking onto a drop</Text> */}
+    <Animated.View style={{ ...styles.backgroundContainer, opacity: animatedValue }}>
+      <Animated.View style={{ ...styles.container, transform: [{ scale: scaleValue }] }}>
         <Text style={styles.title}>{title}</Text>
-        <Entypo name="cross" size={24} style={styles.cross} onPress={() => navigation.navigate('Home')} />
-        {/* <Text style={styles.description}>Enable background geolocation, finds drop without having the app open</Text> */}
+        <Entypo name="cross" size={24} style={styles.cross} onPress={onPressDeny} />
         <Text style={styles.description}>{description}</Text>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.laterButton}>
-            <Text style={{ ...Fonts.bold(14, Colors.darkGrey), letterSpacing: 4 }}>later</Text>
+          <TouchableOpacity style={styles.denyButton} onPress={onPressDeny}>
+            <Text style={{ ...Fonts.bold(14, Colors.darkGrey), letterSpacing: 4 }}>{denyText}</Text>
           </TouchableOpacity>
-          <GlassButton onPress={() => navigation.navigate('Chat')} buttonText={'turn on'} disabled={false} style={styles.turnonButton} fontSize={14}>
+          <GlassButton
+            onPress={onPressValidate}
+            buttonText={validateText}
+            style={styles.turnonButton}
+            fontSize={14}
+          >
           </GlassButton>
         </View>
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   );
 };
 
@@ -32,6 +59,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     ...Styles.center,
+    ...StyleSheet.absoluteFillObject,
   },
   container: {
     position: 'absolute',
@@ -63,8 +91,9 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around' },
-  laterButton: {
+    justifyContent: 'space-around',
+  },
+  denyButton: {
     height: 50,
     borderRadius: 25,
     ...Styles.center,

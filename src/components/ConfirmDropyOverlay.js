@@ -21,12 +21,17 @@ import useGeolocation from '../hooks/useGeolocation';
 
 import Haptics from '../utils/haptics';
 
+import useOverlay from '../hooks/useOverlay';
 import GlassButton from './GlassButton';
 import ProfileAvatar from './ProfileAvatar';
 import GoBackHeader from './GoBackHeader';
 import AnimatedDropyPreviewBox, { OVERLAY_STATE } from './AnimatedDropyPreviewBox';
 
+
+
 const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams }) => {
+
+  const { sendBottomAlert } = useOverlay();
 
   const navigation = useNavigation();
 
@@ -89,6 +94,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       }
     } catch (error) {
       console.log('Error while creating dropy', error?.response?.data || error);
+      sendBottomAlert();
     } finally {
       setTimeout(() => {
         Haptics.notificationSuccess();
