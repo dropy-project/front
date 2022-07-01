@@ -5,14 +5,20 @@ import { Ionicons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import ProfileAvatar from './ProfileAvatar';
 
-const Conversation = ({ username = 'Tomm', lastMessagePreview = 'J\'ai 2 m à Tomm car on m\'ai...',lastMessageTimeStamp = '13:12', isOnline = true, isRead = true }) => {
+const Conversation = ({ username, lastMessagePreview,lastMessageTimeStamp, isOnline, isRead }) => {
   return (
     <View style={{ ...styles.container }}>
-      <ProfileAvatar/>
-      <Text style={styles.usernameText}> {username}</Text>
-      <Text style={styles.lastMessageText}> {lastMessagePreview}</Text>
-      <Text style={styles.lastMessageTimeStampText}> {lastMessageTimeStamp}</Text>
-      <Ionicons name="checkmark-done" size={20} color={isRead ? Colors.mainBlue : Colors.black} />
+      <View>
+        <ProfileAvatar showStatusDot={true} isUserOnline ={isOnline} pictureSRC = {require('../assets/icons/Tomm.png')} />
+      </View>
+      <View style={{ ...styles.infoContainer }}>
+        <Text style={styles.usernameText}> {username}</Text>
+        <Text style={styles.lastMessageText}> {lastMessagePreview}</Text>
+      </View>
+      <View style={{ ...styles.timeStampContainer }}>
+        <Ionicons name="checkmark-done" size={20} color={isRead ? Colors.mainBlue : Colors.black} />
+        <Text style={styles.lastMessageTimeStampText}> {lastMessageTimeStamp}</Text>
+      </View>
     </View>
   );
 };
@@ -21,13 +27,29 @@ export default Conversation;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 100,
+    width: '100%',
     backgroundColor: 'white',
     ...Styles.center,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    paddingHorizontal: 10,
   },
   usernameText: {
     ...Fonts.bold(20, 'black'),
-    marginHorizontal: 20,
-    marginVertical: 10,
+    marginBottom: 10,
+  },
+  infoContainer: {
+    width: 200,
+    textAlign: 'left',
+    overflow: 'hidden',
+  },
+  timeStampContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
   },
 });

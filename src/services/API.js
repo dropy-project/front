@@ -3,7 +3,7 @@ import { getUniqueId } from 'react-native-device-info';
 import Axios from 'axios';
 import Storage from '../utils/storage';
 
-const SERVER_BASE_URL = 'https://api.dropy-app.com';
+const SERVER_BASE_URL = 'http://192.168.1.11:3000';
 
 const axios = Axios.create({
   baseURL: SERVER_BASE_URL,
@@ -115,6 +115,11 @@ const getDropy = async (dropyId) => {
   return result;
 };
 
+const getConversations = async () => {
+  const result = await axios.get('/user/conversations');
+  return result;
+};
+
 const API = {
   getHeaders,
   register,
@@ -128,6 +133,7 @@ const API = {
   getDropyMedia,
   getDropy,
   postUserDeviceToken,
+  getConversations,
 };
 
 export default API;

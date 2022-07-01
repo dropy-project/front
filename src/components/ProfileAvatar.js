@@ -1,18 +1,23 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-const ProfileAvatar = ({ style, size = 80, showQuestionMark = false, showStatusDot, isUserOnline, picture= '.' }) => {
+const ProfileAvatar = ({ style, size = 80, showQuestionMark = false, showStatusDot, isUserOnline, pictureSRC }) => {
   return (
     <View style={{ ...styles.container, width: size, height: size, borderRadius: size / 3, ...style }}>
       <View style={{ ...styles.imageContainer, borderRadius: size / 3.6 }} >
-        {showQuestionMark ? (
-          <Text style={Fonts.bold(size / 3, Colors.white)}>?</Text>
-        ) : (
-          <>{ /* TO DO profile picture */ }</>
+        {pictureSRC && (
+          <Image source={ pictureSRC } style={StyleSheet.absoluteFillObject} resizeMode={'cover'} />
         )}
+        {showQuestionMark && (
+          <Text style={Fonts.bold(size / 3, Colors.white)}>?</Text>
+        )
+        }
       </View>
+      {showStatusDot && (
+        <View style={{ ...styles.statusDot, backgroundColor: isUserOnline ? 'lightgreen' : 'grey' }} />
+      )}
     </View>
   );
 };
@@ -31,5 +36,17 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     ...Styles.center,
+    overflow: 'hidden',
+  },
+  statusDot: {
+    height: 20,
+    width: 20,
+    borderRadius: 16,
+    borderColor: 'white',
+    borderWidth: 3,
+    bottom: -5,
+    right: -5,
+    position: 'absolute',
+
   },
 });
