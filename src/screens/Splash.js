@@ -8,16 +8,16 @@ const Splash = ({ navigation }) => {
 
   const { setUser, user } = useCurrentUser();
 
-  const [isInitialised, setIsInitialised] = useState(false);
-
   const autoLogin = async () => {
     try {
+      console.log('start login');
       const user = await API.login();
+      console.log('end login');
       setUser(user);
     } catch (error) {
       if (error.response?.status === 409) {
         console.log('No user found linked to this device UID');
-        navigation.navigate('Register');
+        navigation.reset({ index: 0, routes: [{ name: 'Register' }] });
       } else {
         console.error(error?.response?.data || error);
       }
@@ -25,9 +25,8 @@ const Splash = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if(user != null && isInitialised === false) {
-      navigation.navigate('Home');
-      setIsInitialised(true);
+    if(user != null) {
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     }
   }, [user]);
 
@@ -37,7 +36,7 @@ const Splash = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ ...Fonts.regular(15, Colors.darkGrey) }}>Loading ...</Text>
+      <Text style={{ ...Fonts.regular(15, Colors.darkGrey) }}>{user == null ? 'Login process' : `${user.username} | Loading app ...`}</Text>
     </View>
   );
 };
