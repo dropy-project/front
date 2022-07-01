@@ -10,7 +10,7 @@ import CreateDropyFromLibrary from '../screens/CreateDropyFromLibrary';
 import GetDropyScreen from '../screens/GetDropyScreen';
 import DisplayDropyMedia from '../screens/DisplayDropyMedia';
 import CreateDropyTakePicture from '../screens/CreateDropyTakePicture';
-import AlertModal from '../components/overlays/AlertModal';
+import GeolocationModal from '../components/overlays/GeolocationModal';
 
 const MainStack = createStackNavigator();
 
@@ -34,7 +34,7 @@ export default function Navigation() {
       <MainStack.Screen name="CreateDropyTakePicture" component={CreateDropyTakePicture} />
       <MainStack.Screen name="GetDropy" component={GetDropyScreen} />
       <MainStack.Screen name="DisplayDropyMedia" component={DisplayDropyMedia} />
-      <MainStack.Screen name="OverlayProvider" component={AlertModal} />
+      <MainStack.Screen name="OverlayProvider" component={GeolocationModal} />
     </MainStack.Navigator>
   );
 }
