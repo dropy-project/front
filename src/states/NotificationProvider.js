@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Notifications } from 'react-native-notifications';
 import useCurrentUser from '../hooks/useCurrentUser';
 import API from '../services/API';
@@ -6,6 +6,7 @@ import API from '../services/API';
 const NotificationProvider = ({ children }) => {
 
   const { user } = useCurrentUser();
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     if(user != null)
@@ -13,6 +14,9 @@ const NotificationProvider = ({ children }) => {
   }, [user]);
 
   const setupNotifications = () => {
+    if(initialized) return;
+    setInitialized(true);
+
     Notifications.registerRemoteNotifications();
 
     sendDeviceToken();
