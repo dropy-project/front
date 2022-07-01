@@ -27,10 +27,13 @@ const login = async () => {
   const response = await axios.post('/login', {
     uid,
   });
-  const token = response.headers['set-cookie'];
-  axios.defaults.headers.common['Authorization'] = token;
-  await Storage.setItem('@auth_tokens', token);
-  return response.data;
+
+  const  { authTokenData, refreshTokenData, user } = response.data;
+  axios.defaults.headers.common['Authorization'] = authTokenData.token;
+
+  await Storage.setItem('@auth_tokens', { authTokenData, refreshTokenData });
+
+  return user;
 };
 
 const createDropy = async (latitude, longitude) => {
