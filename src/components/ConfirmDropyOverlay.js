@@ -98,7 +98,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
     } finally {
       setTimeout(() => {
         Haptics.notificationSuccess();
-        closeOverlay();
+        closeOverlay('Oops, we could not send this dropy into outer space...', 'We\'ll try again when your internet connection gets better' );
       }, 1300);
     }
   };

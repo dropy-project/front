@@ -28,7 +28,7 @@ const OverlayContextProvider = ({ children }) => {
     });
   };
 
-  const sendBottomAlert = (title = 'Oops, we could not send this dropy into outer space...', description = 'We\'ll try again when your internet connection gets better') => {
+  const sendBottomAlert = (title = 'truite', description = 'Vive les truites') => {
     return new Promise((resolve) => {
       setShowBottomAlert({
         title,
