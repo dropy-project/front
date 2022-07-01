@@ -88,7 +88,7 @@ const HomeScreenTabBar = () => {
             color={Colors.grey}
           />
         </TabBarItem>
-        <TabBarItem text="Chat" routeName="Chat" showStatusDot>
+        <TabBarItem text="Chat" routeName="OverlayProvider" showStatusDot>
           <Ionicons
             name="md-chatbubble-outline"
             size={iconsSize}

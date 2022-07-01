@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Entypo , AntDesign } from '@expo/vector-icons';
-import Styles, { Colors, Fonts } from '../styles/Styles';
+import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 
-const OverlayProvider = ({ navigation }) => {
+const BottomModal = ({ navigation }) => {
   return (
 
     <View style={styles.container}>
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OverlayProvider;
+export default BottomModal;
