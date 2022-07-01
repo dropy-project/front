@@ -29,7 +29,7 @@ const CreateDropyFromLibrary = ({ navigation }) => {
       });
 
     } catch (error) {
-      console.log(error);
+      console.error('Open image library error', error);
       navigation.goBack();
     }
   };
