@@ -1,13 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Animated,
+  Easing
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import GlassButton from '../GlassButton';
 
-const AlertModal = ({ visible, title, description, denyText, validateText, onPressValidate, onPressDeny }) => {
+const AlertModal = ({ visible, data }) => {
+
+  const [lastData, setLastData] = useState(data);
 
   const [render, setRender] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if(visible)
+      setLastData(data);
+  }, [data]);
 
   useEffect(() => {
     setRender(true);
@@ -15,6 +30,7 @@ const AlertModal = ({ visible, title, description, denyText, validateText, onPre
       toValue: visible ? 1 : 0,
       duration: 200,
       useNativeDriver: true,
+      easing: Easing.elastic(1.1),
     });
     anim.start(({ finished }) => {
       if (finished) {
@@ -34,17 +50,27 @@ const AlertModal = ({ visible, title, description, denyText, validateText, onPre
   return (
     <Animated.View style={{ ...styles.backgroundContainer, opacity: animatedValue }}>
       <Animated.View style={{ ...styles.container, transform: [{ scale: scaleValue }] }}>
-        <Text style={styles.title}>{title}</Text>
-        <Entypo name="cross" size={24} style={styles.cross} onPress={onPressDeny} />
-        <Text style={styles.description}>{description}</Text>
+        <Text style={styles.title}>{lastData?.title}</Text>
+
+        <TouchableOpacity onPress={lastData?.onPressDeny} style={styles.cross}>
+          <Ionicons name="ios-close" size={24} color={Colors.lightGrey} />
+        </TouchableOpacity>
+
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.description}>{lastData?.description}</Text>
+        </View>
+
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.denyButton} onPress={onPressDeny}>
-            <Text style={{ ...Fonts.bold(14, Colors.darkGrey), letterSpacing: 4 }}>{denyText}</Text>
-          </TouchableOpacity>
+          {lastData?.denyText != null && (
+            <TouchableOpacity style={styles.denyButton} onPress={lastData?.onPressDeny}>
+              <Text style={{ ...Fonts.bold(14, Colors.darkGrey), letterSpacing: 1, textAlign: 'center' }}>{lastData?.denyText}</Text>
+            </TouchableOpacity>
+          )}
           <GlassButton
-            onPress={onPressValidate}
-            buttonText={validateText}
-            style={styles.turnonButton}
+            onPress={lastData?.onPressValidate}
+            buttonText={lastData?.validateText}
+            style={styles.validateButton}
+            te
             fontSize={14}
           >
           </GlassButton>
@@ -63,27 +89,32 @@ const styles = StyleSheet.create({
   },
   container: {
     position: 'absolute',
-    height: 300,
     backgroundColor: Colors.white,
     borderRadius: 25,
-    width:300,
+    width: responsiveWidth(80),
     ...Styles.hardShadows,
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    paddingTop: 30,
+    paddingBottom: 10,
   },
   cross: {
-    color: Colors.lightGrey,
     position: 'absolute',
-    top: '5%',
-    right: '3%',
+    top: 10,
+    right: 10,
   },
   title: {
-    ...Fonts.bold(14, Colors.purple1),
+    ...Fonts.bold(16, Colors.purple1),
     paddingHorizontal: 10,
     textAlign: 'center',
   },
+  descriptionContainer: {
+    width: '90%',
+    minHeight: 100,
+    ...Styles.center,
+  },
   description: {
-    ...Fonts.bold(12, Colors.grey),
+    ...Fonts.bold(13, Colors.grey),
     textAlign: 'center',
     paddingHorizontal: 10,
   },
@@ -91,20 +122,26 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
   denyButton: {
     height: 50,
+    width: '50%',
     borderRadius: 25,
     ...Styles.center,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
+    ...Styles.center,
   },
-  turnonButton: {
-    height: 50,
-    borderRadius: 25,
+  validateButton: {
+    minHeight: 50,
+    flex: 1,
+    borderRadius: 20,
     ...Styles.hardShadows,
     ...Styles.center,
     paddingHorizontal: 10,
+    paddingVertical: 10,
   },
 });
 

@@ -67,10 +67,13 @@ const HomeScreenTabBar = () => {
     setDropyMenuIsOpen(false);
   };
 
-  const handleMusic = async () => {
+  const handleMusic = () => {
     setDropyMenuIsOpen(false);
-    const result = await sendAlert('Bonsoir', 'Je suis une supe alert', 'fermer', 'ok super');
-    console.log('Résultat alert : ', result);
+    sendAlert({
+      title: 'Not available yet',
+      description: 'Creating musical drops will soon be possible.',
+      validateText: 'OK !',
+    });
   };
 
   return (
@@ -85,7 +88,7 @@ const HomeScreenTabBar = () => {
         <Path d={d} fill="white" />
       </Svg>
       <View style={styles.tabsContainer}>
-        <TabBarItem text="Drops" routeName="Chat">
+        <TabBarItem text="Drops">
           <Ionicons
             name="md-bookmark-outline"
             size={iconsSize}
@@ -171,9 +174,18 @@ const DropyWheelItem = ({ children, index, childCount, size }) => {
 
 const TabBarItem = ({ children, text, showStatusDot, routeName }) => {
 
+  const { sendAlert } = useOverlay();
   const navigation = useNavigation();
 
   const goToRoute = () => {
+    if(routeName == null) {
+      sendAlert({
+        title: 'Oups...',
+        description: 'Looks like you can\'t go there yet... \n This page is under construction !',
+        validateText: 'OK !',
+      });
+      return;
+    }
     navigation.navigate(routeName);
   };
 
