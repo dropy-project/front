@@ -85,7 +85,7 @@ const HomeScreenTabBar = () => {
         <Path d={d} fill="white" />
       </Svg>
       <View style={styles.tabsContainer}>
-        <TabBarItem text="Drops" routeName="Chat">
+        <TabBarItem text="Drops" routeName="Conversation">
           <Ionicons
             name="md-bookmark-outline"
             size={iconsSize}

@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-const ProfileAvatar = ({ style, size = 80, showQuestionMark = false }) => {
+const ProfileAvatar = ({ style, size = 80, showQuestionMark = false, showStatusDot, isUserOnline, picture= '.' }) => {
   return (
     <View style={{ ...styles.container, width: size, height: size, borderRadius: size / 3, ...style }}>
       <View style={{ ...styles.imageContainer, borderRadius: size / 3.6 }} >
