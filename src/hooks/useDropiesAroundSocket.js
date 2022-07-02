@@ -38,12 +38,6 @@ const useDropiesAroundSocket = () => {
       setDropiesAround(pute ?? []);
     });
 
-    // socketRef.current.on('dropy_created', (dropies) => {
-    // });
-
-    // socketRef.current.on('dropy_retreived', (dropies) => {
-    // });
-
     socketRef.current.on('connect_error', (err) => {
       log(`connect_error due to ${err.message}`);
     });
