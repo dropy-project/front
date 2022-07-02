@@ -117,8 +117,8 @@ const HomeScreenTabBar = () => {
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleTakePicture}>
               <Entypo name="camera" size={30} color={Colors.grey} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.dropySelectionButton}>
-              <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} onPress={handleMusic}/>
+            <TouchableOpacity style={styles.dropySelectionButton} onPress={handleMusic}>
+              <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} />
             </TouchableOpacity>
           </DropyWheel>
         </>

@@ -27,9 +27,7 @@ import ProfileAvatar from './ProfileAvatar';
 import GoBackHeader from './GoBackHeader';
 import AnimatedDropyPreviewBox, { OVERLAY_STATE } from './AnimatedDropyPreviewBox';
 
-
-
-const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams }) => {
+const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams, createDropy }) => {
 
   const { sendBottomAlert } = useOverlay();
 
@@ -84,14 +82,20 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       Haptics.impactHeavy();
       setAntiSpamOn(true);
       setOverlayState(OVERLAY_STATE.LOADING_POST);
-      const dropy = await API.createDropy(userCoordinates.latitude, userCoordinates.longitude);
+
+      const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude);
+      if(response.error != null) {
+        throw response.error;
+      }
+
       if(mediaIsFile(dropyCreateParams.mediaType)) {
-        const mediaResult = await API.postDropyMediaFromPath(dropy.id, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
+        const mediaResult = await API.postDropyMediaFromPath(response.data, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
         console.log('[File upload] API response', mediaResult.data);
       } else {
-        const mediaResult = await API.postDropyMediaData(dropy.id, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
+        const mediaResult = await API.postDropyMediaData(response.data, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
         console.log('[Data upload] API response', mediaResult.data);
       }
+
       setTimeout(() => {
         Haptics.notificationSuccess();
         closeOverlay();
@@ -101,7 +105,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
         title: 'Oh no...',
         description: 'This drop has been lost somewhere...\nCheck your internet connection!',
       });
-      console.log('Error while creating dropy', error?.response?.data || error);
+      console.error('Error while creating dropy', error?.response?.data || error);
       closeOverlay();
     }
   };

@@ -21,13 +21,13 @@ import DropyMapMarker from '../components/DropyMapMarker';
 
 import useGeolocation from '../hooks/useGeolocation';
 import useMapViewSyncronizer from '../hooks/useMapViewSyncronizer';
-import useTravelDistanceCallback from '../hooks/useTravelDistanceCallback';
 
 import API from '../services/API';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import Sonar from '../components/Sonar';
 import Haptics from '../utils/haptics';
 import useOverlay from '../hooks/useOverlay';
+import useDropiesAroundSocket from '../hooks/useDropiesAroundSocket';
 
 const HomeScreen = ({ navigation, route }) => {
 
@@ -36,21 +36,13 @@ const HomeScreen = ({ navigation, route }) => {
   const mapRef = useRef(null);
 
   const [confirmDropOverlayVisible, setConfirmDropOverlayVisible] = useState(false);
-  const [dropiesAround, setDropiesAround] = useState([]);
 
   const { userCoordinates } = useGeolocation();
   const { sendBottomAlert } = useOverlay();
 
+  const { dropiesAround, createDropy, retreiveDropy } = useDropiesAroundSocket();
+
   useMapViewSyncronizer(mapRef);
-
-  useTravelDistanceCallback(() => fetchDropiesAround(), 60, 15000);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      fetchDropiesAround();
-    });
-    return unsubscribe;
-  }, []);
 
   useEffect(() => {
     if(dropyCreateParams != null) {
@@ -59,44 +51,30 @@ const HomeScreen = ({ navigation, route }) => {
   }, []);
 
   const closeConfirmDropOverlay = () => {
-    fetchDropiesAround();
     setConfirmDropOverlayVisible(false);
   };
 
-  const fetchDropiesAround = async () => {
-    try {
-      if (userCoordinates == null) return;
-      const result = await API.getDropiesAround(userCoordinates.latitude, userCoordinates.longitude);
-      setDropiesAround(result.data ?? []);
-    } catch (error) {
-      console.log('fetchDropiesError', error?.response?.data || error);
-    }
-  };
-
-  const retrieveDropy = async (dropy) => {
+  const handleDropyPressed = async (dropy) => {
     Haptics.impactHeavy();
     try {
+      if(dropy == null) return;
       if (userCoordinates == null) return;
-      if (dropy.isUserDropy) return;
-      const response = await API.retrieveDropy(dropy.id);
-      console.log('Retreive dropy API response', response.data);
+      if (dropy?.isUserDropy) return;
+
+      const response = await retreiveDropy(dropy.id);
+      if(response.error != null) {
+        throw response.error;
+      }
+
       const result = await API.getDropy(dropy.id);
       navigation.navigate('GetDropy', { dropy: result.data });
+
     } catch (error) {
-      console.log('Retrieve dropy error', error?.response?.data ?? error);
-      if(error.response.status === 403) {
-        sendBottomAlert({
-          title: 'Oh no!',
-          description: 'Looks like someone took this drop before you...',
-        });
-      } else {
-        sendBottomAlert({
-          title: 'Oh no!',
-          description: 'Looks like there has been an issue while collecting this drop...\nCheck your internet connection',
-        });
-      }
-    } finally {
-      fetchDropiesAround();
+      console.error(error);
+      sendBottomAlert({
+        title: 'Oh no!',
+        description: 'Looks like there has been an issue while collecting this drop...\nCheck your internet connection',
+      });
     }
   };
 
@@ -114,13 +92,14 @@ const HomeScreen = ({ navigation, route }) => {
         zoomEnabled={false}
       >
         {dropiesAround.map((dropy) => (
-          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => retrieveDropy(dropy)} />
+          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
         ))}
       </MapView>
       <Sonar />
       <HomeScreenTabBar />
       <ToggleBackgroundGeolocation />
       <ConfirmDropyOverlay
+        createDropy={createDropy}
         dropyCreateParams={dropyCreateParams}
         visible={confirmDropOverlayVisible}
         onCloseOverlay={closeConfirmDropOverlay}
