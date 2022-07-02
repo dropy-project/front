@@ -10,7 +10,7 @@ const GlassButton = ({ onPress, buttonText, style, disabled, fontSize = 19 }) =>
   <TouchableOpacity disabled={disabled} onPress={onPress} style={{ ...styles.container, ...style }} >
     <Svg1 width={'80%'} style={{ ...styles.svg, right: '-3%', top: '-35%' }} />
     <Svg2 width={'80%'} style={{ ...styles.svg, left: '-17%' }} />
-    <Text style={{ ...Fonts.bold(fontSize, Colors.white), letterSpacing: 1 }}>{buttonText}</Text>
+    <Text style={{ ...Fonts.bold(fontSize, Colors.white), letterSpacing: 1, textAlign: 'center' }}>{buttonText}</Text>
   </TouchableOpacity>
 );
 

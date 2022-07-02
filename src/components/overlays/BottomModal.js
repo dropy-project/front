@@ -1,13 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Entypo , AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 
-const BottomModal = ({ visible, title, description, onPressClose }) => {
+const BottomModal = ({ visible, data }) => {
+
+  const [lastData, setLastData] = useState(data);
 
   const [render, setRender] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if(visible)
+      setLastData(data);
+  }, [data]);
 
   useEffect(() => {
     setRender(true);
@@ -34,35 +41,40 @@ const BottomModal = ({ visible, title, description, onPressClose }) => {
 
   return (
     <Animated.View style={{ ...styles.container, transform: [{ translateY: translateValue }] }}>
-      <TouchableOpacity style={styles.cross} onPress={onPressClose}>
-        <Entypo name="cross" size={24} color='white' />
+
+      <TouchableOpacity onPress={lastData?.onPressClose} style={styles.cross}>
+        <Ionicons name="ios-close" size={24} color={Colors.white} />
       </TouchableOpacity>
-      <AntDesign style={styles.warning}name="warning" size={70} color="white" />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+
+      <AntDesign style={styles.warning}name="warning" size={50} color="white" />
+      <Text style={styles.title}>{lastData?.title}</Text>
+      <Text style={styles.description}>{lastData?.description}</Text>
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: 400,
     position: 'absolute',
-    bottom: -100,
+    bottom: 0,
+
+    height: '25%',
+    width: '100%',
+
     backgroundColor: Colors.purple2,
+    ...Styles.hardShadows,
+
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    width: '100%',
-    ...Styles.hardShadows,
+
     alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingBottom: 100,
+    justifyContent: 'space-evenly',
+    paddingBottom: '10%',
   },
   cross: {
-    color: Colors.white,
     position: 'absolute',
-    top: '5%',
-    right: '3%',
+    top: 10,
+    right: 10,
   },
   warning: {
     color: Colors.white,
@@ -73,7 +85,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   description: {
-    ...Fonts.regular(13, Colors.lighterGrey),
+    ...Fonts.bold(13, Colors.lighterGrey),
     paddingHorizontal: 20,
     textAlign: 'center',
   },

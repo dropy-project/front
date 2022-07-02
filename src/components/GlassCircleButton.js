@@ -27,6 +27,9 @@ export default GlassCircleButton;
 const styles = StyleSheet.create({
   container: {
     ...Styles.center,
+    ...Styles.hardShadows,
+    shadowOpacity: 0.7,
+    shadowColor: Colors.purple1,
   },
   contentContainer: {
     borderRadius: 35,
