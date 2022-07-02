@@ -54,7 +54,7 @@ const HomeScreen = ({ navigation, route }) => {
     setConfirmDropOverlayVisible(false);
   };
 
-  const retrieveDropylaaaa = async (dropy) => {
+  const handleDropyPressed = async (dropy) => {
     Haptics.impactHeavy();
     try {
       if(dropy == null) return;
@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation, route }) => {
         zoomEnabled={false}
       >
         {dropiesAround.map((dropy) => (
-          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => retrieveDropylaaaa(dropy)} />
+          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
         ))}
       </MapView>
       <Sonar />

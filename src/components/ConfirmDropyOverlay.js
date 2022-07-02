@@ -27,8 +27,6 @@ import ProfileAvatar from './ProfileAvatar';
 import GoBackHeader from './GoBackHeader';
 import AnimatedDropyPreviewBox, { OVERLAY_STATE } from './AnimatedDropyPreviewBox';
 
-
-
 const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams, createDropy }) => {
 
   const { sendBottomAlert } = useOverlay();

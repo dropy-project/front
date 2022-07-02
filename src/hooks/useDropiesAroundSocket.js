@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import API from '../services/API';
+import Socket from '../services/socket';
 import useCurrentUser from './useCurrentUser';
 
 const log = (...params) => {
@@ -16,7 +17,7 @@ const useDropiesAroundSocket = () => {
   const [dropiesAround, setDropiesAround] = useState([]);
 
   useEffect(() => {
-    socketRef.current = io('http://192.168.1.11:4000', {
+    socketRef.current = io(Socket.dropySocketUrl(), {
       transports: ['websocket'],
       extraHeaders: {
         ...API.getHeaders(),
@@ -27,15 +28,19 @@ const useDropiesAroundSocket = () => {
       log('Dropies around socket connected');
     });
 
-    socketRef.current.on('all_dropies_around', (dropies) => {
-      console.log(dropies);
-      const pute = dropies.map((dropy) => {
+    socketRef.current.on('all_dropies_around', (response) => {
+      if(response.error != null) {
+        log('Error getting dropies around', response.error);
+        return;
+      }
+
+      const dropies = response.data.map((dropy) => {
         return {
           ...dropy,
           isUserDropy: dropy.emitterId === user.id,
         };
       });
-      setDropiesAround(pute ?? []);
+      setDropiesAround(dropies ?? []);
     });
 
     socketRef.current.on('connect_error', (err) => {
