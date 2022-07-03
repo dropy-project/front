@@ -20,6 +20,7 @@ export const Colors = {
   lighterGrey: '#E5ECF1',
 
   red: '#f28888',
+  green: '#8FDCB7',
 };
 
 const Styles = {

@@ -3,7 +3,8 @@ import { getUniqueId } from 'react-native-device-info';
 import Axios from 'axios';
 import Storage from '../utils/storage';
 
-const API_BASE_URL = 'https://api.dropy-app.com';
+const API_BASE_URL = 'http://192.168.1.11:3000';
+// const API_BASE_URL = 'https://api.dropy-app.com';
 
 const axios = Axios.create({
   baseURL: API_BASE_URL,
@@ -35,14 +36,6 @@ const login = async () => {
   await Storage.setItem('@auth_tokens', { authTokenData, refreshTokenData });
 
   return user;
-};
-
-const createDropy = async (latitude, longitude) => {
-  const response = await axios.post('/dropy/add', {
-    latitude,
-    longitude,
-  });
-  return response.data;
 };
 
 const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
@@ -79,21 +72,6 @@ const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
   return response;
 };
 
-const getDropiesAround = async (latitude, longitude) => {
-  const result = await axios.post('/dropy/findAround', {
-    latitude,
-    longitude,
-  });
-  return result;
-};
-
-const retrieveDropy = async (dropyId) => {
-  const result = await axios.post('/dropy/retrieve', {
-    dropyId,
-  });
-  return result;
-};
-
 const postUserDeviceToken = (deviceToken) => {
   const result = axios.post('/user/updateDeviceToken', {
     deviceToken,
@@ -128,11 +106,8 @@ const API = {
   getHeaders,
   register,
   login,
-  createDropy,
   postDropyMediaData,
   postDropyMediaFromPath,
-  getDropiesAround,
-  retrieveDropy,
   userBackgroundGeolocationPingUrl,
   getDropyMedia,
   getDropy,
