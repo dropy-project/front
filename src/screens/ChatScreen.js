@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,8 +13,11 @@ import {
   View
 } from 'react-native';
 import ChatBubble from '../components/ChatBubble';
+import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
 import ProfileAvatar from '../components/ProfileAvatar';
+import useChatSocket from '../hooks/useChatSocket';
+import useCurrentUser from '../hooks/useCurrentUser';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const ChatScreen = ({ route }) => {
@@ -22,16 +25,33 @@ const ChatScreen = ({ route }) => {
 
   const [textInputContent, setTextInputContent] = useState('');
 
-  const sendMessage = () => {
+  const scrollViewRef = useRef();
+
+  const { user } = useCurrentUser();
+
+  const { messages, sendMessage, otherUserConnected } = useChatSocket(
+    conversation.id
+  );
+
+  useEffect(() => {
+    scrollViewRef.current.scrollToEnd();
+  }, [messages]);
+
+  const onSubmit = () => {
     Keyboard.dismiss;
     console.log(textInputContent);
+    sendMessage(textInputContent);
     setTextInputContent('');
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <ProfileAvatar size={100} showStatusDot={true} isUserOnline={false} />
+        <ProfileAvatar
+          size={100}
+          showStatusDot={true}
+          isUserOnline={otherUserConnected}
+        />
         <Text style={{ ...Fonts.bold(22, Colors.darkGrey), marginTop: 10 }}>
           {conversation?.user?.username}
         </Text>
@@ -50,25 +70,14 @@ const ChatScreen = ({ route }) => {
       </SafeAreaView>
 
       <ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={100}>
-          <ChatBubble
-            isLeft
-            content={'Salut ça va ?'}
-            read={true}
-            timestamp={'10h23'}
-          />
-          <ChatBubble
-            content={
-              'How wow, ça fais longtemps que je l\'ai posé, bien et toi ?'
-            }
-            read={false}
-            timestamp={'10h24'}
-          />
-        </KeyboardAvoidingView>
+        {messages.map((message, index) => (
+          <FadeInWrapper key={message.id} delay={index * 50}>
+            <ChatBubble isLeft={message.sender.id !== user.id} {...message} />
+          </FadeInWrapper>
+        ))}
       </ScrollView>
 
       <KeyboardAvoidingView
@@ -80,13 +89,14 @@ const ChatScreen = ({ route }) => {
             style={styles.textInput}
             onChangeText={text => setTextInputContent(text)}
             value={textInputContent}
-            onEndEditing={sendMessage}
+            onEndEditing={onSubmit}
             returnKeyType="send"
+            onFocus={() => scrollViewRef.current.scrollToEnd()}
           />
           <TouchableOpacity
             style={styles.sendButton}
             disabled={textInputContent.length === 0}
-            onPress={sendMessage}>
+            onPress={onSubmit}>
             <Ionicons
               name="md-send"
               size={20}

@@ -22,7 +22,7 @@ const ConversationItem = ({
       />
       <View style={styles.infoContainer}>
         <View style={styles.infoTopContainer}>
-          <Text style={styles.usernameText}>{user?.username}</Text>
+          <Text style={styles.usernameText}>{user?.displayName}</Text>
           <View style={{ ...styles.timeStampContainer }}>
             <Ionicons
               name="checkmark-done"
@@ -35,7 +35,7 @@ const ConversationItem = ({
           </View>
         </View>
         <Text style={styles.lastMessageText}>
-          {lastMessagePreview ?? `Send a message to ${user?.username}`}
+          {lastMessagePreview ?? `Send a message to ${user?.displayName}`}
         </Text>
       </View>
 

@@ -6,8 +6,13 @@ const dropySocketUrl = () => {
   return `${SOCKET_BASE_URL}/dropy`;
 };
 
+const chatSocketUrl = () => {
+  return `${SOCKET_BASE_URL}/chat`;
+};
+
 const Socket = {
   dropySocketUrl,
+  chatSocketUrl,
 };
 
 export default Socket;
