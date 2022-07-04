@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import useCurrentUser from '../hooks/useCurrentUser';
 import API from '../services/API';
@@ -10,9 +10,7 @@ const Splash = ({ navigation }) => {
 
   const autoLogin = async () => {
     try {
-      console.log('start login');
       const user = await API.login();
-      console.log('end login');
       setUser(user);
     } catch (error) {
       if (error.response?.status === 409) {

@@ -4,10 +4,18 @@ https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philo
 */
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import API from '../services/API';
+import Styles, { Colors, Fonts } from '../styles/Styles';
 import Storage from '../utils/storage';
 
 import { UserContext } from './UserContextProvider';
@@ -19,11 +27,30 @@ const BackgroundGolocationProvider = ({ children }) => {
 
   const [backgroundGeolocationEnabled, _setBackgroundGeolocationEnabled] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [logs, setLogs] = useState(null);
 
   useEffect(() => {
+    const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, (error) => {
+      console.warn('[onLocation] ERROR: ', error);
+    });
+
+    const motionChangeSubscriber = BackgroundGeolocation.onMotionChange((location) => {
+      console.log('[onMotionChange]', location);
+    });
+
+    const activityChangeSubscriber = BackgroundGeolocation.onActivityChange((activity) => {
+      console.log('[onActivityChange]', activity);
+    });
+
     initializeBackgroundGeolocation().catch(error => {
       console.error('Background geolocation loading error', error);
     });
+
+    return () => {
+      locationSubscriber.remove();
+      motionChangeSubscriber.remove();
+      activityChangeSubscriber.remove();
+    };
   }, [user]);
 
   useEffect(() => {
@@ -52,29 +79,22 @@ const BackgroundGolocationProvider = ({ children }) => {
       return;
     }
 
-    await setupBackgroundGeolocationForUser(authTokens);
+    const state = await setupBackgroundGeolocation(authTokens);
+    _setBackgroundGeolocationEnabled(state.enabled);
 
-    const enabledByUser = await Storage.getItem('@background_geolocation_enabled');
-    setBackgroundGeolocationEnabled(enabledByUser ?? false);
-    log('Initialized successfully');
-
+    log(`Initialized successfully (started : ${state.enabled}`);
     setInitialized(true);
   };
 
-  const setupBackgroundGeolocationForUser = async (authTokens) => {
-    await BackgroundGeolocation.ready({
-      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+  const setupBackgroundGeolocation = async (authTokens) => {
+    return await BackgroundGeolocation.ready({
+      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
       distanceFilter: 10,
-      stopTimeout: 5,
 
-      logLevel: BackgroundGeolocation.LOG_LEVEL_ERROR,
-      logMaxDays: 1,
+      logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
 
       stopOnTerminate: false,
       startOnBoot: true,
-
-      batchSync: false,
-      autoSync: true,
 
       url: API.userBackgroundGeolocationPingUrl(),
       headers: {
@@ -97,12 +117,37 @@ const BackgroundGolocationProvider = ({ children }) => {
     }
   };
 
+  const showLogs = async () => {
+    const data = await BackgroundGeolocation.logger.getLog({
+      limit: 200,
+    });
+    if(logs == null) {
+      setLogs(data);
+      console.log(data);
+    } else {
+      setLogs(null);
+    }
+  };
+
   return (
     <BackgroundGeolocationContext.Provider value={{
       backgroundGeolocationEnabled,
       setBackgroundGeolocationEnabled,
+      showLogs,
     }}>
       {children}
+      {logs != null && (
+        <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.8)', ...Styles.center }}>
+          <ScrollView contentContainerStyle={{ paddingVertical: 200 }}>
+            <Text style={{ ...Fonts.ligth(8, Colors.white), padding: 10 }}>
+              {logs}
+            </Text>
+          </ScrollView>
+          <TouchableOpacity style={{ position: 'absolute', bottom: 30 }} onPress={() => setLogs(null)}>
+            <Text style={{ ...Fonts.bold(14, Colors.white) }}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </BackgroundGeolocationContext.Provider>
   );
 };
