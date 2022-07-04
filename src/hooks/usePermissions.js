@@ -20,14 +20,12 @@ const usePermissions = () => {
     if(Platform.OS === 'ios') {
       setPermissions({
         geolocationForegroundState: await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE),
-        geolocationBackgroundState: await check(PERMISSIONS.IOS.LOCATION_ALWAYS),
         cameraState: await check(PERMISSIONS.IOS.CAMERA),
         audioEnabled: await check(PERMISSIONS.IOS.MICROPHONE),
       });
     } else {
       setPermissions({
         geolocationForegroundState: await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION),
-        geolocationBackgroundState: await check(PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION),
         cameraState: await check(PERMISSIONS.ANDROID.CAMERA),
         microphoneState: await check(PERMISSIONS.ANDROID.RECORD_AUDIO),
       });

@@ -112,7 +112,7 @@ export default HomeScreen;
 
 // TEMPORARY
 const ToggleBackgroundGeolocation = () => {
-  const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
+  const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled, showLogs } = useContext(BackgroundGeolocationContext);
 
   const { sendAlert } = useOverlay();
 
@@ -139,13 +139,22 @@ const ToggleBackgroundGeolocation = () => {
   };
 
   return (
-    <TouchableOpacity style={{ position: 'absolute', top: '10%' }} onPress={toggle}>
-      <View style={styles.toggleBackgroundGeolocButton}>
-        <Text style={styles.toggleBackgroundGeolocButtonText}>
-          {backgroundGeolocationEnabled ? 'Disable background geolocation' : 'Enable background geolocation'}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity style={{ position: 'absolute', top: '10%' }} onPress={toggle}>
+        <View style={styles.toggleBackgroundGeolocButton}>
+          <Text style={styles.toggleBackgroundGeolocButtonText}>
+            {backgroundGeolocationEnabled ? 'Disable background geolocation' : 'Enable background geolocation'}
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={{ position: 'absolute', top: '15%' }} onPress={showLogs}>
+        <View style={styles.toggleBackgroundGeolocButton}>
+          <Text style={styles.toggleBackgroundGeolocButtonText}>
+            Show logs
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </>
   );
 };
 
