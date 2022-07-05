@@ -5,6 +5,7 @@ import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
+import { messageTimeString } from '../utils/time';
 
 const ConversationsScreen = ({ navigation }) => {
   const [conversations, setConversations] = useState([]);
@@ -18,7 +19,14 @@ const ConversationsScreen = ({ navigation }) => {
   const getConversations = async () => {
     try {
       const result = await API.getConversations();
-      setConversations(result.data);
+
+      const datedConversations = result.data.map((conversation) => ({
+        ...conversation,
+        lastMessageDate: messageTimeString(conversation.lastMessageDate),
+      }));
+
+      setConversations(datedConversations);
+      console.log(datedConversations);
     } catch (error) {
       console.log(error?.response?.data ?? error);
       sendAlert({

@@ -8,7 +8,7 @@ import ProfileAvatar from './ProfileAvatar';
 const ConversationItem = ({
   user,
   lastMessagePreview,
-  lastMessageTimeStamp,
+  lastMessageDate,
   isOnline,
   isRead,
   onPress,
@@ -30,7 +30,7 @@ const ConversationItem = ({
               color={isRead ? Colors.mainBlue : Colors.lightGrey}
             />
             <Text style={styles.lastMessageTimeStampText}>
-              {lastMessageTimeStamp ?? '10:20'}
+              {lastMessageDate}
             </Text>
           </View>
         </View>

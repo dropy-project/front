@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-const ChatBubble = ({ isLeft, content, timestamp, read }) => {
+const ChatBubble = ({ isLeft, content, date, read }) => {
   return (
     <View
       style={{
@@ -17,7 +17,7 @@ const ChatBubble = ({ isLeft, content, timestamp, read }) => {
         }}>
         <Text style={styles.textContent}>
           {content}
-          <View style={{ ...styles.timeStampContainer }}>
+          <View style={styles.timeStampContainer}>
             {read && (
               <Ionicons
                 name="checkmark-done"
@@ -26,7 +26,7 @@ const ChatBubble = ({ isLeft, content, timestamp, read }) => {
               />
             )}
             <Text style={styles.lastMessageTimeStampText}>
-              {timestamp ?? '10:20'}
+              {date}
             </Text>
           </View>
         </Text>

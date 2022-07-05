@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
-import API from '../services/API';
-import Socket from '../services/socket';
+import { useContext, useEffect, useState } from 'react';
+import { SocketContext } from '../states/SocketContextProvider';
+import { messageTimeString } from '../utils/time';
 import useCurrentUser from './useCurrentUser';
 
 const log = (...params) => {
@@ -9,50 +8,41 @@ const log = (...params) => {
 };
 
 const useChatSocket = conversationId => {
-  const socketRef = useRef();
 
   const { user } = useCurrentUser();
 
   const [messages, setMessages] = useState([]);
   const [otherUserConnected, setOtherUserConnected] = useState(null);
 
+  const { chatSocket } = useContext(SocketContext);
+
   useEffect(() => {
-    socketRef.current = io(Socket.chatSocketUrl(), {
-      transports: ['websocket'],
-      extraHeaders: {
-        ...API.getHeaders(),
-      },
+
+    chatSocket.emit('join_conversation', conversationId, response => {
+      log(`Chat socket conversation joined ${conversationId}`);
+      if (response.error != null) {
+        log('Error getting messages', response.error);
+        return;
+      }
+      setMessages(response.data.map(message => ({
+        ...message,
+        date: messageTimeString(message.date),
+      })));
     });
 
-    socketRef.current.on('connect', () => {
-      log('Dropies around socket connected');
-
-      socketRef.current.emit('join_conversation', conversationId, response => {
-        if (response.error != null) {
-          log('Error getting messages', response.error);
-          return;
-        }
-        console.log(response);
-        setMessages(response.data ?? []);
-      });
-
-      socketRef.current.emit('user_status', true);
-    });
-
-    socketRef.current.on('message_sent', response => {
+    chatSocket.on('message_sent', response => {
       if (response.error != null) {
         log('Error getting sent message', response.error);
         return;
       }
       console.log(response);
-      setMessages(olds => [...olds, response.data]);
+      setMessages(olds => [...olds, {
+        ...response.data,
+        date: messageTimeString(response.data.date),
+      }]);
     });
 
-    socketRef.current.on('connect_error', err => {
-      log(`connect_error due to ${err.message}`);
-    });
-
-    socketRef.current.on('user_status', response => {
+    chatSocket.on('user_status', response => {
       console.log(response);
       if (response.error != null) {
         log('Error getting user status', response.error);
@@ -61,18 +51,14 @@ const useChatSocket = conversationId => {
       setOtherUserConnected(response.data);
     });
 
-    socketRef.current.on('request_status', () => {
-      socketRef.current.emit('user_status', true);
-    });
-
     return () => {
-      socketRef.current.emit('user_status', false);
-      socketRef.current.disconnect();
+      chatSocket.off('message_sent');
+      chatSocket.off('user_status');
     };
   }, []);
 
   const sendMessage = content => {
-    socketRef.current.emit(
+    chatSocket.emit(
       'message_sent',
       { content, conversationId },
       response => {
@@ -86,7 +72,7 @@ const useChatSocket = conversationId => {
             id: response.data,
             content,
             read: false,
-            date: new Date(),
+            date: messageTimeString(new Date()),
             sender: {
               displayName: user.displayName,
               id: user.id,
