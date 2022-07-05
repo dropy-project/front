@@ -2,19 +2,26 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Entypo, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import  Styles, { Colors, Fonts } from '../styles/Styles';
+import Styles, { Colors, Fonts } from '../styles/Styles';
 
-const GoBackHeader = ({ style, onPressGoBack, text, textStyle, color = Colors.grey, onPressOptions }) => {
-
+const GoBackHeader = ({
+  style,
+  onPressGoBack,
+  text,
+  textStyle,
+  color = Colors.grey,
+  onPressOptions,
+}) => {
   const navigation = useNavigation();
-  const { _onPressGoBack = () => navigation.goBack() } = { onPressGoBack };
 
   return (
     <View style={{ ...styles.container, ...style }}>
-      <TouchableOpacity onPress={_onPressGoBack} style={styles.button}>
+      <TouchableOpacity
+        onPress={onPressGoBack ? onPressGoBack : () => navigation.goBack()}
+        style={styles.button}>
         <Feather name="arrow-left" size={30} color={color} />
       </TouchableOpacity>
-      <Text style={{ ...styles.tipsStyle, ...textStyle, color }}>{ text }</Text>
+      <Text style={{ ...styles.tipsStyle, ...textStyle, color }}>{text}</Text>
       {onPressOptions != null ? (
         <TouchableOpacity onPress={onPressOptions} style={styles.button}>
           <Entypo name="dots-three-horizontal" size={24} color={color} />

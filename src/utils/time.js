@@ -21,14 +21,14 @@ export const messageTimeString = (_date) => {
   const dayDiff = Math.floor((nowNormalized - dateNormalized) / (1000 * 60 * 60 * 24));
 
   if(dayDiff < 1) {
-    const hours = format_two_digits(date.getHours());
-    const minutes = format_two_digits(date.getMinutes());
+    const hours = formatTwoDigits(date.getHours());
+    const minutes = formatTwoDigits(date.getMinutes());
     return `${hours}:${minutes}`;
   } else {
     return `${dayDiff}d`;
   }
 };
 
-function format_two_digits(n) {
+const formatTwoDigits = (n) => {
   return n < 10 ? `0${n}` : n;
-}
+};

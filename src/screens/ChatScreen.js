@@ -73,7 +73,10 @@ const ChatScreen = ({ route }) => {
         ref={scrollViewRef}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
-        {messages.map((message, index) => (
+        {messages.slice(0, messages.length - 20).map((message) => (
+          <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} />
+        ))}
+        {messages.slice(messages.length - 20).map((message, index) => (
           <FadeInWrapper key={message.id} delay={index * 50}>
             <ChatBubble isLeft={message.sender.id !== user.id} {...message} />
           </FadeInWrapper>

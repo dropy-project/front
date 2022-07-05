@@ -7,7 +7,7 @@ const log = (...params) => {
   console.log('\x1b[32m[ Chat Socket ]\x1b[0m', ...params);
 };
 
-const useChatSocket = conversationId => {
+const useChatSocket = (conversationId) => {
 
   const { user } = useCurrentUser();
 
