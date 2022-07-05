@@ -1,20 +1,116 @@
-import React from 'react';
-import { StyleSheet, Text, Image, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
+import ChatBubble from '../components/ChatBubble';
+import FadeInWrapper from '../components/FadeInWrapper';
+import GoBackHeader from '../components/GoBackHeader';
+import ProfileAvatar from '../components/ProfileAvatar';
+import useChatSocket from '../hooks/useChatSocket';
+import useCurrentUser from '../hooks/useCurrentUser';
+import Styles, { Colors, Fonts } from '../styles/Styles';
 
-const ChatScreen = ({ navigation }) => {
+const ChatScreen = ({ route }) => {
+  const { conversation } = route.params;
+
+  const [textInputContent, setTextInputContent] = useState('');
+
+  const scrollViewRef = useRef();
+
+  const { user } = useCurrentUser();
+
+  const { messages, sendMessage, otherUserConnected } = useChatSocket(
+    conversation.id
+  );
+
+  useEffect(() => {
+    scrollViewRef.current.scrollToEnd();
+  }, [messages]);
+
+  const onSubmit = () => {
+    Keyboard.dismiss;
+    console.log(textInputContent);
+    sendMessage(textInputContent);
+    setTextInputContent('');
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Dropy chat</Text>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.navigate('Home')}
-      >
-        <Image
-          source={require('../assets/icons/left-arrow.png')}
-          style={styles.arrow}
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <ProfileAvatar
+          size={100}
+          showStatusDot={true}
+          isUserOnline={otherUserConnected}
         />
-      </TouchableOpacity>
-    </SafeAreaView>
+        <Text style={{ ...Fonts.bold(22, Colors.darkGrey), marginTop: 10 }}>
+          {conversation?.user?.username}
+        </Text>
+        <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>
+          Met x hours ago
+        </Text>
+      </View>
+
+      <SafeAreaView
+        style={{
+          position: 'absolute',
+          width: '100%',
+          flex: 1,
+        }}>
+        <GoBackHeader onPressOptions={() => {}} />
+      </SafeAreaView>
+
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}>
+        {messages.slice(0, messages.length - 20).map((message) => (
+          <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} />
+        ))}
+        {messages.slice(messages.length - 20).map((message, index) => (
+          <FadeInWrapper key={message.id} delay={index * 50}>
+            <ChatBubble isLeft={message.sender.id !== user.id} {...message} />
+          </FadeInWrapper>
+        ))}
+      </ScrollView>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.bottomContainer}>
+          <TextInput
+            placeholder="Send a message..."
+            placeholderTextColor={Colors.lightGrey}
+            style={styles.textInput}
+            onChangeText={text => setTextInputContent(text)}
+            value={textInputContent}
+            onEndEditing={onSubmit}
+            returnKeyType="send"
+            onFocus={() => scrollViewRef.current.scrollToEnd()}
+          />
+          <TouchableOpacity
+            style={styles.sendButton}
+            disabled={textInputContent.length === 0}
+            onPress={onSubmit}>
+            <Ionicons
+              name="md-send"
+              size={20}
+              color={
+                textInputContent.length === 0 ? Colors.lightGrey : Colors.grey
+              }
+            />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -25,21 +121,52 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  text: {
-    color: 'blue',
-    fontSize: 20,
+  headerContainer: {
+    width: '100%',
+    backgroundColor: 'white',
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 50,
+    paddingBottom: 15,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    ...Styles.hardShadows,
   },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 0,
+  scrollView: {
+    flex: 1,
+    width: '100%',
   },
-  arrow: {
-    width: 30,
-    height: 30,
+  scrollViewContent: {
+    width: '100%',
+    paddingVertical: 20,
+    justifyContent: 'flex-end',
+  },
+  bottomContainer: {
+    width: '100%',
+    height: 50,
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    ...Styles.hardShadows,
+    padding: 30,
+    paddingBottom: 80,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  textInput: {
+    paddingHorizontal: 10,
+    flex: 1,
+    height: 40,
+    backgroundColor: Colors.lighterGrey,
+    borderRadius: 10,
+    ...Fonts.bold(13, Colors.grey),
+  },
+  sendButton: {
+    height: 40,
+    width: 40,
+    marginLeft: 10,
+    borderRadius: 10,
+    backgroundColor: Colors.lighterGrey,
+    ...Styles.center,
   },
 });

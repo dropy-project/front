@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
-import API from '../services/API';
-import Socket from '../services/socket';
+import { useContext, useEffect, useState } from 'react';
+import { SocketContext } from '../states/SocketContextProvider';
 import useCurrentUser from './useCurrentUser';
 
 const log = (...params) => {
@@ -10,25 +8,14 @@ const log = (...params) => {
 
 const useDropiesAroundSocket = () => {
 
-  const socketRef = useRef();
-
   const { user } = useCurrentUser();
 
   const [dropiesAround, setDropiesAround] = useState([]);
 
+  const { dropySocket } = useContext(SocketContext);
+
   useEffect(() => {
-    socketRef.current = io(Socket.dropySocketUrl(), {
-      transports: ['websocket'],
-      extraHeaders: {
-        ...API.getHeaders(),
-      },
-    });
-
-    socketRef.current.on('connect', () => {
-      log('Dropies around socket connected');
-    });
-
-    socketRef.current.on('all_dropies_around', (response) => {
+    dropySocket.on('all_dropies_around', (response) => {
       if(response.error != null) {
         log('Error getting dropies around', response.error);
         return;
@@ -43,25 +30,21 @@ const useDropiesAroundSocket = () => {
       setDropiesAround(dropies ?? []);
     });
 
-    socketRef.current.on('connect_error', (err) => {
-      log(`connect_error due to ${err.message}`);
-    });
-
     return () => {
-      socketRef.current.disconnect();
+      dropySocket.off('all_dropies_around');
     };
   }, []);
 
   const createDropy = (latitude, longitude) => {
     return new Promise((resolve) => {
-      socketRef.current.emit('dropy_created', { latitude, longitude }, resolve);
+      dropySocket.emit('dropy_created', { latitude, longitude }, resolve);
     });
   };
 
   const retreiveDropy = (dropyId) => {
     console.log('retreiveDropy', dropyId);
     return new Promise((resolve) => {
-      socketRef.current.emit('dropy_retreived', { dropyId }, resolve);
+      dropySocket.emit('dropy_retreived', { dropyId }, resolve);
     });
   };
 

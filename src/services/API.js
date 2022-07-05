@@ -37,14 +37,6 @@ const login = async () => {
   return user;
 };
 
-const createDropy = async (latitude, longitude) => {
-  const response = await axios.post('/dropy/add', {
-    latitude,
-    longitude,
-  });
-  return response.data;
-};
-
 const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
   // eslint-disable-next-line no-undef
   var data = new FormData();
@@ -79,21 +71,6 @@ const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
   return response;
 };
 
-const getDropiesAround = async (latitude, longitude) => {
-  const result = await axios.post('/dropy/findAround', {
-    latitude,
-    longitude,
-  });
-  return result;
-};
-
-const retrieveDropy = async (dropyId) => {
-  const result = await axios.post('/dropy/retrieve', {
-    dropyId,
-  });
-  return result;
-};
-
 const postUserDeviceToken = (deviceToken) => {
   const result = axios.post('/user/updateDeviceToken', {
     deviceToken,
@@ -119,19 +96,22 @@ const getDropy = async (dropyId) => {
   return result;
 };
 
+const getConversations = async () => {
+  const result = await axios.get('/user/conversations');
+  return result;
+};
+
 const API = {
   getHeaders,
   register,
   login,
-  createDropy,
   postDropyMediaData,
   postDropyMediaFromPath,
-  getDropiesAround,
-  retrieveDropy,
   userBackgroundGeolocationPingUrl,
   getDropyMedia,
   getDropy,
   postUserDeviceToken,
+  getConversations,
   dropyMediaUrl,
 };
 

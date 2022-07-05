@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import RegisterScreen from '../screens/RegisterScreen';
-import ChatScreen from '../screens/ChatScreen';
+import ConversationsScreen from '../screens/ConversationsScreen';
 import HomeScreen from '../screens/HomeScreen';
 import MuseumScreen from '../screens/MuseumScreen';
 import Splash from '../screens/Splash';
@@ -10,6 +10,7 @@ import CreateDropyFromLibrary from '../screens/CreateDropyFromLibrary';
 import GetDropyScreen from '../screens/GetDropyScreen';
 import DisplayDropyMedia from '../screens/DisplayDropyMedia';
 import CreateDropyTakePicture from '../screens/CreateDropyTakePicture';
+import ChatScreen from '../screens/ChatScreen';
 
 const MainStack = createStackNavigator();
 
@@ -26,6 +27,7 @@ export default function Navigation() {
       <MainStack.Screen name="Splash" component={Splash} />
       <MainStack.Screen name="Register" component={RegisterScreen} />
       <MainStack.Screen name="Home" component={HomeScreen} />
+      <MainStack.Screen name="Conversations" component={ConversationsScreen} />
       <MainStack.Screen name="Chat" component={ChatScreen} />
       <MainStack.Screen name="Museum" component={MuseumScreen} />
       <MainStack.Screen name="CreateDropyText" component={CreateDropyTextScreen} />
