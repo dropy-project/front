@@ -29,9 +29,7 @@ const ChatScreen = ({ route }) => {
 
   const { user } = useCurrentUser();
 
-  const { messages, sendMessage, otherUserConnected } = useChatSocket(
-    conversation.id
-  );
+  const { messages, sendMessage, otherUserConnected } = useChatSocket(conversation.id);
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd();

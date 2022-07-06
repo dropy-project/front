@@ -1,9 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import { messageTimeString } from '../utils/time';
+import DropyMediaViewer from './DropyMediaViewer';
 
 const ChatBubble = ({ isLeft, content, date, read }) => {
+
+  if(typeof content !== 'string') {
+    return (
+      <View style={styles.dropyContainer}>
+        <DropyMediaViewer {...content} style={styles.dropyMediaContainer} />
+        <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>{messageTimeString(content.retrieveDate)}</Text>
+      </View>
+    );
+  }
+
   return (
     <View
       style={{
@@ -43,6 +56,18 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     paddingVertical: 5,
+  },
+  dropyContainer: {
+    paddingVertical: 30,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  dropyMediaContainer: {
+    height: responsiveWidth(80),
+    width: responsiveWidth(60),
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: Colors.lighterGrey,
   },
   bubble: {
     maxWidth: '70%',
