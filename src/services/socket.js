@@ -1,17 +1,46 @@
+import { io } from 'socket.io-client';
+import API from './API';
 
 const SOCKET_BASE_URL = 'https://socket.dropy-app.com';
 
-const dropySocketUrl = () => {
-  return `${SOCKET_BASE_URL}/dropy`;
+const initSockets = () => {
+  Socket.dropySocket = io(`${SOCKET_BASE_URL}/dropy`, {
+    transports: ['websocket'],
+    extraHeaders: {
+      ...API.getHeaders(),
+    },
+  });
+
+  Socket.chatSocket = io(`${SOCKET_BASE_URL}/chat`, {
+    transports: ['websocket'],
+    extraHeaders: {
+      ...API.getHeaders(),
+    },
+  });
+
+  Socket.dropySocket.on('connect_error', err => {
+    console.error(`Dropy socket connect_error due to ${err.message}`);
+  });
+
+  Socket.chatSocket.on('connect_error', err => {
+    console.error(`Chat socket connect_error due to ${err.message}`);
+  });
 };
 
-const chatSocketUrl = () => {
-  return `${SOCKET_BASE_URL}/chat`;
+const destroySockets = () => {
+  Socket.dropySocket?.disconnect();
+  Socket.chatSocket?.disconnect();
+
+  Socket.dropySocket = null;
+  Socket.chatSocket = null;
 };
 
 const Socket = {
-  dropySocketUrl,
-  chatSocketUrl,
+  initSockets,
+  destroySockets,
+  dropySocket: null,
+  chatSocket: null,
 };
 
 export default Socket;
+

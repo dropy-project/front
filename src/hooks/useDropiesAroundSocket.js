@@ -1,10 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../states/SocketContextProvider';
+import { useEffect, useState } from 'react';
+import Socket from '../services/socket';
 import useCurrentUser from './useCurrentUser';
-
-const log = (...params) => {
-  console.log('\x1b[33m[ DropiesAround Socket ]\x1b[0m', ...params);
-};
 
 const useDropiesAroundSocket = () => {
 
@@ -12,12 +8,10 @@ const useDropiesAroundSocket = () => {
 
   const [dropiesAround, setDropiesAround] = useState([]);
 
-  const { dropySocket } = useContext(SocketContext);
-
   useEffect(() => {
-    dropySocket.on('all_dropies_around', (response) => {
+    Socket.dropySocket.on('all_dropies_around', (response) => {
       if(response.error != null) {
-        log('Error getting dropies around', response.error);
+        console.error('Error getting dropies around', response.error);
         return;
       }
 
@@ -31,20 +25,19 @@ const useDropiesAroundSocket = () => {
     });
 
     return () => {
-      dropySocket.off('all_dropies_around');
+      Socket.dropySocket.off('all_dropies_around');
     };
   }, []);
 
   const createDropy = (latitude, longitude) => {
     return new Promise((resolve) => {
-      dropySocket.emit('dropy_created', { latitude, longitude }, resolve);
+      Socket.dropySocket.emit('dropy_created', { latitude, longitude }, resolve);
     });
   };
 
   const retreiveDropy = (dropyId) => {
-    console.log('retreiveDropy', dropyId);
     return new Promise((resolve) => {
-      dropySocket.emit('dropy_retreived', { dropyId }, resolve);
+      Socket.dropySocket.emit('dropy_retreived', { dropyId }, resolve);
     });
   };
 

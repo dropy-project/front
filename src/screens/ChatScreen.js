@@ -37,7 +37,7 @@ const ChatScreen = ({ route }) => {
 
   const onSubmit = () => {
     Keyboard.dismiss;
-    console.log(textInputContent);
+    if(textInputContent.length < 0) return;
     sendMessage(textInputContent);
     setTextInputContent('');
   };
