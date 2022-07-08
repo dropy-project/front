@@ -13,6 +13,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B09796FB28781CC7005CF48D /* dropy_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B09796FA28781CC7005CF48D /* dropy_sound.mp3 */; };
+		B09796FD28781CD0005CF48D /* message_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B09796FC28781CD0005CF48D /* message_sound.mp3 */; };
 		C816C5204BC753784C23D85A /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6F5C4FF9B5C0B552280A53 /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +43,8 @@
 		6D589A229BEB57579B51FC42 /* Pods-dropy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropy.release.xcconfig"; path = "Target Support Files/Pods-dropy/Pods-dropy.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = dropy/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B3DF828E19B0492196AE144 /* Pods-dropy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropy.debug.xcconfig"; path = "Target Support Files/Pods-dropy/Pods-dropy.debug.xcconfig"; sourceTree = "<group>"; };
+		B09796FA28781CC7005CF48D /* dropy_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = dropy_sound.mp3; sourceTree = "<group>"; };
+		B09796FC28781CD0005CF48D /* message_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = message_sound.mp3; sourceTree = "<group>"; };
 		B0D8E493286A0B1400256D66 /* dropy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = dropy.entitlements; path = dropy/dropy.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -84,6 +88,8 @@
 		13B07FAE1A68108700A75B9A /* dropy */ = {
 			isa = PBXGroup;
 			children = (
+				B09796FA28781CC7005CF48D /* dropy_sound.mp3 */,
+				B09796FC28781CD0005CF48D /* message_sound.mp3 */,
 				B0D8E493286A0B1400256D66 /* dropy.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -251,6 +257,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B09796FD28781CD0005CF48D /* message_sound.mp3 in Resources */,
+				B09796FB28781CC7005CF48D /* dropy_sound.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
