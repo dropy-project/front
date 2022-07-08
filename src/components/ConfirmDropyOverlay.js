@@ -89,10 +89,10 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       }
 
       if(mediaIsFile(dropyCreateParams.mediaType)) {
-        const mediaResult = await API.postDropyMediaFromPath(response.data, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
+        const mediaResult = await API.postDropyMediaFromPath(response.data.id, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
         console.log('[File upload] API response', mediaResult.data);
       } else {
-        const mediaResult = await API.postDropyMediaData(response.data, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
+        const mediaResult = await API.postDropyMediaData(response.data.id, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
         console.log('[Data upload] API response', mediaResult.data);
       }
 

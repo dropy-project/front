@@ -1,81 +1,81 @@
-import React, { createContext, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import { useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 
 import Socket from '../services/socket';
-import API from '../services/API';
 import useCurrentUser from '../hooks/useCurrentUser';
 
-export const SocketContext = createContext();
+const log = (...params) => {
+  console.log('\x1b[33m[ Sockets Provider ]\x1b[0m', ...params);
+};
 
 const SocketProvider = ({ children }) => {
 
-  const [dropySocket, setDropySocket] = useState(null);
-  const [chatSocket, setChatSocket] = useState(null);
-
   const { user } = useCurrentUser();
+
+  const isTemporaryDisconnected = useRef(false);
 
   useEffect(() => {
     if(user == null) return;
 
-    console.log('SocketProvider : Sockets initilized');
+    if(AppState.currentState === 'background') {
+      console.log('Socket initilization skipped (App is in background)');
+      return;
+    }
 
-    setDropySocket(io(Socket.dropySocketUrl(), {
-      transports: ['websocket'],
-      extraHeaders: {
-        ...API.getHeaders(),
-      },
-    }));
+    Socket.initSockets();
 
-    setChatSocket(io(Socket.chatSocketUrl(), {
-      transports: ['websocket'],
-      extraHeaders: {
-        ...API.getHeaders(),
-      },
-    }));
+    handleUserStatus();
+
+    log('Sockets initilized');
 
     return () => {
-      dropySocket.disconnect();
-      chatSocket.disconnect();
+      Socket.chatSocket?.emit('user_status', false);
 
-      chatSocket.emit('user_status', false);
-
-      setDropySocket(null);
-      setChatSocket(null);
-      console.log('SocketProvider : Sockets destroyed');
+      Socket.destroySockets();
+      log('Sockets destroyed');
     };
   }, [user]);
 
-  useEffect(() => {
-    if(chatSocket == null) return;
+  const handleUserStatus = () => {
+    if(Socket.chatSocket == null) return;
 
-    chatSocket.on('connect_error', err => {
-      console.error(`Chat socket connect_error due to ${err.message}`);
+    Socket.chatSocket.emit('user_status', true);
+
+    Socket.chatSocket.on('request_status', () => {
+      Socket.chatSocket.emit('user_status', true);
     });
-
-    chatSocket.emit('user_status', true);
-
-    chatSocket.on('request_status', () => {
-      chatSocket.emit('user_status', true);
-    });
-
-  }, [chatSocket]);
+  };
 
   useEffect(() => {
-    if(dropySocket == null) return;
-
-    dropySocket.on('connect_error', (err) => {
-      console.error(`Dropy socket connect_error due to ${err.message}`);
+    const appStateListener = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        if (isTemporaryDisconnected.current) {
+          reconnectSocketsFromTemporaryDisconnection();
+        }
+      } else if (nextAppState.match(/background|inactive/)) {
+        if (Socket.chatSocket.connected || Socket.dropySocket.connected) {
+          temporaryDisconnectSockets();
+        }
+      }
     });
-  }, [dropySocket]);
+    return appStateListener.remove;
+  }, []);
 
-  return (
-    <SocketContext.Provider value={{
-      dropySocket,
-      chatSocket,
-    }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  const reconnectSocketsFromTemporaryDisconnection = () => {
+    log('Reconnecting sockets from temporary disconnection');
+    Socket.dropySocket?.connect();
+    Socket.chatSocket?.connect();
+    isTemporaryDisconnected.current = false;
+  };
+
+  const temporaryDisconnectSockets = () => {
+    log('Temporary disconnecting sockets');
+    Socket.dropySocket?.disconnect();
+    Socket.chatSocket?.disconnect();
+    isTemporaryDisconnected.current = true;
+  };
+
+  return children;
 };
 
 export default SocketProvider;

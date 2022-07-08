@@ -1,10 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../states/SocketContextProvider';
+import { useEffect, useState } from 'react';
+import Socket from '../services/socket';
 import useCurrentUser from './useCurrentUser';
-
-const log = (...params) => {
-  console.log('\x1b[33m[ DropiesAround Socket ]\x1b[0m', ...params);
-};
 
 const useDropiesAroundSocket = () => {
 
@@ -12,39 +8,62 @@ const useDropiesAroundSocket = () => {
 
   const [dropiesAround, setDropiesAround] = useState([]);
 
-  const { dropySocket } = useContext(SocketContext);
-
   useEffect(() => {
-    dropySocket.on('all_dropies_around', (response) => {
-      if(response.error != null) {
-        log('Error getting dropies around', response.error);
+    updateAllDropiesAround();
+    Socket.dropySocket.on('connect', updateAllDropiesAround);
+
+    Socket.dropySocket.on('dropy_created', (response) => {
+
+      if (response.error != null) {
+        console.error('Error getting created dropy', response.error);
+        return;
+      }
+      const newDropy = response.data;
+      console.log('New dropy emitter ', newDropy.emitterId);
+
+      newDropy.isUserDropy = newDropy.emitterId === user.id;
+      setDropiesAround(olds => [...olds, response.data]);
+    });
+
+    Socket.dropySocket.on('dropy_retreived', (response) => {
+      if (response.error != null) {
+        console.error('Error getting retreived dropy', response.error);
         return;
       }
 
-      const dropies = response.data.map((dropy) => {
-        return {
-          ...dropy,
-          isUserDropy: dropy.emitterId === user.id,
-        };
-      });
-      setDropiesAround(dropies ?? []);
+      setDropiesAround(olds => olds.filter(dropy => dropy.id !== response.data));
     });
 
     return () => {
-      dropySocket.off('all_dropies_around');
+      Socket.dropySocket.off('connect');
+      Socket.dropySocket.off('dropy_created');
+      Socket.dropySocket.off('dropy_retreived');
     };
   }, []);
 
+  const updateAllDropiesAround = () => {
+    Socket.dropySocket.emit('all_dropies_around', (response) => {
+      if(response.error != null) {
+        console.error('Error getting dropies around', response.error);
+        return;
+      }
+      const dropies = response.data.map((dropy) =>  ({
+        ...dropy,
+        isUserDropy: dropy.emitterId === user.id,
+      }));
+      setDropiesAround(dropies ?? []);
+    });
+  };
+
   const createDropy = (latitude, longitude) => {
     return new Promise((resolve) => {
-      dropySocket.emit('dropy_created', { latitude, longitude }, resolve);
+      Socket.dropySocket.emit('dropy_created', { latitude, longitude }, resolve);
     });
   };
 
   const retreiveDropy = (dropyId) => {
-    console.log('retreiveDropy', dropyId);
     return new Promise((resolve) => {
-      dropySocket.emit('dropy_retreived', { dropyId }, resolve);
+      Socket.dropySocket.emit('dropy_retreived', { dropyId }, resolve);
     });
   };
 

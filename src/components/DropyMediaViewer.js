@@ -53,7 +53,7 @@ const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject
     );
   }
 
-  console.error('DropyMediaViewer unsupported dropy type');
+  console.error(`DropyMediaViewer unsupported dropy type ${mediaType}`);
   return null;
 };
 
