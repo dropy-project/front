@@ -9,25 +9,51 @@ const useDropiesAroundSocket = () => {
   const [dropiesAround, setDropiesAround] = useState([]);
 
   useEffect(() => {
-    Socket.dropySocket.on('all_dropies_around', (response) => {
+    updateAllDropiesAround();
+    Socket.dropySocket.on('connect', updateAllDropiesAround);
+
+    Socket.dropySocket.on('dropy_created', (response) => {
+
+      if (response.error != null) {
+        console.error('Error getting created dropy', response.error);
+        return;
+      }
+      const newDropy = response.data;
+      console.log('New dropy emitter ', newDropy.emitterId);
+
+      newDropy.isUserDropy = newDropy.emitterId === user.id;
+      setDropiesAround(olds => [...olds, response.data]);
+    });
+
+    Socket.dropySocket.on('dropy_retreived', (response) => {
+      if (response.error != null) {
+        console.error('Error getting retreived dropy', response.error);
+        return;
+      }
+
+      setDropiesAround(olds => olds.filter(dropy => dropy.id !== response.data));
+    });
+
+    return () => {
+      Socket.dropySocket.off('connect');
+      Socket.dropySocket.off('dropy_created');
+      Socket.dropySocket.off('dropy_retreived');
+    };
+  }, []);
+
+  const updateAllDropiesAround = () => {
+    Socket.dropySocket.emit('all_dropies_around', (response) => {
       if(response.error != null) {
         console.error('Error getting dropies around', response.error);
         return;
       }
-
-      const dropies = response.data.map((dropy) => {
-        return {
-          ...dropy,
-          isUserDropy: dropy.emitterId === user.id,
-        };
-      });
+      const dropies = response.data.map((dropy) =>  ({
+        ...dropy,
+        isUserDropy: dropy.emitterId === user.id,
+      }));
       setDropiesAround(dropies ?? []);
     });
-
-    return () => {
-      Socket.dropySocket.off('all_dropies_around');
-    };
-  }, []);
+  };
 
   const createDropy = (latitude, longitude) => {
     return new Promise((resolve) => {

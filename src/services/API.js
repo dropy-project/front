@@ -3,7 +3,8 @@ import { getUniqueId } from 'react-native-device-info';
 import Axios from 'axios';
 import Storage from '../utils/storage';
 
-const API_BASE_URL = 'https://api.dropy-app.com';
+// const API_BASE_URL = 'https://api.dropy-app.com';
+const API_BASE_URL = 'http://192.168.1.11:3000';
 
 const axios = Axios.create({
   baseURL: API_BASE_URL,
