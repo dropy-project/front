@@ -75,7 +75,7 @@ const GetDropyScreen = ({ navigation, route }) => {
       <GoBackHeader onPressGoBack={() => navigation.navigate('Home')} />
       <ParticleEmitter particlesColor={Colors.lighterGrey} />
       <View style={styles.containerImage}>
-        <Text style={styles.topText}>{'You\'ve juste found'}</Text>
+        <Text style={styles.topText}>{'You\'ve just found'}</Text>
         <DropyLogo height={87} width={87} />
         <Text style={styles.bottomText}>A new Drop</Text>
         <Animated.View style={{ ...styles.largeCircle, transform: [{ scale: Animated.multiply(breathing, circleAnimation) }] }} />

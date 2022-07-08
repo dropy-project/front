@@ -1,11 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../states/SocketContextProvider';
+import { useEffect, useState } from 'react';
+import Socket from '../services/socket';
 import { messageTimeString } from '../utils/time';
 import useCurrentUser from './useCurrentUser';
-
-const log = (...params) => {
-  console.log('\x1b[32m[ Chat Socket ]\x1b[0m', ...params);
-};
 
 const useChatSocket = (conversationId) => {
 
@@ -14,25 +10,14 @@ const useChatSocket = (conversationId) => {
   const [messages, setMessages] = useState([]);
   const [otherUserConnected, setOtherUserConnected] = useState(null);
 
-  const { chatSocket } = useContext(SocketContext);
-
   useEffect(() => {
 
-    chatSocket.emit('join_conversation', conversationId, response => {
-      log(`Chat socket conversation joined ${conversationId}`);
-      if (response.error != null) {
-        log('Error getting messages', response.error);
-        return;
-      }
-      setMessages(response.data.map(message => ({
-        ...message,
-        date: messageTimeString(message.date),
-      })));
-    });
+    joinConversation();
+    Socket.chatSocket.on('connect', joinConversation);
 
-    chatSocket.on('message_sent', response => {
+    Socket.chatSocket.on('message_sent', response => {
       if (response.error != null) {
-        log('Error getting sent message', response.error);
+        console.error('Error getting sent message', response.error);
         return;
       }
       console.log(response);
@@ -42,28 +27,44 @@ const useChatSocket = (conversationId) => {
       }]);
     });
 
-    chatSocket.on('user_status', response => {
+    Socket.chatSocket.on('user_status', response => {
       console.log(response);
       if (response.error != null) {
-        log('Error getting user status', response.error);
+        console.error('Error getting user status', response.error);
         return;
       }
       setOtherUserConnected(response.data);
     });
 
     return () => {
-      chatSocket.off('message_sent');
-      chatSocket.off('user_status');
+      Socket.chatSocket.off('connect');
+      Socket.chatSocket.off('message_sent');
+      Socket.chatSocket.off('user_status');
     };
   }, []);
 
+  const joinConversation = () => {
+    Socket.chatSocket.emit('join_conversation', conversationId, response => {
+      console.log(`Chat socket conversation joined ${conversationId}`);
+      if (response.error != null) {
+        console.error('Error getting conversation messages', response.error);
+        return;
+      }
+
+      setMessages(response.data.map(message => ({
+        ...message,
+        date: messageTimeString(message.date),
+      })));
+    });
+  };
+
   const sendMessage = content => {
-    chatSocket.emit(
+    Socket.chatSocket.emit(
       'message_sent',
       { content, conversationId },
       response => {
         if (response.error != null) {
-          log('Error getting messages', response.error);
+          console.error('Error getting messages', response.error);
           return;
         }
         setMessages(olds => [
