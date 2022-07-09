@@ -1,12 +1,18 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { Notifications } from 'react-native-notifications';
+import Notification from '../components/Notification';
 import useCurrentUser from '../hooks/useCurrentUser';
 import API from '../services/API';
 
 const NotificationProvider = ({ children }) => {
 
   const { user } = useCurrentUser();
+  const navigation = useNavigation();
+
   const [initialized, setInitialized] = useState(false);
+
+  const [notificationData, setNotificationData] = useState(null);
 
   useEffect(() => {
     if(user != null)
@@ -21,19 +27,40 @@ const NotificationProvider = ({ children }) => {
 
     sendDeviceToken();
 
-    Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
+    const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
       console.error(event);
     });
 
-    Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
+    const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
       console.log(`Notification received in foreground: ${notification.title} : ${notification.body}`);
       completion({ alert: false, sound: false, badge: false });
+
+      const conversation = JSON.parse(notification.payload.category);
+      console.log(conversation);
+
+      if(conversation == null)
+        return;
+
+
+      setNotificationData({
+        title: notification.title,
+        body: notification.body,
+        onPress: () => {
+          navigation.navigate('Chat', { conversation });
+        },
+      });
     });
 
-    Notifications.events().registerNotificationOpened((notification, completion) => {
+    const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
       console.log(`Notification opened: ${notification.payload}`);
       completion();
     });
+
+    return () => {
+      registrationFailedEvent.remove();
+      receivedForegroundEvent.remove();
+      openedEvent.remove();
+    };
   };
 
   const sendDeviceToken = async () => {
@@ -47,7 +74,12 @@ const NotificationProvider = ({ children }) => {
     });
   };
 
-  return children;
+  return (
+    <>
+      {children}
+      <Notification data={notificationData} onDone={() => setNotificationData(null)} />
+    </>
+  );
 };
 
 export default NotificationProvider;

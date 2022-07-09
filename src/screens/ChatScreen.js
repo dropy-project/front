@@ -29,15 +29,17 @@ const ChatScreen = ({ route }) => {
 
   const { user } = useCurrentUser();
 
+  const [lastMessagesCount, setLastMessagesCount] = useState(0);
   const { messages, sendMessage, otherUserConnected } = useChatSocket(conversation.id);
 
   useEffect(() => {
-    scrollViewRef.current.scrollToEnd();
+    scrollViewRef.current.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
+    setLastMessagesCount(messages.length);
   }, [messages]);
 
   const onSubmit = () => {
     Keyboard.dismiss;
-    if(textInputContent.length < 0) return;
+    if(textInputContent.length <= 0) return;
     sendMessage(textInputContent);
     setTextInputContent('');
   };

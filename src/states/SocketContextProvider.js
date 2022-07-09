@@ -53,7 +53,7 @@ const SocketProvider = ({ children }) => {
           reconnectSocketsFromTemporaryDisconnection();
         }
       } else if (nextAppState.match(/background|inactive/)) {
-        if (Socket.chatSocket.connected || Socket.dropySocket.connected) {
+        if (Socket.chatSocket?.connected || Socket.dropySocket?.connected) {
           temporaryDisconnectSockets();
         }
       }

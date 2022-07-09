@@ -37,6 +37,8 @@ const useChatSocket = (conversationId) => {
     });
 
     return () => {
+      Socket.chatSocket.emit('leave_conversation', conversationId);
+
       Socket.chatSocket.off('connect');
       Socket.chatSocket.off('message_sent');
       Socket.chatSocket.off('user_status');
