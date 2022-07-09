@@ -1,7 +1,10 @@
+import { Platform } from 'react-native';
 import { io } from 'socket.io-client';
 import API from './API';
 
-const SOCKET_BASE_URL = 'https://socket.dropy-app.com';
+// const SOCKET_BASE_URL = 'http://192.168.1.11:4000';
+const SOCKET_BASE_URL = `http://${Platform.OS === 'android' ? 'localhost' : '192.168.1.11'}:4000`;
+// const SOCKET_BASE_URL = 'https://socket.dropy-app.com';
 
 const initSockets = () => {
   Socket.dropySocket = io(`${SOCKET_BASE_URL}/dropy`, {

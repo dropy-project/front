@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Notifications } from 'react-native-notifications';
+import { Platform } from 'react-native';
 import Notification from '../components/Notification';
 import useCurrentUser from '../hooks/useCurrentUser';
 import API from '../services/API';
+
+export const extractNotificationPayload = (notification) => {
+  if(Platform.OS === 'android') {
+    const payload = notification?.payload['gcm.notification.click_action'];
+    if(payload == null) return null;
+    return JSON.parse(payload);
+  } else {
+    const payload = notification?.payload?.aps?.category;
+    if(payload == null) return null;
+    return JSON.parse(payload);
+  }
+};
 
 const NotificationProvider = ({ children }) => {
 
@@ -35,30 +48,24 @@ const NotificationProvider = ({ children }) => {
       console.log(`Notification received in foreground: ${notification.title} : ${notification.body}`);
       completion({ alert: false, sound: false, badge: false });
 
-      const conversation = JSON.parse(notification.payload.category);
-      console.log(conversation);
-
-      if(conversation == null)
-        return;
-
+      const payload = extractNotificationPayload(notification);
+      if(payload == null) return;
 
       setNotificationData({
         title: notification.title,
-        body: notification.body,
-        onPress: () => openConversation(conversation),
+        body: notification.body ?? notification?.payload?.message,
+        onPress: () => openConversation(payload),
       });
     });
 
     const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
+      console.log('App openened from notification');
       completion();
 
-      if(notification == null) return;
+      const payload = extractNotificationPayload(notification);
+      if(payload == null) return;
 
-      const conversation = JSON.parse(notification.payload.category);
-      console.log('App openened from notification');
-
-      if(conversation != null)
-        openConversation(conversation);
+      openConversation(payload);
     });
 
     return () => {
@@ -69,6 +76,7 @@ const NotificationProvider = ({ children }) => {
   };
 
   const openConversation = (conversation) => {
+    if(conversation?.id == null) return;
     navigation.reset({
       index: 2,
       routes: [
