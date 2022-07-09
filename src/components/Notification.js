@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   safeAreaView: {
     width: '100%',
     alignItems: 'center',
+    paddingTop: 20,
   },
   notification: {
     backgroundColor: Colors.purple2,

@@ -26,7 +26,7 @@ const ChatBubble = ({ isLeft, content, date, read }) => {
       <View
         style={{
           ...styles.bubble,
-          backgroundColor: isLeft ? Colors.purple2 : Colors.mainBlue,
+          backgroundColor: isLeft ? Colors.lightGrey : Colors.mainBlue,
         }}>
         <Text style={styles.textContent}>
           {content}

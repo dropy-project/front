@@ -20,7 +20,6 @@ const useChatSocket = (conversationId) => {
         console.error('Error getting sent message', response.error);
         return;
       }
-      console.log(response);
       setMessages(olds => [...olds, {
         ...response.data,
         date: messageTimeString(response.data.date),

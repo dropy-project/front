@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Notifications } from 'react-native-notifications';
 import useCurrentUser from '../hooks/useCurrentUser';
 import API from '../services/API';
+import { extractNotificationPayload } from '../states/NotificationProvider';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const Splash = ({ navigation }) => {
@@ -38,20 +39,16 @@ const Splash = ({ navigation }) => {
   const handleLoginSuccess = async () => {
     const initialNotification = await Notifications.getInitialNotification();
 
-    const initialPayload = initialNotification?.payload?.aps?.category;
+    const payload = extractNotificationPayload(initialNotification);
 
-    let initialConversation = null;
-    if(initialPayload != null) {
-      initialConversation = JSON.parse(initialPayload);
-    }
-
-    if (initialConversation != null) {
+    if (payload?.user?.displayName != null) {
+      console.log('Login success with notification payload', payload);
       navigation.reset({
         index: 2,
         routes: [
           { name: 'Home' },
           { name: 'Conversations' },
-          { name: 'Chat', params: { conversation: initialConversation } }
+          { name: 'Chat', params: { conversation: payload } }
         ],
       });
     } else {
@@ -66,6 +63,9 @@ const Splash = ({ navigation }) => {
       </Text>
       {error != null && (
         <>
+          <Text style={{ ...Fonts.ligth(10, Colors.darkGrey), marginTop: 20 }}>
+            {`${error}`}
+          </Text>
           <TouchableOpacity onPress={login} style={{ marginTop: 30 }}>
             <Text style={{ ...Fonts.regular(15, Colors.red) }}>
           [Retry]
