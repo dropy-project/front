@@ -45,15 +45,20 @@ const NotificationProvider = ({ children }) => {
       setNotificationData({
         title: notification.title,
         body: notification.body,
-        onPress: () => {
-          navigation.navigate('Chat', { conversation });
-        },
+        onPress: () => openConversation(conversation),
       });
     });
 
     const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
-      console.log(`Notification opened: ${notification.payload}`);
       completion();
+
+      if(notification == null) return;
+
+      const conversation = JSON.parse(notification.payload.category);
+      console.log('App openened from notification');
+
+      if(conversation != null)
+        openConversation(conversation);
     });
 
     return () => {
@@ -61,6 +66,17 @@ const NotificationProvider = ({ children }) => {
       receivedForegroundEvent.remove();
       openedEvent.remove();
     };
+  };
+
+  const openConversation = (conversation) => {
+    navigation.reset({
+      index: 2,
+      routes: [
+        { name: 'Home' },
+        { name: 'Conversations' },
+        { name: 'Chat', params: { conversation } }
+      ],
+    });
   };
 
   const sendDeviceToken = async () => {
