@@ -35,6 +35,7 @@ const useConversationSocket = () => {
         return {
           ...c,
           lastMessageDate: messageTimeString(c.lastMessageDate),
+          lastMessagePreview: c.lastMessagePreview == null ? undefined :  decryptMessage(c.lastMessagePreview),
         };
       }));
     });
