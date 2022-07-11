@@ -1,52 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
-import useOverlay from '../hooks/useOverlay';
-import API from '../services/API';
-import { messageTimeString } from '../utils/time';
+import useConversationSocket from '../hooks/useConversationSocket';
 
 const ConversationsScreen = ({ navigation }) => {
-  const [conversations, setConversations] = useState([]);
 
-  const { sendAlert } = useOverlay();
-
-  useEffect(() => {
-    getConversations();
-  }, []);
-
-  const getConversations = async () => {
-    try {
-      const result = await API.getConversations();
-
-      const datedConversations = result.data.map((conversation) => ({
-        ...conversation,
-        lastMessageDate: messageTimeString(conversation.lastMessageDate),
-      }));
-
-      setConversations(datedConversations);
-      console.log(datedConversations);
-    } catch (error) {
-      console.log(error?.response?.data ?? error);
-      sendAlert({
-        title: 'Oh that\'s bad...',
-        description: 'Looks like we can\'t load your conversations right now...',
-      });
-    }
-  };
-
-  const deleteConversation = async (id) => {
-    const deleteConfirmed = sendAlert({
-      title: 'Delete this conversation',
-      description: 'Are you sure you want to delete this conversation?\n This cannot be undone.',
-      denyText: 'Cancel',
-      confirmText: 'Delete',
-    });
-    if(deleteConfirmed) {
-      // TO DO: Delete conversation
-    }
-  };
+  const { conversations } = useConversationSocket();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +22,6 @@ const ConversationsScreen = ({ navigation }) => {
           <FadeInWrapper key={conversation.id} delay={index * 50}>
             <ConversationItem
               onPress={() => navigation.navigate('Chat', { conversation })}
-              onLongPress={() => deleteConversation(conversation.id)}
               {...conversation}
             />
           </FadeInWrapper>
