@@ -1,9 +1,11 @@
-import CryptoJS from 'crypto-js';
+import crypto from 'crypto-js';
+import { SECRET_KEY } from '@env';
 
-export function encryptMessage(text) {
-  return CryptoJS.AES.encrypt(text, 'secret key 123').toString();
-}
+export const encryptMessage = (text) => {
+  return crypto.AES.encrypt(JSON.stringify({ text }), SECRET_KEY).toString();
+};
 
-export function decryptMessage(text) {
-  return CryptoJS.AES.decrypt(text, 'secret key 123').toString(CryptoJS.enc.Utf8);
-}
+export const decryptMessage = (text) => {
+  const info2 = crypto.AES.decrypt(text, SECRET_KEY).toString(crypto.enc.Utf8);
+  return JSON.parse(info2).text;
+};

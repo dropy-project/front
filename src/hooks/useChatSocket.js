@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Socket from '../services/socket';
+import { decryptMessage, encryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
 import useCurrentUser from './useCurrentUser';
 
@@ -23,6 +24,7 @@ const useChatSocket = (conversationId) => {
       setMessages(olds => [...olds, {
         ...response.data,
         date: messageTimeString(response.data.date),
+        content: decryptMessage(response.data.content),
       }]);
     });
 
@@ -55,33 +57,31 @@ const useChatSocket = (conversationId) => {
       setMessages(response.data.map(message => ({
         ...message,
         date: messageTimeString(message.date),
+        content: decryptMessage(message.content),
       })));
     });
   };
 
   const sendMessage = content => {
-    Socket.chatSocket.emit(
-      'message_sent',
-      { content, conversationId },
-      response => {
-        if (response.error != null) {
-          console.error('Error getting messages', response.error);
-          return;
-        }
-        setMessages(olds => [
-          ...olds,
-          {
-            id: response.data,
-            content,
-            read: false,
-            date: messageTimeString(new Date()),
-            sender: {
-              displayName: user.displayName,
-              id: user.id,
-            },
-          }
-        ]);
+    Socket.chatSocket.emit('message_sent', { content: encryptMessage(content), conversationId }, response => {
+      if (response.error != null) {
+        console.error('Error getting messages', response.error);
+        return;
       }
+      setMessages(olds => [
+        ...olds,
+        {
+          id: response.data,
+          content,
+          read: false,
+          date: messageTimeString(new Date()),
+          sender: {
+            displayName: user.displayName,
+            id: user.id,
+          },
+        }
+      ]);
+    }
     );
   };
 

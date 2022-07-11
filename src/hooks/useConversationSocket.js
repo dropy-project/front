@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Socket from '../services/socket';
+import { decryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
 
 const useConversationSocket = () => {
