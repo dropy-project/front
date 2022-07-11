@@ -3,6 +3,8 @@ import Socket from '../services/socket';
 import { messageTimeString } from '../utils/time';
 import useCurrentUser from './useCurrentUser';
 
+export const MESSAGES_PER_PAGE = 30;
+
 const useChatSocket = (conversationId) => {
 
   const { user } = useCurrentUser();
@@ -46,7 +48,10 @@ const useChatSocket = (conversationId) => {
 
   const joinConversation = () => {
     Socket.chatSocket.emit('join_conversation', conversationId, response => {
-      console.log(`Chat socket conversation joined ${conversationId}`);
+      console.log(`Chat socket conversation joined ${conversationId} ${response.status}`);
+    });
+
+    Socket.chatSocket.emit('list_messages', { conversationId, offset: 0, limit: MESSAGES_PER_PAGE }, response => {
       if (response.error != null) {
         console.error('Error getting conversation messages', response.error);
         return;
@@ -60,32 +65,42 @@ const useChatSocket = (conversationId) => {
   };
 
   const sendMessage = content => {
-    Socket.chatSocket.emit(
-      'message_sent',
-      { content, conversationId },
-      response => {
-        if (response.error != null) {
-          console.error('Error getting messages', response.error);
-          return;
-        }
-        setMessages(olds => [
-          ...olds,
-          {
-            id: response.data,
-            content,
-            read: false,
-            date: messageTimeString(new Date()),
-            sender: {
-              displayName: user.displayName,
-              id: user.id,
-            },
-          }
-        ]);
+    Socket.chatSocket.emit('message_sent', { content, conversationId }, response => {
+      if (response.error != null) {
+        console.error('Error getting messages', response.error);
+        return;
       }
+      setMessages(olds => [
+        ...olds,
+        {
+          id: response.data,
+          content,
+          read: false,
+          date: messageTimeString(new Date()),
+          sender: {
+            displayName: user.displayName,
+            id: user.id,
+          },
+        }
+      ]);
+    }
     );
   };
 
-  return { otherUserConnected, sendMessage, messages };
+  const loadMoreMessages = () => {
+    Socket.chatSocket.emit('list_messages', { conversationId, offset: Math.round(messages.length / MESSAGES_PER_PAGE), limit: MESSAGES_PER_PAGE }, response => {
+      if (response.error != null) {
+        console.error('Error getting conversation messages', response.error);
+        return;
+      }
+      setMessages(olds => [...response.data.map(message => ({
+        ...message,
+        date: messageTimeString(message.date),
+      })), ...olds]);
+    });
+  };
+
+  return { otherUserConnected, sendMessage, messages, loadMoreMessages };
 };
 
 export default useChatSocket;
