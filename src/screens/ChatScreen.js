@@ -22,7 +22,6 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const ChatScreen = ({ route }) => {
   const { conversation } = route.params;
-
   const [textInputContent, setTextInputContent] = useState('');
 
   const scrollViewRef = useRef();
@@ -31,6 +30,8 @@ const ChatScreen = ({ route }) => {
 
   const [lastMessagesCount, setLastMessagesCount] = useState(0);
   const { messages, sendMessage, otherUserConnected } = useChatSocket(conversation.id);
+
+  const [ isKeyboardVisible, setIsKeyboardVisible ] = useState(false);
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
@@ -46,19 +47,30 @@ const ChatScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <ProfileAvatar
-          size={100}
-          showStatusDot={true}
-          isUserOnline={otherUserConnected}
-        />
-        <Text style={{ ...Fonts.bold(22, Colors.darkGrey), marginTop: 10 }}>
-          {conversation?.user?.username}
-        </Text>
-        <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>
-          Met x hours ago
-        </Text>
-      </View>
+      {isKeyboardVisible === true ? (
+        <View style={styles.headerContainerKeyboard}>
+          <ProfileAvatar
+            size={100}
+            showStatusDot={true}
+            isUserOnline={otherUserConnected}
+          />
+          <Text style={{ ...Fonts.bold(22, Colors.darkGrey), marginTop: 10 }}>
+            {conversation?.user?.displaName}
+          </Text>
+          <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>
+            {conversation?.user?.displayName}
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.headerContainer}>
+          <View style={styles.userinfos}>
+            <Text style={styles.username}>
+              {conversation.user.displayName}
+            </Text>
+            <View style={{ ...styles.statusDot, backgroundColor: otherUserConnected ? Colors.green : Colors.lightGrey }}/>
+          </View>
+        </View>
+      )}
 
       <SafeAreaView
         style={{
@@ -122,7 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
   },
-  headerContainer: {
+  headerContainerKeyboard: {
     width: '100%',
     backgroundColor: 'white',
     alignItems: 'center',
@@ -131,6 +143,31 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     ...Styles.hardShadows,
+  },
+  headerContainer: {
+    width: '100%',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    ...Styles.hardShadows,
+  },
+  userinfos: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 10,
+    width: '15%',
+  },
+  username: {
+    ...Fonts.bold(20, Colors.darkGrey),
+  },
+  statusDot: {
+    ...Styles.blueShadow,
+    width: 12,
+    height: 12,
+    borderRadius: 16,
   },
   scrollView: {
     flex: 1,
