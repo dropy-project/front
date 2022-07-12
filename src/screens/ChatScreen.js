@@ -19,6 +19,7 @@ import ProfileAvatar from '../components/ProfileAvatar';
 import useChatSocket from '../hooks/useChatSocket';
 import useCurrentUser from '../hooks/useCurrentUser';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import useKeyboardVisible from '../hooks/useKeyboardVisible';
 
 const ChatScreen = ({ route }) => {
   const { conversation } = route.params;
@@ -31,7 +32,7 @@ const ChatScreen = ({ route }) => {
   const [lastMessagesCount, setLastMessagesCount] = useState(0);
   const { messages, sendMessage, otherUserConnected } = useChatSocket(conversation.id);
 
-  const [ isKeyboardVisible, setIsKeyboardVisible ] = useState(false);
+  const isKeyboardVisible = useKeyboardVisible();
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
