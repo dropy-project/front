@@ -10,7 +10,7 @@ export const INITIAL_ZOOM = 17;
  * position and orientation
  * @param mapViewRef
  */
-const useMapViewSyncronizer = (mapViewRef, mapIsReady) => {
+const useMapViewSyncronizer = (mapViewRef, mapIsReady = true) => {
 
   const { userCoordinates, compassHeading } = useGeolocation();
 
