@@ -68,7 +68,7 @@ const NotificationProvider = ({ children }) => {
       openConversation(payload);
     });
 
-    Notifications._ios.setBadgeCount(0);
+    Notifications.ios.setBadgeCount(0);
 
     return () => {
       registrationFailedEvent.remove();
