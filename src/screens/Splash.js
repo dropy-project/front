@@ -23,7 +23,7 @@ const Splash = ({ navigation }) => {
         return;
       }
 
-      console.error(error?.response?.data || error);
+      console.error('Login error', error?.response?.data || error);
       setError(error?.response?.data || error);
     }
   };

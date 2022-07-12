@@ -16,7 +16,7 @@ import ChatBubble from '../components/ChatBubble';
 import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
 import ProfileAvatar from '../components/ProfileAvatar';
-import useChatSocket from '../hooks/useChatSocket';
+import useChatSocket, { MESSAGES_PER_PAGE } from '../hooks/useChatSocket';
 import useCurrentUser from '../hooks/useCurrentUser';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useKeyboardVisible from '../hooks/useKeyboardVisible';
@@ -30,7 +30,8 @@ const ChatScreen = ({ route }) => {
   const { user } = useCurrentUser();
 
   const [lastMessagesCount, setLastMessagesCount] = useState(0);
-  const { messages, sendMessage, otherUserConnected } = useChatSocket(conversation.id);
+
+  const { messages, sendMessage, otherUserConnected, loadMoreMessages } = useChatSocket(conversation.id);
 
   const isKeyboardVisible = useKeyboardVisible();
 
@@ -85,7 +86,13 @@ const ChatScreen = ({ route }) => {
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
+        scrollEventThrottle={16}
         contentContainerStyle={styles.scrollViewContent}>
+        {messages.length >= MESSAGES_PER_PAGE && (
+          <TouchableOpacity style={styles.loadMoreButton} onPress={loadMoreMessages}>
+            <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>Load more</Text>
+          </TouchableOpacity>
+        )}
         {messages.slice(0, messages.length - 20).map((message) => (
           <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} />
         ))}
@@ -178,6 +185,10 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 20,
     justifyContent: 'flex-end',
+  },
+  loadMoreButton: {
+    width: '100%%',
+    ...Styles.center,
   },
   bottomContainer: {
     width: '100%',
