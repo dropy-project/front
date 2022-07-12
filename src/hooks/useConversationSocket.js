@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Socket from '../services/socket';
+import { decryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
 
 const useConversationSocket = () => {
@@ -19,6 +20,9 @@ const useConversationSocket = () => {
           {
             ...response.data,
             lastMessageDate: messageTimeString(response.data.lastMessageDate),
+            lastMessagePreview: response.data.lastMessagePreview == null ?
+              `Start chatting with ${response.data.user.displayName}` :
+              decryptMessage(response.data.lastMessagePreview),
           }
         ];
       });
@@ -30,10 +34,12 @@ const useConversationSocket = () => {
         console.error('The list of the conversations can not be send.', response.error);
         return;
       }
+
       setConversations(response.data.map(c => {
         return {
           ...c,
           lastMessageDate: messageTimeString(c.lastMessageDate),
+          lastMessagePreview: c.lastMessagePreview == null ? undefined : decryptMessage(c.lastMessagePreview),
         };
       }));
     });
