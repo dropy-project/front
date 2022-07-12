@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation, route }) => {
       </MapView>
       <Sonar />
       <HomeScreenTabBar />
-      <TouchableOpacity style={{ position: 'absolute', top: '2%', left: '2%' }} onPress={() => navigation.navigate('ProfilePage')}>
+      <TouchableOpacity style={{ position: 'absolute', top: '2%', left: '2%' }} onPress={() => navigation.navigate('Profile')}>
         <ProfileAvatar
           size={70}
           onPress={() => navigation.navigate('Profile')}
