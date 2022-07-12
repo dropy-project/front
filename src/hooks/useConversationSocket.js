@@ -17,14 +17,14 @@ const useConversationSocket = () => {
 
       setConversations(old => {
         return [
-          ...old.filter(conversation => conversation.id !== response.data.id),
           {
             ...response.data,
             lastMessageDate: messageTimeString(response.data.lastMessageDate),
             lastMessagePreview: response.data.lastMessagePreview == null ?
               `Start chatting with ${response.data.user.displayName}` :
               decryptMessage(response.data.lastMessagePreview),
-          }
+          },
+          ...old.filter(conversation => conversation.id !== response.data.id)
         ];
       });
     });
@@ -38,7 +38,9 @@ const useConversationSocket = () => {
         return;
       }
 
-      setConversations(response.data.map(c => {
+      setConversations(response.data.sort((a, b) => {
+        return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
+      }).map(c => {
         return {
           ...c,
           lastMessageDate: messageTimeString(c.lastMessageDate),

@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   loadMoreButton: {
-    width: '100%%',
+    width: '100%',
     ...Styles.center,
   },
   bottomContainer: {

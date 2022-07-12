@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { messageTimeString } from '../utils/time';
@@ -8,12 +10,13 @@ import DropyMediaViewer from './DropyMediaViewer';
 
 const ChatBubble = ({ isLeft, content, date, read }) => {
 
+  const navigation = useNavigation();
   if(typeof content !== 'string') {
     return (
-      <View style={styles.dropyContainer}>
+      <TouchableOpacity style={styles.dropyContainer}  onPress={() => navigation.navigate('DisplayDropyMedia', { dropy: content, showBottomModal: false })}>
         <DropyMediaViewer {...content} style={styles.dropyMediaContainer} />
         <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>{messageTimeString(content.retrieveDate)}</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 

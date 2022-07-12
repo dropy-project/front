@@ -34,7 +34,7 @@ const ConversationItem = ({
             </Text>
           </View>
         </View>
-        <Text style={styles.lastMessageText}>
+        <Text style={styles.lastMessageText} numberOfLines={1}>
           {lastMessagePreview ?? `Send a message to ${user?.displayName}`}
         </Text>
       </View>
