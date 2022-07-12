@@ -20,7 +20,7 @@ import ConfirmDropyOverlay from '../components/ConfirmDropyOverlay';
 import DropyMapMarker from '../components/DropyMapMarker';
 
 import useGeolocation from '../hooks/useGeolocation';
-import useMapViewSyncronizer from '../hooks/useMapViewSyncronizer';
+import useMapViewSyncronizer, { INITIAL_PITCH, INITIAL_ZOOM } from '../hooks/useMapViewSyncronizer';
 
 import API from '../services/API';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
@@ -34,15 +34,16 @@ const HomeScreen = ({ navigation, route }) => {
   const { dropyCreateParams = null } = route.params || {};
 
   const mapRef = useRef(null);
+  const [mapIsReady, setMapIsReady] = useState(false);
 
   const [confirmDropOverlayVisible, setConfirmDropOverlayVisible] = useState(false);
 
-  const { userCoordinates } = useGeolocation();
+  const { userCoordinates, compassHeading } = useGeolocation();
   const { sendBottomAlert } = useOverlay();
 
   const { dropiesAround, createDropy, retreiveDropy } = useDropiesAroundSocket();
 
-  useMapViewSyncronizer(mapRef);
+  useMapViewSyncronizer(mapRef, mapIsReady);
 
   useEffect(() => {
     if(dropyCreateParams != null) {
@@ -90,6 +91,17 @@ const HomeScreen = ({ navigation, route }) => {
         rotateEnabled={false}
         scrollEnabled={false}
         zoomEnabled={false}
+        initialCamera={{
+          center: {
+            latitude: userCoordinates?.latitude || 0,
+            longitude: userCoordinates?.longitude || 0,
+          },
+          heading: compassHeading || 0,
+          pitch: INITIAL_PITCH,
+          zoom: INITIAL_ZOOM,
+          altitude: 0,
+        }}
+        onMapReady={() => setMapIsReady(true)}
       >
         {dropiesAround.map((dropy) => (
           <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
