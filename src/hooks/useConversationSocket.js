@@ -7,6 +7,7 @@ const useConversationSocket = () => {
   const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
+    if(Socket.chatSocket == null) return;
 
     Socket.chatSocket.on('conversation_updated', (response) => {
       if (response.error != null) {
@@ -29,6 +30,8 @@ const useConversationSocket = () => {
     });
 
     Socket.chatSocket.emit('list_conversations', (response) => {
+      if(Socket.chatSocket == null) return;
+      if(Socket.chatSocket.connected === false) return;
       console.log('Chat socket conversations listed');
       if (response.error != null) {
         console.error('The list of the conversations can not be send.', response.error);

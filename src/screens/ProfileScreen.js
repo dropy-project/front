@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import GoBackHeader from '../components/GoBackHeader';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -10,15 +10,19 @@ import useOverlay from '../hooks/useOverlay';
 const ProfileScreen = () => {
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <GoBackHeader/>
       <View style={styles.wrapper}>
         <ToggleBackgroundGeolocation />
         <Text style={styles.version}>
         Current version is {AppInfo.version}
         </Text>
+        <Text style={styles.version}>
+          {/* eslint-disable-next-line no-undef */}
+        Current server : {__DEV__ ? 'preprod' : 'prod'}
+        </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -55,14 +59,14 @@ const ToggleBackgroundGeolocation = () => {
 
   return (
     <>
-      <TouchableOpacity style={{ position: 'absolute', top: '10%' }} onPress={toggle}>
+      <TouchableOpacity onPress={toggle}>
         <View style={styles.toggleBackgroundGeolocButton}>
           <Text style={styles.toggleBackgroundGeolocButtonText}>
             {backgroundGeolocationEnabled ? 'Disable background geolocation' : 'Enable background geolocation'}
           </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={{ position: 'absolute', top: '15%' }} onPress={showLogs}>
+      <TouchableOpacity style={{ marginVertical: 20 }} onPress={showLogs}>
         <View style={styles.toggleBackgroundGeolocButton}>
           <Text style={styles.toggleBackgroundGeolocButtonText}>
             Show logs
@@ -83,9 +87,8 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     alignItems: 'center',
     backgroundColor: Colors.mainBlue,
-    ...Styles.hardShadows,
     ...Styles.center,
-    borderRadius: 20,
+    borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 15,
   },

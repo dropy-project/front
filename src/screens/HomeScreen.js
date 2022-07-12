@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, StatusBar, Platform, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  StatusBar,
+  Platform,
+  TouchableOpacity,
+  SafeAreaView
+} from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -101,15 +108,15 @@ const HomeScreen = ({ navigation, route }) => {
         ))}
       </MapView>
       <Sonar />
+      <SafeAreaView style={styles.avatarContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <ProfileAvatar
+            size={70}
+            onPress={() => navigation.navigate('Profile')}
+          />
+        </TouchableOpacity>
+      </SafeAreaView>
       <HomeScreenTabBar />
-      <TouchableOpacity style={{ position: 'absolute', top: '2%', left: '2%' }} onPress={() => navigation.navigate('Profile')}>
-        <ProfileAvatar
-          size={70}
-          onPress={() => navigation.navigate('Profile')}
-          showQuestionMark={false}
-          showStatusDot={false}
-        />
-      </TouchableOpacity>
       <ConfirmDropyOverlay
         createDropy={createDropy}
         dropyCreateParams={dropyCreateParams}
@@ -128,5 +135,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     ...Styles.center,
     ...Styles.hardShadows,
+  },
+  avatarContainer: {
+    position: 'absolute',
+    top: 0,
+    width: '90%',
   },
 });
