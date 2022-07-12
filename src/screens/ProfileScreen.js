@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import GoBackHeader from '../components/GoBackHeader';
-import truc from '../../app.json';
+import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import useOverlay from '../hooks/useOverlay';
@@ -15,7 +15,7 @@ const ProfileScreen = () => {
       <View style={styles.wrapper}>
         <ToggleBackgroundGeolocation />
         <Text style={styles.version}>
-        Current version is {truc.version}
+        Current version is {AppInfo.version}
         </Text>
       </View>
     </View>
