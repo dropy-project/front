@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation, route }) => {
       navigation.navigate('GetDropy', { dropy: result.data });
 
     } catch (error) {
-      console.error(error);
+      console.error('Dropy pressed error', error);
       sendBottomAlert({
         title: 'Oh no!',
         description: 'Looks like there has been an issue while collecting this drop...\nCheck your internet connection',

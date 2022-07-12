@@ -26,7 +26,9 @@ const useChatSocket = (conversationId) => {
       setMessages(olds => [...olds, {
         ...response.data,
         date: messageTimeString(response.data.date),
-        content: response.data.content == null ? undefined :  decryptMessage(response.data.content),
+        content: typeof response.data.content === 'string' ?
+          decryptMessage(response.data.content) :
+          response.data.content,
       }]);
     });
 
@@ -62,7 +64,9 @@ const useChatSocket = (conversationId) => {
       setMessages(response.data.map(message => ({
         ...message,
         date: messageTimeString(message.date),
-        content: message.content == null ? undefined :  decryptMessage(message.content),
+        content: typeof message.content === 'string' ?
+          decryptMessage(message.content) :
+          message.content,
       })));
     });
   };
