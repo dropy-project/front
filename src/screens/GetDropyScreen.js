@@ -70,6 +70,16 @@ const GetDropyScreen = ({ navigation, route }) => {
     outputRange: [0.97, 1],
   });
 
+  const handleConfirmation = (dropy) => {
+    navigation.reset({
+      index: 1,
+      routes: [
+        { name: 'Home' },
+        { name: 'DisplayDropyMedia', params: { dropy, showBottoModal: true } }
+      ],
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader onPressGoBack={() => navigation.navigate('Home')} />
@@ -82,7 +92,7 @@ const GetDropyScreen = ({ navigation, route }) => {
         <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle) }] }} />
         <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle) }] }} />
       </View>
-      <FooterConfirmation dropy={dropy} onPress={() => navigation.navigate('DisplayDropyMedia', { dropy })} textButton="Open !"/>
+      <FooterConfirmation dropy={dropy} onPress={() => handleConfirmation(dropy)} textButton="Open !"/>
     </SafeAreaView>
   );
 };
