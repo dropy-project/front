@@ -41,7 +41,7 @@ const NotificationProvider = ({ children }) => {
     sendDeviceToken();
 
     const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
-      console.error(event);
+      console.error('Notification registation error', event);
     });
 
     const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
