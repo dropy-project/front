@@ -36,7 +36,7 @@ export default function Navigation() {
       <MainStack.Screen name="CreateDropyTakePicture" component={CreateDropyTakePicture} />
       <MainStack.Screen name="GetDropy" component={GetDropyScreen} />
       <MainStack.Screen name="DisplayDropyMedia" component={DisplayDropyMediaScreen} />
-      <MainStack.Screen name="ProfilePage" component={ProfileScreen} />
+      <MainStack.Screen name="Profile" component={ProfileScreen} />
     </MainStack.Navigator>
   );
 }
