@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import GoBackHeader from '../components/GoBackHeader';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -10,7 +10,7 @@ import useOverlay from '../hooks/useOverlay';
 const ProfileScreen = () => {
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <GoBackHeader/>
       <View style={styles.wrapper}>
         <ToggleBackgroundGeolocation />
@@ -18,7 +18,7 @@ const ProfileScreen = () => {
         Current version is {AppInfo.version}
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

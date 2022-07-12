@@ -68,6 +68,8 @@ const NotificationProvider = ({ children }) => {
       openConversation(payload);
     });
 
+    Notifications.ios.setBadgeCount(0);
+
     return () => {
       registrationFailedEvent.remove();
       receivedForegroundEvent.remove();

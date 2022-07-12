@@ -9,15 +9,20 @@ import useOverlay from '../hooks/useOverlay';
 import useConversationSocket from '../hooks/useConversationSocket';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
-  const { dropy } = route.params || {};
+  const { dropy, showBottoModal } = route.params || {};
 
   const { sendAlert } = useOverlay();
   const { conversations } = useConversationSocket();
 
   const openChat = async () => {
     try {
-      navigation.navigate('Chat', {
-        conversation: conversations.find(c => c.id === dropy.conversationId),
+      navigation.reset({
+        index: 1,
+        routes: [
+          { name: 'Home' },
+          { name: 'Conversations' },
+          { name: 'Chat', params: { conversation: conversations.find(c => c.id === dropy.conversationId) } }
+        ],
       });
     } catch (error) {
       console.log('Open chat error', error?.response?.data ?? error);
@@ -30,9 +35,11 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader onPressGoBack={() => navigation.navigate('Home')} />
+      <GoBackHeader />
       <DropyMediaViewer {...dropy} />
-      <FooterConfirmation onPress={openChat} dropy={dropy} textButton="Let's chat !" />
+      {showBottoModal && (
+        <FooterConfirmation onPress={openChat} dropy={dropy} textButton="Let's chat !" />
+      )}
     </SafeAreaView>
   );
 };
