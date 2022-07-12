@@ -1,5 +1,6 @@
 {
   "name": "dropy",
   "displayName": "dropy",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "requiredServerVersion": "0.0.1"
 }

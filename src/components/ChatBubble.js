@@ -13,10 +13,12 @@ const ChatBubble = ({ isLeft, content, date, read }) => {
   const navigation = useNavigation();
   if(typeof content !== 'string') {
     return (
-      <TouchableOpacity style={styles.dropyContainer}  onPress={() => navigation.navigate('DisplayDropyMedia', { dropy: content, showBottomModal: false })}>
-        <DropyMediaViewer {...content} style={styles.dropyMediaContainer} />
+      <View style={styles.dropyContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('DisplayDropyMedia', { dropy: content, showBottomModal: false })}>
+          <DropyMediaViewer {...content} style={styles.dropyMediaContainer} />
+        </TouchableOpacity>
         <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>{messageTimeString(content.retrieveDate)}</Text>
-      </TouchableOpacity>
+      </View>
     );
   }
 

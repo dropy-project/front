@@ -2,6 +2,7 @@ import { getUniqueId } from 'react-native-device-info';
 
 import Axios from 'axios';
 import Storage from '../utils/storage';
+import app from '../../app.json';
 
 // eslint-disable-next-line no-undef
 const DOMAIN_PREFIX = __DEV__ ? 'preprod-' : '';
@@ -103,6 +104,16 @@ const getConversations = async () => {
   return result;
 };
 
+const serverVersionIsCompatible = async () => {
+  try {
+    const result = await axios.get(`/version/${app.requiredServerVersion}`);
+    return result.status === 200;
+  } catch (error) {
+    console.error('Checking server version error : ', error?.response?.data ?? error);
+    return false;
+  }
+};
+
 const API = {
   getHeaders,
   register,
@@ -115,6 +126,7 @@ const API = {
   postUserDeviceToken,
   getConversations,
   dropyMediaUrl,
+  serverVersionIsCompatible,
 };
 
 export default API;

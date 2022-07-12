@@ -64,14 +64,14 @@ const ChatScreen = ({ route }) => {
           </Text>
         </View>
       ) : (
-        <View style={styles.headerContainer}>
+        <SafeAreaView style={styles.headerContainer}>
           <View style={styles.userinfos}>
             <Text style={styles.username}>
               {conversation.user.displayName}
             </Text>
             <View style={{ ...styles.statusDot, backgroundColor: otherUserConnected ? Colors.green : Colors.lightGrey }}/>
           </View>
-        </View>
+        </SafeAreaView>
       )}
 
       <SafeAreaView

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Notifications } from 'react-native-notifications';
 import useCurrentUser from '../hooks/useCurrentUser';
+import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import { extractNotificationPayload } from '../states/NotificationProvider';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -10,6 +11,8 @@ const Splash = ({ navigation }) => {
 
   const { setUser, user } = useCurrentUser();
   const [error, setError] = useState(null);
+
+  const { sendAlert } = useOverlay();
 
   const login = async () => {
     setError(null);
@@ -29,7 +32,17 @@ const Splash = ({ navigation }) => {
   };
 
   useEffect(() => {
-    login();
+    API.serverVersionIsCompatible().then(compatible => {
+      if (compatible) {
+        login();
+      } else {
+        sendAlert({
+          title: 'Server version is not compatible',
+          description: 'Please update the app to the latest version',
+        });
+        setError('Server is not compatible with this app version');
+      }
+    });
   }, []);
 
   useEffect(() => {
