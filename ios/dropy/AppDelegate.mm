@@ -30,10 +30,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  RCTAppSetupPrepareApp(application);
-
-  [RNNotifications startMonitorNotifications];
   [GMSServices provideAPIKey:@"AIzaSyByN4eSyZgIP7cMhAYWZEAJVlniGxcmfUU"];
+  [RNNotifications startMonitorNotifications];
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
@@ -47,12 +45,6 @@
 #endif
 
   UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"dropy", nil);
-
-  if (@available(iOS 13.0, *)) {
-    rootView.backgroundColor = [UIColor systemBackgroundColor];
-  } else {
-    rootView.backgroundColor = [UIColor whiteColor];
-  }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];

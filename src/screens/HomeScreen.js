@@ -91,7 +91,7 @@ const HomeScreen = ({ navigation, route }) => {
         rotateEnabled={false}
         scrollEnabled={false}
         zoomEnabled={false}
-        initialCamera={{
+        initialCamera={Platform.OS === 'ios' ? undefined : {
           center: {
             latitude: userCoordinates?.latitude || 0,
             longitude: userCoordinates?.longitude || 0,
