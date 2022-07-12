@@ -49,7 +49,7 @@ const ChatScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      {isKeyboardVisible === true ? (
+      {isKeyboardVisible === false ? (
         <View style={styles.headerContainerKeyboard}>
           <ProfileAvatar
             size={100}
@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
     marginBottom: 10,
-    width: '15%',
   },
   username: {
     ...Fonts.bold(20, Colors.darkGrey),
@@ -176,6 +175,7 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 16,
+    marginLeft: 10,
   },
   scrollView: {
     flex: 1,
