@@ -9,6 +9,7 @@ const useDropiesAroundSocket = () => {
   const [dropiesAround, setDropiesAround] = useState([]);
 
   useEffect(() => {
+    if (Socket.dropySocket == null) return;
     updateAllDropiesAround();
     Socket.dropySocket.on('connect', updateAllDropiesAround);
 
@@ -42,6 +43,8 @@ const useDropiesAroundSocket = () => {
   }, []);
 
   const updateAllDropiesAround = () => {
+    if (Socket.dropySocket == null) return;
+    if (Socket.dropySocket.connected === false) return;
     Socket.dropySocket.emit('all_dropies_around', (response) => {
       if(response.error != null) {
         console.error('Error getting dropies around', response.error);
