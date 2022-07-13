@@ -86,7 +86,7 @@ const HomeScreen = ({ navigation, route }) => {
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         customMapStyle={Platform.OS === 'ios' ? mapStyleIOS : mapStyleAndroid}
-        style={StyleSheet.absoluteFillObject}
+        style={{ ...StyleSheet.absoluteFillObject, width: '100%', height: '100%' }}
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}
