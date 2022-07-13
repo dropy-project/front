@@ -11,11 +11,11 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		5B6CFBE289748703AC6E3991 /* libPods-dropy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4B446A37F7D20BBDD822AB6 /* libPods-dropy.a */; };
+		6EA8AF11F7E60C5EAED9EE1B /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02CEEC46AE2F90549546E3D /* ExpoModulesProvider.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B09796FB28781CC7005CF48D /* dropy_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B09796FA28781CC7005CF48D /* dropy_sound.mp3 */; };
 		B09796FD28781CD0005CF48D /* message_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B09796FC28781CD0005CF48D /* message_sound.mp3 */; };
-		C816C5204BC753784C23D85A /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6F5C4FF9B5C0B552280A53 /* ExpoModulesProvider.swift */; };
+		EEEED4606C8AAD30FC261AD3 /* libPods-Dropy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28CB6450F218523056412763 /* libPods-Dropy.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,14 +38,14 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = dropy/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = dropy/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = dropy/main.m; sourceTree = "<group>"; };
-		3C6F5C4FF9B5C0B552280A53 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-dropy/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		28CB6450F218523056412763 /* libPods-Dropy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Dropy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = dropy/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9C617C8D377EE4C4378BCD70 /* Pods-dropy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropy.debug.xcconfig"; path = "Target Support Files/Pods-dropy/Pods-dropy.debug.xcconfig"; sourceTree = "<group>"; };
-		A4B446A37F7D20BBDD822AB6 /* libPods-dropy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dropy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B09796FA28781CC7005CF48D /* dropy_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = dropy_sound.mp3; sourceTree = "<group>"; };
 		B09796FC28781CD0005CF48D /* message_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = message_sound.mp3; sourceTree = "<group>"; };
 		B0D8E493286A0B1400256D66 /* dropy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = dropy.entitlements; path = dropy/dropy.entitlements; sourceTree = "<group>"; };
-		CC77F996CB799A89C290FF95 /* Pods-dropy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropy.release.xcconfig"; path = "Target Support Files/Pods-dropy/Pods-dropy.release.xcconfig"; sourceTree = "<group>"; };
+		BB22505EBDD516FEB6A14CB4 /* Pods-Dropy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dropy.debug.xcconfig"; path = "Target Support Files/Pods-Dropy/Pods-Dropy.debug.xcconfig"; sourceTree = "<group>"; };
+		D02CEEC46AE2F90549546E3D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Dropy/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		E32175EE742108E7440590B7 /* Pods-Dropy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dropy.release.xcconfig"; path = "Target Support Files/Pods-Dropy/Pods-Dropy.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -61,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B6CFBE289748703AC6E3991 /* libPods-dropy.a in Frameworks */,
+				EEEED4606C8AAD30FC261AD3 /* libPods-Dropy.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,7 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				A4B446A37F7D20BBDD822AB6 /* libPods-dropy.a */,
+				28CB6450F218523056412763 /* libPods-Dropy.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -142,27 +142,27 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		859FBBAA5E87B753E5337BF6 /* Dropy */ = {
+			isa = PBXGroup;
+			children = (
+				D02CEEC46AE2F90549546E3D /* ExpoModulesProvider.swift */,
+			);
+			name = Dropy;
+			sourceTree = "<group>";
+		};
 		98DFA73370E5C38D9E9527A5 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				B9C001CF59D98C70FD82CD8B /* dropy */,
+				859FBBAA5E87B753E5337BF6 /* Dropy */,
 			);
 			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
-		B9C001CF59D98C70FD82CD8B /* dropy */ = {
-			isa = PBXGroup;
-			children = (
-				3C6F5C4FF9B5C0B552280A53 /* ExpoModulesProvider.swift */,
-			);
-			name = dropy;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9C617C8D377EE4C4378BCD70 /* Pods-dropy.debug.xcconfig */,
-				CC77F996CB799A89C290FF95 /* Pods-dropy.release.xcconfig */,
+				BB22505EBDD516FEB6A14CB4 /* Pods-Dropy.debug.xcconfig */,
+				E32175EE742108E7440590B7 /* Pods-Dropy.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -192,14 +192,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Dropy" */;
 			buildPhases = (
-				B8A8F0B8CEC88446A082F17A /* [CP] Check Pods Manifest.lock */,
+				BB9D541AF2D1F55AE2DA2B4E /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				96F25D24A8AD4B718B04249C /* Upload Debug Symbols to Sentry */,
-				9A451436A5DA5DBFA0DC8A78 /* [CP] Copy Pods Resources */,
+				DDA6B543F44ED5D0B114214D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -296,24 +296,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
 		};
-		9A451436A5DA5DBFA0DC8A78 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dropy/Pods-dropy-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dropy/Pods-dropy-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dropy/Pods-dropy-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B8A8F0B8CEC88446A082F17A /* [CP] Check Pods Manifest.lock */ = {
+		BB9D541AF2D1F55AE2DA2B4E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -328,11 +311,28 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-dropy-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Dropy-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DDA6B543F44ED5D0B114214D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dropy/Pods-Dropy-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dropy/Pods-Dropy-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dropy/Pods-Dropy-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -371,7 +371,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				C816C5204BC753784C23D85A /* ExpoModulesProvider.swift in Sources */,
+				6EA8AF11F7E60C5EAED9EE1B /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,7 +439,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C617C8D377EE4C4378BCD70 /* Pods-dropy.debug.xcconfig */;
+			baseConfigurationReference = BB22505EBDD516FEB6A14CB4 /* Pods-Dropy.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -470,13 +470,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CC77F996CB799A89C290FF95 /* Pods-dropy.release.xcconfig */;
+			baseConfigurationReference = E32175EE742108E7440590B7 /* Pods-Dropy.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = dropy/dropy.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9YNDJH2V64;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = dropy/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -491,7 +492,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dropy.project;
-				PRODUCT_NAME = "Dropy";
+				PRODUCT_NAME = Dropy;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -564,6 +565,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -627,6 +629,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
