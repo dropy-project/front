@@ -42,6 +42,7 @@ export default ConversationsScreen;
 
 const styles = StyleSheet.create({
   container: {
+    ...Styles.safeAreaView,
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',

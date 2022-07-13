@@ -5,21 +5,32 @@ import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import useOverlay from '../hooks/useOverlay';
+import useGeolocation from '../hooks/useGeolocation';
 
 
 const ProfileScreen = () => {
 
+  const { userCoordinates, compassHeading } = useGeolocation();
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader/>
       <View style={styles.wrapper}>
         <ToggleBackgroundGeolocation />
-        <Text style={styles.version}>
+        <Text style={styles.text}>
         Current version is {AppInfo.version}
         </Text>
-        <Text style={styles.version}>
+        <Text style={styles.text}>
           {/* eslint-disable-next-line no-undef */}
         Current server : {__DEV__ ? 'preprod' : 'prod'}
+        </Text>
+        <Text style={{ ...styles.text, marginTop: 20 }}>
+          latitude: {userCoordinates.latitude}
+        </Text>
+        <Text style={{ ...styles.text }}>
+          longitude: {userCoordinates.longitude}
+        </Text>
+        <Text style={{ ...styles.text }}>
+          heading: {compassHeading}
         </Text>
       </View>
     </SafeAreaView>
@@ -82,6 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: Colors.white,
+    ...Styles.safeAreaView,
   },
   toggleBackgroundGeolocButton: {
     opacity: 0.8,
@@ -96,7 +108,7 @@ const styles = StyleSheet.create({
     ...Fonts.bold(12, Colors.white),
     textAlign: 'center',
   },
-  version: {
+  text: {
     ...Fonts.bold(12, Colors.darkGrey),
   },
   wrapper: {

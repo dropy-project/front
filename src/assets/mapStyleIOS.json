@@ -12,7 +12,7 @@
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#bdbdbd"
+        "color": "#efefef"
       },
       {
         "visibility": "on"
@@ -328,7 +328,6 @@
       }
     ]
   },
-  {},
   {
     "featureType": "road.highway",
     "elementType": "labels",

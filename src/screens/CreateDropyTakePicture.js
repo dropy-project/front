@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   invertCameraTypeBtn: {
     ...Styles.center,
     position: 'absolute',
-    right: '25%',
+    right: '15%',
     width: 40,
     height: 40,
     borderRadius: 20,
