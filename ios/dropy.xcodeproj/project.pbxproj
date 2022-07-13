@@ -33,7 +33,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* dropyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dropyTests.m; sourceTree = "<group>"; };
 		0752B60E8A183F9BE2E1B5B0 /* Pods-dropy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dropy.release.xcconfig"; path = "Target Support Files/Pods-dropy/Pods-dropy.release.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* dropy (dev).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "dropy (dev).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Dropy (dev).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dropy (dev).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = dropy/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = dropy/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = dropy/Images.xcassets; sourceTree = "<group>"; };
@@ -136,7 +136,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* dropy (dev).app */,
+				13B07F961A680F5B00A75B9A /* Dropy (dev).app */,
 				00E356EE1AD99517003FC87E /* dropyTests.xctest */,
 			);
 			name = Products;
@@ -207,7 +207,7 @@
 			);
 			name = dropy;
 			productName = dropy;
-			productReference = 13B07F961A680F5B00A75B9A /* dropy (dev).app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Dropy (dev).app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -460,7 +460,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dropy.project;
-				PRODUCT_NAME = "dropy (dev)";
+				PRODUCT_NAME = "Dropy (dev)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -489,7 +489,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dropy.project;
-				PRODUCT_NAME = dropy;
+				PRODUCT_NAME = Dropy;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
