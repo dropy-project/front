@@ -49,6 +49,15 @@ const HomeScreen = ({ navigation, route }) => {
     if(dropyCreateParams != null) {
       setConfirmDropOverlayVisible(true);
     }
+    if(Platform.OS === 'ios') {
+      setTimeout(() => {
+        setMapIsReady(true);
+        console.log('MAP READY SKETCHY OVERRIDE');
+        // REMOVE THIS WHEN FIXED IN MAPVIEW
+        // Upgrade rn-maps to 1.0.0 and then check if this is fixed
+        // https://github.com/react-native-maps/react-native-maps/issues/4319
+      }, 2000);
+    }
   }, []);
 
   const closeConfirmDropOverlay = () => {
@@ -91,7 +100,7 @@ const HomeScreen = ({ navigation, route }) => {
         rotateEnabled={false}
         scrollEnabled={false}
         zoomEnabled={false}
-        initialCamera={Platform.OS === 'ios' ? undefined : {
+        initialCamera={{
           center: {
             latitude: userCoordinates?.latitude || 0,
             longitude: userCoordinates?.longitude || 0,
