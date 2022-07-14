@@ -84,5 +84,25 @@
         "visibility": "off"
       }
     ]
+  },
+  {
+    "featureType": "water",
+    "stylers": [
+      {
+        "color": "#a0d3d3"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#efefef"
+      },
+      {
+        "visibility": "on"
+      }
+    ]
   }
 ]

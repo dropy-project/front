@@ -62,6 +62,9 @@ const Styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  safeAreaView: {
+    paddingTop: Platform.OS === 'ios' ? 0 : 20,
+  },
 };
 
 export const Fonts = {

@@ -76,6 +76,7 @@ const ChatScreen = ({ route }) => {
 
       <SafeAreaView
         style={{
+          ...Styles.safeAreaView,
           position: 'absolute',
           width: '100%',
           flex: 1,
@@ -159,13 +160,13 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     ...Styles.hardShadows,
+    ...Styles.safeAreaView,
   },
   userinfos: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   username: {
     ...Fonts.bold(20, Colors.darkGrey),
