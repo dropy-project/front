@@ -13,13 +13,13 @@ const ConversationsScreen = ({ navigation }) => {
   const { conversations, closeConversation } = useConversationSocket();
 
   const handleLongPress = async (conversation) => {
-    const confirmed = sendAlert({
+    const confirmed = await sendAlert({
       title: 'Close conversation',
       description: `Are you sure you want to close the conversation with ${conversation.user.displayName}?`,
       validateText: 'delete',
     });
 
-    if(confirmed) {
+    if(confirmed === true) {
       const result = await closeConversation(conversation.id);
       console.log('Conversation closed', result);
     }

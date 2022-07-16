@@ -55,7 +55,7 @@ const useConversationSocket = () => {
       if(Socket.chatSocket.connected === false) return;
 
       if (response.error != null) {
-        console.error('Error whil getting conversations', response.error);
+        console.error('Error while getting conversations', response.error);
         return;
       }
 

@@ -3,7 +3,7 @@ import API from './API';
 
 // eslint-disable-next-line no-undef
 const DOMAIN_PREFIX = __DEV__ ? 'preprod-' : '';
-const SOCKET_BASE_URL = `https://${DOMAIN_PREFIX}socket.dropy-app.com`;
+const SOCKET_BASE_URL = 'http://172.20.10.3:4000';
 
 const initSockets = () => {
   Socket.dropySocket = io(`${SOCKET_BASE_URL}/dropy`, {
