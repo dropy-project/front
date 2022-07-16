@@ -49,12 +49,29 @@ const useConversationSocket = () => {
       }));
     });
 
+    Socket.chatSocket.on('close_conversation', (response) => {
+      if (response.error != null) {
+        console.error('Conversation has not been closed correctly.', response.error);
+        return;
+      }
+
+      setConversations(old => {
+        return old.filter(conversation => conversation.id !== response.data.id);
+      });
+    });
+
     return () => {
       Socket.chatSocket.off('conversation_updated');
     };
   }, []);
 
-  return { conversations };
+  const closeConversation = (conversationId) => {
+    return new Promise((resolve) => {
+      Socket.chatSocket.emit('close_conversation', conversationId, resolve);
+    });
+  };
+
+  return { conversations, closeConversation };
 };
 
 export default useConversationSocket;
