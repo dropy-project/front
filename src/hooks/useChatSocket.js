@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import Socket from '../services/socket';
 import { decryptMessage, encryptMessage } from '../utils/encrypt';
@@ -8,6 +9,7 @@ export const MESSAGES_PER_PAGE = 30;
 
 const useChatSocket = (conversationId) => {
 
+  const navigation = useNavigation();
   const { user } = useCurrentUser();
 
   const [messages, setMessages] = useState([]);
@@ -41,12 +43,26 @@ const useChatSocket = (conversationId) => {
       setOtherUserConnected(response.data);
     });
 
+    Socket.chatSocket.on('close_conversation', (response) => {
+      if (response.error != null) {
+        console.error('Conversation has not been closed correctly.', response.error);
+        return;
+      }
+
+      const closedConversationId = response.data.id;
+      if(closedConversationId === conversationId) {
+        navigation.goBack();
+        console.log('Conversation forced closed as the other user has closed it');
+      }
+    });
+
     return () => {
       Socket.chatSocket.emit('leave_conversation', conversationId);
 
       Socket.chatSocket.off('connect');
       Socket.chatSocket.off('message_sent');
       Socket.chatSocket.off('user_status');
+      Socket.chatSocket.off('close_conversation');
     };
   }, []);
 

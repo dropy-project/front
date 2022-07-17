@@ -35,7 +35,7 @@ const ConversationItem = ({
           </View>
         </View>
         <Text style={styles.lastMessageText} numberOfLines={1}>
-          {lastMessagePreview ?? `Send a message to ${user?.displayName}`}
+          {lastMessagePreview ?? `Start chatting with ${user?.displayName}`}
         </Text>
       </View>
 

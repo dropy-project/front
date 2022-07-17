@@ -4,11 +4,26 @@ import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
 import useConversationSocket from '../hooks/useConversationSocket';
+import useOverlay from '../hooks/useOverlay';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const ConversationsScreen = ({ navigation }) => {
 
-  const { conversations } = useConversationSocket();
+  const { sendAlert } = useOverlay();
+  const { conversations, closeConversation } = useConversationSocket();
+
+  const handleLongPress = async (conversation) => {
+    const confirmed = await sendAlert({
+      title: 'Close conversation',
+      description: `Are you sure you want to close the conversation with ${conversation.user.displayName}?`,
+      validateText: 'delete',
+    });
+
+    if(confirmed === true) {
+      const result = await closeConversation(conversation.id);
+      console.log('Conversation closed', result);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,6 +42,7 @@ const ConversationsScreen = ({ navigation }) => {
           {conversations.map((conversation, index) => (
             <FadeInWrapper key={conversation.id} delay={index * 50}>
               <ConversationItem
+                onLongPress={() => handleLongPress(conversation)}
                 onPress={() => navigation.navigate('Chat', { conversation })}
                 {...conversation}
               />
