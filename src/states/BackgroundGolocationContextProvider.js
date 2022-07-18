@@ -134,7 +134,7 @@ const BackgroundGolocationProvider = ({ children }) => {
 
   if(initialAppState === 'background') {
     log('Render Skipped - App has been launched in background');
-    return;
+    return null;
   }
 
   return (
