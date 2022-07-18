@@ -19,16 +19,22 @@ const useConversationSocket = () => {
       }
 
       setConversations(old => {
-        const newConversation = {
+        const updatedConversation = {
           ...response.data,
           lastMessageDate: messageTimeString(response.data.lastMessageDate),
           lastMessagePreview: decryptMessage(response.data.lastMessagePreview),
         };
 
-        return [
-          newConversation,
+        const newConversations = [
+          updatedConversation,
           ...old.filter(conversation => conversation.id !== response.data.id)
         ];
+
+        const sortedConversations = newConversations.sort((a, b) => {
+          return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
+        });
+
+        return sortedConversations;
       });
     });
 
