@@ -37,7 +37,18 @@ ANDROID :
 
 ## Release ANDROID
 
+`npm run release-android`
+
+L'apk est dans `android/app/build/outputs/apk/release`
+
 ## Release IOS
+
+Depuis xcode:
+
+1. Passer en release
+2. Selectionner un build-only-device
+3. Product > Archive
+4. Upload l'archive
 
 ## Env
 
