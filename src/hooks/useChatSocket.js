@@ -42,7 +42,10 @@ const useChatSocket = (conversationId) => {
     });
 
     return () => {
-      Socket.chatSocket.emit('leave_conversation', conversationId);
+      Socket.chatSocket.emit('leave_conversation', conversationId, (response) => {
+        if(response.error != null)
+          console.error('Error leaving conversation', response.error);
+      });
 
       Socket.chatSocket.off('connect');
       Socket.chatSocket.off('message_sent');

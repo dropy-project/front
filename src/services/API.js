@@ -6,7 +6,8 @@ import app from '../../app.json';
 
 // eslint-disable-next-line no-undef
 const DOMAIN_PREFIX = __DEV__ ? 'preprod-' : '';
-const API_BASE_URL = `https://${DOMAIN_PREFIX}api.dropy-app.com`;
+// const API_BASE_URL = `https://${DOMAIN_PREFIX}api.dropy-app.com`;
+const API_BASE_URL = `http://192.168.1.11:3000`;
 
 const axios = Axios.create({
   baseURL: API_BASE_URL,

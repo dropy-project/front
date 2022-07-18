@@ -15,7 +15,7 @@ const HomeScreen = ({ navigation, route }) => {
   const { dropyCreateParams = null } = route.params || {};
 
   const [confirmDropOverlayVisible, setConfirmDropOverlayVisible] = useState(false);
-  const { dropiesAround, createDropy, retreiveDropy } = useDropiesAroundSocket();
+  const { dropiesAround, createDropy, retrieveDropy } = useDropiesAroundSocket();
 
   useEffect(() => {
     if(dropyCreateParams != null) {
@@ -30,7 +30,7 @@ const HomeScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle='dark-content' />
-      <DropyMap dropiesAround={dropiesAround} retreiveDropy={retreiveDropy} />
+      <DropyMap dropiesAround={dropiesAround} retrieveDropy={retrieveDropy} />
       <SafeAreaView style={styles.avatarContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <ProfileAvatar
