@@ -10,6 +10,7 @@ const useDropiesAroundSocket = () => {
 
   useEffect(() => {
     if (Socket.dropySocket == null) return;
+
     updateAllDropiesAround();
     Socket.dropySocket.on('connect', updateAllDropiesAround);
 
@@ -26,9 +27,9 @@ const useDropiesAroundSocket = () => {
       setDropiesAround(olds => [...olds, response.data]);
     });
 
-    Socket.dropySocket.on('dropy_retreived', (response) => {
+    Socket.dropySocket.on('dropy_retrieved', (response) => {
       if (response.error != null) {
-        console.error('Error getting retreived dropy', response.error);
+        console.error('Error getting retrieved dropy', response.error);
         return;
       }
 
@@ -38,13 +39,14 @@ const useDropiesAroundSocket = () => {
     return () => {
       Socket.dropySocket.off('connect');
       Socket.dropySocket.off('dropy_created');
-      Socket.dropySocket.off('dropy_retreived');
+      Socket.dropySocket.off('dropy_retrieved');
     };
   }, []);
 
   const updateAllDropiesAround = () => {
     if (Socket.dropySocket == null) return;
     if (Socket.dropySocket.connected === false) return;
+
     Socket.dropySocket.emit('all_dropies_around', (response) => {
       if(response.error != null) {
         console.error('Error getting dropies around', response.error);
@@ -64,13 +66,13 @@ const useDropiesAroundSocket = () => {
     });
   };
 
-  const retreiveDropy = (dropyId) => {
+  const retrieveDropy = (dropyId) => {
     return new Promise((resolve) => {
-      Socket.dropySocket.emit('dropy_retreived', { dropyId }, resolve);
+      Socket.dropySocket.emit('dropy_retrieved', { dropyId }, resolve);
     });
   };
 
-  return { dropiesAround, createDropy, retreiveDropy };
+  return { dropiesAround, createDropy, retrieveDropy };
 };
 
 export default useDropiesAroundSocket;

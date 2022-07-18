@@ -24,27 +24,13 @@ const SocketProvider = ({ children }) => {
 
     Socket.initSockets();
 
-    handleUserStatus();
-
     log('Sockets initilized');
 
     return () => {
-      Socket.chatSocket?.emit('user_status', false);
-
       Socket.destroySockets();
       log('Sockets destroyed');
     };
   }, [user]);
-
-  const handleUserStatus = () => {
-    if(Socket.chatSocket == null) return;
-
-    Socket.chatSocket.emit('user_status', true);
-
-    Socket.chatSocket.on('request_status', () => {
-      Socket.chatSocket.emit('user_status', true);
-    });
-  };
 
   useEffect(() => {
     const appStateListener = AppState.addEventListener('change', (nextAppState) => {
