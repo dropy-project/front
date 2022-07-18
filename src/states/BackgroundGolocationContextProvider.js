@@ -31,6 +31,7 @@ const BackgroundGolocationProvider = ({ children }) => {
   const [logs, setLogs] = useState(null);
 
   const initialAppState = useRef(AppState.currentState).current;
+  const appState = useRef(AppState.currentState);
 
   useEffect(() => {
     const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, (error) => {
@@ -49,10 +50,15 @@ const BackgroundGolocationProvider = ({ children }) => {
       console.error('Background geolocation loading error', error);
     });
 
+    const appStateListener = AppState.addEventListener('change', nextAppState => {
+      appState.current = nextAppState;
+    });
+
     return () => {
       locationSubscriber.remove();
       motionChangeSubscriber.remove();
       activityChangeSubscriber.remove();
+      appStateListener.remove();
     };
   }, [user]);
 
@@ -132,9 +138,9 @@ const BackgroundGolocationProvider = ({ children }) => {
     }
   };
 
-  if(initialAppState === 'background') {
+  if(initialAppState === 'background' && appState.current !== 'active') {
     log('Render Skipped - App has been launched in background');
-    return;
+    return null;
   }
 
   return (
