@@ -1,9 +1,9 @@
 import { io } from 'socket.io-client';
+import AppInfo from '../../app.json';
 import API from './API';
 
-// eslint-disable-next-line no-undef
-const DOMAIN_PREFIX = __DEV__ ? 'preprod-' : '';
-const SOCKET_BASE_URL = `https://${DOMAIN_PREFIX}socket.dropy-app.com`;
+const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
+const SOCKET_BASE_URL = AppInfo.customSocket ?? `https://${DOMAIN_PREFIX}socket.dropy-app.com`;
 
 const initSockets = () => {
   Socket.dropySocket = io(`${SOCKET_BASE_URL}/dropy`, {

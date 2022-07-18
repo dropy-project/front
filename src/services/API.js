@@ -2,11 +2,10 @@ import { getUniqueId } from 'react-native-device-info';
 
 import Axios from 'axios';
 import Storage from '../utils/storage';
-import app from '../../app.json';
+import AppInfo from '../../app.json';
 
-// eslint-disable-next-line no-undef
-const DOMAIN_PREFIX = __DEV__ ? 'preprod-' : '';
-const API_BASE_URL = `https://${DOMAIN_PREFIX}api.dropy-app.com`;
+const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
+const API_BASE_URL = AppInfo.customAPI ?? `https://${DOMAIN_PREFIX}api.dropy-app.com`;
 
 const axios = Axios.create({
   baseURL: API_BASE_URL,
@@ -106,7 +105,7 @@ const getConversations = async () => {
 
 const serverVersionIsCompatible = async () => {
   try {
-    const result = await axios.get(`/version/${app.requiredServerVersion}`);
+    const result = await axios.get(`/version/${AppInfo.requiredServerVersion}`);
     return result.status === 200;
   } catch (error) {
     console.error('Checking server version error : ', error?.response ?? error);
