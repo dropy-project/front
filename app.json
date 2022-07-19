@@ -5,8 +5,8 @@
   "version": "0.0.2",
   "requiredServerVersion": "0.0.2",
 
-  "customAPI": null,
-  "customSocket": null,
+  "customAPI": "http://localhost:3000",
+  "customSocket": "http://localhost:4000",
 
   "productionMode": true
 }
