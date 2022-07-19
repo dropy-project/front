@@ -20,7 +20,7 @@ const ProfileScreen = () => {
         </Text>
         <Text style={styles.text}>
           {/* eslint-disable-next-line no-undef */}
-        Current server : {AppInfo.productionMode ? 'preprod' : 'prod'}
+        Current server : {AppInfo.productionMode ? 'prod' : 'preprod'}
         </Text>
         <Text style={{ ...styles.text, marginTop: 20 }}>
           latitude: {userCoordinates.latitude}

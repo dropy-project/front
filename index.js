@@ -5,7 +5,12 @@
 import { AppRegistry, AppState } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import App from './App';
-import { name as appName } from './app.json';
+import { name as appName, productionMode } from './app.json';
+
+// eslint-disable-next-line no-undef
+if(__DEV__ && productionMode) {
+  console.warn('You using production mode in development, this may impact production servers');
+}
 
 if(AppState.currentState !== 'background') {
   Sentry.init({
