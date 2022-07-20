@@ -29,6 +29,25 @@ export const messageTimeString = (_date) => {
   }
 };
 
+export const chunckHeaderTimeString = (_date) => {
+  if(_date == null) return '';
+  const date = new Date(_date);
+
+  const nowNormalized = new Date().setHours(0, 0, 0, 0);
+  const dateNormalized = new Date(date).setHours(0, 0, 0, 0);
+  const dayDiff = Math.floor((nowNormalized - dateNormalized) / (1000 * 60 * 60 * 24));
+  const hours = formatTwoDigits(date.getHours());
+  const minutes = formatTwoDigits(date.getMinutes());
+
+  if (dayDiff < 1) {
+    return `Today at ${hours}:${minutes}`;
+  }
+  if (dayDiff === 1) {
+    return `Yesterday at ${hours}:${minutes}`;
+  }
+  return `${dayDiff} days ago at ${hours}:${minutes}`;
+};
+
 const formatTwoDigits = (n) => {
   return n < 10 ? `0${n}` : n;
 };

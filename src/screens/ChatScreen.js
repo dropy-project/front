@@ -20,6 +20,7 @@ import useChatSocket, { MESSAGES_PER_PAGE } from '../hooks/useChatSocket';
 import useCurrentUser from '../hooks/useCurrentUser';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useKeyboardVisible from '../hooks/useKeyboardVisible';
+import { chunckHeaderTimeString } from '../utils/time';
 
 const ChatScreen = ({ route }) => {
   const { conversation } = route.params;
@@ -35,6 +36,8 @@ const ChatScreen = ({ route }) => {
 
   const isKeyboardVisible = useKeyboardVisible();
 
+  const [chunckHeaderMessage, setChunckHeaderMessage] = useState('');
+
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
     setLastMessagesCount(messages.length);
@@ -45,6 +48,13 @@ const ChatScreen = ({ route }) => {
     if(textInputContent.length <= 0) return;
     sendMessage(textInputContent);
     setTextInputContent('');
+  };
+
+  const writeHeader = () => {
+    const lastMessage = messages[messages.length - 1];
+    if(!lastMessage) return;
+    const lastMessageDate = new Date(lastMessage.date);
+    setChunckHeaderMessage(chunckHeaderTimeString(lastMessageDate));
   };
 
   return (
