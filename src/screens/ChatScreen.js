@@ -13,7 +13,6 @@ import {
   View
 } from 'react-native';
 import ChatBubble from '../components/ChatBubble';
-import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
 import ProfileAvatar from '../components/ProfileAvatar';
 import useChatSocket, { MESSAGES_PER_PAGE } from '../hooks/useChatSocket';
@@ -36,8 +35,6 @@ const ChatScreen = ({ route }) => {
 
   const isKeyboardVisible = useKeyboardVisible();
 
-  const [chunckHeaderMessage, setChunckHeaderMessage] = useState('');
-
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
     setLastMessagesCount(messages.length);
@@ -48,13 +45,6 @@ const ChatScreen = ({ route }) => {
     if(textInputContent.length <= 0) return;
     sendMessage(textInputContent);
     setTextInputContent('');
-  };
-
-  const writeHeader = () => {
-    const lastMessage = messages[messages.length - 1];
-    if(!lastMessage) return;
-    const lastMessageDate = new Date(lastMessage.date);
-    setChunckHeaderMessage(chunckHeaderTimeString(lastMessageDate));
   };
 
   return (
@@ -104,14 +94,28 @@ const ChatScreen = ({ route }) => {
             <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>Load more</Text>
           </TouchableOpacity>
         )}
-        {messages.slice(0, messages.length - 20).map((message) => (
-          <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} />
-        ))}
-        {messages.slice(messages.length - 20).map((message, index) => (
-          <FadeInWrapper key={message.id} delay={index * 50}>
-            <ChatBubble isLeft={message.sender.id !== user.id} {...message} />
-          </FadeInWrapper>
-        ))}
+        {messages.map((message, index) => {
+          const nextMessage = messages[index + 1];
+          const hour = 60 * 60 * 1000;
+          const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / hour;
+          if( hourDifference > 2 ) {
+            return (
+              <React.Fragment key={message.id}>
+                <ChatBubble
+                  index={index}
+                  animateIn={index >= messages.length - 20}
+                  key={message.id}
+                  isLeft={message.sender.id !== user.id}
+                  {...message}
+                />
+                <Text style={styles.chunckHeader}>{chunckHeaderTimeString(nextMessage.date)}</Text>
+              </React.Fragment>
+            );
+          }
+          return (
+            <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} />
+          );
+        })}
       </ScrollView>
 
       <KeyboardAvoidingView
@@ -152,6 +156,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
+  },
+  chunckHeader: {
+    ...Fonts.bold(13, Colors.lightGrey),
+    marginTop: 30,
+    marginBottom: 5,
+    textAlign: 'center',
   },
   headerContainerKeyboard: {
     width: '100%',
