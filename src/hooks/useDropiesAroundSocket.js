@@ -34,7 +34,6 @@ const useDropiesAroundSocket = () => {
         console.error('Error getting retrieved dropy', response.error);
         return;
       }
-
       setDropiesAround(olds => olds.filter(dropy => dropy.id !== response.data));
     });
 
@@ -57,7 +56,7 @@ const useDropiesAroundSocket = () => {
         console.error('Error getting dropies around', response.error);
         return;
       }
-      const dropies = response.data.map((dropy) =>  ({
+      const dropies = response.data.slice(0, 30).map((dropy) =>  ({
         ...dropy,
         isUserDropy: dropy.emitterId === user.id,
       }));

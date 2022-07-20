@@ -30,7 +30,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
     <MapView.Marker
       coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
       onPress={onPress}
-      tracksViewChanges={false}
+      tracksViewChanges={dropy.isUserDropy}
     >
       <View style={styles.container}>
         <DropyPopup style={styles.svgBackground}></DropyPopup>
