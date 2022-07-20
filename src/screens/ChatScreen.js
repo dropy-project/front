@@ -38,7 +38,7 @@ const ChatScreen = ({ route }) => {
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
     setLastMessagesCount(messages.length);
-  }, [messages]);
+  }, [messages, isKeyboardVisible]);
 
   const onSubmit = () => {
     Keyboard.dismiss;
