@@ -27,7 +27,6 @@ const useChatSocket = (conversationId) => {
       }
       setMessages(olds => [...olds, {
         ...response.data,
-        date: response.data.date,
         content: typeof response.data.content === 'string' ?
           decryptMessage(response.data.content) :
           response.data.content,
@@ -82,7 +81,6 @@ const useChatSocket = (conversationId) => {
 
       setMessages(response.data.map(message => ({
         ...message,
-        date: message.date,
         content: typeof message.content === 'string' ?
           decryptMessage(message.content) :
           message.content,

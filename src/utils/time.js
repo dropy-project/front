@@ -1,3 +1,5 @@
+const ONE_DAY = 24 * 60 * 60 * 1000;
+
 export const createDropTimeString = (dropLifeTime) => {
   if (dropLifeTime < 60000) {
     return `${Math.floor(dropLifeTime / 1000)}s`;
@@ -18,7 +20,7 @@ export const messageTimeString = (_date) => {
 
   const nowNormalized = new Date().setHours(0, 0, 0, 0);
   const dateNormalized = new Date(date).setHours(0, 0, 0, 0);
-  const dayDiff = Math.floor((nowNormalized - dateNormalized) / (1000 * 60 * 60 * 24));
+  const dayDiff = Math.floor((nowNormalized - dateNormalized) / ONE_DAY);
 
   if(dayDiff < 1) {
     const hours = formatTwoDigits(date.getHours());
@@ -35,7 +37,7 @@ export const chunckHeaderTimeString = (_date) => {
 
   const nowNormalized = new Date().setHours(0, 0, 0, 0);
   const dateNormalized = new Date(date).setHours(0, 0, 0, 0);
-  const dayDiff = Math.floor((nowNormalized - dateNormalized) / (1000 * 60 * 60 * 24));
+  const dayDiff = Math.floor((nowNormalized - dateNormalized) / ONE_DAY);
   const hours = formatTwoDigits(date.getHours());
   const minutes = formatTwoDigits(date.getMinutes());
 

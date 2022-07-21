@@ -21,6 +21,9 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import useKeyboardVisible from '../hooks/useKeyboardVisible';
 import { chunckHeaderTimeString } from '../utils/time';
 
+const ONE_HOUR = 60 * 60 * 1000;
+
+
 const ChatScreen = ({ route }) => {
   const { conversation } = route.params;
   const [textInputContent, setTextInputContent] = useState('');
@@ -96,8 +99,7 @@ const ChatScreen = ({ route }) => {
         )}
         {messages.map((message, index) => {
           const nextMessage = messages[index + 1];
-          const hour = 60 * 60 * 1000;
-          const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / hour;
+          const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / ONE_HOUR;
           if( hourDifference > 2 ) {
             return (
               <React.Fragment key={message.id}>
