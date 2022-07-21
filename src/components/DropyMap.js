@@ -92,7 +92,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
         onMapReady={() => setMapIsReady(true)}
       >
         {dropiesAround.map((dropy) => (
-          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
+          <DropyMapMarker  key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
         ))}
       </MapView>
       <Sonar />
