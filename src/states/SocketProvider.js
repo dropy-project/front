@@ -77,7 +77,7 @@ const SocketProvider = ({ children }) => {
   return(
     <View style={StyleSheet.absoluteFillObject}>
       {children}
-      <ReconnectingOverlay visible={!connected} />
+      <ReconnectingOverlay visible={!connected && user != null} />
     </View>
   );
 };
