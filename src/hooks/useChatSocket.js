@@ -7,7 +7,7 @@ import useCurrentUser from './useCurrentUser';
 
 export const MESSAGES_PER_PAGE = 30;
 
-const useChatSocket = (conversationId, onError) => {
+const useChatSocket = (conversationId, onError = () => {}) => {
 
   const navigation = useNavigation();
   const { user } = useCurrentUser();
