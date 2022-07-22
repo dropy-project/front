@@ -20,25 +20,42 @@ import useChatSocket, { MESSAGES_PER_PAGE } from '../hooks/useChatSocket';
 import useCurrentUser from '../hooks/useCurrentUser';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useKeyboardVisible from '../hooks/useKeyboardVisible';
+import LoadingSpinner from '../components/LoadingSpinner';
+import useOverlay from '../hooks/useOverlay';
 
-const ChatScreen = ({ route }) => {
+const ChatScreen = ({ route, navigation }) => {
   const { conversation } = route.params;
   const [textInputContent, setTextInputContent] = useState('');
 
   const scrollViewRef = useRef();
 
+  const { sendAlert } = useOverlay();
   const { user } = useCurrentUser();
 
   const [lastMessagesCount, setLastMessagesCount] = useState(0);
 
-  const { messages, sendMessage, otherUserConnected, loadMoreMessages } = useChatSocket(conversation.id);
+  const {
+    loading,
+    messages,
+    sendMessage,
+    otherUserConnected,
+    loadMoreMessages,
+  } = useChatSocket(conversation.id, handleSocketError);
 
   const isKeyboardVisible = useKeyboardVisible();
 
   useEffect(() => {
-    scrollViewRef.current.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
+    scrollViewRef.current?.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
     setLastMessagesCount(messages.length);
   }, [messages]);
+
+  const handleSocketError = async () => {
+    await sendAlert({
+      title: 'An error occurred',
+      description: 'Check your internet connection and try again',
+    });
+    navigation.goBack();
+  };
 
   const onSubmit = () => {
     Keyboard.dismiss;
@@ -84,25 +101,29 @@ const ChatScreen = ({ route }) => {
         <GoBackHeader onPressOptions={() => {}} />
       </SafeAreaView>
 
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.scrollView}
-        scrollEventThrottle={16}
-        contentContainerStyle={styles.scrollViewContent}>
-        {messages.length >= MESSAGES_PER_PAGE && (
-          <TouchableOpacity style={styles.loadMoreButton} onPress={loadMoreMessages}>
-            <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>Load more</Text>
-          </TouchableOpacity>
-        )}
-        {messages.slice(0, messages.length - 20).map((message) => (
-          <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} />
-        ))}
-        {messages.slice(messages.length - 20).map((message, index) => (
-          <FadeInWrapper key={message.id} delay={index * 50}>
-            <ChatBubble isLeft={message.sender.id !== user.id} {...message} />
-          </FadeInWrapper>
-        ))}
-      </ScrollView>
+      {loading ? (
+        <LoadingSpinner selfCenter />
+      ) : (
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.scrollView}
+          scrollEventThrottle={16}
+          contentContainerStyle={styles.scrollViewContent}>
+          {messages.length >= MESSAGES_PER_PAGE && (
+            <TouchableOpacity style={styles.loadMoreButton} onPress={loadMoreMessages}>
+              <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>Load more</Text>
+            </TouchableOpacity>
+          )}
+          {messages.slice(0, messages.length - 20).map((message) => (
+            <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} />
+          ))}
+          {messages.slice(messages.length - 20).map((message, index) => (
+            <FadeInWrapper key={message.id} delay={index * 50}>
+              <ChatBubble isLeft={message.sender.id !== user.id} {...message} />
+            </FadeInWrapper>
+          ))}
+        </ScrollView>
+      )}
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>

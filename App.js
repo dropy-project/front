@@ -16,7 +16,7 @@ import GeolocationProvider from './src/states/GeolocationContextProvider';
 import BackgroundGolocationContextProvider from './src/states/BackgroundGolocationContextProvider';
 import NotificationProvider from './src/states/NotificationProvider';
 import OverlayContextProvider from './src/states/OverlayContextProvider';
-import SocketProvider from './src/states/SocketContextProvider';
+import SocketProvider from './src/states/SocketProvider';
 
 export default function App() {
 

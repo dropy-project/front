@@ -4,14 +4,16 @@ import { responsiveWidth } from 'react-native-responsive-dimensions';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import MEDIA_TYPES from '../utils/mediaTypes';
+import LoadingSpinner from './LoadingSpinner';
 
 const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject }) => {
 
+  const [loading, setLoading] = useState(true);
   const [imageSource, setImageSource] = useState(null);
   const [dropyText, setDropyText] = useState('');
 
   useEffect(() => {
-    console.log(mediaType);
+    setLoading(true);
     switch (mediaType) {
     case MEDIA_TYPES.PICTURE:
       loadImageSource();
@@ -32,12 +34,19 @@ const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject
   const loadDropyText = async () => {
     const result = await API.getDropyMedia(id);
     setDropyText(result.data);
+    setLoading(false);
   };
 
   if(mediaType === MEDIA_TYPES.PICTURE) {
     return (
       <View style={style}>
+        {loading && (
+          <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
+            <LoadingSpinner />
+          </View>
+        )}
         <Image
+          onLoadEnd={() => setLoading(false)}
           style={{ ...styles.displayImage }}
           source={imageSource}
         ></Image>
@@ -48,6 +57,11 @@ const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject
   if (mediaType === MEDIA_TYPES.TEXT) {
     return (
       <ScrollView style={style} contentContainerStyle={styles.textContentContainer}>
+        {loading && (
+          <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
+            <LoadingSpinner />
+          </View>
+        )}
         <Text style={styles.dropyText}>{dropyText}</Text>
       </ScrollView>
     );
