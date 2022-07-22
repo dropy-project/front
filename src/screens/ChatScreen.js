@@ -98,6 +98,7 @@ const ChatScreen = ({ route }) => {
           </TouchableOpacity>
         )}
         {messages.map((message, index) => {
+          const isLastMessage = index === messages.length - 1;
           const nextMessage = messages[index + 1];
           const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / ONE_HOUR;
           if( hourDifference > 2 ) {
@@ -109,13 +110,14 @@ const ChatScreen = ({ route }) => {
                   key={message.id}
                   isLeft={message.sender.id !== user.id}
                   {...message}
+                  showDate={isLastMessage}
                 />
                 <Text style={styles.chunckHeader}>{chunckHeaderTimeString(nextMessage.date)}</Text>
               </React.Fragment>
             );
           }
           return (
-            <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} />
+            <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} showDate={isLastMessage} />
           );
         })}
       </ScrollView>

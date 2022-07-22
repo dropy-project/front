@@ -25,7 +25,7 @@ const ChatBubble = (props) => {
 
 export default ChatBubble;
 
-const Bubble = ({ isLeft, content, read }) => {
+const Bubble = ({ isLeft, content, date, read, showDate }) => {
   const navigation = useNavigation();
   if(typeof content !== 'string') {
     return (
@@ -33,7 +33,7 @@ const Bubble = ({ isLeft, content, read }) => {
         <TouchableOpacity onPress={() => navigation.navigate('DisplayDropyMedia', { dropy: content, showBottomModal: false })}>
           <DropyMediaViewer {...content} style={styles.dropyMediaContainer} />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>{messageTimeString(content.retrieveDate)}</Text>
+        <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>Retrieved {messageTimeString(content.retrieveDate)} ago</Text>
       </View>
     );
   }
@@ -62,9 +62,19 @@ const Bubble = ({ isLeft, content, read }) => {
           </View>
         </Text>
       </View>
+      {showDate && (
+        <Text style={{
+          ...styles.lastMessageTimeStampText,
+          right: isLeft ? undefined : '7%',
+          left: isLeft ? '7%' : undefined,
+        }}>
+          {messageTimeString(date)}
+        </Text>
+      )}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -103,5 +113,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
+  },
+  lastMessageTimeStampText: {
+    position: 'absolute',
+    ...Fonts.bold(12, Colors.grey),
+    bottom: '-35%',
   },
 });
