@@ -33,7 +33,7 @@ const Bubble = ({ isLeft, content, date, read, showDate }) => {
         <TouchableOpacity onPress={() => navigation.navigate('DisplayDropyMedia', { dropy: content, showBottomModal: false })}>
           <DropyMediaViewer {...content} style={styles.dropyMediaContainer} />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>Retrieved {messageTimeString(content.retrieveDate)} ago</Text>
+        <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>{messageTimeString(content.retrieveDate)}</Text>
       </View>
     );
   }
