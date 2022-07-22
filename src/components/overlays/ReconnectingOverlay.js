@@ -6,6 +6,7 @@ import LoadingSpinner from '../LoadingSpinner';
 
 const ReconnectingOverlay = ({ visible }) => {
 
+  const [initilized, setInitilized] = useState(false);
   const [render, setRender] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
 
@@ -14,7 +15,7 @@ const ReconnectingOverlay = ({ visible }) => {
     const anim = Animated.timing(animatedValue, {
       toValue: visible ? 1 : 0,
       duration: 300,
-      delay: visible ? 300 : 0,
+      delay: initilized === false ? 2000 : 0,
       useNativeDriver: true,
       easing: Easing.ease,
     });
@@ -23,12 +24,15 @@ const ReconnectingOverlay = ({ visible }) => {
         setRender(visible);
       }
     });
+    if(visible) {
+      setInitilized(true);
+    }
     return anim.stop;
   }, [visible]);
 
   const translateValue = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['300%', '0%'],
+    outputRange: [responsiveHeight(10), 0],
   });
 
   if(!render) return null;
