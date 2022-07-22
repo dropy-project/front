@@ -23,25 +23,42 @@ import { chunckHeaderTimeString } from '../utils/time';
 
 const ONE_HOUR = 60 * 60 * 1000;
 
+import LoadingSpinner from '../components/LoadingSpinner';
+import useOverlay from '../hooks/useOverlay';
 
-const ChatScreen = ({ route }) => {
+const ChatScreen = ({ route, navigation }) => {
   const { conversation } = route.params;
   const [textInputContent, setTextInputContent] = useState('');
 
   const scrollViewRef = useRef();
 
+  const { sendAlert } = useOverlay();
   const { user } = useCurrentUser();
 
   const [lastMessagesCount, setLastMessagesCount] = useState(0);
 
-  const { messages, sendMessage, otherUserConnected, loadMoreMessages } = useChatSocket(conversation.id);
+  const {
+    loading,
+    messages,
+    sendMessage,
+    otherUserConnected,
+    loadMoreMessages,
+  } = useChatSocket(conversation.id, handleSocketError);
 
   const isKeyboardVisible = useKeyboardVisible();
 
   useEffect(() => {
-    scrollViewRef.current.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
+    scrollViewRef.current?.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
     setLastMessagesCount(messages.length);
   }, [messages, isKeyboardVisible]);
+
+  const handleSocketError = async () => {
+    await sendAlert({
+      title: 'An error occurred',
+      description: 'Check your internet connection and try again',
+    });
+    navigation.goBack();
+  };
 
   const onSubmit = () => {
     Keyboard.dismiss;
@@ -87,40 +104,44 @@ const ChatScreen = ({ route }) => {
         <GoBackHeader onPressOptions={() => {}} />
       </SafeAreaView>
 
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.scrollView}
-        scrollEventThrottle={16}
-        contentContainerStyle={styles.scrollViewContent}>
-        {messages.length >= MESSAGES_PER_PAGE && (
-          <TouchableOpacity style={styles.loadMoreButton} onPress={loadMoreMessages}>
-            <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>Load more</Text>
-          </TouchableOpacity>
-        )}
-        {messages.map((message, index) => {
-          const isLastMessage = index === messages.length - 1;
-          const nextMessage = messages[index + 1];
-          const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / ONE_HOUR;
-          if( hourDifference > 2 ) {
+      {loading ? (
+        <LoadingSpinner selfCenter />
+      ) : (
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.scrollView}
+          scrollEventThrottle={16}
+          contentContainerStyle={styles.scrollViewContent}>
+          {messages.length >= MESSAGES_PER_PAGE && (
+            <TouchableOpacity style={styles.loadMoreButton} onPress={loadMoreMessages}>
+              <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>Load more</Text>
+            </TouchableOpacity>
+          )}
+          {messages.map((message, index) => {
+            const isLastMessage = index === messages.length - 1;
+            const nextMessage = messages[index + 1];
+            const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / ONE_HOUR;
+            if( hourDifference > 2 ) {
+              return (
+                <React.Fragment key={message.id}>
+                  <ChatBubble
+                    index={index}
+                    animateIn={index >= messages.length - 20}
+                    key={message.id}
+                    isLeft={message.sender.id !== user.id}
+                    {...message}
+                    showDate={isLastMessage}
+                  />
+                  <Text style={styles.chunckHeader}>{chunckHeaderTimeString(nextMessage.date)}</Text>
+                </React.Fragment>
+              );
+            }
             return (
-              <React.Fragment key={message.id}>
-                <ChatBubble
-                  index={index}
-                  animateIn={index >= messages.length - 20}
-                  key={message.id}
-                  isLeft={message.sender.id !== user.id}
-                  {...message}
-                  showDate={isLastMessage}
-                />
-                <Text style={styles.chunckHeader}>{chunckHeaderTimeString(nextMessage.date)}</Text>
-              </React.Fragment>
+              <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} showDate={isLastMessage} />
             );
-          }
-          return (
-            <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} showDate={isLastMessage} />
-          );
-        })}
-      </ScrollView>
+          })}
+        </ScrollView>
+      )}
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
