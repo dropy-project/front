@@ -6,10 +6,26 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { messageTimeString } from '../utils/time';
+import FadeInWrapper from './FadeInWrapper';
 import DropyMediaViewer from './DropyMediaViewer';
 
-const ChatBubble = ({ isLeft, content, date, read }) => {
 
+const ChatBubble = (props) => {
+
+  if(props.animateIn) {
+    return (
+      <FadeInWrapper delay={props.index * 50}>
+        <Bubble {...props} />
+      </FadeInWrapper>
+    );
+  }
+  return (<Bubble {...props} />);
+
+};
+
+export default ChatBubble;
+
+const Bubble = ({ isLeft, content, date, read, showDate }) => {
   const navigation = useNavigation();
   if(typeof content !== 'string') {
     return (
@@ -43,17 +59,21 @@ const ChatBubble = ({ isLeft, content, date, read }) => {
                 color={Colors.white}
               />
             )}
-            <Text style={styles.lastMessageTimeStampText}>
-              {date}
-            </Text>
           </View>
         </Text>
       </View>
+      {showDate && (
+        <Text style={{
+          ...styles.lastMessageTimeStampText,
+          right: isLeft ? undefined : '7%',
+          left: isLeft ? '7%' : undefined,
+        }}>
+          {messageTimeString(date)}
+        </Text>
+      )}
     </View>
   );
 };
-
-export default ChatBubble;
 
 const styles = StyleSheet.create({
   container: {
@@ -84,7 +104,7 @@ const styles = StyleSheet.create({
     shadowColor: Colors.purple2,
   },
   textContent: {
-    ...Fonts.bold(14, Colors.white),
+    ...Fonts.bold(13, Colors.white),
     alignItems: 'center',
     flexDirection: 'row-reverse',
   },
@@ -95,8 +115,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   lastMessageTimeStampText: {
-    ...Fonts.bold(11, Colors.white),
-    marginLeft: 4,
-    flexWrap: 'wrap',
+    position: 'absolute',
+    ...Fonts.bold(12, Colors.grey),
+    bottom: '-35%',
   },
 });

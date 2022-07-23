@@ -7,11 +7,12 @@ import useCurrentUser from './useCurrentUser';
 
 export const MESSAGES_PER_PAGE = 30;
 
-const useChatSocket = (conversationId) => {
+const useChatSocket = (conversationId, onError = () => {}) => {
 
   const navigation = useNavigation();
   const { user } = useCurrentUser();
 
+  const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const [otherUserConnected, setOtherUserConnected] = useState(null);
 
@@ -22,12 +23,12 @@ const useChatSocket = (conversationId) => {
 
     Socket.chatSocket.on('message_sent', response => {
       if (response.error != null) {
+        onError(response.error);
         console.error('Error getting sent message', response.error);
         return;
       }
       setMessages(olds => [...olds, {
         ...response.data,
-        date: messageTimeString(response.data.date),
         content: typeof response.data.content === 'string' ?
           decryptMessage(response.data.content) :
           response.data.content,
@@ -70,23 +71,31 @@ const useChatSocket = (conversationId) => {
   }, []);
 
   const joinConversation = () => {
+    setLoading(true);
+
     Socket.chatSocket.emit('join_conversation', conversationId, response => {
+      if (response.error != null) {
+        onError(response.error);
+        console.error('Error joining conversation', response.error);
+        return;
+      }
       console.log(`Chat socket conversation joined ${conversationId} ${response.status}`);
     });
 
     Socket.chatSocket.emit('list_messages', { conversationId, offset: 0, limit: MESSAGES_PER_PAGE }, response => {
       if (response.error != null) {
+        onError(response.error);
         console.error('Error getting conversation messages', response.error);
         return;
       }
 
       setMessages(response.data.map(message => ({
         ...message,
-        date: messageTimeString(message.date),
         content: typeof message.content === 'string' ?
           decryptMessage(message.content) :
           message.content,
       })));
+      setLoading(false);
     });
   };
 
@@ -102,7 +111,7 @@ const useChatSocket = (conversationId) => {
           id: response.data,
           content,
           read: false,
-          date: messageTimeString(new Date()),
+          date: new Date(),
           sender: {
             displayName: user.displayName,
             id: user.id,
@@ -126,7 +135,7 @@ const useChatSocket = (conversationId) => {
     });
   };
 
-  return { otherUserConnected, sendMessage, messages, loadMoreMessages };
+  return { loading, otherUserConnected, sendMessage, messages, loadMoreMessages };
 };
 
 export default useChatSocket;
