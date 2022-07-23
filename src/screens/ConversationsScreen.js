@@ -13,13 +13,13 @@ const ConversationsScreen = ({ navigation }) => {
   const { sendAlert } = useOverlay();
   const { loading, conversations, closeConversation } = useConversationSocket(handleSocketError);
 
-  const handleSocketError = async () => {
+  async function handleSocketError() {
     await sendAlert({
       title: 'An error occurred',
       description: 'Check your internet connection and try again',
     });
     navigation.goBack();
-  };
+  }
 
   const handleLongPress = async (conversation) => {
     const confirmed = await sendAlert({

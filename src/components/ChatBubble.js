@@ -29,7 +29,7 @@ const Bubble = ({ isLeft, content, date, read, showDate }) => {
   const navigation = useNavigation();
   if(typeof content !== 'string') {
     return (
-      <View style={styles.dropyContainer}>
+      <View style={{ ...styles.dropyContainer, maxHeight: 500 }}>
         <TouchableOpacity onPress={() => navigation.navigate('DisplayDropyMedia', { dropy: content, showBottomModal: false })}>
           <DropyMediaViewer {...content} style={styles.dropyMediaContainer} />
         </TouchableOpacity>

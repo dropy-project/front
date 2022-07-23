@@ -7,32 +7,50 @@ import useCurrentUser from './useCurrentUser';
 
 export const MESSAGES_PER_PAGE = 30;
 
-const useChatSocket = (conversationId, onError = () => {}) => {
+
+
+const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd = () => {}, onNewMessage = () => {}, onOldMessagesLoadEnd = () => {}) => {
 
   const navigation = useNavigation();
   const { user } = useCurrentUser();
 
   const [loading, setLoading] = useState(true);
-  const [messages, setMessages] = useState([]);
+
+  const [messageBuffer, setMessagesBuffer] = useState({
+    messages: [],
+    action: null,
+  });
+
   const [otherUserConnected, setOtherUserConnected] = useState(null);
+
+  useEffect(() => {
+    if (messageBuffer.action) {
+      messageBuffer.action();
+    }
+  }, [messageBuffer]);
 
   useEffect(() => {
 
     joinConversation();
     Socket.chatSocket.on('connect', joinConversation);
-
     Socket.chatSocket.on('message_sent', response => {
       if (response.error != null) {
         onError(response.error);
         console.error('Error getting sent message', response.error);
         return;
       }
-      setMessages(olds => [...olds, {
-        ...response.data,
-        content: typeof response.data.content === 'string' ?
-          decryptMessage(response.data.content) :
-          response.data.content,
-      }]);
+
+      setMessagesBuffer(oldBuffer => {
+        return {
+          messages: [...oldBuffer.messages, {
+            ...response.data,
+            content: typeof response.data.content === 'string' ?
+              decryptMessage(response.data.content) :
+              response.data.content,
+          }],
+          action: onNewMessage,
+        };
+      });
     });
 
     Socket.chatSocket.on('user_status', response => {
@@ -89,12 +107,17 @@ const useChatSocket = (conversationId, onError = () => {}) => {
         return;
       }
 
-      setMessages(response.data.map(message => ({
-        ...message,
-        content: typeof message.content === 'string' ?
-          decryptMessage(message.content) :
-          message.content,
-      })));
+      setMessagesBuffer(() => {
+        return {
+          messages: [response.data.map(message => ({
+            ...message,
+            content: typeof message.content === 'string' ?
+              decryptMessage(message.content) :
+              message.content,
+          }))],
+          action: onAllMessageLoadEnd,
+        };
+      });
       setLoading(false);
     });
   };
@@ -105,37 +128,47 @@ const useChatSocket = (conversationId, onError = () => {}) => {
         console.error('Error getting messages', response.error);
         return;
       }
-      setMessages(olds => [
-        ...olds,
-        {
-          id: response.data,
-          content,
-          read: false,
-          date: new Date(),
-          sender: {
-            displayName: user.displayName,
-            id: user.id,
-          },
-        }
-      ]);
-    }
-    );
+      setMessagesBuffer(oldBuffer => {
+        return {
+          messages: [...oldBuffer.messages,
+            {
+              id: response.data,
+              content,
+              read: false,
+              date: new Date(),
+              sender: {
+                displayName: user.displayName,
+                id: user.id,
+              },
+            }
+          ],
+          action: onNewMessage,
+        };
+      }
+      );
+    });
   };
 
   const loadMoreMessages = () => {
-    Socket.chatSocket.emit('list_messages', { conversationId, offset: Math.round(messages.length / MESSAGES_PER_PAGE), limit: MESSAGES_PER_PAGE }, response => {
+    Socket.chatSocket.emit('list_messages', { conversationId, offset: Math.round(messageBuffer.length / MESSAGES_PER_PAGE), limit: MESSAGES_PER_PAGE }, response => {
       if (response.error != null) {
         console.error('Error getting conversation messages', response.error);
         return;
       }
-      setMessages(olds => [...response.data.map(message => ({
-        ...message,
-        date: messageTimeString(message.date),
-      })), ...olds]);
+      setMessagesBuffer(oldBuffer => {
+        return {
+          messages: [...response.data.map(message => ({
+            ...message,
+            date: messageTimeString(message.date),
+          })), ...oldBuffer.messages],
+          action: onOldMessagesLoadEnd,
+        };
+      });
     });
   };
 
-  return { loading, otherUserConnected, sendMessage, messages, loadMoreMessages };
+  return { loading, otherUserConnected, sendMessage, messages: messageBuffer.messages, loadMoreMessages };
 };
+
 
 export default useChatSocket;

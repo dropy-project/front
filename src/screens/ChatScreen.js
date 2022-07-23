@@ -35,30 +35,35 @@ const ChatScreen = ({ route, navigation }) => {
   const { sendAlert } = useOverlay();
   const { user } = useCurrentUser();
 
-  const [lastMessagesCount, setLastMessagesCount] = useState(0);
-
   const {
     loading,
     messages,
     sendMessage,
     otherUserConnected,
     loadMoreMessages,
-  } = useChatSocket(conversation.id, handleSocketError);
+  } = useChatSocket(conversation.id, handleSocketError, onAllMessageLoadEnd, onNewMessage, onOldMessagesLoadEnd);
 
   const isKeyboardVisible = useKeyboardVisible();
 
-  useEffect(() => {
-    scrollViewRef.current?.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
-    setLastMessagesCount(messages.length);
-  }, [messages, isKeyboardVisible]);
-
-  const handleSocketError = async () => {
+  async function handleSocketError() {
     await sendAlert({
       title: 'An error occurred',
       description: 'Check your internet connection and try again',
     });
     navigation.goBack();
-  };
+  }
+
+  function onAllMessageLoadEnd() {
+    scrollViewRef.current?.scrollToEnd({ animated: false });
+  }
+
+  function onNewMessage(isUserMessage) {
+    scrollViewRef.current?.scrollToEnd({ animated: !isUserMessage });
+  }
+
+  function onOldMessagesLoadEnd() {
+    return;
+  }
 
   const onSubmit = () => {
     Keyboard.dismiss;
@@ -66,6 +71,10 @@ const ChatScreen = ({ route, navigation }) => {
     sendMessage(textInputContent);
     setTextInputContent('');
   };
+
+  useEffect(() => {
+    console.log('Messages updted');
+  }, [messages]);
 
   return (
     <View style={styles.container}>
