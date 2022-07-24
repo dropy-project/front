@@ -1,4 +1,4 @@
-package com.dropy.newarchitecture.modules;
+package com.dropy.project.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

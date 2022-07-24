@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import Socket from '../services/socket';
 import useCurrentUser from './useCurrentUser';
+import useGeolocation from './useGeolocation';
 
 const useDropiesAroundSocket = () => {
 
   const { user } = useCurrentUser();
+  const { userCoordinates } = useGeolocation();
 
   const [dropiesAround, setDropiesAround] = useState([]);
 
   useEffect(() => {
     if (Socket.dropySocket == null) return;
+
     updateAllDropiesAround();
     Socket.dropySocket.on('connect', updateAllDropiesAround);
 
@@ -26,31 +29,34 @@ const useDropiesAroundSocket = () => {
       setDropiesAround(olds => [...olds, response.data]);
     });
 
-    Socket.dropySocket.on('dropy_retreived', (response) => {
+    Socket.dropySocket.on('dropy_retrieved', (response) => {
       if (response.error != null) {
-        console.error('Error getting retreived dropy', response.error);
+        console.error('Error getting retrieved dropy', response.error);
         return;
       }
-
       setDropiesAround(olds => olds.filter(dropy => dropy.id !== response.data));
     });
 
     return () => {
       Socket.dropySocket.off('connect');
       Socket.dropySocket.off('dropy_created');
-      Socket.dropySocket.off('dropy_retreived');
+      Socket.dropySocket.off('dropy_retrieved');
     };
   }, []);
 
   const updateAllDropiesAround = () => {
     if (Socket.dropySocket == null) return;
     if (Socket.dropySocket.connected === false) return;
-    Socket.dropySocket.emit('all_dropies_around', (response) => {
+
+    Socket.dropySocket.emit('all_dropies_around', {
+      latitude: userCoordinates.latitude,
+      longitude: userCoordinates.longitude,
+    }, (response) => {
       if(response.error != null) {
         console.error('Error getting dropies around', response.error);
         return;
       }
-      const dropies = response.data.map((dropy) =>  ({
+      const dropies = response.data.slice(0, 30).map((dropy) =>  ({
         ...dropy,
         isUserDropy: dropy.emitterId === user.id,
       }));
@@ -64,13 +70,13 @@ const useDropiesAroundSocket = () => {
     });
   };
 
-  const retreiveDropy = (dropyId) => {
+  const retrieveDropy = (dropyId) => {
     return new Promise((resolve) => {
-      Socket.dropySocket.emit('dropy_retreived', { dropyId }, resolve);
+      Socket.dropySocket.emit('dropy_retrieved', { dropyId }, resolve);
     });
   };
 
-  return { dropiesAround, createDropy, retreiveDropy };
+  return { dropiesAround, createDropy, retrieveDropy };
 };
 
 export default useDropiesAroundSocket;

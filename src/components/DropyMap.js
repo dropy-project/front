@@ -20,7 +20,7 @@ import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
 
-const DropyMap = ({ dropiesAround, retreiveDropy }) => {
+const DropyMap = ({ dropiesAround, retrieveDropy }) => {
 
   const navigation = useNavigation();
 
@@ -34,7 +34,7 @@ const DropyMap = ({ dropiesAround, retreiveDropy }) => {
       if (userCoordinates == null) return;
       if (dropy?.isUserDropy) return;
 
-      const response = await retreiveDropy(dropy.id);
+      const response = await retrieveDropy(dropy.id);
       if(response.error != null) {
         throw response.error;
       }
@@ -92,7 +92,7 @@ const DropyMap = ({ dropiesAround, retreiveDropy }) => {
         onMapReady={() => setMapIsReady(true)}
       >
         {dropiesAround.map((dropy) => (
-          <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
+          <DropyMapMarker  key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
         ))}
       </MapView>
       <Sonar />

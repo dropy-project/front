@@ -7,7 +7,6 @@ import { BackgroundGeolocationContext } from '../states/BackgroundGolocationCont
 import useOverlay from '../hooks/useOverlay';
 import useGeolocation from '../hooks/useGeolocation';
 
-
 const ProfileScreen = () => {
 
   const { userCoordinates, compassHeading } = useGeolocation();
@@ -21,7 +20,7 @@ const ProfileScreen = () => {
         </Text>
         <Text style={styles.text}>
           {/* eslint-disable-next-line no-undef */}
-        Current server : {__DEV__ ? 'preprod' : 'prod'}
+        Current server : {AppInfo.productionMode ? 'prod' : 'preprod'}
         </Text>
         <Text style={{ ...styles.text, marginTop: 20 }}>
           latitude: {userCoordinates.latitude}

@@ -3,7 +3,8 @@ import Socket from '../services/socket';
 import { decryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
 
-const useConversationSocket = () => {
+const useConversationSocket = (onError = () => {}) => {
+  const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
@@ -14,26 +15,34 @@ const useConversationSocket = () => {
 
     Socket.chatSocket.on('conversation_updated', (response) => {
       if (response.error != null) {
+        onError(response.error);
         console.error('Conversation has not been updated correctly.', response.error);
         return;
       }
 
       setConversations(old => {
-        const newConversation = {
+        const updatedConversation = {
           ...response.data,
           lastMessageDate: messageTimeString(response.data.lastMessageDate),
           lastMessagePreview: decryptMessage(response.data.lastMessagePreview),
         };
 
-        return [
-          newConversation,
+        const newConversations = [
+          updatedConversation,
           ...old.filter(conversation => conversation.id !== response.data.id)
         ];
+
+        const sortedConversations = newConversations.sort((a, b) => {
+          return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
+        });
+
+        return sortedConversations;
       });
     });
 
     Socket.chatSocket.on('close_conversation', (response) => {
       if (response.error != null) {
+        onError(response.error);
         console.error('Conversation has not been closed correctly.', response.error);
         return;
       }
@@ -50,11 +59,13 @@ const useConversationSocket = () => {
   }, []);
 
   const listConversations = () => {
+    setLoading(true);
     Socket.chatSocket.emit('list_conversations', (response) => {
       if(Socket.chatSocket == null) return;
       if(Socket.chatSocket.connected === false) return;
 
       if (response.error != null) {
+        onError(response.error);
         console.error('Error while getting conversations', response.error);
         return;
       }
@@ -72,6 +83,7 @@ const useConversationSocket = () => {
       });
 
       setConversations(datedConversations);
+      setLoading(false);
     });
   };
 
@@ -84,7 +96,7 @@ const useConversationSocket = () => {
     });
   };
 
-  return { conversations, closeConversation };
+  return { loading, conversations, closeConversation };
 };
 
 export default useConversationSocket;

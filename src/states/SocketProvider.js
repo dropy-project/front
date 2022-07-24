@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
-import { AppState } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { AppState, View, StyleSheet } from 'react-native';
 
 import Socket from '../services/socket';
 import useCurrentUser from '../hooks/useCurrentUser';
+import ReconnectingOverlay from '../components/overlays/ReconnectingOverlay';
 
 const log = (...params) => {
   console.log('\x1b[33m[ Sockets Provider ]\x1b[0m', ...params);
@@ -12,39 +13,37 @@ const SocketProvider = ({ children }) => {
 
   const { user } = useCurrentUser();
 
+  const [connected, setConnected] = useState(false);
   const isTemporaryDisconnected = useRef(false);
 
   useEffect(() => {
     if(user == null) return;
 
-    if(AppState.currentState === 'background') {
-      console.log('Socket initilization skipped (App is in background)');
-      return;
-    }
-
     Socket.initSockets();
 
-    handleUserStatus();
+    Socket.dropySocket.on('connect', () => {
+      setConnected(true);
+    });
+
+    Socket.dropySocket.on('disconnect', () => {
+      setConnected(false);
+    });
+    Socket.chatSocket.on('disconnect', () => {
+      setConnected(false);
+    });
+
+    Socket.manager.on('connect_error', err => {
+      setConnected(false);
+      console.error(`Socket connect_error due to ${err.message}`);
+    });
 
     log('Sockets initilized');
 
     return () => {
-      Socket.chatSocket?.emit('user_status', false);
-
       Socket.destroySockets();
       log('Sockets destroyed');
     };
   }, [user]);
-
-  const handleUserStatus = () => {
-    if(Socket.chatSocket == null) return;
-
-    Socket.chatSocket.emit('user_status', true);
-
-    Socket.chatSocket.on('request_status', () => {
-      Socket.chatSocket.emit('user_status', true);
-    });
-  };
 
   useEffect(() => {
     const appStateListener = AppState.addEventListener('change', (nextAppState) => {
@@ -52,7 +51,7 @@ const SocketProvider = ({ children }) => {
         if (isTemporaryDisconnected.current) {
           reconnectSocketsFromTemporaryDisconnection();
         }
-      } else if (nextAppState.match(/background|inactive/)) {
+      } else if (nextAppState === 'background') {
         if (Socket.chatSocket?.connected || Socket.dropySocket?.connected) {
           temporaryDisconnectSockets();
         }
@@ -75,7 +74,12 @@ const SocketProvider = ({ children }) => {
     isTemporaryDisconnected.current = true;
   };
 
-  return children;
+  return(
+    <View style={StyleSheet.absoluteFillObject}>
+      {children}
+      <ReconnectingOverlay visible={!connected && user != null} />
+    </View>
+  );
 };
 
 export default SocketProvider;
