@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AppState, View, StyleSheet } from 'react-native';
+import { AppState, View, StyleSheet, Platform } from 'react-native';
 
 import Socket from '../services/socket';
 import useCurrentUser from '../hooks/useCurrentUser';
@@ -51,7 +51,7 @@ const SocketProvider = ({ children }) => {
         if (isTemporaryDisconnected.current) {
           reconnectSocketsFromTemporaryDisconnection();
         }
-      } else if (nextAppState === 'background') {
+      } else if (nextAppState === (Platform.OS === 'ios' ? 'background' : 'inactive')) {
         if (Socket.chatSocket?.connected || Socket.dropySocket?.connected) {
           temporaryDisconnectSockets();
         }

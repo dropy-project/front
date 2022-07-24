@@ -41,16 +41,13 @@ const CreateDropyTakePicture = ({ navigation }) => {
       return;
     }
 
-    const params = {
-      dropyFilePath: await compressImage(picture?.uri),
-      dropyData: null,
-      mediaType: MEDIA_TYPES.PICTURE,
-      originRoute: 'CreateDropyTakePicture',
-    };
-
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Home', params: { dropyCreateParams: params } }],
+    navigation.navigate('Home', {
+      dropyCreateParams: {
+        dropyFilePath: await compressImage(picture?.uri),
+        dropyData: null,
+        mediaType: MEDIA_TYPES.PICTURE,
+        originRoute: 'CreateDropyTakePicture',
+      },
     });
   };
 

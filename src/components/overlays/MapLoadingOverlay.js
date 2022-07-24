@@ -14,7 +14,8 @@ const MapLoadingOverlay = ({ visible = true }) => {
     setRender(true);
     const anim = Animated.timing(opacityAnimatedValue, {
       toValue: visible ? 1 : 0,
-      duration: visible ? 0 : 300,
+      delay: visible ? 0 : 500,
+      duration: visible ? 0 : 500,
       useNativeDriver: true,
     });
     anim.start(( { finished } ) => {
