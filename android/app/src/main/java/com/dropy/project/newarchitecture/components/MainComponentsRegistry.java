@@ -1,4 +1,4 @@
-package com.dropy.newarchitecture.components;
+package com.dropy.project.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
