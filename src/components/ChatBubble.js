@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   lastMessageTimeStampText: {
     position: 'absolute',
-    ...Fonts.bold(12, Colors.grey),
+    ...Fonts.bold(12, Colors.lightGrey),
     bottom: '-35%',
   },
 });

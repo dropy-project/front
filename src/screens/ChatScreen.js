@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -53,6 +53,7 @@ const ChatScreen = ({ route, navigation }) => {
     navigation.goBack();
   }
 
+
   function onAllMessageLoadEnd() {
     scrollViewRef.current?.scrollToEnd({ animated: false });
   }
@@ -71,10 +72,6 @@ const ChatScreen = ({ route, navigation }) => {
     sendMessage(textInputContent);
     setTextInputContent('');
   };
-
-  useEffect(() => {
-    console.log('Messages updted');
-  }, [messages]);
 
   return (
     <View style={styles.container}>
@@ -134,11 +131,10 @@ const ChatScreen = ({ route, navigation }) => {
               return (
                 <React.Fragment key={message.id}>
                   <ChatBubble
-                    index={index}
-                    animateIn={index >= messages.length - 20}
-                    key={message.id}
-                    isLeft={message.sender.id !== user.id}
                     {...message}
+                    index={index}
+                    animateIn={index >= messages.length - MESSAGES_PER_PAGE}
+                    isLeft={message.sender.id !== user.id}
                     showDate={isLastMessage}
                   />
                   <Text style={styles.chunckHeader}>{chunckHeaderTimeString(nextMessage.date)}</Text>
@@ -146,7 +142,14 @@ const ChatScreen = ({ route, navigation }) => {
               );
             }
             return (
-              <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} showDate={isLastMessage} />
+              <ChatBubble
+                {...message}
+                key={message.id}
+                index={index}
+                animateIn={index >= messages.length - MESSAGES_PER_PAGE}
+                isLeft={message?.sender.id !== user.id}
+                showDate={isLastMessage}
+              />
             );
           })}
         </ScrollView>
