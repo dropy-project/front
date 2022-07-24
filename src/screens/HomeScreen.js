@@ -21,7 +21,7 @@ const HomeScreen = ({ navigation, route }) => {
     if(dropyCreateParams != null) {
       setConfirmDropOverlayVisible(true);
     }
-  }, []);
+  }, [dropyCreateParams]);
 
   const closeConfirmDropOverlay = () => {
     setConfirmDropOverlayVisible(false);
