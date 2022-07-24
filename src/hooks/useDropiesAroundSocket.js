@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Socket from '../services/socket';
 import useCurrentUser from './useCurrentUser';
 import useGeolocation from './useGeolocation';
+import useTravelDistanceCallback from './useTravelDistanceCallback';
 
 const useDropiesAroundSocket = () => {
 
@@ -9,6 +10,8 @@ const useDropiesAroundSocket = () => {
   const { userCoordinates } = useGeolocation();
 
   const [dropiesAround, setDropiesAround] = useState([]);
+
+  useTravelDistanceCallback(updateAllDropiesAround, 100);
 
   useEffect(() => {
     if (Socket.dropySocket == null) return;
@@ -44,7 +47,8 @@ const useDropiesAroundSocket = () => {
     };
   }, []);
 
-  const updateAllDropiesAround = () => {
+  function updateAllDropiesAround() {
+    console.log('Update all dropies around');
     if (Socket.dropySocket == null) return;
     if (Socket.dropySocket.connected === false) return;
 
@@ -62,7 +66,7 @@ const useDropiesAroundSocket = () => {
       }));
       setDropiesAround(dropies ?? []);
     });
-  };
+  }
 
   const createDropy = (latitude, longitude) => {
     return new Promise((resolve) => {
