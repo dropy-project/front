@@ -48,7 +48,6 @@ const useDropiesAroundSocket = () => {
   }, []);
 
   function updateAllDropiesAround() {
-    console.log('Update all dropies around');
     if (Socket.dropySocket == null) return;
     if (Socket.dropySocket.connected === false) return;
 
