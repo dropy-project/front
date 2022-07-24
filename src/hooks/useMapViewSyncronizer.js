@@ -23,7 +23,8 @@ const useMapViewSyncronizer = (mapViewRef, mapIsReady = true) => {
   }, [userCoordinates, compassHeading, mapIsReady]);
 
   const setMapCameraPosition = async () => {
-    const currentCamera = await mapViewRef.current.getCamera();
+    const currentCamera = await mapViewRef.current?.getCamera();
+    if (currentCamera == null) return;
     const distanceBetweenCameraAndPosition = coordinatesDistance(currentCamera.center, userCoordinates);
     const duration = distanceBetweenCameraAndPosition > 100 ? 0 : 2000;
 

@@ -5,8 +5,8 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
+import { useInitializedGeolocation } from '../hooks/useGeolocation';
 import useMapViewSyncronizer, { INITIAL_PITCH, INITIAL_ZOOM } from '../hooks/useMapViewSyncronizer';
-import useGeolocation from '../hooks/useGeolocation';
 import useOverlay from '../hooks/useOverlay';
 
 import mapStyleAndroid from '../assets/mapStyleAndroid.json';
@@ -25,7 +25,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
   const navigation = useNavigation();
 
   const { sendBottomAlert } = useOverlay();
-  const { userCoordinates, compassHeading } = useGeolocation();
+  const { userCoordinates, compassHeading, initialized: geolocationInitialized } = useInitializedGeolocation();
 
   const handleDropyPressed = async (dropy) => {
     Haptics.impactHeavy();
@@ -96,7 +96,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
         ))}
       </MapView>
       <Sonar />
-      <MapLoadingOverlay visible={userCoordinates == null} />
+      <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
         pointerEvents='none'
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.1)']}

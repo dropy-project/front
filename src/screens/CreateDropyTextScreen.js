@@ -44,15 +44,13 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
       if(result) return;
     }
 
-    const params = {
-      dropyFilePath: null,
-      dropyData: text,
-      mediaType: MEDIA_TYPES.TEXT,
-      originRoute: 'CreateDropyText',
-    };
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Home', params: { dropyCreateParams: params } }],
+    navigation.navigate('Home', {
+      dropyCreateParams: {
+        dropyFilePath: null,
+        dropyData: text,
+        mediaType: MEDIA_TYPES.TEXT,
+        originRoute: 'CreateDropyText',
+      },
     });
   };
 

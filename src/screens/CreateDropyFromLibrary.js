@@ -5,9 +5,11 @@ import MEDIA_TYPES from '../utils/mediaTypes';
 
 const CreateDropyFromLibrary = ({ navigation }) => {
 
+
   useEffect(() => {
     openImageLibraryAndValidate();
   }, []);
+
   const openImageLibraryAndValidate = async () => {
     try {
       const result = await launchImageLibrary({
@@ -20,16 +22,13 @@ const CreateDropyFromLibrary = ({ navigation }) => {
         throw new Error('User cancelled image picker');
       }
 
-      const params = {
-        dropyFilePath: await compressImage(result.assets[0].uri),
-        dropyData: null,
-        mediaType: MEDIA_TYPES.PICTURE,
-        originRoute: 'CreateDropyFromLibrary',
-      };
-
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home', params: { dropyCreateParams: params } }],
+      navigation.navigate('Home', {
+        dropyCreateParams: {
+          dropyFilePath: await compressImage(result.assets[0].uri),
+          dropyData: null,
+          mediaType: MEDIA_TYPES.PICTURE,
+          originRoute: 'CreateDropyFromLibrary',
+        },
       });
 
     } catch (error) {

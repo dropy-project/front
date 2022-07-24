@@ -1,4 +1,4 @@
-package com.dropy.newarchitecture;
+package com.dropy.project.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.dropy.BuildConfig;
-import com.dropy.newarchitecture.components.MainComponentsRegistry;
-import com.dropy.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.dropy.project.BuildConfig;
+import com.dropy.project.newarchitecture.components.MainComponentsRegistry;
+import com.dropy.project.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

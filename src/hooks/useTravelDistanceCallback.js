@@ -36,6 +36,7 @@ const useTravelDistanceCallback = (
   }, []);
 
   useEffect(() => {
+    if(userCoordinates == null) return;
     if(distanceCallback == null) return;
 
     if(lastTrigger.current.coordinates == null) {
