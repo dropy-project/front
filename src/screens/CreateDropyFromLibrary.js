@@ -15,7 +15,7 @@ const CreateDropyFromLibrary = ({ navigation }) => {
       const result = await launchImageLibrary({
         mediaType: 'photo',
         selectionLimit: 1,
-        presentationStyle: 'popover',
+        presentationStyle: 'overFullScreen',
       });
 
       if(result.didCancel) {
