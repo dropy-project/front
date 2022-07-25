@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AppState, View, StyleSheet, Platform } from 'react-native';
 
 import Socket from '../services/socket';
+
 import useCurrentUser from '../hooks/useCurrentUser';
+import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
+
 import ReconnectingOverlay from '../components/overlays/ReconnectingOverlay';
 
 const log = (...params) => {
@@ -16,7 +19,7 @@ const SocketProvider = ({ children }) => {
   const [connected, setConnected] = useState(false);
   const isTemporaryDisconnected = useRef(false);
 
-  useEffect(() => {
+  useEffectForegroundOnly(() => {
     if(user == null) return;
 
     Socket.initSockets();
