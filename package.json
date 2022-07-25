@@ -1,5 +1,5 @@
 {
-  "name": "Dropy",
+  "name": "dropy",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -36,7 +36,7 @@
     "react-native-image-picker": "^4.8.4",
     "react-native-image-resizer": "^1.4.5",
     "react-native-linear-gradient": "^2.5.6",
-    "react-native-maps": "^0.31.1",
+    "react-native-maps": "^1.1.0",
     "react-native-notifications": "^4.3.1",
     "react-native-permissions": "^3.3.1",
     "react-native-responsive-dimensions": "^3.1.1",
