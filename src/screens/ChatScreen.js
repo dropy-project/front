@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -35,30 +35,32 @@ const ChatScreen = ({ route, navigation }) => {
   const { sendAlert } = useOverlay();
   const { user } = useCurrentUser();
 
-  const [lastMessagesCount, setLastMessagesCount] = useState(0);
-
   const {
     loading,
     messages,
     sendMessage,
     otherUserConnected,
     loadMoreMessages,
-  } = useChatSocket(conversation.id, handleSocketError);
+  } = useChatSocket(conversation.id, handleSocketError, onAllMessageLoadEnd, onNewMessage);
 
   const isKeyboardVisible = useKeyboardVisible();
 
-  useEffect(() => {
-    scrollViewRef.current?.scrollToEnd({ animated: messages.length - lastMessagesCount < 10 });
-    setLastMessagesCount(messages.length);
-  }, [messages, isKeyboardVisible]);
-
-  const handleSocketError = async () => {
+  async function handleSocketError() {
     await sendAlert({
       title: 'An error occurred',
       description: 'Check your internet connection and try again',
     });
     navigation.goBack();
-  };
+  }
+
+
+  function onAllMessageLoadEnd() {
+    scrollViewRef.current?.scrollToEnd({ animated: false });
+  }
+
+  function onNewMessage(isUserMessage) {
+    scrollViewRef.current?.scrollToEnd({ animated: !isUserMessage });
+  }
 
   const onSubmit = () => {
     Keyboard.dismiss;
@@ -125,11 +127,10 @@ const ChatScreen = ({ route, navigation }) => {
               return (
                 <React.Fragment key={message.id}>
                   <ChatBubble
-                    index={index}
-                    animateIn={index >= messages.length - 20}
-                    key={message.id}
-                    isLeft={message.sender.id !== user.id}
                     {...message}
+                    index={index}
+                    animateIn={index >= messages.length - MESSAGES_PER_PAGE}
+                    isLeft={message.sender.id !== user.id}
                     showDate={isLastMessage}
                   />
                   <Text style={styles.chunckHeader}>{chunckHeaderTimeString(nextMessage.date)}</Text>
@@ -137,7 +138,14 @@ const ChatScreen = ({ route, navigation }) => {
               );
             }
             return (
-              <ChatBubble key={message.id} isLeft={message.sender.id !== user.id} {...message} showDate={isLastMessage} />
+              <ChatBubble
+                {...message}
+                key={message.id}
+                index={index}
+                animateIn={index >= messages.length - MESSAGES_PER_PAGE}
+                isLeft={message?.sender.id !== user.id}
+                showDate={isLastMessage}
+              />
             );
           })}
         </ScrollView>

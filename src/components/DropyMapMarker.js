@@ -24,7 +24,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
     }, intervalDuration);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [dropy?.isUserDropy]);
 
   return (
     <Marker
