@@ -41,7 +41,7 @@ const ChatScreen = ({ route, navigation }) => {
     sendMessage,
     otherUserConnected,
     loadMoreMessages,
-  } = useChatSocket(conversation.id, handleSocketError, onAllMessageLoadEnd, onNewMessage, onOldMessagesLoadEnd);
+  } = useChatSocket(conversation.id, handleSocketError, onAllMessageLoadEnd, onNewMessage);
 
   const isKeyboardVisible = useKeyboardVisible();
 
@@ -60,10 +60,6 @@ const ChatScreen = ({ route, navigation }) => {
 
   function onNewMessage(isUserMessage) {
     scrollViewRef.current?.scrollToEnd({ animated: !isUserMessage });
-  }
-
-  function onOldMessagesLoadEnd() {
-    return;
   }
 
   const onSubmit = () => {

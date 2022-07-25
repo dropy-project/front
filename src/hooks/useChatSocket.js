@@ -7,7 +7,7 @@ import useCurrentUser from './useCurrentUser';
 
 export const MESSAGES_PER_PAGE = 30;
 
-const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd = () => {}, onNewMessage = () => {}, onOldMessagesLoadEnd = () => {}) => {
+const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd = () => {}, onNewMessage = () => {}) => {
 
   const navigation = useNavigation();
   const { user } = useCurrentUser();
@@ -21,7 +21,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
   const [otherUserConnected, setOtherUserConnected] = useState(null);
 
   useLayoutEffect(() => {
-    if (messageBuffer.action) {
+    if (messageBuffer.action != null) {
       messageBuffer.action();
     }
   }, [messageBuffer]);
@@ -176,7 +176,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
 
         return {
           messages,
-          action: onOldMessagesLoadEnd,
+          action: null,
           loading: false,
         };
       });
