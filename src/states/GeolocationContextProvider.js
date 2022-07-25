@@ -1,7 +1,10 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import Geolocation from 'react-native-geolocation-service';
 import CompassHeading from 'react-native-compass-heading';
+
 import usePermissions from '../hooks/usePermissions';
+import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
+
 import GeolocationModal from '../components/overlays/GeolocationModal';
 
 export const GeolocationContext = createContext(null);
@@ -13,7 +16,7 @@ const GeolocationProvider = ({ children }) => {
 
   const { requestForegroundGeolocation, geolocationForegroundState } = usePermissions();
 
-  useEffect(() => {
+  useEffectForegroundOnly(() => {
     requestForegroundGeolocation();
     const geolocationWatchId = registerGeolocationListener();
     registerCompassListener();

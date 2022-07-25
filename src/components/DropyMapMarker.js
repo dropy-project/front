@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 import DropyPopup from '../assets/svgs/dropyPopup.svg';
@@ -27,7 +27,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
   }, [dropy?.isUserDropy]);
 
   return (
-    <MapView.Marker
+    <Marker
       coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
       onPress={onPress}
       tracksViewChanges={dropy.isUserDropy}
@@ -60,7 +60,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
           </View>
         )}
       </View>
-    </MapView.Marker>
+    </Marker>
   );
 };
 

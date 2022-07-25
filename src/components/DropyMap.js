@@ -15,7 +15,6 @@ import mapStyleIOS from '../assets/mapStyleIOS.json';
 import API from '../services/API';
 import Haptics from '../utils/haptics';
 
-
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
@@ -55,18 +54,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
   const [mapIsReady, setMapIsReady] = useState(false);
   useMapViewSyncronizer(mapRef, mapIsReady);
 
-  useEffect(() => {
-    if(Platform.OS === 'ios') {
-      setTimeout(() => {
-        setMapIsReady(true);
-        console.log('MAP READY SKETCHY OVERRIDE');
-        // REMOVE THIS WHEN FIXED IN MAPVIEW
-        // Upgrade rn-maps to 1.0.0 and then check if this is fixed
-        // https://github.com/react-native-maps/react-native-maps/issues/4319
-      }, 2000);
-    }
-  }, []);
-
   return (
     <>
       <MapView
@@ -89,7 +76,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
           zoom: INITIAL_ZOOM,
           altitude: 0,
         }}
-        onMapReady={() => setMapIsReady(true)}
+        onMapLoaded={() => setMapIsReady(true)}
       >
         {dropiesAround.map((dropy) => (
           <DropyMapMarker  key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />

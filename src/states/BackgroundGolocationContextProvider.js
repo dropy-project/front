@@ -3,16 +3,16 @@ Philosophy of Operation
 https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philosophy-of-Operation
 */
 
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   Alert,
-  AppState,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from 'react-native';
+
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
 import API from '../services/API';
@@ -29,8 +29,6 @@ const BackgroundGolocationProvider = ({ children }) => {
   const [backgroundGeolocationEnabled, _setBackgroundGeolocationEnabled] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [logs, setLogs] = useState(null);
-
-  const initialAppState = useRef(AppState.currentState).current;
 
   useEffect(() => {
     const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, (error) => {
@@ -131,11 +129,6 @@ const BackgroundGolocationProvider = ({ children }) => {
       setLogs(null);
     }
   };
-
-  if(initialAppState === 'background') {
-    log('Render Skipped - App has been launched in background');
-    return null;
-  }
 
   return (
     <BackgroundGeolocationContext.Provider value={{
