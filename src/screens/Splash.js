@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Notifications } from 'react-native-notifications';
+
 import useCurrentUser from '../hooks/useCurrentUser';
+import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 import useOverlay from '../hooks/useOverlay';
+
 import API from '../services/API';
+
 import { extractNotificationPayload } from '../states/NotificationProvider';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
@@ -31,7 +35,7 @@ const Splash = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
+  useEffectForegroundOnly(() => {
     API.serverVersionIsCompatible().then(compatible => {
       if (compatible) {
         login();

@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Notifications } from 'react-native-notifications';
 import { Platform } from 'react-native';
-import Notification from '../components/Notification';
-import useCurrentUser from '../hooks/useCurrentUser';
+
 import API from '../services/API';
+
+import useCurrentUser from '../hooks/useCurrentUser';
+import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
+
+import Notification from '../components/Notification';
 
 export const extractNotificationPayload = (notification) => {
   if(Platform.OS === 'android') {
@@ -27,7 +31,7 @@ const NotificationProvider = ({ children }) => {
 
   const [notificationData, setNotificationData] = useState(null);
 
-  useEffect(() => {
+  useEffectForegroundOnly(() => {
     if(user != null)
       setupNotifications();
   }, [user]);
