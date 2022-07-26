@@ -5,7 +5,7 @@ import { decryptMessage, encryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
 import useCurrentUser from './useCurrentUser';
 
-export const MESSAGES_PER_PAGE = 30;
+export const MESSAGES_PER_PAGE = 200;
 
 const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd = () => {}, onNewMessage = () => {}) => {
 
@@ -108,14 +108,16 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         return;
       }
 
+      const messages = response.data.map(message => ({
+        ...message,
+        content: typeof message.content === 'string' ?
+          decryptMessage(message.content) :
+          message.content,
+      }));
+
       setMessagesBuffer(() => {
         return {
-          messages: response.data.map(message => ({
-            ...message,
-            content: typeof message.content === 'string' ?
-              decryptMessage(message.content) :
-              message.content,
-          })),
+          messages: messages.reverse(),
           action: onAllMessageLoadEnd,
           loading: false,
         };
@@ -129,20 +131,21 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         console.error('Error getting messages', response.error);
         return;
       }
+
+      const newMessage = {
+        id: response.data,
+        content,
+        read: false,
+        date: new Date(),
+        sender: {
+          displayName: user.displayName,
+          id: user.id,
+        },
+      };
+
       setMessagesBuffer(oldBuffer => {
         return {
-          messages: [...oldBuffer.messages,
-            {
-              id: response.data,
-              content,
-              read: false,
-              date: new Date(),
-              sender: {
-                displayName: user.displayName,
-                id: user.id,
-              },
-            }
-          ],
+          messages: [newMessage, ...oldBuffer.messages],
           action: onNewMessage,
           loading: false,
         };
