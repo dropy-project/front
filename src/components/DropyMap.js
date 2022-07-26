@@ -59,7 +59,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
-        customMapStyle={Platform.OS === 'ios' ? mapStyleIOS : mapStyleAndroid}
         style={StyleSheet.absoluteFillObject}
         pitchEnabled={false}
         rotateEnabled={false}

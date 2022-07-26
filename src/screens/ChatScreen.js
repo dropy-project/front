@@ -13,6 +13,7 @@ import useKeyboardVisible from '../hooks/useKeyboardVisible';
 import SendMessageInput from '../components/SendMessageInput';
 import ChatBubble from '../components/ChatBubble';
 import { Colors, Fonts } from '../styles/Styles';
+import ChatHeader from '../components/ChatHeader';
 
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -27,6 +28,7 @@ const ChatScreen = ({ route, navigation }) => {
   const {
     messages,
     sendMessage,
+    otherUserConnected,
   } = useChatSocket(conversation.id, handleSocketError);
 
   async function handleSocketError() {
@@ -75,6 +77,7 @@ const ChatScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <GoBackHeader />
+      <ChatHeader conversation={conversation} otherUserConnected={otherUserConnected}/>
       <FlatList
         ref={flatListRef}
         data={messages}
