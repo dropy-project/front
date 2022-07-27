@@ -3,8 +3,7 @@ import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import { chunckHeaderTimeString } from '../utils/time';
-import GoBackHeader from '../components/GoBackHeader';
-
+import LoadingSpinner from '../components/LoadingSpinner';
 import useChatSocket from '../hooks/useChatSocket';
 import useCurrentUser from '../hooks/useCurrentUser';
 import useOverlay from '../hooks/useOverlay';
@@ -29,6 +28,7 @@ const ChatScreen = ({ route, navigation }) => {
     messages,
     sendMessage,
     otherUserConnected,
+    loadMoreMessages,
   } = useChatSocket(conversation.id, handleSocketError);
 
   async function handleSocketError() {
@@ -40,7 +40,6 @@ const ChatScreen = ({ route, navigation }) => {
   }
 
   useKeyboardVisible(() => {
-    // to do scroll en bas (scollToEnd fait l'inverse de ça)
     flatListRef.scrollToOffset({ animated: true, offset: 0 });
   });
 
@@ -76,16 +75,17 @@ const ChatScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <GoBackHeader />
-      <ChatHeader conversation={conversation} otherUserConnected={otherUserConnected}/>
       <FlatList
         ref={flatListRef}
         data={messages}
         renderItem={renderChatMessage}
         contentContainerStyle={{ paddingVertical: 30 }}
         inverted={true}
-        keyExtractor={(item) => item.id}
+        ListEmptyComponent={<LoadingSpinner selfCenter/>}
+        onEndReached={loadMoreMessages}
+        onEndReachedThreshold={0.5}
       />
+      <ChatHeader conversation={conversation} otherUserConnected={otherUserConnected}/>
       <SendMessageInput sendMessage={sendMessage}/>
       {Platform.OS === 'ios' && (
         <KeyboardSpacer />

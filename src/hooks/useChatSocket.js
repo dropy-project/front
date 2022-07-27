@@ -5,7 +5,7 @@ import { decryptMessage, encryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
 import useCurrentUser from './useCurrentUser';
 
-export const MESSAGES_PER_PAGE = 200;
+export const MESSAGES_PER_PAGE = 30;
 
 const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd = () => {}, onNewMessage = () => {}) => {
 

@@ -1,17 +1,23 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { SafeAreaView, StyleSheet, Text, View , TouchableOpacity } from 'react-native';
 import useKeyboardVisible from '../hooks/useKeyboardVisible';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import GoBackHeader from './GoBackHeader';
 import ProfileAvatar from './ProfileAvatar';
 
 
 
-const ChatHeader = (conversation, otherUserConnected) => {
+const ChatHeader = ({ conversation, otherUserConnected }) => {
 
   const isKeyboardVisible = useKeyboardVisible();
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, height: isKeyboardVisible ? 50 : undefined }}>
+      <GoBackHeader />
+      <TouchableOpacity style={styles.moreButton}>
+        <Feather name="more-horizontal" size={40} color={Colors.grey}/>
+      </TouchableOpacity>
       {isKeyboardVisible === false ? (
         <View style={styles.headerContainerKeyboard}>
           <ProfileAvatar
@@ -23,7 +29,7 @@ const ChatHeader = (conversation, otherUserConnected) => {
             {conversation?.user?.displayName}
           </Text>
           <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>
-            {conversation?.user?.displayName}
+            Met x hours ago
           </Text>
         </View>
       ) : (
@@ -44,28 +50,23 @@ export default ChatHeader;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'red',
+    position: 'absolute',
+    width: '100%',
     alignItems: 'center',
-    height: 200,
+    backgroundColor: Colors.white,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    ...Styles.hardShadows,
   },
   headerContainerKeyboard: {
-    width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     alignItems: 'center',
-    paddingTop: 50,
-    paddingBottom: 15,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
-    ...Styles.hardShadows,
   },
   headerContainer: {
-    width: '100%',
-    backgroundColor: 'white',
+    position: 'absolute',
+    backgroundColor: Colors.white,
     alignItems: 'center',
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
-    ...Styles.hardShadows,
-    ...Styles.safeAreaView,
+    paddingTop: 5,
   },
   userinfos: {
     flexDirection: 'row',
@@ -82,5 +83,9 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 16,
     marginLeft: 10,
+  },
+  moreButton: {
+    position: 'absolute',
+    right: 20,
   },
 });

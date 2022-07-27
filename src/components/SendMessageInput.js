@@ -26,7 +26,8 @@ const SendMessageInput = ({ sendMessage, onFocus }) => {
           style={styles.textInput}
           onChangeText={text => setTextInputContent(text)}
           value={textInputContent}
-          onEndEditing={onSubmit}
+          onSubmitEditing={() => onSubmit()}
+          onPressOut={() => Keyboard.dismiss}
           returnKeyType="send"
         />
         <TouchableOpacity
