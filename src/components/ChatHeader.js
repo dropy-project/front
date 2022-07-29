@@ -1,91 +1,70 @@
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
-import { SafeAreaView, StyleSheet, Text, View , TouchableOpacity } from 'react-native';
-import useKeyboardVisible from '../hooks/useKeyboardVisible';
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import GoBackHeader from './GoBackHeader';
 import ProfileAvatar from './ProfileAvatar';
-
-
 
 const ChatHeader = ({ conversation, otherUserConnected }) => {
 
-  const isKeyboardVisible = useKeyboardVisible();
+  const navigation = useNavigation();
+
+  const openProfile = () => {
+    // TO DO
+  };
 
   return (
-    <View style={{ ...styles.container, height: isKeyboardVisible ? 50 : undefined }}>
-      <GoBackHeader />
-      <TouchableOpacity style={styles.moreButton}>
-        <Feather name="more-horizontal" size={40} color={Colors.grey}/>
-      </TouchableOpacity>
-      {isKeyboardVisible === false ? (
-        <View style={styles.headerContainerKeyboard}>
+    <SafeAreaView style={{ ...Styles.safeAreaView, ...styles.safeArea }}>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.button}>
+          <Feather name="arrow-left" size={30} color={Colors.grey} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.userInfosContainer} onPress={openProfile}>
           <ProfileAvatar
-            size={100}
-            showStatusDot={true}
+            size={40}
+            showStatusDot
+            style={{ borderWidth: 0 }}
+            statusDotStyle={{ borderWidth: 2, bottom: 1, right: 1, width: 13, height: 13 }}
             isUserOnline={otherUserConnected}
           />
-          <Text style={{ ...Fonts.bold(22, Colors.darkGrey), marginTop: 10 }}>
+          <Text style={{ ...Fonts.bold(15, Colors.darkGrey), marginHorizontal: 15 }}>
             {conversation?.user?.displayName}
           </Text>
-          <Text style={{ ...Fonts.bold(13, Colors.lightGrey), marginTop: 5 }}>
-            Met x hours ago
-          </Text>
-        </View>
-      ) : (
-        <SafeAreaView style={styles.headerContainer}>
-          <View style={styles.userinfos}>
-            <Text style={styles.username}>
-              {conversation?.user?.displayName}
-            </Text>
-            <View style={{ ...styles.statusDot, backgroundColor: otherUserConnected ? Colors.green : Colors.lightGrey }}/>
-          </View>
-        </SafeAreaView>
-      )}
-    </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Feather name="more-horizontal" size={30} color={Colors.grey}/>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default ChatHeader;
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     position: 'absolute',
     width: '100%',
-    alignItems: 'center',
     backgroundColor: Colors.white,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     ...Styles.hardShadows,
   },
-  headerContainerKeyboard: {
-    backgroundColor: Colors.white,
+  container: {
+    width: '100%',
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    paddingBottom: 10,
   },
-  headerContainer: {
-    position: 'absolute',
-    backgroundColor: Colors.white,
-    alignItems: 'center',
-    paddingTop: 5,
-  },
-  userinfos: {
+  userInfosContainer: {
+    paddingHorizontal: 15,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  username: {
-    ...Fonts.bold(20, Colors.darkGrey),
-  },
-  statusDot: {
-    ...Styles.blueShadow,
-    width: 12,
-    height: 12,
-    borderRadius: 16,
-    marginLeft: 10,
-  },
-  moreButton: {
-    position: 'absolute',
-    right: 20,
   },
 });
