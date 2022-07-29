@@ -108,14 +108,16 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         return;
       }
 
+      const messages = response.data.map(message => ({
+        ...message,
+        content: typeof message.content === 'string' ?
+          decryptMessage(message.content) :
+          message.content,
+      }));
+
       setMessagesBuffer(() => {
         return {
-          messages: response.data.map(message => ({
-            ...message,
-            content: typeof message.content === 'string' ?
-              decryptMessage(message.content) :
-              message.content,
-          })),
+          messages: messages.reverse(),
           action: onAllMessageLoadEnd,
           loading: false,
         };
@@ -129,20 +131,21 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         console.error('Error getting messages', response.error);
         return;
       }
+
+      const newMessage = {
+        id: response.data,
+        content,
+        read: false,
+        date: new Date(),
+        sender: {
+          displayName: user.displayName,
+          id: user.id,
+        },
+      };
+
       setMessagesBuffer(oldBuffer => {
         return {
-          messages: [...oldBuffer.messages,
-            {
-              id: response.data,
-              content,
-              read: false,
-              date: new Date(),
-              sender: {
-                displayName: user.displayName,
-                id: user.id,
-              },
-            }
-          ],
+          messages: [newMessage, ...oldBuffer.messages],
           action: onNewMessage,
           loading: false,
         };
@@ -162,16 +165,23 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         return;
       }
 
+      if(messageBuffer.messages.some(message => response.data.some(newMessage => newMessage.id === message.id))) {
+        console.log('End of chat reached');
+        return;
+      }
+
+      const newMessages = response.data.map(message => ({
+        ...message,
+        content: typeof message.content === 'string' ?
+          decryptMessage(message.content) :
+          message.content,
+        date: messageTimeString(message.date),
+      }));
+
       setMessagesBuffer(oldBuffer => {
         const messages = [
-          ...response.data.map(message => ({
-            ...message,
-            content: typeof message.content === 'string' ?
-              decryptMessage(message.content) :
-              message.content,
-            date: messageTimeString(message.date),
-          })),
-          ...oldBuffer.messages
+          ...oldBuffer.messages,
+          ...newMessages.reverse()
         ];
 
         return {
