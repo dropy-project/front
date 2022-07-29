@@ -165,16 +165,23 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         return;
       }
 
+      if(messageBuffer.messages.some(message => response.data.some(newMessage => newMessage.id === message.id))) {
+        console.log('End of chat reached');
+        return;
+      }
+
+      const newMessages = response.data.map(message => ({
+        ...message,
+        content: typeof message.content === 'string' ?
+          decryptMessage(message.content) :
+          message.content,
+        date: messageTimeString(message.date),
+      }));
+
       setMessagesBuffer(oldBuffer => {
         const messages = [
-          ...response.data.map(message => ({
-            ...message,
-            content: typeof message.content === 'string' ?
-              decryptMessage(message.content) :
-              message.content,
-            date: messageTimeString(message.date),
-          })),
-          ...oldBuffer.messages
+          ...oldBuffer.messages,
+          ...newMessages
         ];
 
         return {

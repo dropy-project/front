@@ -47,7 +47,6 @@ export default ChatHeader;
 
 const styles = StyleSheet.create({
   safeArea: {
-    position: 'absolute',
     width: '100%',
     backgroundColor: Colors.white,
     borderBottomLeftRadius: 20,

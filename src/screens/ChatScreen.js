@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 import { chunckHeaderTimeString } from '../utils/time';
 import LoadingSpinner from '../components/LoadingSpinner';
 import useChatSocket from '../hooks/useChatSocket';
@@ -47,13 +48,13 @@ const ChatScreen = ({ route, navigation }) => {
     const isLastMessage = index === 0;
     const nextMessage = messages[index - 1];
     const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / ONE_HOUR;
-    if( hourDifference > 2 ) {
+    if(hourDifference > 2) {
       return (
         <React.Fragment key={message.id}>
           <Text style={styles.chunckHeader}>{chunckHeaderTimeString(nextMessage.date)}</Text>
           <ChatBubble
             {...message}
-            index={0}
+            animationDelay={index * 10}
             animateIn={true}
             isLeft={message.sender.id !== user.id}
             showDate={isLastMessage}
@@ -65,7 +66,7 @@ const ChatScreen = ({ route, navigation }) => {
       <ChatBubble
         {...message}
         key={message.id}
-        index={0}
+        animationDelay={index * 10}
         animateIn={true}
         isLeft={message?.sender.id !== user.id}
         showDate={isLastMessage}
@@ -75,17 +76,18 @@ const ChatScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <ChatHeader conversation={conversation} otherUserConnected={otherUserConnected}/>
       <FlatList
         ref={flatListRef}
+        style={styles.chatList}
+        contentContainerStyle={{ paddingVertical: 30 }}
         data={messages}
         renderItem={renderChatMessage}
-        contentContainerStyle={{ paddingVertical: 30 }}
-        inverted={true}
+        inverted
+        indicatorStyle='black'
         ListEmptyComponent={<LoadingSpinner selfCenter/>}
         onEndReached={loadMoreMessages}
-        onEndReachedThreshold={0.5}
       />
-      <ChatHeader conversation={conversation} otherUserConnected={otherUserConnected}/>
       <SendMessageInput sendMessage={sendMessage}/>
       {Platform.OS === 'ios' && (
         <KeyboardSpacer />
@@ -102,8 +104,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
   },
+  chatList: {
+    flex: 1,
+    width: '100%',
+  },
   chunckHeader: {
-    ...Fonts.bold(13, Colors.lightGrey),
+    ...Fonts.bold(11, Colors.lightGrey),
     marginTop: 30,
     marginBottom: 5,
     textAlign: 'center',

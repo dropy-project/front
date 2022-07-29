@@ -10,18 +10,11 @@ import FadeInWrapper from './FadeInWrapper';
 import DropyMediaViewer from './DropyMediaViewer';
 
 
-const ChatBubble = (props) => {
-
-  if(props.animateIn) {
-    return (
-      <FadeInWrapper delay={props.index * 50}>
-        <Bubble {...props} />
-      </FadeInWrapper>
-    );
-  }
-  return (<Bubble {...props} />);
-
-};
+const ChatBubble = (props) => (
+  <FadeInWrapper delay={props?.animationDelay ?? 0}>
+    <Bubble {...props} />
+  </FadeInWrapper>
+);
 
 export default ChatBubble;
 
@@ -80,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 20,
-    paddingVertical: 5,
+    paddingVertical: 2,
   },
   dropyContainer: {
     paddingVertical: 30,
@@ -116,7 +109,7 @@ const styles = StyleSheet.create({
   },
   lastMessageTimeStampText: {
     position: 'absolute',
-    ...Fonts.bold(12, Colors.lightGrey),
+    ...Fonts.bold(10, Colors.lightGrey),
     bottom: '-35%',
   },
 });
