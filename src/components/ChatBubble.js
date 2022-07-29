@@ -5,13 +5,16 @@ import { StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import { messageTimeString } from '../utils/time';
+import { chunckHeaderTimeString, messageTimeString } from '../utils/time';
 import FadeInWrapper from './FadeInWrapper';
 import DropyMediaViewer from './DropyMediaViewer';
 
 
 const ChatBubble = (props) => (
   <FadeInWrapper delay={props?.animationDelay ?? 0}>
+    {props.isChunkFirstMessage && (
+      <Text style={styles.chunkFirstMessageText}>{chunckHeaderTimeString(props?.date)}</Text>
+    )}
     <Bubble {...props} />
   </FadeInWrapper>
 );
@@ -111,5 +114,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     ...Fonts.bold(10, Colors.lightGrey),
     bottom: '-35%',
+  },
+  chunkFirstMessageText: {
+    ...Fonts.bold(11, Colors.lightGrey),
+    marginTop: 30,
+    marginBottom: 5,
+    textAlign: 'center',
   },
 });

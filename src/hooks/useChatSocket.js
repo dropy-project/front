@@ -181,7 +181,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
       setMessagesBuffer(oldBuffer => {
         const messages = [
           ...oldBuffer.messages,
-          ...newMessages
+          ...newMessages.reverse()
         ];
 
         return {

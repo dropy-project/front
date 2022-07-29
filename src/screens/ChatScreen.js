@@ -1,9 +1,7 @@
 import React, { useRef } from 'react';
-import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
-import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { chunckHeaderTimeString } from '../utils/time';
 import LoadingSpinner from '../components/LoadingSpinner';
 import useChatSocket from '../hooks/useChatSocket';
 import useCurrentUser from '../hooks/useCurrentUser';
@@ -12,7 +10,6 @@ import useKeyboardVisible from '../hooks/useKeyboardVisible';
 
 import SendMessageInput from '../components/SendMessageInput';
 import ChatBubble from '../components/ChatBubble';
-import { Colors, Fonts } from '../styles/Styles';
 import ChatHeader from '../components/ChatHeader';
 
 const ONE_HOUR = 60 * 60 * 1000;
@@ -41,33 +38,19 @@ const ChatScreen = ({ route, navigation }) => {
   }
 
   useKeyboardVisible(() => {
-    flatListRef.scrollToOffset({ animated: true, offset: 0 });
+    flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
   });
 
   const renderChatMessage = ({ item: message, index }) => {
     const isLastMessage = index === 0;
     const nextMessage = messages[index - 1];
     const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / ONE_HOUR;
-    if(hourDifference > 2) {
-      return (
-        <React.Fragment key={message.id}>
-          <Text style={styles.chunckHeader}>{chunckHeaderTimeString(nextMessage.date)}</Text>
-          <ChatBubble
-            {...message}
-            animationDelay={index * 10}
-            animateIn={true}
-            isLeft={message.sender.id !== user.id}
-            showDate={isLastMessage}
-          />
-        </React.Fragment>
-      );
-    }
     return (
       <ChatBubble
         {...message}
         key={message.id}
+        isChunkFirstMessage={hourDifference > 2}
         animationDelay={index * 10}
-        animateIn={true}
         isLeft={message?.sender.id !== user.id}
         showDate={isLastMessage}
       />
@@ -107,11 +90,5 @@ const styles = StyleSheet.create({
   chatList: {
     flex: 1,
     width: '100%',
-  },
-  chunckHeader: {
-    ...Fonts.bold(11, Colors.lightGrey),
-    marginTop: 30,
-    marginBottom: 5,
-    textAlign: 'center',
   },
 });
