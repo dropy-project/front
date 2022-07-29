@@ -43,6 +43,14 @@ const BackgroundGolocationProvider = ({ children }) => {
       console.log('[onActivityChange]', activity);
     });
 
+    const authorizationChangeSubscriber = BackgroundGeolocation.onAuthorization((event) => {
+      if (event.success) {
+        console.log('[authorization] SUCCESS: ', event.response);
+      } else {
+        console.error('[authorization] ERROR: ', event.error);
+      }
+    });
+
     initializeBackgroundGeolocation().catch(error => {
       console.error('Background geolocation loading error', error);
     });
@@ -51,6 +59,7 @@ const BackgroundGolocationProvider = ({ children }) => {
       locationSubscriber.remove();
       motionChangeSubscriber.remove();
       activityChangeSubscriber.remove();
+      authorizationChangeSubscriber.remove();
     };
   }, [user]);
 
@@ -88,6 +97,8 @@ const BackgroundGolocationProvider = ({ children }) => {
   };
 
   const setupBackgroundGeolocation = async (authTokens) => {
+    const { accessToken, refreshToken, expires } = authTokens;
+
     return await BackgroundGeolocation.ready({
       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
       distanceFilter: 10,
@@ -97,9 +108,18 @@ const BackgroundGolocationProvider = ({ children }) => {
       stopOnTerminate: false,
       startOnBoot: true,
 
+      maxRecordsToPersist: 0,
+
       url: API.userBackgroundGeolocationPingUrl(),
-      headers: {
-        'Authorization': authTokens.authTokenData.token,
+      authorization: {
+        strategy: 'JWT',
+        accessToken,
+        refreshToken,
+        expires,
+        refreshUrl: API.refreshTokenUrl(),
+        refreshPayload: {
+          refreshToken: '{refreshToken}',
+        },
       },
     });
   };
@@ -108,9 +128,9 @@ const BackgroundGolocationProvider = ({ children }) => {
     try {
       if(enabled) {
         await BackgroundGeolocation.requestPermission();
+        await initializeBackgroundGeolocation();
       }
       _setBackgroundGeolocationEnabled(enabled);
-      Storage.setItem('@background_geolocation_enabled', enabled);
     } catch (error) {
       log('Permission granting failed', error);
       _setBackgroundGeolocationEnabled(false);

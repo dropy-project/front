@@ -57,7 +57,7 @@ export default ReconnectingOverlay;
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0)',
+    backgroundColor: 'rgba(0, 0, 0, 0.14)',
   },
   animatedContainer: {
     position: 'absolute',

@@ -31,12 +31,16 @@ const login = async () => {
     uid,
   });
 
-  const  { authTokenData, refreshTokenData, user } = response.data;
-  axios.defaults.headers.common['Authorization'] = authTokenData.token;
+  const  { accessToken, refreshToken, expires, user } = response.data;
+  axios.defaults.headers.common['Authorization'] = accessToken;
 
-  await Storage.setItem('@auth_tokens', { authTokenData, refreshTokenData });
+  await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
 
   return user;
+};
+
+const refreshTokenUrl = () => {
+  return `${API_BASE_URL}/refresh`;
 };
 
 const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
@@ -117,6 +121,7 @@ const API = {
   getHeaders,
   register,
   login,
+  refreshTokenUrl,
   postDropyMediaData,
   postDropyMediaFromPath,
   userBackgroundGeolocationPingUrl,
