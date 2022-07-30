@@ -17,11 +17,14 @@ const DropyMapMarker = ({ dropy, onPress }) => {
     const initialLifeTime = new Date() - dropTime;
     const intervalDuration = initialLifeTime < 60 * 1000 ? 1000 : 60 * 1000;
 
-    const interval = setInterval(() => {
+    const updateTimeString = () => {
       const dropTime = new Date(dropy.creationDate);
       const dropLifeTime = new Date() - dropTime;
       setDropTimeString(createDropTimeString(dropLifeTime));
-    }, intervalDuration);
+    };
+
+    updateTimeString();
+    const interval = setInterval(updateTimeString, intervalDuration);
 
     return () => clearInterval(interval);
   }, [dropy?.isUserDropy]);
@@ -39,12 +42,14 @@ const DropyMapMarker = ({ dropy, onPress }) => {
             <Text
               numberOfLines={1}
               ellipsizeMode="clip"
+              allowFontScaling={false}
               style={{ ...Fonts.bold(8, Colors.lightGrey), fontSize: 7 }}>
                 DROP
             </Text>
             <Text
               numberOfLines={1}
               ellipsizeMode="clip"
+              allowFontScaling={false}
               style={{ ...Fonts.bold(11, Colors.grey), fontSize: 12 }}>
               {dropTimeString} ago
             </Text>
@@ -54,6 +59,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
             <Text
               numberOfLines={1}
               ellipsizeMode="clip"
+              allowFontScaling={false}
               style={{ ...Fonts.bold(10, Colors.white), fontSize: 12 }}>
                 PICK UP
             </Text>
