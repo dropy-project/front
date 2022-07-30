@@ -2,11 +2,11 @@
   "name": "Dropy",
   "displayName": "Dropy",
 
-  "version": "0.0.2",
-  "requiredServerVersion": "0.0.2",
+  "version": "0.0.3",
+  "requiredServerVersion": "0.0.3",
 
   "customAPI": null,
   "customSocket": null,
 
-  "productionMode": false
+  "productionMode": true
 }
