@@ -59,10 +59,10 @@ const ChatScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <SendMessageInput sendMessage={sendMessage}/>
       {Platform.OS === 'ios' && (
         <KeyboardSpacer />
       )}
+      <SendMessageInput sendMessage={sendMessage}/>
       <FlatList
         ref={flatListRef}
         style={styles.chatList}
