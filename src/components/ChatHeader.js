@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import ProfileAvatar from './ProfileAvatar';
+import DisabledNotificationsPopup from './DisabledNotificationsPopup';
 
 const ChatHeader = ({ conversation, otherUserConnected }) => {
 
@@ -39,6 +40,8 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
           <Feather name="more-horizontal" size={30} color={Colors.grey}/>
         </TouchableOpacity>
       </View>
+
+      <DisabledNotificationsPopup />
     </SafeAreaView>
   );
 };
@@ -51,6 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+    alignItems: 'center',
     ...Styles.hardShadows,
   },
   container: {

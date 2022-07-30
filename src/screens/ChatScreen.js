@@ -59,7 +59,10 @@ const ChatScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ChatHeader conversation={conversation} otherUserConnected={otherUserConnected}/>
+      <SendMessageInput sendMessage={sendMessage}/>
+      {Platform.OS === 'ios' && (
+        <KeyboardSpacer />
+      )}
       <FlatList
         ref={flatListRef}
         style={styles.chatList}
@@ -71,10 +74,7 @@ const ChatScreen = ({ route, navigation }) => {
         ListEmptyComponent={<LoadingSpinner selfCenter/>}
         onEndReached={loadMoreMessages}
       />
-      <SendMessageInput sendMessage={sendMessage}/>
-      {Platform.OS === 'ios' && (
-        <KeyboardSpacer />
-      )}
+      <ChatHeader conversation={conversation} otherUserConnected={otherUserConnected}/>
     </View>
   );
 };
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
+    flexDirection: 'column-reverse',
   },
   chatList: {
     flex: 1,
