@@ -92,7 +92,7 @@ const BackgroundGolocationProvider = ({ children }) => {
     const state = await setupBackgroundGeolocation(authTokens);
     _setBackgroundGeolocationEnabled(state.enabled);
 
-    log(`Initialized successfully (started : ${state.enabled}`);
+    log(`Initialized successfully (started : ${state.enabled})`);
     setInitialized(true);
   };
 
@@ -108,7 +108,7 @@ const BackgroundGolocationProvider = ({ children }) => {
       stopOnTerminate: false,
       startOnBoot: true,
 
-      maxRecordsToPersist: 0,
+      maxRecordsToPersist: 1,
 
       url: API.userBackgroundGeolocationPingUrl(),
       authorization: {
