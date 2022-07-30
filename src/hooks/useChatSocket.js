@@ -30,6 +30,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
 
     joinConversation();
     Socket.chatSocket.on('connect', joinConversation);
+
     Socket.chatSocket.on('message_sent', response => {
       if (response.error != null) {
         onError(response.error);
@@ -37,14 +38,16 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         return;
       }
 
+      const newMessage = {
+        ...response.data,
+        content: typeof response.data.content === 'string' ?
+          decryptMessage(response.data.content) :
+          response.data.content,
+      };
+
       setMessagesBuffer(oldBuffer => {
         return {
-          messages: [...oldBuffer.messages, {
-            ...response.data,
-            content: typeof response.data.content === 'string' ?
-              decryptMessage(response.data.content) :
-              response.data.content,
-          }],
+          messages: [newMessage, ...oldBuffer.messages],
           action: onNewMessage,
           loading: false,
         };
