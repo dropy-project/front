@@ -1,118 +1,55 @@
-import React, { useContext } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import GoBackHeader from '../components/GoBackHeader';
-import AppInfo from '../../app.json';
-import Styles, { Colors, Fonts } from '../styles/Styles';
-import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
-import useOverlay from '../hooks/useOverlay';
-import useGeolocation from '../hooks/useGeolocation';
+import React, { useRef } from 'react';
+import { Animated, StatusBar, StyleSheet, Text, View } from 'react-native';
+import ProfileScreenHeader, { MAX_HEADER_HEIGHT } from '../components/ProfileScreenHeader';
+import { Colors, Fonts } from '../styles/Styles';
 
 const ProfileScreen = () => {
 
-  const { userCoordinates, compassHeading } = useGeolocation();
+  const scrollAnimValue = useRef(new Animated.Value(0)).current;
+
   return (
-    <SafeAreaView style={styles.container}>
-      <GoBackHeader/>
-      <View style={styles.wrapper}>
-        <ToggleBackgroundGeolocation />
-        <Text style={styles.text}>
-        Current version is {AppInfo.version}
-        </Text>
-        <Text style={styles.text}>
-          {/* eslint-disable-next-line no-undef */}
-        Current server : {AppInfo.productionMode ? 'prod' : 'preprod'}
-        </Text>
-        <Text style={{ ...styles.text, marginTop: 20 }}>
-          latitude: {userCoordinates.latitude}
-        </Text>
-        <Text style={{ ...styles.text }}>
-          longitude: {userCoordinates.longitude}
-        </Text>
-        <Text style={{ ...styles.text }}>
-          heading: {compassHeading}
-        </Text>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <Animated.ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.scrollViewContent}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollAnimValue } } }],
+          { useNativeDriver: true })
+        }
+      >
+        <View style={styles.infoContainer}>
+          <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>About</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>Je mange des truites la nuit car le soleil attire aux travers du sl les fourmis</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>Records</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>Member since 2008</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>Drops: 208</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>Found: 11</Text>
+        </View>
+      </Animated.ScrollView>
+
+      <ProfileScreenHeader scrollAnimValue={scrollAnimValue} />
+    </View>
   );
 };
 
 export default ProfileScreen;
 
-
-// TEMPORARY
-const ToggleBackgroundGeolocation = () => {
-  const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled, showLogs } = useContext(BackgroundGeolocationContext);
-
-  const { sendAlert } = useOverlay();
-
-  const toggle = async () => {
-    if (backgroundGeolocationEnabled) {
-      const result = await sendAlert({
-        title: 'Turn off background location',
-        description: 'The app will not be able to tell you if there are drops around you.',
-        denyText: 'keep enabled',
-        validateText: 'TURN OFF',
-      });
-      if(!result) return;
-      setBackgroundGeolocationEnabled(false);
-    } else {
-      const result = await sendAlert({
-        title: 'Turn on background location',
-        description: 'The app will send you notifications when you are near a drop, even if you are not using the app.',
-        denyText: 'cancel',
-        validateText: 'TURN ON',
-      });
-      if(!result) return;
-      setBackgroundGeolocationEnabled(true);
-    }
-  };
-
-  return (
-    <>
-      <TouchableOpacity onPress={toggle}>
-        <View style={styles.toggleBackgroundGeolocButton}>
-          <Text style={styles.toggleBackgroundGeolocButtonText}>
-            {backgroundGeolocationEnabled ? 'Disable background geolocation' : 'Enable background geolocation'}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={{ marginVertical: 20 }} onPress={showLogs}>
-        <View style={styles.toggleBackgroundGeolocButton}>
-          <Text style={styles.toggleBackgroundGeolocButtonText}>
-            Show logs
-          </Text>
-        </View>
-      </TouchableOpacity>
-    </>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: Colors.white,
-    ...Styles.safeAreaView,
   },
-  toggleBackgroundGeolocButton: {
-    opacity: 0.8,
-    alignItems: 'center',
-    backgroundColor: Colors.mainBlue,
-    ...Styles.center,
-    borderRadius: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+  scrollViewContent: {
+    paddingTop: MAX_HEADER_HEIGHT,
+    minHeight: '100%',
   },
-  toggleBackgroundGeolocButtonText: {
-    ...Fonts.bold(12, Colors.white),
-    textAlign: 'center',
-  },
-  text: {
-    ...Fonts.bold(12, Colors.darkGrey),
-  },
-  wrapper: {
-    height: '100%',
+  infoContainer: {
+    marginTop: 20,
     width: '100%',
-    ...Styles.center,
+    paddingHorizontal: 30,
   },
 });

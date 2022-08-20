@@ -12,6 +12,7 @@ import CreateDropyTakePicture from '../screens/CreateDropyTakePicture';
 import ChatScreen from '../screens/ChatScreen';
 import DisplayDropyMediaScreen from '../screens/DisplayDropyMediaScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import SettingsScreen from '../screens/SettingScreen';
 
 const MainStack = createStackNavigator();
 
@@ -37,6 +38,7 @@ export default function Navigation() {
       <MainStack.Screen name="GetDropy" component={GetDropyScreen} />
       <MainStack.Screen name="DisplayDropyMedia" component={DisplayDropyMediaScreen} />
       <MainStack.Screen name="Profile" component={ProfileScreen} />
+      <MainStack.Screen name="Settings" component={SettingsScreen} />
     </MainStack.Navigator>
   );
 }
