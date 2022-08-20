@@ -11,6 +11,7 @@ import {
 } from '@expo-google-fonts/space-grotesk';
 
 import * as Sentry from '@sentry/react-native';
+import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet';
 
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
@@ -31,19 +32,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-export default function App() {
-
-  let [fontsLoaded] = useFonts({
-    SpaceGrotesk_300Light,
-    SpaceGrotesk_400Regular,
-    SpaceGrotesk_500Medium,
-    SpaceGrotesk_600SemiBold,
-    SpaceGrotesk_700Bold,
-  });
-
-  if(!fontsLoaded)
-    return null;
-
+const NavigationApp = () => {
   return (
     <NavigationContainer>
       <OverlayContextProvider>
@@ -61,4 +50,28 @@ export default function App() {
       </OverlayContextProvider>
     </NavigationContainer>
   );
+};
+
+const ConnectedNavigationApp = connectActionSheet(NavigationApp);
+
+export default function App() {
+
+  let [fontsLoaded] = useFonts({
+    SpaceGrotesk_300Light,
+    SpaceGrotesk_400Regular,
+    SpaceGrotesk_500Medium,
+    SpaceGrotesk_600SemiBold,
+    SpaceGrotesk_700Bold,
+  });
+
+  if(!fontsLoaded)
+    return null;
+
+  return (
+    <ActionSheetProvider>
+      <ConnectedNavigationApp />
+    </ActionSheetProvider>
+  );
 }
+
+

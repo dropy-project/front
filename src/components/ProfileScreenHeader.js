@@ -33,6 +33,12 @@ const ProfileScreenHeader = ({ scrollAnimValue }) => {
     extrapolate: 'clamp',
   });
 
+  const editOpacity = scrollAnimValue.interpolate({
+    inputRange: [0, MIN_HEADER_HEIGHT / 2, MIN_HEADER_HEIGHT - 20],
+    outputRange: [1, 1, 0],
+    extrapolate: 'clamp',
+  });
+
   return (
     <Animated.View style={{ ...styles.animatedHeader, transform: [{ translateY: headerTranform }] }}>
 
@@ -56,16 +62,20 @@ const ProfileScreenHeader = ({ scrollAnimValue }) => {
 
       <SafeAreaView style={Styles.safeAreaView}>
         <Animated.View style={{ ...styles.headerControlsContainer, transform: [{ translateY: headerCancelTransform }] }}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.button}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Feather name="arrow-left" size={30} color={Colors.white} />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Settings')}
-            style={styles.button}>
-            <Feather name="settings" size={25} color={Colors.white} />
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+              <Feather name="settings" size={25} color={Colors.white} />
+            </TouchableOpacity>
+            <Animated.View style={{ opacity: editOpacity }}>
+              <TouchableOpacity onPress={() => navigation.navigate('ProfileEdit')}
+                style={{ position: 'absolute', top: '100%', paddingTop: 25 }}>
+                <Feather name="edit" size={25} color={Colors.white} />
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
         </Animated.View>
       </SafeAreaView>
 

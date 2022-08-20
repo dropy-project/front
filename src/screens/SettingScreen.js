@@ -12,7 +12,7 @@ const SettingsScreen = () => {
   const { userCoordinates, compassHeading } = useGeolocation();
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader/>
+      <GoBackHeader text="Settings" />
       <View style={styles.wrapper}>
         <ToggleBackgroundGeolocation />
         <Text style={styles.text}>
