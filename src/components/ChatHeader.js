@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import ProfileAvatar from './ProfileAvatar';
 import DisabledNotificationsPopup from './DisabledNotificationsPopup';
+import DropDownButton from './DropdownButton';
 
 const ChatHeader = ({ conversation, otherUserConnected }) => {
 
@@ -36,9 +37,11 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
-          <Feather name="more-horizontal" size={30} color={Colors.grey}/>
-        </TouchableOpacity>
+        <DropDownButton options={[
+          { text: 'Block user', destructive: false },
+          { text: 'Report user', destructive: false },
+          { text: 'Delete conversation', destructive: true }
+        ]}/>
       </View>
 
       <DisabledNotificationsPopup />

@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Entypo, Feather } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import DropDownButton from './DropdownButton';
 
 const GoBackHeader = ({
   style,
@@ -10,7 +11,7 @@ const GoBackHeader = ({
   text,
   textStyle,
   color = Colors.grey,
-  onPressOptions,
+  dropDownOptions,
 }) => {
   const navigation = useNavigation();
 
@@ -22,10 +23,8 @@ const GoBackHeader = ({
         <Feather name="arrow-left" size={30} color={color} />
       </TouchableOpacity>
       <Text style={{ ...styles.tipsStyle, ...textStyle, color }}>{text}</Text>
-      {onPressOptions != null ? (
-        <TouchableOpacity onPress={onPressOptions} style={styles.button}>
-          <Entypo name="dots-three-horizontal" size={24} color={color} />
-        </TouchableOpacity>
+      {dropDownOptions != null ? (
+        <DropDownButton buttonColor={color} options={dropDownOptions}/>
       ) : (
         <View style={styles.button} />
       )}

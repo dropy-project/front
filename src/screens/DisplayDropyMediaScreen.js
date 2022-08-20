@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { Colors } from '../styles/Styles';
 
 import FooterConfirmation from '../components/FooterConfirmation';
@@ -35,7 +35,14 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader />
+      <StatusBar barStyle="light-content" />
+      <GoBackHeader
+        color={Colors.white}
+        dropDownOptions={[
+          { text: 'Block user', destructive: false },
+          { text: 'Report this drop', destructive: false }
+        ]}
+      />
       <DropyMediaViewer {...dropy} />
       {showBottoModal && (
         <FooterConfirmation onPress={openChat} dropy={dropy} textButton="Let's chat !" />
