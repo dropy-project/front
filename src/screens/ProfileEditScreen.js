@@ -3,7 +3,6 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
 import {
-  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -15,9 +14,11 @@ import {
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import FormInput from '../components/FormInput';
 import GoBackHeader from '../components/GoBackHeader';
+import ProfileImage from '../components/ProfileImage';
 import useCurrentUser from '../hooks/useCurrentUser';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import { compressImage } from '../utils/files';
 
 const ProfileEditScreen = () => {
 
@@ -51,7 +52,15 @@ const ProfileEditScreen = () => {
       presentationStyle: 'overFullScreen',
     });
 
-    console.log(result);
+    if(result.didCancel) {
+      throw new Error('User cancelled image picker');
+    }
+
+    const filePath = await compressImage(result.assets[0].uri);
+
+    const response = await API.postProfilePicture(filePath);
+    console.log('API response : ', response.data);
+    setUser({ ...user });
   };
 
   const updateProfilePictureFromCamera = async () => {
@@ -89,7 +98,7 @@ const ProfileEditScreen = () => {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
         <TouchableOpacity style={styles.profilePictureButton} onPress={onPressEditPicture}>
-          <Image source={require('../assets/guigui1.png')} resizeMode='cover' style={{ position: 'absolute', width: '100%', height: '100%' }} />
+          <ProfileImage resizeMode='cover' style={{ position: 'absolute', width: '100%', height: '100%' }} />
           <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.3)' }} />
           <Feather name="edit-2" size={30} color={Colors.white} />
         </TouchableOpacity>

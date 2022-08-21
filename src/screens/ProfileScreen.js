@@ -14,10 +14,8 @@ const ProfileScreen = ({ route }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    console.log('ProfileScreen.useEffect', externalUserId);
     if(externalUserId != null) {
       API.getProfile(externalUserId).then(response => {
-        console.log(response.data);
         setUser(response.data);
       });
     }
@@ -66,6 +64,7 @@ const ProfileScreen = ({ route }) => {
       </Animated.ScrollView>
 
       <ProfileScreenHeader
+        externalUserId={externalUserId}
         showControls={externalUserId == null}
         user={user}
         scrollAnimValue={scrollAnimValue}

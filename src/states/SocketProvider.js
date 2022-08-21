@@ -16,11 +16,14 @@ const SocketProvider = ({ children }) => {
 
   const { user } = useCurrentUser();
 
+  const [initialized, setInitialized] = useState(false);
   const [connected, setConnected] = useState(false);
+
   const isTemporaryDisconnected = useRef(false);
 
   useEffectForegroundOnly(() => {
     if(user == null) return;
+    if(initialized === true) return;
 
     Socket.initSockets();
 
@@ -41,6 +44,7 @@ const SocketProvider = ({ children }) => {
     });
 
     log('Sockets initilized');
+    setInitialized(true);
 
     return () => {
       Socket.destroySockets();

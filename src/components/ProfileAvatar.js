@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import ProfileImage from './ProfileImage';
 
 const ProfileAvatar = ({
   style,
@@ -9,8 +10,10 @@ const ProfileAvatar = ({
   showQuestionMark = false,
   showStatusDot,
   isUserOnline,
-  imageSrc,
   statusDotStyle,
+  userId,
+  displayName,
+  displayNameSize,
 }) => {
   return (
     <View style={{
@@ -22,13 +25,11 @@ const ProfileAvatar = ({
       ...style,
     }}>
       <View style={{ ...styles.imageContainer, borderRadius: size / 3.4 }} >
-        {imageSrc && (
-          <Image source={imageSrc} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
-        )}
-        {showQuestionMark && (
+        {showQuestionMark === true ? (
           <Text style={Fonts.bold(size / 3, Colors.white)}>?</Text>
-        )
-        }
+        ) : (
+          <ProfileImage displayNameSize={displayNameSize} userId={userId} displayName={displayName} />
+        )}
       </View>
       {showStatusDot && (
         <View style={{

@@ -131,6 +131,29 @@ const postProfileInfos = async (about, pronouns, displayName) => {
   return result;
 };
 
+const postProfilePicture = async (filePath) => {
+  // eslint-disable-next-line no-undef
+  var data = new FormData();
+  data.append('profile', {
+    uri: filePath,
+    name: `${filePath}`,
+    type: 'image/jpeg',
+  });
+
+  const response = await axios.post('/user/profile/picture', data,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+  return response;
+};
+
+const profilePictureUrl = (userId) => {
+  return `${API_BASE_URL}/user/profile/${userId}/picture`;
+};
+
 const API = {
   getHeaders,
   register,
@@ -147,6 +170,8 @@ const API = {
   serverVersionIsCompatible,
   postProfileInfos,
   getProfile,
+  postProfilePicture,
+  profilePictureUrl,
 };
 
 export default API;

@@ -26,6 +26,9 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
 
         <TouchableOpacity style={styles.userInfosContainer} onPress={openProfile}>
           <ProfileAvatar
+            userId={conversation?.user?.userId}
+            displayName={conversation?.user?.displayName}
+            displayNameSize={10}
             size={40}
             showStatusDot
             style={{ borderWidth: 0 }}

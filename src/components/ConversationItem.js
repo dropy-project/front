@@ -19,6 +19,8 @@ const ConversationItem = ({
       <ProfileAvatar
         showStatusDot={true}
         isUserOnline={isOnline}
+        userId={user?.userId}
+        displayName={user?.displayName}
       />
       <View style={styles.infoContainer}>
         <View style={styles.infoTopContainer}>

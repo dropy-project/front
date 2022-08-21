@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Animated,
-  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -13,11 +12,12 @@ import { Feather } from '@expo/vector-icons';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import ProfileImage from './ProfileImage';
 
 export const MAX_HEADER_HEIGHT = responsiveHeight(45);
 export const MIN_HEADER_HEIGHT = responsiveHeight(25);
 
-const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false }) => {
+const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showControls = false }) => {
 
   const navigation = useNavigation();
 
@@ -43,7 +43,7 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false }) =>
     <Animated.View style={{ ...styles.animatedHeader, transform: [{ translateY: headerTranform }] }}>
 
       <Animated.View style={{ ...StyleSheet.absoluteFillObject, transform: [{ translateY: headerCancelTransform }] }}>
-        <Image source={require('../assets/guigui1.png')} resizeMode='cover' style={{ width: '100%', height: '100%' }} />
+        <ProfileImage displayNameSize={40} displayName={user?.displayName} userId={externalUserId} />
         <LinearGradient
           pointerEvents='none'
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
@@ -54,9 +54,9 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false }) =>
       </Animated.View>
 
       <LinearGradient
-        colors={['rgba(123, 109, 205, 0)', 'rgba(123, 109, 205, 1)']}
+        colors={['rgba(123, 109, 205, 0)', 'rgba(117, 90, 190, 1)']}
         start={{ x: 0.5, y: 0.6 }}
-        end={{ x: 0.6, y: 1.5 }}
+        end={{ x: 0.4, y: 1.3 }}
         style={StyleSheet.absoluteFillObject}
       />
 
