@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,10 +11,18 @@ import {
 import { Colors, Fonts } from '../styles/Styles';
 
 
-const FormInput = (props) => {
+const FormInput = (props, ref) => {
   const { onEdited = () => {}, title = '""', placeholder = '', defaultValue = '' } = props;
 
   const [value, setValue] = useState(defaultValue);
+
+  useEffect(() => {
+    onEdited(value !== defaultValue);
+  }, [value]);
+
+  useImperativeHandle(ref, () => ({
+    getValue: () => value,
+  }));
 
   return (
     <KeyboardAvoidingView
@@ -38,7 +46,7 @@ const FormInput = (props) => {
   );
 };
 
-export default FormInput;
+export default forwardRef(FormInput);
 
 const styles = StyleSheet.create({
   container: {

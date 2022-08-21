@@ -12,6 +12,7 @@ const GoBackHeader = ({
   textStyle,
   color = Colors.grey,
   dropDownOptions,
+  children,
 }) => {
   const navigation = useNavigation();
 
@@ -23,10 +24,14 @@ const GoBackHeader = ({
         <Feather name="arrow-left" size={30} color={color} />
       </TouchableOpacity>
       <Text style={{ ...styles.tipsStyle, ...textStyle, color }}>{text}</Text>
+
+
       {dropDownOptions != null ? (
         <DropDownButton buttonColor={color} options={dropDownOptions}/>
       ) : (
-        <View style={styles.button} />
+        <>
+          {children ? children : <View style={styles.button} />}
+        </>
       )}
     </View>
   );

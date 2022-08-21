@@ -12,7 +12,7 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
   const navigation = useNavigation();
 
   const openProfile = () => {
-    // TO DO
+    navigation.navigate('Profile', { userId: conversation.user.userId });
   };
 
   return (

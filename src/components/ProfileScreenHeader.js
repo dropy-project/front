@@ -17,7 +17,7 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 export const MAX_HEADER_HEIGHT = responsiveHeight(45);
 export const MIN_HEADER_HEIGHT = responsiveHeight(25);
 
-const ProfileScreenHeader = ({ scrollAnimValue }) => {
+const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false }) => {
 
   const navigation = useNavigation();
 
@@ -65,26 +65,30 @@ const ProfileScreenHeader = ({ scrollAnimValue }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Feather name="arrow-left" size={30} color={Colors.white} />
           </TouchableOpacity>
-          <View>
-            <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-              <Feather name="settings" size={25} color={Colors.white} />
-            </TouchableOpacity>
-            <Animated.View style={{ opacity: editOpacity }}>
-              <TouchableOpacity onPress={() => navigation.navigate('ProfileEdit')}
-                style={{ position: 'absolute', top: '100%', paddingTop: 25 }}>
-                <Feather name="edit" size={25} color={Colors.white} />
+          {showControls && (
+            <View>
+              <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+                <Feather name="settings" size={25} color={Colors.white} />
               </TouchableOpacity>
-            </Animated.View>
-          </View>
+              <Animated.View style={{ opacity: editOpacity }}>
+                <TouchableOpacity onPress={() => navigation.navigate('ProfileEdit')}
+                  style={{ position: 'absolute', top: '100%', paddingTop: 25 }}>
+                  <Feather name="edit" size={25} color={Colors.white} />
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
+          )}
         </Animated.View>
       </SafeAreaView>
 
       <View style={styles.headerUserInfosContainer}>
         <View>
-          <Text style={{ ...Fonts.bold(25, Colors.white) }}>Guillaume</Text>
-          <Text style={{ ...Fonts.regular(13, Colors.white) }}>@Guilaume01</Text>
+          <Text style={{ ...Fonts.bold(25, Colors.white) }}>{user?.displayName}</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.white) }}>@{user?.username}</Text>
         </View>
-        <Text style={{ ...Fonts.regular(13, Colors.white) }}>he / him</Text>
+        {user?.pronouns !== 'UNKOWN' && (
+          <Text style={{ ...Fonts.regular(13, Colors.white) }}>{user?.pronouns}</Text>
+        )}
       </View>
     </Animated.View>
   );

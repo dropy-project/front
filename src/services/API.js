@@ -31,7 +31,7 @@ const login = async () => {
     uid,
   });
 
-  const  { accessToken, refreshToken, expires, user } = response.data;
+  const  { accessToken, refreshToken, expires, profile: user } = response.data;
   axios.defaults.headers.common['Authorization'] = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
@@ -117,6 +117,20 @@ const serverVersionIsCompatible = async () => {
   }
 };
 
+const getProfile = async (userId) => {
+  const result = await axios.get(`/user/profile/${userId}`);
+  return result;
+};
+
+const postProfileInfos = async (about, pronouns, displayName) => {
+  const result = await axios.post('/user/profile', {
+    about,
+    pronouns,
+    displayName,
+  });
+  return result;
+};
+
 const API = {
   getHeaders,
   register,
@@ -131,6 +145,8 @@ const API = {
   getConversations,
   dropyMediaUrl,
   serverVersionIsCompatible,
+  postProfileInfos,
+  getProfile,
 };
 
 export default API;

@@ -1,23 +1,34 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { Feather } from '@expo/vector-icons';
-import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useRef, useState } from 'react';
 import {
   Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View
 } from 'react-native';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import FormInput from '../components/FormInput';
 import GoBackHeader from '../components/GoBackHeader';
-import Styles, { Colors } from '../styles/Styles';
+import useCurrentUser from '../hooks/useCurrentUser';
+import API from '../services/API';
+import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const ProfileEditScreen = () => {
 
+  const navigation = useNavigation();
+  const { user, setUser } = useCurrentUser();
   const { showActionSheetWithOptions } = useActionSheet();
+
+  const [edited, setEdited] = useState(false);
+
+  const aboutInputRef = useRef();
+  const displayNameInputRef = useRef();
 
   const onPressEditPicture = () => {
     showActionSheetWithOptions({
@@ -52,10 +63,28 @@ const ProfileEditScreen = () => {
     console.log(result);
   };
 
+  const updateProfile = async () => {
+    const displayName = displayNameInputRef.current?.getValue();
+    const about = aboutInputRef.current?.getValue();
+    const response = await API.postProfileInfos(about, 'UNKOWN', displayName);
+    const profile = response.data;
+    console.log(profile);
+    setUser(profile);
+    navigation.goBack();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <GoBackHeader text="Profile" />
+
+      <GoBackHeader text="Profile">
+        {edited && (
+          <TouchableOpacity onPress={updateProfile}>
+            <Text style={{ ...Fonts.regular(16, Colors.mainBlue) }}>save</Text>
+          </TouchableOpacity>
+        )}
+      </GoBackHeader>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
@@ -65,8 +94,24 @@ const ProfileEditScreen = () => {
           <Feather name="edit-2" size={30} color={Colors.white} />
         </TouchableOpacity>
 
-        <FormInput title="Name" placeholder="What's your name?"  />
-        <FormInput title="About" placeholder="WHat makes you special?" multiline />
+        <FormInput
+          ref={displayNameInputRef}
+          onEdited={(edited) => edited && setEdited(true)}
+          title="Name"
+          defaultValue={user.displayName}
+          placeholder="What's your name?"
+          maxLength={25}
+        />
+
+        <FormInput
+          ref={aboutInputRef}
+          onEdited={(edited) => edited && setEdited(true)}
+          title="About"
+          defaultValue={user.about}
+          placeholder="What makes you special?"
+          multiline
+          maxLength={250}
+        />
       </ScrollView>
     </SafeAreaView>
   );
