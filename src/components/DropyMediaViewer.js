@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
+import FastImage from 'react-native-fast-image';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import MEDIA_TYPES from '../utils/mediaTypes';
@@ -45,11 +46,11 @@ const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject
             <LoadingSpinner />
           </View>
         )}
-        <Image
+        <FastImage
           onLoadEnd={() => setLoading(false)}
           style={{ ...styles.displayImage }}
           source={imageSource}
-        ></Image>
+        />
       </View>
     );
   }

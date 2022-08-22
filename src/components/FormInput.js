@@ -26,8 +26,8 @@ const FormInput = (props, ref) => {
   useImperativeHandle(ref, () => ({
     getValue: () => value.trim(),
     isValid: () => {
-      setValid(value.trim().length > 0);
-      return value.trim().length > 0;
+      setValid(value?.trim().length > 0);
+      return value?.trim().length > 0;
     },
   }));
 

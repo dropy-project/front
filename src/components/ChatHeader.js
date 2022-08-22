@@ -21,9 +21,9 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
 
   const handleOptionsButtonPress = () => {
     showActionSheetWithOptions({
-      options: ['Delete conversation', 'Report user', 'Block user', 'Cancel'],
-      destructiveButtonIndex: 2,
-      cancelButtonIndex: 3,
+      options: ['Report user', 'Block user', 'Cancel'],
+      destructiveButtonIndex: 1,
+      cancelButtonIndex: 2,
       title: conversation?.user?.displayName,
     }, (buttonIndex) => {
       if (buttonIndex === 0) {
