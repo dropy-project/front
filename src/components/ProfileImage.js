@@ -27,7 +27,7 @@ const ProfileImage = (props) => {
   if(error) {
     return (
       <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.purple3, ...Styles.center }}>
-        {_displayName && (<Text style={{ ...Fonts.bold(displayNameSize, Colors.white) }}>{_displayName.slice(0, 1)}</Text>)}
+        {_displayName && (<Text style={{ ...Fonts.bold(displayNameSize, Colors.white) }}>{_displayName.slice(0, 1).toUpperCase()}</Text>)}
       </View>
     );
   }

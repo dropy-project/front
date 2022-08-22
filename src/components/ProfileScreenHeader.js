@@ -8,7 +8,7 @@ import {
   View
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Feather, FontAwesome5, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
+import { Feather, FontAwesome5, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import { useActionSheet } from '@expo/react-native-action-sheet';
@@ -20,7 +20,7 @@ import TouchableTooltip from './TouchableTooltip';
 export const MAX_HEADER_HEIGHT = responsiveHeight(45);
 export const MIN_HEADER_HEIGHT = responsiveHeight(25);
 
-const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showControls = false }) => {
+const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showControls = false, conversation }) => {
 
   const { showActionSheetWithOptions } = useActionSheet();
   const navigation = useNavigation();
@@ -93,9 +93,26 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
               </Animated.View>
             </View>
           ) : (
-            <TouchableOpacity onPress={handleOptionsButtonPress}>
-              <Feather name="more-horizontal" size={30} color={Colors.white} />
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity onPress={handleOptionsButtonPress}>
+                <Feather name="more-horizontal" size={30} color={Colors.white} />
+              </TouchableOpacity>
+              {conversation != null && (
+                <Animated.View style={{ opacity: editOpacity }}>
+                  <TouchableOpacity onPress={() => {
+                    navigation.goBack();
+                    navigation.navigate('Chat', { conversation });
+                  }}
+                  style={{ position: 'absolute', top: '100%', paddingTop: 25 }}>
+                    <Ionicons
+                      name="md-chatbubble-outline"
+                      size={30}
+                      color={Colors.white}
+                    />
+                  </TouchableOpacity>
+                </Animated.View>
+              )}
+            </View>
           )}
         </Animated.View>
       </SafeAreaView>

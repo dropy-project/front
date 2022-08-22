@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 import ProfileScreenHeader, { MAX_HEADER_HEIGHT } from '../components/ProfileScreenHeader';
 import useCurrentUser from '../hooks/useCurrentUser';
 import useOverlay from '../hooks/useOverlay';
@@ -9,7 +10,7 @@ import { sinceDayMonth } from '../utils/time';
 
 const ProfileScreen = ({ route, navigation }) => {
 
-  const { userId: externalUserId } = route.params ?? { userId: null };
+  const { userId: externalUserId, conversation = null } = route.params ?? { userId: null, conversation: null };
 
   const { user, setUser } = useCurrentUser();
   const { sendAlert } = useOverlay();
@@ -60,6 +61,7 @@ const ProfileScreen = ({ route, navigation }) => {
           [{ nativeEvent: { contentOffset: { y: scrollAnimValue } } }],
           { useNativeDriver: true })
         }
+        indicatorStyle="black"
       >
         <View style={styles.infoContainer}>
           <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>About</Text>
@@ -89,6 +91,7 @@ const ProfileScreen = ({ route, navigation }) => {
       </Animated.ScrollView>
 
       <ProfileScreenHeader
+        conversation={conversation}
         externalUserId={externalUserId}
         showControls={externalUserId == null}
         user={displayedUser}
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingTop: MAX_HEADER_HEIGHT,
-    minHeight: '100%',
+    height: responsiveHeight(200),
   },
   infoContainer: {
     marginTop: 20,

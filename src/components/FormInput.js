@@ -54,8 +54,8 @@ const FormInput = (props, ref) => {
           {...props}
         />
         {selected && props.maxLength != null && (
-          <Text style={{ ...Fonts.bold(10, value.length === props.maxLength ? Colors.red : Colors.grey) }}>
-            {value.length}/{props.maxLength}
+          <Text style={{ ...Fonts.bold(10, (value?.length || 0) === props.maxLength ? Colors.red : Colors.grey) }}>
+            {value?.length || 0}/{props.maxLength}
           </Text>
         )}
         {!selected && (

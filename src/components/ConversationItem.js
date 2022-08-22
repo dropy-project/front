@@ -2,10 +2,12 @@ import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import ProfileAvatar from './ProfileAvatar';
 
 const ConversationItem = ({
+  conversation,
   user,
   lastMessagePreview,
   lastMessageDate,
@@ -14,15 +16,23 @@ const ConversationItem = ({
   onPress,
   onLongPress,
 }) => {
+
+  const navigation = useNavigation();
+  const openProfile = () => {
+    navigation.navigate('Profile', { userId: user.userId, conversation });
+  };
+
   return (
-    <TouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
-      <ProfileAvatar
-        showStatusDot={true}
-        isUserOnline={isOnline}
-        userId={user?.userId}
-        displayName={user?.displayName}
-      />
-      <View style={styles.infoContainer}>
+    <View style={styles.container} >
+      <TouchableOpacity onPress={openProfile}>
+        <ProfileAvatar
+          showStatusDot={true}
+          isUserOnline={isOnline}
+          userId={user?.userId}
+          displayName={user?.displayName}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity onLongPress={onLongPress} onPress={onPress} style={styles.infoContainer}>
         <View style={styles.infoTopContainer}>
           <Text style={styles.usernameText}>{user?.displayName}</Text>
           <View style={{ ...styles.timeStampContainer }}>
@@ -39,9 +49,9 @@ const ConversationItem = ({
         <Text style={styles.lastMessageText} numberOfLines={1}>
           {lastMessagePreview ?? `Start chatting with ${user?.displayName}`}
         </Text>
-      </View>
+      </TouchableOpacity>
 
-    </TouchableOpacity>
+    </View>
   );
 };
 

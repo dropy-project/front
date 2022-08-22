@@ -55,6 +55,7 @@ const ConversationsScreen = ({ navigation }) => {
               {conversations.map((conversation, index) => (
                 <FadeInWrapper key={conversation.id} delay={index * 50}>
                   <ConversationItem
+                    conversation={conversation}
                     onLongPress={() => handleLongPress(conversation)}
                     onPress={() => navigation.navigate('Chat', { conversation })}
                     {...conversation}
