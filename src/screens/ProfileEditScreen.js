@@ -23,7 +23,7 @@ import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { compressImage } from '../utils/files';
-import PRONOUNS from '../utils/pronouns';
+import { PRONOUNS } from '../utils/profiles';
 
 const ProfileEditScreen = () => {
 

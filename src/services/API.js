@@ -154,6 +154,16 @@ const profilePictureUrl = (userId) => {
   return `${API_BASE_URL}/user/profile/${userId}/picture`;
 };
 
+const reportUser = async (userId) => {
+  const result = await axios.post(`/user/report/${userId}`);
+  return result;
+};
+
+const blockUser = async (userId) => {
+  const result = await axios.post(`/user/block/${userId}`);
+  return result;
+};
+
 const API = {
   getHeaders,
   register,
@@ -172,6 +182,8 @@ const API = {
   getProfile,
   postProfilePicture,
   profilePictureUrl,
+  reportUser,
+  blockUser,
 };
 
 export default API;

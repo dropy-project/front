@@ -8,6 +8,7 @@ import GoBackHeader from '../components/GoBackHeader';
 import DropyMediaViewer from '../components/DropyMediaViewer';
 import useOverlay from '../hooks/useOverlay';
 import useConversationSocket from '../hooks/useConversationSocket';
+import { blockUser, reportUser } from '../utils/profiles';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { dropy, showBottoModal } = route.params || {};
@@ -42,7 +43,11 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       cancelButtonIndex: 2,
       title: 'Drop',
     }, (buttonIndex) => {
-      // TODO
+      if (buttonIndex === 0) {
+        reportUser(dropy, sendAlert);
+      } else if (buttonIndex === 1) {
+        blockUser(dropy.emitterId, sendAlert);
+      }
     });
   };
 

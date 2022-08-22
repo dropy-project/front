@@ -4,12 +4,15 @@ import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import { blockUser, reportUser } from '../utils/profiles';
+import useOverlay from '../hooks/useOverlay';
 import ProfileAvatar from './ProfileAvatar';
 import DisabledNotificationsPopup from './DisabledNotificationsPopup';
 
 const ChatHeader = ({ conversation, otherUserConnected }) => {
 
   const navigation = useNavigation();
+  const { sendAlert } = useOverlay();
   const { showActionSheetWithOptions } = useActionSheet();
 
   const openProfile = () => {
@@ -23,7 +26,11 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
       cancelButtonIndex: 3,
       title: conversation?.user?.displayName,
     }, (buttonIndex) => {
-      // TODO
+      if (buttonIndex === 0) {
+        reportUser(conversation?.user?.userId, sendAlert);
+      } else if (buttonIndex === 1) {
+        blockUser(conversation?.user?.userId, sendAlert);
+      }
     });
   };
 

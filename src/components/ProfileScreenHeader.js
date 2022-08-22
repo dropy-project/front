@@ -13,7 +13,8 @@ import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import PRONOUNS from '../utils/pronouns';
+import useOverlay from '../hooks/useOverlay';
+import { blockUser, PRONOUNS, reportUser } from '../utils/profiles';
 import ProfileImage from './ProfileImage';
 import TouchableTooltip from './TouchableTooltip';
 
@@ -23,6 +24,8 @@ export const MIN_HEADER_HEIGHT = responsiveHeight(25);
 const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showControls = false, conversation }) => {
 
   const { showActionSheetWithOptions } = useActionSheet();
+  const { sendAlert } = useOverlay();
+
   const navigation = useNavigation();
 
   const headerTranform = scrollAnimValue.interpolate({
@@ -50,7 +53,11 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
       cancelButtonIndex: 2,
       title: `@${user?.username}`,
     }, (buttonIndex) => {
-      // TODO
+      if (buttonIndex === 0) {
+        reportUser(user.id, sendAlert);
+      } else if (buttonIndex === 1) {
+        blockUser(user.id, sendAlert);
+      }
     });
   };
 
