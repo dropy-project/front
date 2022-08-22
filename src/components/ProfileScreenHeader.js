@@ -12,6 +12,7 @@ import { Feather, FontAwesome5, MaterialCommunityIcons, Octicons } from '@expo/v
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import PRONOUNS from '../utils/pronouns';
 import ProfileImage from './ProfileImage';
 import TouchableTooltip from './TouchableTooltip';
 
@@ -91,7 +92,7 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
           <Text style={{ ...Fonts.regular(13, Colors.white) }}>@{user?.username}</Text>
         </View>
         {user?.pronouns !== 'UNKOWN' && (
-          <Text style={{ ...Fonts.regular(13, Colors.white) }}>{user?.pronouns}</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.white) }}>{PRONOUNS[user?.pronouns]}</Text>
         )}
       </View>
     </Animated.View>

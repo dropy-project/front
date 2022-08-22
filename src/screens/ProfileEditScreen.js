@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import FormInput from '../components/FormInput';
+import FormSelect from '../components/FormSelect';
 import GoBackHeader from '../components/GoBackHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ProfileImage from '../components/ProfileImage';
@@ -22,6 +23,7 @@ import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { compressImage } from '../utils/files';
+import PRONOUNS from '../utils/pronouns';
 
 const ProfileEditScreen = () => {
 
@@ -38,6 +40,7 @@ const ProfileEditScreen = () => {
 
   const aboutInputRef = useRef();
   const displayNameInputRef = useRef();
+  const pronounsRef = useRef();
 
   const onPressEditPicture = () => {
     showActionSheetWithOptions({
@@ -111,7 +114,8 @@ const ProfileEditScreen = () => {
 
       const displayName = displayNameInputRef.current?.getValue();
       const about = aboutInputRef.current?.getValue();
-      const response = await API.postProfileInfos(about, 'UNKOWN', displayName);
+      const pronouns = Object.keys(PRONOUNS)[pronounsRef.current?.getValue()];
+      const response = await API.postProfileInfos(about, pronouns, displayName);
 
       const profile = response.data;
       setUser(profile);
@@ -198,6 +202,14 @@ const ProfileEditScreen = () => {
           multiline
           maxLength={250}
           inputStyle={{ minHeight: 100 }}
+        />
+
+        <FormSelect
+          ref={pronounsRef}
+          defaultIndex={Object.keys(PRONOUNS).indexOf(user.pronouns)}
+          title="Pronouns"
+          onEdited={(edited) => edited && setEdited(true)}
+          options={Object.values(PRONOUNS)}
         />
       </ScrollView>
     </SafeAreaView>
