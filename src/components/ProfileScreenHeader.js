@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather, FontAwesome5, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradient from 'react-native-linear-gradient';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import PRONOUNS from '../utils/pronouns';
 import ProfileImage from './ProfileImage';
@@ -21,6 +22,7 @@ export const MIN_HEADER_HEIGHT = responsiveHeight(25);
 
 const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showControls = false }) => {
 
+  const { showActionSheetWithOptions } = useActionSheet();
   const navigation = useNavigation();
 
   const headerTranform = scrollAnimValue.interpolate({
@@ -40,6 +42,17 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
     outputRange: [1, 1, 0],
     extrapolate: 'clamp',
   });
+
+  const handleOptionsButtonPress = () => {
+    showActionSheetWithOptions({
+      options: ['Report user', 'Block user', 'Cancel'],
+      destructiveButtonIndex: 1,
+      cancelButtonIndex: 2,
+      title: `@${user?.username}`,
+    }, (buttonIndex) => {
+      // TODO
+    });
+  };
 
   return (
     <Animated.View style={{ ...styles.animatedHeader, transform: [{ translateY: headerTranform }] }}>
@@ -67,7 +80,7 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Feather name="arrow-left" size={30} color={Colors.white} />
           </TouchableOpacity>
-          {showControls && (
+          {showControls ? (
             <View>
               <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
                 <Feather name="settings" size={25} color={Colors.white} />
@@ -79,6 +92,10 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
                 </TouchableOpacity>
               </Animated.View>
             </View>
+          ) : (
+            <TouchableOpacity onPress={handleOptionsButtonPress}>
+              <Feather name="more-horizontal" size={30} color={Colors.white} />
+            </TouchableOpacity>
           )}
         </Animated.View>
       </SafeAreaView>

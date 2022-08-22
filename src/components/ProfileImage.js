@@ -12,6 +12,7 @@ const ProfileImage = (props) => {
   const [source, setSource] = useState(null);
   const [error, setError] = useState(false);
 
+  const _displayName = displayName ?? user?.displayName ?? null;
   useEffect(() => {
     if(user == null) return;
 
@@ -26,7 +27,7 @@ const ProfileImage = (props) => {
   if(error) {
     return (
       <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.purple3, ...Styles.center }}>
-        {displayName && (<Text style={{ ...Fonts.bold(displayNameSize, Colors.white) }}>{displayName.slice(0, 1)}</Text>)}
+        {_displayName && (<Text style={{ ...Fonts.bold(displayNameSize, Colors.white) }}>{_displayName.slice(0, 1)}</Text>)}
       </View>
     );
   }

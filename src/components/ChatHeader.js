@@ -2,17 +2,29 @@ import React from 'react';
 import { Feather } from '@expo/vector-icons';
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import ProfileAvatar from './ProfileAvatar';
 import DisabledNotificationsPopup from './DisabledNotificationsPopup';
-import DropDownButton from './DropdownButton';
 
 const ChatHeader = ({ conversation, otherUserConnected }) => {
 
   const navigation = useNavigation();
+  const { showActionSheetWithOptions } = useActionSheet();
 
   const openProfile = () => {
     navigation.navigate('Profile', { userId: conversation.user.userId });
+  };
+
+  const handleOptionsButtonPress = () => {
+    showActionSheetWithOptions({
+      options: ['Delete conversation', 'Report user', 'Block user', 'Cancel'],
+      destructiveButtonIndex: 2,
+      cancelButtonIndex: 3,
+      title: conversation?.user?.displayName,
+    }, (buttonIndex) => {
+      // TODO
+    });
   };
 
   return (
@@ -39,12 +51,9 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
             {conversation?.user?.displayName}
           </Text>
         </TouchableOpacity>
-
-        <DropDownButton options={[
-          { text: 'Block user', destructive: false },
-          { text: 'Report user', destructive: false },
-          { text: 'Delete conversation', destructive: true }
-        ]}/>
+        <TouchableOpacity onPress={handleOptionsButtonPress}>
+          <Feather name="more-horizontal" size={30} color={Colors.grey} />
+        </TouchableOpacity>
       </View>
 
       <DisabledNotificationsPopup />

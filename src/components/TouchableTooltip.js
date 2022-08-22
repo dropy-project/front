@@ -36,7 +36,7 @@ export default TouchableTooltip;
 const styles = StyleSheet.create({
   tooltipContainer: {
     position: 'absolute',
-    top: '-140%',
+    top: '-150%',
     padding: 10,
     backgroundColor: Colors.darkGrey,
     borderRadius: 10,

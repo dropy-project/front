@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Animated, Easing } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import YouriPicture from '../assets/svgs/youri.svg';
 import { createDropTimeString } from '../utils/time';
 import GlassButton from './GlassButton';
+import ProfileImage from './ProfileImage';
 
 
 const FooterConfirmation = ({ dropy, onPress, textButton }) => {
@@ -32,7 +32,13 @@ const FooterConfirmation = ({ dropy, onPress, textButton }) => {
     <Animated.View style={{ ...styles.container, transform: [{ translateY: displayCardAnimation }] }}>
       <View style={styles.infoContainer}>
         <View style={styles.pictureContainer}>
-          <YouriPicture style={styles.profilePicture} width={65} height={65} />
+          <ProfileImage
+            width={65}
+            height={65}
+            resizeMode="cover"
+            userId={dropy.emitterId}
+            displayName={dropy.emitterDisplayName}
+          />
         </View>
         <View style={styles.infoDropy}>
           <Text style={styles.profileName}>@{dropy.emitterDisplayName}</Text>

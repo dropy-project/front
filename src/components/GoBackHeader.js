@@ -3,15 +3,14 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import DropDownButton from './DropdownButton';
 
 const GoBackHeader = ({
   style,
   onPressGoBack,
+  onPressOptions,
   text,
   textStyle,
   color = Colors.grey,
-  dropDownOptions,
   children,
 }) => {
   const navigation = useNavigation();
@@ -25,9 +24,10 @@ const GoBackHeader = ({
       </TouchableOpacity>
       <Text style={{ ...styles.tipsStyle, ...textStyle, color }}>{text}</Text>
 
-
-      {dropDownOptions != null ? (
-        <DropDownButton buttonColor={color} options={dropDownOptions}/>
+      {onPressOptions != null ? (
+        <TouchableOpacity onPress={onPressOptions}>
+          <Feather name="more-horizontal" size={30} color={Colors.white} />
+        </TouchableOpacity>
       ) : (
         <>
           {children ? children : <View style={styles.button} />}

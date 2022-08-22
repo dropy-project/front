@@ -1,5 +1,6 @@
 import React from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import { Colors } from '../styles/Styles';
 
 import FooterConfirmation from '../components/FooterConfirmation';
@@ -13,6 +14,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
 
   const { sendAlert } = useOverlay();
   const { conversations } = useConversationSocket();
+  const { showActionSheetWithOptions } = useActionSheet();
 
   const openChat = async () => {
     try {
@@ -33,15 +35,23 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
     }
   };
 
+  const handleOptionsButtonPress = () => {
+    showActionSheetWithOptions({
+      options: ['Report user', 'Block user', 'Cancel'],
+      destructiveButtonIndex: 1,
+      cancelButtonIndex: 2,
+      title: 'Drop',
+    }, (buttonIndex) => {
+      // TODO
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <GoBackHeader
         color={Colors.white}
-        dropDownOptions={[
-          { text: 'Block user', destructive: false },
-          { text: 'Report this drop', destructive: false }
-        ]}
+        onPressOptions={handleOptionsButtonPress}
       />
       <DropyMediaViewer {...dropy} />
       {showBottoModal && (

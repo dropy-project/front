@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
@@ -14,32 +14,56 @@ const DropDownButton = ({
   onSelect = () => {},
 }) => {
 
+  const animatedVaue = useRef(new Animated.Value(0)).current;
+
   const [isOpen, setIsOpen] = useState(false);
+  const [renderMenu, setRenderMenu] = useState(false);
 
   const _onSelect = (index) => {
     onSelect(index);
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    setRenderMenu(true);
+    const anim = Animated.timing(animatedVaue, {
+      toValue: isOpen ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    });
+    anim.start(({ finished }) => {
+      if(!finished) return;
+      setRenderMenu(isOpen);
+    });
+    return anim.stop;
+  }, [isOpen]);
+
+  const animatedScale = animatedVaue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.8, 1],
+  });
+
   return (
     <View style={styles.container}>
-      {isOpen && (
-        <TouchableOpacity
-          style={styles.backgroundTouchable}
-          activeOpacity={1}
-          onPress={() => setIsOpen(false)}
-        />
+      {renderMenu && (
+        <Animated.View style={{ opacity: animatedVaue }}>
+          <TouchableOpacity
+            style={styles.backgroundTouchable}
+            activeOpacity={1}
+            onPress={() => setIsOpen(false)}
+          />
+        </Animated.View>
       )}
       <TouchableOpacity onPress={() => setIsOpen(true)}>
         <Feather name="more-horizontal" size={30} color={buttonColor} />
       </TouchableOpacity>
-      {isOpen && (
-        <View style={styles.menuContainer}>
+      {renderMenu && (
+        <Animated.View style={{ ...styles.menuContainer, opacity: animatedVaue, transform: [{ scale: animatedScale }] }}>
           {options.map((option, index) => (
             <React.Fragment key={index}>
               <TouchableOpacity onPress={() => _onSelect(index)} style={styles.menuOptionButton}>
                 <Text style={{
-                  ...Fonts.ligth(15, option?.destructive === true ? Colors.red : Colors.darkGrey), marginHorizontal: 15,
+                  ...Fonts.regular(15, option?.destructive === true ? Colors.red : Colors.darkGrey), marginHorizontal: 15,
                 }}>
                   {option.text}
                 </Text>
@@ -49,7 +73,7 @@ const DropDownButton = ({
               )}
             </React.Fragment>
           ))}
-        </View>
+        </Animated.View>
       )}
     </View>
   );
