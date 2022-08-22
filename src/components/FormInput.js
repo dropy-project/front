@@ -12,16 +12,23 @@ import { Colors, Fonts } from '../styles/Styles';
 
 
 const FormInput = (props, ref) => {
-  const { onEdited = () => {}, title = '""', placeholder = '', defaultValue = '' } = props;
+  const { onEdited = () => {}, title = '""', placeholder = '', defaultValue = '', inputStyle } = props;
 
   const [value, setValue] = useState(defaultValue);
+  const [selected, setSelected] = useState(false);
+
+  const [valid, setValid] = useState(true);
 
   useEffect(() => {
     onEdited(value !== defaultValue);
   }, [value]);
 
   useImperativeHandle(ref, () => ({
-    getValue: () => value,
+    getValue: () => value.trim(),
+    isValid: () => {
+      setValid(value.trim().length > 0);
+      return value.trim().length > 0;
+    },
   }));
 
   return (
@@ -30,8 +37,14 @@ const FormInput = (props, ref) => {
       style={styles.container}
     >
       <Text style={styles.text}>{title}</Text>
-      <View style={styles.textInputContainer}>
+      <View style={{
+        ...styles.textInputContainer,
+        ...inputStyle,
+        borderColor: valid ? 'transparent' : Colors.red,
+      }}>
         <TextInput
+          onFocus={() => setSelected(true)}
+          onBlur={() => setSelected(false)}
           onChangeText={(text) => setValue(text)}
           style={{ ...Fonts.regular(12, Colors.darkGrey), ...styles.textInput }}
           placeholder={placeholder}
@@ -40,7 +53,14 @@ const FormInput = (props, ref) => {
           onEndEditing={() => onEdited(value)}
           {...props}
         />
-        <Feather name="edit-2" size={15} color={Colors.darkGrey} />
+        {selected && props.maxLength != null && (
+          <Text style={{ ...Fonts.bold(10, value.length === props.maxLength ? Colors.red : Colors.grey) }}>
+            {value.length}/{props.maxLength}
+          </Text>
+        )}
+        {!selected && (
+          <Feather style={{ marginLeft: 4 }} name="edit-2" size={15} color={Colors.darkGrey} />
+        )}
       </View>
     </KeyboardAvoidingView>
   );
@@ -60,6 +80,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   textInputContainer: {
+    borderWidth: 2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: Colors.lighterGrey,

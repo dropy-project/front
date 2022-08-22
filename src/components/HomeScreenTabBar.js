@@ -106,7 +106,9 @@ const HomeScreenTabBar = () => {
       </View>
       {renderMenuOverlay && (
         <>
-          <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
+          <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => setDropyMenuIsOpen(false)}>
+            <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
+          </TouchableOpacity>
           <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={menuAnimatedValue}>
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
               <SimpleLineIcons name="picture" size={30} color={Colors.grey} />

@@ -2,25 +2,50 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StatusBar, StyleSheet, Text, View } from 'react-native';
 import ProfileScreenHeader, { MAX_HEADER_HEIGHT } from '../components/ProfileScreenHeader';
 import useCurrentUser from '../hooks/useCurrentUser';
+import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import { Colors, Fonts } from '../styles/Styles';
 import { sinceDayMonth } from '../utils/time';
 
-const ProfileScreen = ({ route }) => {
+const ProfileScreen = ({ route, navigation }) => {
 
   const { userId: externalUserId } = route.params ?? { userId: null };
-  const { user: localUser } = useCurrentUser();
 
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useCurrentUser();
+  const { sendAlert } = useOverlay();
+
+  const [displayedUser, setDisplayedUser] = useState(null);
 
   useEffect(() => {
-    if(externalUserId != null) {
-      API.getProfile(externalUserId).then(response => {
-        setUser(response.data);
-      });
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    if(externalUserId == null) {
+      setDisplayedUser(user);
     }
-    setUser(localUser);
-  }, [localUser]);
+  }, [user]);
+
+  const fetchProfile = async () => {
+    try {
+      if(externalUserId != null) {
+        const response = await API.getProfile(externalUserId);
+        setDisplayedUser(response.data);
+      } else if (user != null) {
+        setDisplayedUser(user);
+        const response = await API.getProfile(user.id);
+        setDisplayedUser(response.data);
+        setUser(response.data);
+      }
+    } catch (error) {
+      sendAlert({
+        title: 'Oh no...',
+        description: 'We couldn\'t find your profile...\nCheck your internet connection!',
+      });
+      console.error('Error while fetching profile informations', error?.response?.data || error);
+      navigation.goBack();
+    }
+  };
 
   const scrollAnimValue = useRef(new Animated.Value(0)).current;
 
@@ -38,26 +63,26 @@ const ProfileScreen = ({ route }) => {
       >
         <View style={styles.infoContainer}>
           <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>About</Text>
-          <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>{user?.about ?? `Hello i'm ${user?.displayName}`}</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>{displayedUser?.about ?? `Hello i'm ${displayedUser?.displayName}`}</Text>
         </View>
         <View style={styles.infoContainer}>
           <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>Records</Text>
           <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>
             Member since
             <Text style={{ ...Fonts.bold(13, Colors.darkGrey), marginTop: 5 }}>
-              {` ${sinceDayMonth(user?.registerDate)}`}
+              {` ${sinceDayMonth(displayedUser?.registerDate)}`}
             </Text>
           </Text>
           <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>
             Drops:
             <Text style={{ ...Fonts.bold(13, Colors.darkGrey), marginTop: 5 }}>
-              {` ${user?.emittedDropiesCount}`}
+              {` ${displayedUser?.emittedDropiesCount}`}
             </Text>
           </Text>
           <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>
             Found:
             <Text style={{ ...Fonts.bold(13, Colors.darkGrey), marginTop: 5 }}>
-              {` ${user?.retrievedDropiesCount}`}
+              {` ${displayedUser?.retrievedDropiesCount}`}
             </Text>
           </Text>
         </View>
@@ -66,7 +91,7 @@ const ProfileScreen = ({ route }) => {
       <ProfileScreenHeader
         externalUserId={externalUserId}
         showControls={externalUserId == null}
-        user={user}
+        user={displayedUser}
         scrollAnimValue={scrollAnimValue}
       />
     </View>

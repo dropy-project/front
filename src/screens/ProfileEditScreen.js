@@ -3,6 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
 import {
+  Keyboard,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -14,8 +15,10 @@ import {
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import FormInput from '../components/FormInput';
 import GoBackHeader from '../components/GoBackHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import ProfileImage from '../components/ProfileImage';
 import useCurrentUser from '../hooks/useCurrentUser';
+import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { compressImage } from '../utils/files';
@@ -23,10 +26,15 @@ import { compressImage } from '../utils/files';
 const ProfileEditScreen = () => {
 
   const navigation = useNavigation();
+
+  const { sendAlert } = useOverlay();
+
   const { user, setUser } = useCurrentUser();
   const { showActionSheetWithOptions } = useActionSheet();
 
   const [edited, setEdited] = useState(false);
+  const [infosUploading, setInfosUploading] = useState(false);
+  const [pictureUploading, setPictureUploading] = useState(false);
 
   const aboutInputRef = useRef();
   const displayNameInputRef = useRef();
@@ -52,15 +60,7 @@ const ProfileEditScreen = () => {
       presentationStyle: 'overFullScreen',
     });
 
-    if(result.didCancel) {
-      throw new Error('User cancelled image picker');
-    }
-
-    const filePath = await compressImage(result.assets[0].uri);
-
-    const response = await API.postProfilePicture(filePath);
-    console.log('API response : ', response.data);
-    setUser({ ...user });
+    processPickerResponseUpload(result);
   };
 
   const updateProfilePictureFromCamera = async () => {
@@ -69,29 +69,102 @@ const ProfileEditScreen = () => {
       quality: 0.1,
     });
 
-    console.log(result);
+    processPickerResponseUpload(result);
+  };
+
+  const processPickerResponseUpload = async (pickerResponse) => {
+    if(pickerResponse.didCancel) {
+      throw new Error('User cancelled image picker');
+    }
+
+    setPictureUploading(true);
+    try {
+      const filePath = await compressImage(pickerResponse.assets[0].uri);
+      const response = await API.postProfilePicture(filePath);
+      console.log('API response : ', response.data);
+      setUser({ ...user });
+    } catch (error) {
+      sendAlert({
+        title: 'Oh no...',
+        description: 'Your profile picture has been lost somewhere...\nCheck your internet connection!',
+      });
+      console.error('Error while uploading profile picture', error?.response?.data || error);
+    } finally {
+      setPictureUploading(false);
+    }
   };
 
   const updateProfile = async () => {
-    const displayName = displayNameInputRef.current?.getValue();
-    const about = aboutInputRef.current?.getValue();
-    const response = await API.postProfileInfos(about, 'UNKOWN', displayName);
-    const profile = response.data;
-    console.log(profile);
-    setUser(profile);
-    navigation.goBack();
+    setInfosUploading(true);
+    try {
+      Keyboard.dismiss();
+
+      let valid = true;
+      if(!displayNameInputRef.current.isValid()) {
+        valid = false;
+      }
+      if(!aboutInputRef.current.isValid()) {
+        valid = false;
+      }
+
+      if(!valid) return;
+
+      const displayName = displayNameInputRef.current?.getValue();
+      const about = aboutInputRef.current?.getValue();
+      const response = await API.postProfileInfos(about, 'UNKOWN', displayName);
+
+      const profile = response.data;
+      setUser(profile);
+
+      navigation.goBack();
+    } catch (error) {
+      sendAlert({
+        title: 'Oh no...',
+        description: 'We could\'nt update your profile\nCheck your internet connection!',
+      });
+      console.error('Error while updatng profile', error?.response?.data || error);
+    } finally {
+      setInfosUploading(false);
+      setEdited(false);
+    }
+  };
+
+  const handleGoBack = async () => {
+    if (!edited) {
+      navigation.goBack();
+      return;
+    }
+
+    const result = await sendAlert({
+      title: 'Are you sure?',
+      description: 'You haven\'t saved your changes yet!\nAre you sure you want to go back?',
+      validateText: 'Save',
+      denyText: 'Go back',
+    });
+
+    if (result) {
+      updateProfile();
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
 
-      <GoBackHeader text="Profile">
-        {edited && (
-          <TouchableOpacity onPress={updateProfile}>
-            <Text style={{ ...Fonts.regular(16, Colors.mainBlue) }}>save</Text>
-          </TouchableOpacity>
-        )}
+      <GoBackHeader onPressGoBack={handleGoBack} text="Profile">
+        <View style={{ width: 40 }}>
+          {infosUploading ? (
+            <LoadingSpinner color={Colors.mainBlue} size={20} />
+          ) : (
+            <>
+              {edited && (
+                <TouchableOpacity onPress={updateProfile}>
+                  <Text style={{ ...Fonts.bold(16, Colors.mainBlue) }}>save</Text>
+                </TouchableOpacity>
+              )}
+            </>
+          )}
+        </View>
       </GoBackHeader>
 
       <ScrollView
@@ -100,7 +173,11 @@ const ProfileEditScreen = () => {
         <TouchableOpacity style={styles.profilePictureButton} onPress={onPressEditPicture}>
           <ProfileImage resizeMode='cover' style={{ position: 'absolute', width: '100%', height: '100%' }} />
           <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.3)' }} />
-          <Feather name="edit-2" size={30} color={Colors.white} />
+          {pictureUploading ? (
+            <LoadingSpinner color={Colors.white} size={30} />
+          ) : (
+            <Feather name="edit-2" size={30} color={Colors.white} />
+          )}
         </TouchableOpacity>
 
         <FormInput
@@ -120,6 +197,7 @@ const ProfileEditScreen = () => {
           placeholder="What makes you special?"
           multiline
           maxLength={250}
+          inputStyle={{ minHeight: 100 }}
         />
       </ScrollView>
     </SafeAreaView>

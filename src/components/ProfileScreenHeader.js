@@ -8,11 +8,12 @@ import {
   View
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome5, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import ProfileImage from './ProfileImage';
+import TouchableTooltip from './TouchableTooltip';
 
 export const MAX_HEADER_HEIGHT = responsiveHeight(45);
 export const MIN_HEADER_HEIGHT = responsiveHeight(25);
@@ -83,7 +84,10 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
 
       <View style={styles.headerUserInfosContainer}>
         <View>
-          <Text style={{ ...Fonts.bold(25, Colors.white) }}>{user?.displayName}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+            <Text style={{ ...Fonts.bold(25, Colors.white) }}>{user?.displayName}</Text>
+            <RankIcons user={user} />
+          </View>
           <Text style={{ ...Fonts.regular(13, Colors.white) }}>@{user?.username}</Text>
         </View>
         {user?.pronouns !== 'UNKOWN' && (
@@ -95,6 +99,35 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
 };
 
 export default ProfileScreenHeader;
+
+const RankIcons = ({ user }) => {
+  if(!user) return null;
+
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      {user.isDeveloper && (
+        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText="Developer">
+          <MaterialCommunityIcons name="code-braces-box" size={25}  color="#c299ff" />
+        </TouchableTooltip>
+      )}
+      {user.isAdmin && (
+        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText="Admin">
+          <FontAwesome5 name="shield-alt" size={19} color="#aeb9fc" />
+        </TouchableTooltip>
+      )}
+      {user.isAmbassador && (
+        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText="Ambassador">
+          <Octicons name="code-of-conduct" size={20} color="#f571c0" />
+        </TouchableTooltip>
+      )}
+      {user.isPremium && (
+        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText="Premium">
+          <FontAwesome5 name="crown" size={18} color="#faec84" />
+        </TouchableTooltip>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   animatedHeader: {
