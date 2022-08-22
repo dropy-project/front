@@ -29,7 +29,7 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
       if (buttonIndex === 0) {
         reportUser(conversation?.user?.userId, sendAlert);
       } else if (buttonIndex === 1) {
-        blockUser(conversation?.user?.userId, sendAlert);
+        blockUser(conversation?.user?.userId, sendAlert, navigation);
       }
     });
   };

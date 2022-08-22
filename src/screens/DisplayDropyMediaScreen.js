@@ -38,15 +38,15 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
 
   const handleOptionsButtonPress = () => {
     showActionSheetWithOptions({
-      options: ['Report user', 'Block user', 'Cancel'],
+      options: ['Report Drop', 'Block user', 'Cancel'],
       destructiveButtonIndex: 1,
       cancelButtonIndex: 2,
       title: 'Drop',
     }, (buttonIndex) => {
       if (buttonIndex === 0) {
-        reportUser(dropy, sendAlert);
+        reportUser(dropy.emitterId, sendAlert, dropy.id);
       } else if (buttonIndex === 1) {
-        blockUser(dropy.emitterId, sendAlert);
+        blockUser(dropy.emitterId, sendAlert, navigation);
       }
     });
   };

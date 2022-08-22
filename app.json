@@ -5,8 +5,8 @@
   "version": "0.0.4",
   "requiredServerVersion": "0.0.4",
 
-  "customAPI": null,
-  "customSocket": null,
+  "customAPI": "http://192.168.1.29:3000",
+  "customSocket": "http://192.168.1.29:4000",
 
   "productionMode": false
 }

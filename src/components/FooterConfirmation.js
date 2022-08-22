@@ -61,6 +61,8 @@ const styles = StyleSheet.create({
     ...Styles.hardShadows,
   },
   pictureContainer: {
+    width: 65,
+    height: 65,
     borderRadius: 25,
     marginRight: 10,
     ...Styles.softShadows,

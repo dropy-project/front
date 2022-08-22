@@ -154,8 +154,10 @@ const profilePictureUrl = (userId) => {
   return `${API_BASE_URL}/user/profile/${userId}/picture`;
 };
 
-const reportUser = async (userId) => {
-  const result = await axios.post(`/user/report/${userId}`);
+const reportUser = async (userId, dropyId) => {
+  const result = await axios.post(`/user/report/${userId}`, {
+    dropyId,
+  });
   return result;
 };
 

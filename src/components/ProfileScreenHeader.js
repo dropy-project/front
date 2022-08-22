@@ -56,7 +56,7 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
       if (buttonIndex === 0) {
         reportUser(user.id, sendAlert);
       } else if (buttonIndex === 1) {
-        blockUser(user.id, sendAlert);
+        blockUser(user.id, sendAlert, navigation);
       }
     });
   };

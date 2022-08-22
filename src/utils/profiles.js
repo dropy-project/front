@@ -6,16 +6,16 @@ export const PRONOUNS = {
   SHE_HER: 'She/Her',
 };
 
-export const reportUser = async (userId, sendAlert) => {
+export const reportUser = async (userId, sendAlert, dropyId = undefined) => {
   try {
-    const response = await API.reportUser(userId);
+    const response = await API.reportUser(userId, dropyId);
     console.log('Report API response : ', response.data);
     sendAlert({
       title: 'User reported',
       description: 'Your report has been shipped !',
     });
   } catch (error) {
-    if(error.response.status === 400) {
+    if(error.response.status === 401) {
       sendAlert({
         title: 'Take it easy !',
         description: 'You can only report a user once per hour.',
@@ -30,10 +30,11 @@ export const reportUser = async (userId, sendAlert) => {
   }
 };
 
-export const blockUser = async (userId, sendAlert) => {
+export const blockUser = async (userId, sendAlert, navigation) => {
   try {
     const response = await API.blockUser(userId);
     console.log('Block API response : ', response.data);
+    navigation?.popToTop();
   } catch (error) {
     sendAlert({
       title: 'Oh no...',
