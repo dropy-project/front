@@ -175,12 +175,14 @@ const ProfileEditScreen = () => {
     const result = await sendAlert({
       title: 'Are you sure?',
       description: 'You haven\'t saved your changes yet!\nAre you sure you want to go back?',
-      validateText: 'Save',
+      validateText: 'Save and go back',
       denyText: 'Go back',
     });
 
     if (result) {
-      updateProfile();
+      await updateProfile();
+    } else {
+      navigation.goBack();
     }
   };
 
@@ -196,7 +198,7 @@ const ProfileEditScreen = () => {
             <>
               {edited && (
                 <TouchableOpacity onPress={updateProfile}>
-                  <Text style={{ ...Fonts.bold(16, Colors.mainBlue) }}>save</Text>
+                  <Text style={{ ...Fonts.bold(16, Colors.mainBlue), width: 60 }}>save</Text>
                 </TouchableOpacity>
               )}
             </>

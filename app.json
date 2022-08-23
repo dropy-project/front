@@ -8,5 +8,5 @@
   "customAPI": null,
   "customSocket": null,
 
-  "productionMode": false
+  "productionMode": true
 }
