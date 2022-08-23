@@ -43,8 +43,8 @@ const ChatScreen = ({ route, navigation }) => {
 
   const renderChatMessage = ({ item: message, index }) => {
     const isLastMessage = index === 0;
-    const nextMessage = messages[index - 1];
-    const hourDifference = Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / ONE_HOUR;
+    const nextMessage = messages[index + 1];
+    const hourDifference = Math.round(Math.abs(new Date(message.date) - new Date(nextMessage?.date)) / ONE_HOUR);
     return (
       <ChatBubble
         {...message}
@@ -53,6 +53,7 @@ const ChatScreen = ({ route, navigation }) => {
         animationDelay={index * 10}
         isLeft={message?.sender.id !== user.id}
         showDate={isLastMessage}
+        hourDifference={hourDifference}
       />
     );
   };

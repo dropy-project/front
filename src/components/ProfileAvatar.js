@@ -18,7 +18,7 @@ const ProfileAvatar = ({
   return (
     <View style={{
       ...styles.container,
-      borderWidth: size / 22,
+      borderWidth: size / 25,
       width: size,
       height: size,
       borderRadius: size / 2.7,

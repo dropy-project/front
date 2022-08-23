@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
@@ -8,10 +8,27 @@ import useConversationSocket from '../hooks/useConversationSocket';
 import useOverlay from '../hooks/useOverlay';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-const ConversationsScreen = ({ navigation }) => {
+const ConversationsScreen = ({ navigation, route }) => {
 
+  const { conversationId = null } = route.params || {};
   const { sendAlert } = useOverlay();
   const { loading, conversations, closeConversation } = useConversationSocket(handleSocketError);
+
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if(conversations == null || conversations.length === 0) return;
+    if(initialized) return;
+
+    if(conversationId != null) {
+      const toOpenConversation = conversations.find(conversation => conversation.id === conversationId);
+      if(toOpenConversation != null) {
+        navigation.navigate('Chat', { conversation: toOpenConversation  });
+      }
+    }
+
+    setInitialized(true);
+  }, [conversations]);
 
   async function handleSocketError() {
     await sendAlert({

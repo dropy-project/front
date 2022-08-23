@@ -7,26 +7,18 @@ import FooterConfirmation from '../components/FooterConfirmation';
 import GoBackHeader from '../components/GoBackHeader';
 import DropyMediaViewer from '../components/DropyMediaViewer';
 import useOverlay from '../hooks/useOverlay';
-import useConversationSocket from '../hooks/useConversationSocket';
 import { blockUser, reportUser } from '../utils/profiles';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { dropy, showBottoModal } = route.params || {};
 
   const { sendAlert } = useOverlay();
-  const { conversations } = useConversationSocket();
   const { showActionSheetWithOptions } = useActionSheet();
 
   const openChat = async () => {
     try {
-      navigation.reset({
-        index: 1,
-        routes: [
-          { name: 'Home' },
-          { name: 'Conversations' },
-          { name: 'Chat', params: { conversation: conversations.find(c => c.id === dropy.conversationId) } }
-        ],
-      });
+      navigation.goBack();
+      navigation.navigate('Conversations', { conversationId: dropy.conversationId });
     } catch (error) {
       console.log('Open chat error', error?.response?.data ?? error);
       sendAlert({

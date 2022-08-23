@@ -28,11 +28,12 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
   const { userCoordinates, compassHeading, initialized: geolocationInitialized } = useInitializedGeolocation();
 
   const handleDropyPressed = async (dropy) => {
-    Haptics.impactHeavy();
     try {
       if(dropy == null) return;
       if (userCoordinates == null) return;
       if (dropy?.isUserDropy) return;
+
+      Haptics.impactHeavy();
 
       const response = await retrieveDropy(dropy.id);
       if(response.error != null) {

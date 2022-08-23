@@ -22,7 +22,7 @@ const ChatBubble = (props) => (
 
 export default ChatBubble;
 
-const Bubble = ({ isLeft, content, date, read, showDate }) => {
+const Bubble = ({ isLeft, content, date, read, showDate, hourDifference }) => {
   const navigation = useNavigation();
   if(typeof content !== 'string') {
     return (
@@ -69,7 +69,7 @@ const Bubble = ({ isLeft, content, date, read, showDate }) => {
           {messageTimeString(date)}
         </Text>
       )}
-      <DebugText showBoundingBox date={date}>Text msg : [{content}]</DebugText>
+      <DebugText showBoundingBox date={date}>{hourDifference}h diff | txt : [{content}]</DebugText>
     </View>
   );
 };
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   dropyContainer: {
-    paddingVertical: 30,
+    paddingVertical: 10,
     flexDirection: 'column',
     alignItems: 'center',
   },
