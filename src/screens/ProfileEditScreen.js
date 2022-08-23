@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
 import {
   Keyboard,
+  Linking,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -12,7 +13,9 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import FastImage from 'react-native-fast-image';
+import { openCamera, openPicker } from 'react-native-image-crop-picker';
+
 import FormInput from '../components/FormInput';
 import FormSelect from '../components/FormSelect';
 import GoBackHeader from '../components/GoBackHeader';
@@ -57,34 +60,64 @@ const ProfileEditScreen = () => {
   };
 
   const updateProfilePictureFromLibrary = async () => {
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
-      selectionLimit: 1,
-      presentationStyle: 'overFullScreen',
-    });
+    try {
+      const image = await openPicker({
+        width: 600,
+        height: 600,
+        cropping: true,
+        mediaType: 'photo',
+      });
 
-    processPickerResponseUpload(result);
+      processPickerResponseUpload(image);
+    } catch (error) {
+      if(error.code === 'E_NO_LIBRARY_PERMISSION') {
+        const alertResult = await sendAlert({
+          title: 'LIbrary access not granted...',
+          description: 'Enable access in your settings',
+          validateText: 'Open settings',
+          denyText: 'Ok !',
+        });
+        if(alertResult) {
+          Linking.openSettings();
+        }
+      }
+      console.error('Open camera error', error);
+    }
   };
 
   const updateProfilePictureFromCamera = async () => {
-    const result = await launchCamera({
-      mediaType: 'photo',
-      quality: 0.1,
-    });
-
-    processPickerResponseUpload(result);
+    try {
+      const image = await openCamera({
+        width: 600,
+        height: 600,
+        cropping: true,
+        mediaType: 'photo',
+      });
+      processPickerResponseUpload(image);
+    } catch (error) {
+      if(error.code === 'E_NO_CAMERA_PERMISSION') {
+        const alertResult = await sendAlert({
+          title: 'Camera not granted...',
+          description: 'Enable camera access in your settings',
+          validateText: 'Open settings',
+          denyText: 'Ok !',
+        });
+        if(alertResult) {
+          Linking.openSettings();
+        }
+      }
+      console.error('Open camera error', error);
+    }
   };
 
-  const processPickerResponseUpload = async (pickerResponse) => {
-    if(pickerResponse.didCancel) {
-      throw new Error('User cancelled image picker');
-    }
-
+  const processPickerResponseUpload = async (image) => {
     setPictureUploading(true);
     try {
-      const filePath = await compressImage(pickerResponse.assets[0].uri);
+      const filePath = await compressImage(image.path);
       const response = await API.postProfilePicture(filePath);
       console.log('API response : ', response.data);
+      await FastImage.clearDiskCache();
+      await FastImage.clearMemoryCache();
       setUser({ ...user });
     } catch (error) {
       sendAlert({

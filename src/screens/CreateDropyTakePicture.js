@@ -1,127 +1,52 @@
-import { Camera, CameraType } from 'expo-camera';
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
-import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Styles, { Colors, Fonts } from '../styles/Styles';
-import GoBackHeader from '../components/GoBackHeader';
+import { useEffect } from 'react';
+import { openCamera } from 'react-native-image-crop-picker';
+import { Linking } from 'react-native';
 import MEDIA_TYPES from '../utils/mediaTypes';
 import { compressImage } from '../utils/files';
+import useOverlay from '../hooks/useOverlay';
 
 const CreateDropyTakePicture = ({ navigation }) => {
 
-  const cameraRef = useRef(null);
-  const [hasPermission, setHasPermission] = useState(null);
-  const [cameraType, setCameraType] = useState(CameraType.back);
+  const { sendAlert } = useOverlay();
 
   useEffect(() => {
-    checkPermission();
+    handleCamera();
   }, []);
 
-  const checkPermission = async () => {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setHasPermission(status === 'granted');
-  };
+  const handleCamera = async () => {
+    try {
+      const image = await openCamera({
+        mediaType: 'photo',
+        cropping: true,
+      });
 
-  const reverseCamera = () => {
-    setCameraType(cameraType === CameraType.back ? CameraType.front : CameraType.back);
-  };
+      navigation.navigate('Home', {
+        dropyCreateParams: {
+          dropyFilePath: await compressImage((await image).path),
+          dropyData: null,
+          mediaType: MEDIA_TYPES.PICTURE,
+          originRoute: 'CreateDropyTakePicture',
+        },
+      });
+    } catch (error) {
+      navigation.goBack();
 
-  const takePicture = async () => {
-    const picture = await cameraRef.current.takePictureAsync();
-
-    if(picture?.uri == null) {
-      return;
+      if(error.code === 'E_NO_CAMERA_PERMISSION') {
+        const alertResult = await sendAlert({
+          title: 'Camera not granted...',
+          description: 'Enable camera access in your settings',
+          validateText: 'Open settings',
+          denyText: 'Ok !',
+        });
+        if(alertResult) {
+          Linking.openSettings();
+        }
+      }
+      console.error('Open camera error', error);
     }
-
-    navigation.navigate('Home', {
-      dropyCreateParams: {
-        dropyFilePath: await compressImage(picture?.uri),
-        dropyData: null,
-        mediaType: MEDIA_TYPES.PICTURE,
-        originRoute: 'CreateDropyTakePicture',
-      },
-    });
   };
 
-  if (hasPermission === null) {
-    return <View />;
-  }
-
-  if (hasPermission === false) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} color={Colors.darkGrey} />
-        <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
-          <Text style={{ ...Fonts.regular(18, Colors.darkGrey) }}>Oups...</Text>
-          <Text style={{ ...Fonts.regular(16, Colors.darkGrey), marginTop: 10 }}>Camera not authorized</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={'light-content'}></StatusBar>
-      <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} color={Colors.white} text={'Tips: smile !'}/>
-      <Camera ref={cameraRef} style={StyleSheet.absoluteFillObject} type={cameraType} onMountError={console.error}>
-        <View style={styles.bottomContainer}>
-          <View style={styles.recordBtnContainer}>
-            <TouchableOpacity style={styles.recordBtn} onPress={takePicture} />
-          </View>
-          <TouchableOpacity onPress={reverseCamera} style={styles.invertCameraTypeBtn}>
-            <MaterialCommunityIcons name="swap-horizontal-variant" size={24} color={Colors.white} />
-          </TouchableOpacity>
-        </View>
-      </Camera>
-    </SafeAreaView>
-  );
+  return null;
 };
 
 export default CreateDropyTakePicture;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  bottomContainer: {
-    position: 'absolute',
-    bottom: responsiveHeight(6),
-    height: 80,
-    width: '100%',
-    ...Styles.center,
-  },
-  recordBtnContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 80,
-    borderWidth: 3,
-    borderColor: Colors.white,
-    padding: 4,
-    ...Styles.center,
-  },
-  recordBtn: {
-    borderRadius: 80,
-    backgroundColor: 'white',
-    width: '100%',
-    height: '100%',
-  },
-  invertCameraTypeBtn: {
-    ...Styles.center,
-    position: 'absolute',
-    right: '15%',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 3,
-    borderColor: Colors.white,
-  },
-});

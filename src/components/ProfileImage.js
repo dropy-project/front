@@ -35,8 +35,9 @@ const ProfileImage = (props) => {
 
   return (
     <FastImage
-      key={refreshCount.current}
+      key={source.refreshCount}
       source={source}
+      onLoadEnd={() => console.log('refreshed')}
       onError={() => setSource(null)}
       resizeMode='cover'
       style={{ width: '100%', height: '100%' }}
