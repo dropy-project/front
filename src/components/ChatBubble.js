@@ -8,6 +8,7 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import { chunckHeaderTimeString, messageTimeString } from '../utils/time';
 import FadeInWrapper from './FadeInWrapper';
 import DropyMediaViewer from './DropyMediaViewer';
+import DebugText from './DebugText';
 
 
 const ChatBubble = (props) => (
@@ -30,6 +31,7 @@ const Bubble = ({ isLeft, content, date, read, showDate }) => {
           <DropyMediaViewer {...content} style={styles.dropyMediaContainer} />
         </TouchableOpacity>
         <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>{messageTimeString(content.retrieveDate)}</Text>
+        <DebugText showBoundingBox date={date}>Dropy msg</DebugText>
       </View>
     );
   }
@@ -67,6 +69,7 @@ const Bubble = ({ isLeft, content, date, read, showDate }) => {
           {messageTimeString(date)}
         </Text>
       )}
+      <DebugText showBoundingBox date={date}>Text msg : [{content}]</DebugText>
     </View>
   );
 };

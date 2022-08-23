@@ -18,6 +18,7 @@ import Haptics from '../utils/haptics';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
+import DebugText from './DebugText';
 
 const DropyMap = ({ dropiesAround, retrieveDropy }) => {
 
@@ -91,6 +92,8 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
         end={{ x: 0.5, y: 1 }}
         style={StyleSheet.absoluteFillObject}
       />
+      <DebugText marginBottom={100}>{JSON.stringify(userCoordinates, null, 2)}</DebugText>
+      <DebugText marginBottom={210}>{JSON.stringify(dropiesAround, null, 2)}</DebugText>
     </>
   );
 };

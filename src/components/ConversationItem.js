@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import ProfileAvatar from './ProfileAvatar';
+import DebugText from './DebugText';
 
 const ConversationItem = ({
   conversation,
@@ -23,7 +24,7 @@ const ConversationItem = ({
   };
 
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       <TouchableOpacity onPress={openProfile}>
         <ProfileAvatar
           showStatusDot={true}
@@ -50,7 +51,7 @@ const ConversationItem = ({
           {lastMessagePreview ?? `Start chatting with ${user?.displayName}`}
         </Text>
       </TouchableOpacity>
-
+      <DebugText showBoundingBox>{JSON.stringify(user, null, 2)}</DebugText>
     </View>
   );
 };

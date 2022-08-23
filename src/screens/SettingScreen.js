@@ -6,14 +6,29 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import useOverlay from '../hooks/useOverlay';
 import useGeolocation from '../hooks/useGeolocation';
+import useCurrentUser from '../hooks/useCurrentUser';
+import DebugText from '../components/DebugText';
 
 const SettingsScreen = () => {
 
   const { userCoordinates, compassHeading } = useGeolocation();
+  const { developerMode, setDeveloperMode } = useCurrentUser();
+
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader text="Settings" />
+      <DebugText marginBottom={100}>DEV MODE</DebugText>
+
+      <TouchableOpacity onPress={() => setDeveloperMode(!developerMode)} style={styles.toggleBackgroundGeolocButton}>
+        <Text style={styles.toggleBackgroundGeolocButtonText}>
+            Toggle dev mode
+        </Text>
+      </TouchableOpacity>
+
       <View style={styles.wrapper}>
+
+
+
         <ToggleBackgroundGeolocation />
         <Text style={styles.text}>
         Current version is {AppInfo.version}
