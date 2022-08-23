@@ -47,14 +47,17 @@ const ProfileEditScreen = () => {
 
   const onPressEditPicture = () => {
     showActionSheetWithOptions({
-      options: ['Take a photo', 'Choose from library', 'Cancel'],
-      cancelButtonIndex: 2,
+      options: ['Take a photo', 'Choose from library', 'Delete picture', 'Cancel'],
+      cancelButtonIndex: 3,
+      destructiveButtonIndex: 2,
       title: 'Where do you want to get your picture from?',
     }, (buttonIndex) => {
       if (buttonIndex === 0) {
         updateProfilePictureFromCamera();
       } else if (buttonIndex === 1) {
         updateProfilePictureFromLibrary();
+      } else if (buttonIndex === 2) {
+        deleteProfilePicture();
       }
     });
   };
@@ -125,6 +128,24 @@ const ProfileEditScreen = () => {
         description: 'Your profile picture has been lost somewhere...\nCheck your internet connection!',
       });
       console.error('Error while uploading profile picture', error?.response?.data || error);
+    } finally {
+      setPictureUploading(false);
+    }
+  };
+
+  const deleteProfilePicture = async () => {
+    setPictureUploading(true);
+    try {
+      await API.deleteProfilePicture();
+      await FastImage.clearDiskCache();
+      await FastImage.clearMemoryCache();
+      setUser({ ...user });
+    } catch (error) {
+      sendAlert({
+        title: 'Oh no...',
+        description: 'Your profile picture vould not be deleted...\nCheck your internet connection!',
+      });
+      console.error('Error while deleting profile picture', error?.response?.data || error);
     } finally {
       setPictureUploading(false);
     }
