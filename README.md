@@ -26,7 +26,10 @@ ANDROID :
     - required server version
 
 2. Changer numéro de version dans xcode (IOS)
-    - Si xcode pas disponible -> ouvrir le fichier `project.pbxproj` et modifier `MARKETING_VERSION` (2 occurrences)
+    - Changer numéro marketing (x.x.x)
+        - Si xcode pas disponible -> ouvrir le fichier `project.pbxproj` et modifier `MARKETING_VERSION` (2 occurrences)
+    - Changer build number (x)
+        - Si xcode pas disponible -> ouvrir le fichier `project.pbxproj` et modifier `CURRENT_PROJECT_VERSION` (2 occurrences)
 
 3. Changer numéro de version android `/app/build.gradle` :
     - Incrémenter versionCode
