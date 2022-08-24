@@ -18,6 +18,7 @@ const GoBackHeader = ({
   return (
     <View style={{ ...styles.container, ...style }}>
       <TouchableOpacity
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         onPress={onPressGoBack ? onPressGoBack : () => navigation.goBack()}
         style={styles.button}>
         <Feather name="arrow-left" size={30} color={color} />

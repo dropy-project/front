@@ -39,7 +39,9 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={styles.button}>
+          style={styles.button}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
           <Feather name="arrow-left" size={30} color={Colors.grey} />
         </TouchableOpacity>
 
@@ -58,7 +60,11 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
             {conversation?.user?.displayName}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleOptionsButtonPress}>
+
+        <TouchableOpacity
+          onPress={handleOptionsButtonPress}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
           <Feather name="more-horizontal" size={30} color={Colors.grey} />
         </TouchableOpacity>
       </View>

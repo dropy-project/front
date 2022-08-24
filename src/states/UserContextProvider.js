@@ -4,21 +4,12 @@ export const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
 
-  const [initialized, setInitialized] = useState(false);
   const [user, setUser] = useState(null);
   const [developerMode, setDeveloperMode] = useState(false);
 
   useEffect(() => {
-    if (user == null || initialized)
+    if (user == null)
       return;
-
-    setInitialized(true);
-
-    if(user.isDeveloper) {
-      console.log('Dev mode enabled');
-      setDeveloperMode(true);
-    }
-
     console.log('Current user is', user?.username);
   }, [user]);
 

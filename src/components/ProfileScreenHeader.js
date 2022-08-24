@@ -84,17 +84,23 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
 
       <SafeAreaView style={Styles.safeAreaView}>
         <Animated.View style={{ ...styles.headerControlsContainer, transform: [{ translateY: headerCancelTransform }] }}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
             <Feather name="arrow-left" size={30} color={Colors.white} />
           </TouchableOpacity>
           {showControls ? (
             <View>
-              <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Settings')}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
                 <Feather name="settings" size={25} color={Colors.white} />
               </TouchableOpacity>
               <Animated.View style={{ opacity: editOpacity }}>
-                <TouchableOpacity onPress={() => navigation.navigate('ProfileEdit')}
-                  style={{ position: 'absolute', top: '100%', paddingTop: 25 }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ProfileEdit')}
+                  style={{ position: 'absolute', top: '100%', marginTop: 25 }}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
                   <Feather name="edit" size={25} color={Colors.white} />
                 </TouchableOpacity>
               </Animated.View>

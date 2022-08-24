@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, StatusBar, TouchableOpacity, SafeAreaView } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  SafeAreaView,
+  Text,
+  Animated
+} from 'react-native';
 
-import Styles, { Colors } from '../styles/Styles';
+import { FontAwesome5 } from '@expo/vector-icons';
+import Styles, { Colors, Fonts } from '../styles/Styles';
 
 import HomeScreenTabBar from '../components/HomeScreenTabBar';
 import ConfirmDropyOverlay from '../components/ConfirmDropyOverlay';
@@ -9,13 +18,26 @@ import ProfileAvatar from '../components/ProfileAvatar';
 import DropyMap from '../components/DropyMap';
 
 import useDropiesAroundSocket from '../hooks/useDropiesAroundSocket';
+import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
+
+const ICON_OPENED_SIZE = 40;
 
 const HomeScreen = ({ navigation, route }) => {
 
   const { dropyCreateParams = null } = route.params || {};
 
+  const backIconAnimatedValue = useRef(new Animated.Value(0)).current;
+
   const [confirmDropOverlayVisible, setConfirmDropOverlayVisible] = useState(false);
+
   const { dropiesAround, createDropy, retrieveDropy } = useDropiesAroundSocket();
+
+  const { backgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
+  const shouldAnimateIcon = useRef(true);
+
+  useEffect(() => {
+    shouldAnimateIcon.current = true;
+  }, [backgroundGeolocationEnabled]);
 
   useEffect(() => {
     if(dropyCreateParams != null) {
@@ -27,6 +49,46 @@ const HomeScreen = ({ navigation, route }) => {
     setConfirmDropOverlayVisible(false);
   };
 
+  useEffect(() => {
+
+    const unsubscribe = navigation.addListener('focus', () => {
+
+      console.log(shouldAnimateIcon.current);
+      if(shouldAnimateIcon.current === false) return;
+      shouldAnimateIcon.current = false;
+
+
+      const anim = Animated.sequence([
+        Animated.timing(backIconAnimatedValue, {
+          toValue: 1,
+          duration: 500,
+          delay: 500,
+          useNativeDriver: false,
+        }),
+        Animated.delay(1500),
+        Animated.timing(backIconAnimatedValue, {
+          toValue: 0,
+          duration: 500,
+          delay: 500,
+          useNativeDriver: false,
+        })
+      ]);
+      anim.start();
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const iconScale = backIconAnimatedValue.interpolate({
+    inputRange: [0, 0.1, 1],
+    outputRange: [backgroundGeolocationEnabled ? 0.7 : 0.5, 1, 1],
+  });
+
+  const iconMinWidth = backIconAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [ICON_OPENED_SIZE, 270],
+  });
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle='dark-content' />
@@ -35,8 +97,19 @@ const HomeScreen = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <ProfileAvatar
             size={70}
-            onPress={() => navigation.navigate('Profile')}
           />
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+            <Animated.View style={{
+              ...styles.backgroundGeolocIconContainer,
+              transform: [{ scale: iconScale }],
+              width: iconMinWidth,
+            }}>
+              <FontAwesome5 name="satellite-dish" size={ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
+              <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
+                Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
+              </Text>
+            </Animated.View>
+          </TouchableOpacity>
         </TouchableOpacity>
       </SafeAreaView>
       <HomeScreenTabBar />
@@ -64,5 +137,23 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     width: '90%',
+  },
+  backgroundGeolocIconContainer: {
+    ...Styles.center,
+    position: 'absolute',
+    flexDirection: 'row',
+    height: ICON_OPENED_SIZE,
+    justifyContent: 'space-between',
+    bottom: -10,
+    left: 40,
+    borderRadius: 100,
+    padding: 10,
+    backgroundColor: Colors.white,
+    overflow: 'hidden',
+  },
+  backgroundGeolocationText: {
+    position: 'absolute',
+    ...Fonts.regular(12, Colors.darkGrey),
+    marginLeft: ICON_OPENED_SIZE + 5,
   },
 });

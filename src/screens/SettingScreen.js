@@ -1,52 +1,107 @@
 import React, { useContext } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Linking,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import GoBackHeader from '../components/GoBackHeader';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
-import useOverlay from '../hooks/useOverlay';
-import useGeolocation from '../hooks/useGeolocation';
 import useCurrentUser from '../hooks/useCurrentUser';
 import DebugText from '../components/DebugText';
+import FormToggle from '../components/FormToggle';
 
 const SettingsScreen = () => {
 
-  const { userCoordinates, compassHeading } = useGeolocation();
-  const { developerMode, setDeveloperMode } = useCurrentUser();
+  const { setDeveloperMode } = useCurrentUser();
+
+  const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
 
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader text="Settings" />
-      <DebugText marginBottom={100}>DEV MODE</DebugText>
 
-      <TouchableOpacity onPress={() => setDeveloperMode(!developerMode)} style={styles.toggleBackgroundGeolocButton}>
-        <Text style={styles.toggleBackgroundGeolocButtonText}>
-            Toggle dev mode
-        </Text>
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
 
-      <View style={styles.wrapper}>
+        <Text style={styles.titleText}>Background location</Text>
+        <View style={styles.linkContainer}>
+          <View style={{ flex: 0.9 }}>
+            <Text style={{ ...Fonts.regular(11, Colors.grey) }}>Be alerted when you walk onto a drop with the app closed.</Text>
+            <Text style={{ ...Fonts.bold(12, Colors.purple2), marginTop: 2 }}>Highly recommended</Text>
+          </View>
+          <Switch
+            value={backgroundGeolocationEnabled}
+            onValueChange={setBackgroundGeolocationEnabled}
+            thumbColor={Colors.white}
+            trackColor={{
+              false: Colors.darkGrey,
+              true: Colors.mainBlue,
+            }}
+            ios_backgroundColor={Colors.darkGrey}
+          />
+        </View>
 
+        <Text style={styles.titleText}>Notifications</Text>
+        <FormToggle disabled title="Remind me to drop something daily"></FormToggle>
+        <FormToggle disabled title="When one of my drop is collected"></FormToggle>
+        <FormToggle disabled title="When a new feature is available"></FormToggle>
 
+        <Text style={styles.titleText}>Others</Text>
+        <FormToggle disabled title="Vibrations"></FormToggle>
+        <FormToggle disabled title="Show my connection status"></FormToggle>
 
-        <ToggleBackgroundGeolocation />
-        <Text style={styles.text}>
-        Current version is {AppInfo.version}
-        </Text>
-        <Text style={styles.text}>
-          {/* eslint-disable-next-line no-undef */}
-        Current server : {AppInfo.productionMode ? 'prod' : 'preprod'}
-        </Text>
-        <Text style={{ ...styles.text, marginTop: 20 }}>
-          latitude: {userCoordinates.latitude}
-        </Text>
-        <Text style={{ ...styles.text }}>
-          longitude: {userCoordinates.longitude}
-        </Text>
-        <Text style={{ ...styles.text }}>
-          heading: {compassHeading}
-        </Text>
-      </View>
+        <View style={styles.spacer} />
+
+        <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/help')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Help</Text>
+          <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/about')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>About</Text>
+          <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/privacy-policy.html')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Privacy Policy</Text>
+          <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/terms-conditions.html')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Terms & Conditions</Text>
+          <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+        </TouchableOpacity>
+
+        <View style={styles.spacer} />
+
+        <TouchableOpacity onLongPress={() => setDeveloperMode(old => !old)} activeOpacity={1}>
+          <View style={styles.infoTextContainer}>
+            <Ionicons name="git-branch" size={19} color={Colors.darkGrey} />
+            <Text style={styles.infoText}>
+              {AppInfo.version}
+            </Text>
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Feather name="flag" size={17} color={Colors.darkGrey} />
+            <Text style={styles.infoText}>
+              {AppInfo.versionFlag}
+            </Text>
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Feather name="server" size={17} color={Colors.darkGrey} />
+            <Text style={styles.infoText}>
+              {AppInfo.productionMode ? 'prod' : 'preprod'}
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <DebugText marginBottom={20}>DEV MODE</DebugText>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -54,53 +109,6 @@ const SettingsScreen = () => {
 export default SettingsScreen;
 
 
-// TEMPORARY
-const ToggleBackgroundGeolocation = () => {
-  const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled, showLogs } = useContext(BackgroundGeolocationContext);
-
-  const { sendAlert } = useOverlay();
-
-  const toggle = async () => {
-    if (backgroundGeolocationEnabled) {
-      const result = await sendAlert({
-        title: 'Turn off background location',
-        description: 'The app will not be able to tell you if there are drops around you.',
-        denyText: 'keep enabled',
-        validateText: 'TURN OFF',
-      });
-      if(!result) return;
-      setBackgroundGeolocationEnabled(false);
-    } else {
-      const result = await sendAlert({
-        title: 'Turn on background location',
-        description: 'The app will send you notifications when you are near a drop, even if you are not using the app.',
-        denyText: 'cancel',
-        validateText: 'TURN ON',
-      });
-      if(!result) return;
-      setBackgroundGeolocationEnabled(true);
-    }
-  };
-
-  return (
-    <>
-      <TouchableOpacity onPress={toggle}>
-        <View style={styles.toggleBackgroundGeolocButton}>
-          <Text style={styles.toggleBackgroundGeolocButtonText}>
-            {backgroundGeolocationEnabled ? 'Disable background geolocation' : 'Enable background geolocation'}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={{ marginVertical: 20 }} onPress={showLogs}>
-        <View style={styles.toggleBackgroundGeolocButton}>
-          <Text style={styles.toggleBackgroundGeolocButtonText}>
-            Show logs
-          </Text>
-        </View>
-      </TouchableOpacity>
-    </>
-  );
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -109,25 +117,39 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     ...Styles.safeAreaView,
   },
-  toggleBackgroundGeolocButton: {
-    opacity: 0.8,
+  scrollViewContent: {
+    width: responsiveWidth(100),
     alignItems: 'center',
-    backgroundColor: Colors.mainBlue,
-    ...Styles.center,
-    borderRadius: 5,
-    paddingVertical: 10,
+    paddingBottom: 10,
+  },
+  titleText: {
+    ...Fonts.bold(13, Colors.darkGrey),
+    width: '80%',
+    marginBottom: 10,
+    marginTop: 30,
+  },
+  spacer: {
+    width: '90%',
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: Colors.lighterGrey,
+    marginVertical: 25,
+  },
+  linkContainer: {
+    flexDirection: 'row',
+    width: '90%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
     paddingHorizontal: 15,
   },
-  toggleBackgroundGeolocButtonText: {
-    ...Fonts.bold(12, Colors.white),
-    textAlign: 'center',
+  infoTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  text: {
+  infoText: {
     ...Fonts.bold(12, Colors.darkGrey),
-  },
-  wrapper: {
-    height: '100%',
-    width: '100%',
-    ...Styles.center,
+    marginLeft: 10,
   },
 });

@@ -7,10 +7,12 @@ import AppInfo from '../../app.json';
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
 const API_BASE_URL = AppInfo.customAPI ?? `https://${DOMAIN_PREFIX}api.dropy-app.com`;
 
-const axios = Axios.create({
+const AXIOS_PARAMS = {
   baseURL: API_BASE_URL,
   timeout: 5000,
-});
+};
+
+let axios = Axios.create(AXIOS_PARAMS);
 
 const getHeaders = () => {
   return axios.defaults.headers.common;
@@ -32,6 +34,8 @@ const login = async () => {
   });
 
   const  { accessToken, refreshToken, expires, profile: user } = response.data;
+
+  axios = Axios.create(AXIOS_PARAMS);
   axios.defaults.headers.common['Authorization'] = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
