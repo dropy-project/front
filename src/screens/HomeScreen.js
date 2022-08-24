@@ -52,8 +52,6 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
 
     const unsubscribe = navigation.addListener('focus', () => {
-
-      console.log(shouldAnimateIcon.current);
       if(shouldAnimateIcon.current === false) return;
       shouldAnimateIcon.current = false;
 
@@ -140,6 +138,7 @@ const styles = StyleSheet.create({
   },
   backgroundGeolocIconContainer: {
     ...Styles.center,
+    ...Styles.hardShadows,
     position: 'absolute',
     flexDirection: 'row',
     height: ICON_OPENED_SIZE,

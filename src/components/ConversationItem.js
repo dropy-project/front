@@ -20,7 +20,7 @@ const ConversationItem = ({
 
   const navigation = useNavigation();
   const openProfile = () => {
-    navigation.navigate('Profile', { userId: user.userId, conversation });
+    navigation.navigate('Profile', { userId: user.id, conversation });
   };
 
   return (
@@ -29,7 +29,7 @@ const ConversationItem = ({
         <ProfileAvatar
           showStatusDot={true}
           isUserOnline={isOnline}
-          userId={user?.userId}
+          userId={user?.id}
           displayName={user?.displayName}
         />
       </TouchableOpacity>

@@ -16,7 +16,7 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
   const { showActionSheetWithOptions } = useActionSheet();
 
   const openProfile = () => {
-    navigation.navigate('Profile', { userId: conversation.user.userId });
+    navigation.navigate('Profile', { userId: conversation.user.id });
   };
 
   const handleOptionsButtonPress = () => {
@@ -27,9 +27,9 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
       title: conversation?.user?.displayName,
     }, (buttonIndex) => {
       if (buttonIndex === 0) {
-        reportUser(conversation?.user?.userId, sendAlert);
+        reportUser(conversation?.user?.id, sendAlert);
       } else if (buttonIndex === 1) {
-        blockUser(conversation?.user?.userId, sendAlert, navigation);
+        blockUser(conversation?.user?.id, sendAlert, navigation);
       }
     });
   };
@@ -47,7 +47,7 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
 
         <TouchableOpacity style={styles.userInfosContainer} onPress={openProfile}>
           <ProfileAvatar
-            userId={conversation?.user?.userId}
+            userId={conversation?.user?.id}
             displayName={conversation?.user?.displayName}
             displayNameSize={10}
             size={40}

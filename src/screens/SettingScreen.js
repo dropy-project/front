@@ -19,7 +19,7 @@ import useCurrentUser from '../hooks/useCurrentUser';
 import DebugText from '../components/DebugText';
 import FormToggle from '../components/FormToggle';
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
 
   const { setDeveloperMode } = useCurrentUser();
 
@@ -34,7 +34,7 @@ const SettingsScreen = () => {
         <Text style={styles.titleText}>Background location</Text>
         <View style={styles.linkContainer}>
           <View style={{ flex: 0.9 }}>
-            <Text style={{ ...Fonts.regular(11, Colors.grey) }}>Be alerted when you walk onto a drop with the app closed.</Text>
+            <Text style={{ ...Fonts.regular(11, Colors.grey) }}>Get alerted when you walk onto a drop with the app closed.</Text>
             <Text style={{ ...Fonts.bold(12, Colors.purple2), marginTop: 2 }}>Highly recommended</Text>
           </View>
           <Switch
@@ -50,13 +50,28 @@ const SettingsScreen = () => {
         </View>
 
         <Text style={styles.titleText}>Notifications</Text>
-        <FormToggle disabled title="Remind me to drop something daily"></FormToggle>
-        <FormToggle disabled title="When one of my drop is collected"></FormToggle>
-        <FormToggle disabled title="When a new feature is available"></FormToggle>
+        <FormToggle disabled title="Remind me to drop something daily" />
+        <FormToggle disabled title="When one of my drop is collected" />
+        <FormToggle disabled title="When a new feature is available" />
 
         <Text style={styles.titleText}>Others</Text>
-        <FormToggle disabled title="Vibrations"></FormToggle>
-        <FormToggle disabled title="Show my connection status"></FormToggle>
+        <FormToggle disabled title="Vibrations" />
+        <FormToggle disabled title="Show my connection status" />
+
+        <View style={styles.spacer} />
+
+        <TouchableOpacity style={{ ...styles.navigateContainer, marginTop: 10 }} onPress={() => navigation.navigate('UserDropies')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>My drops</Text>
+          <View style={styles.navigateArrow}>
+            <AntDesign name="arrowright" size={24} color={Colors.white} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navigateContainer} onPress={() => navigation.navigate('BlockedUsers')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Blocked users</Text>
+          <View style={styles.navigateArrow}>
+            <AntDesign name="arrowright" size={24} color={Colors.white} />
+          </View>
+        </TouchableOpacity>
 
         <View style={styles.spacer} />
 
@@ -133,7 +148,7 @@ const styles = StyleSheet.create({
     height: 2,
     borderRadius: 1,
     backgroundColor: Colors.lighterGrey,
-    marginVertical: 25,
+    marginVertical: 30,
   },
   linkContainer: {
     flexDirection: 'row',
@@ -142,6 +157,27 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 8,
     paddingHorizontal: 15,
+  },
+  navigateContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.lighterGrey,
+    width: '90%',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    ...Styles.softShadows,
+    shadowOpacity: 0.2,
+    height: 50,
+    marginBottom: 10,
+  },
+  navigateArrow: {
+    ...Styles.center,
+    backgroundColor: Colors.darkGrey,
+    height: '95%',
+    width: 50,
+    borderRadius: 12,
   },
   infoTextContainer: {
     flexDirection: 'row',

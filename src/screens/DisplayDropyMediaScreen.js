@@ -8,10 +8,12 @@ import GoBackHeader from '../components/GoBackHeader';
 import DropyMediaViewer from '../components/DropyMediaViewer';
 import useOverlay from '../hooks/useOverlay';
 import { blockUser, reportUser } from '../utils/profiles';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { dropy, showBottoModal } = route.params || {};
 
+  const { user } = useCurrentUser();
   const { sendAlert } = useOverlay();
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -48,7 +50,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       <StatusBar barStyle="light-content" />
       <GoBackHeader
         color={Colors.white}
-        onPressOptions={handleOptionsButtonPress}
+        onPressOptions={user.id === dropy.emitterId ? undefined : handleOptionsButtonPress}
       />
       <DropyMediaViewer {...dropy} />
       {showBottoModal && (

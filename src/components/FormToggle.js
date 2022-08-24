@@ -34,6 +34,7 @@ export default forwardRef(FormSelect);
 
 const styles = StyleSheet.create({
   container: {
+    height: 50,
     marginBottom: 10,
     alignItems: 'center',
     flexDirection: 'row',

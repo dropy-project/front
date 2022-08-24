@@ -15,16 +15,20 @@ const useEffectForegroundOnly = (effect, deps) => {
   const needRefresh = useRef(false);
 
   useEffect(() => {
+    let effectReturn = () => {};
     const subscription = AppState.addEventListener('change', nextAppState => {
       appState.current = nextAppState;
 
       if(nextAppState === 'active' && needRefresh.current) {
-        effect();
+        effectReturn = effect() ?? (() => {});
         needRefresh.current = false;
       }
     });
 
-    return () => subscription.remove();
+    return () => {
+      effectReturn();
+      subscription.remove();
+    };
   }, []);
 
   useEffect(() => {

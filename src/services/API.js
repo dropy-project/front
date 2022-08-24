@@ -175,6 +175,26 @@ const blockUser = async (userId) => {
   return result;
 };
 
+const getUserDropies = async () => {
+  const result = await axios.get('/dropy/userEmitted');
+  return result;
+};
+
+const deleteUserDropy = async (dropyId) => {
+  const result = await axios.delete(`/dropy/${dropyId}`);
+  return result;
+};
+
+const getBlockedUsers = async () => {
+  const result = await axios.get('/user/blocked');
+  return result;
+};
+
+const unblockUser = async (userId) => {
+  const result = await axios.post(`/user/unblock/${userId}`);
+  return result;
+};
+
 const API = {
   getHeaders,
   register,
@@ -196,6 +216,10 @@ const API = {
   reportUser,
   blockUser,
   deleteProfilePicture,
+  getUserDropies,
+  deleteUserDropy,
+  getBlockedUsers,
+  unblockUser,
 };
 
 export default API;

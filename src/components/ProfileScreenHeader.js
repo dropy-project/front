@@ -19,7 +19,7 @@ import ProfileImage from './ProfileImage';
 import TouchableTooltip from './TouchableTooltip';
 
 export const MAX_HEADER_HEIGHT = responsiveHeight(45);
-export const MIN_HEADER_HEIGHT = responsiveHeight(25);
+export const MIN_HEADER_HEIGHT = responsiveHeight(24);
 
 const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showControls = false, conversation }) => {
 
@@ -42,6 +42,12 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
 
   const editOpacity = scrollAnimValue.interpolate({
     inputRange: [0, MIN_HEADER_HEIGHT / 2, MIN_HEADER_HEIGHT - 20],
+    outputRange: [1, 1, 0],
+    extrapolate: 'clamp',
+  });
+
+  const dropsOpacity = scrollAnimValue.interpolate({
+    inputRange: [0, MIN_HEADER_HEIGHT / 4, MIN_HEADER_HEIGHT / 2],
     outputRange: [1, 1, 0],
     extrapolate: 'clamp',
   });
@@ -88,20 +94,31 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
             <Feather name="arrow-left" size={30} color={Colors.white} />
           </TouchableOpacity>
           {showControls ? (
-            <View>
+            <View style={{ alignItems: 'center' }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('Settings')}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
-                <Feather name="settings" size={25} color={Colors.white} />
+                <Feather name="settings" size={24} color={Colors.white} />
               </TouchableOpacity>
+
               <Animated.View style={{ opacity: editOpacity }}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('ProfileEdit')}
-                  style={{ position: 'absolute', top: '100%', marginTop: 25 }}
+                  style={{ marginTop: 20 }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Feather name="edit" size={25} color={Colors.white} />
+                  <Feather name="edit" size={24} color={Colors.white} />
+                </TouchableOpacity>
+              </Animated.View>
+
+              <Animated.View style={{ opacity: dropsOpacity }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('UserDropies')}
+                  style={{ marginTop: 22 }}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <MaterialCommunityIcons name="tooltip-image-outline" size={26}  color={Colors.white} />
                 </TouchableOpacity>
               </Animated.View>
             </View>
@@ -190,9 +207,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   headerControlsContainer: {
+    marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     width: '100%',
     paddingHorizontal: 20,
   },

@@ -14,6 +14,8 @@ import DisplayDropyMediaScreen from '../screens/DisplayDropyMediaScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
+import BlockedUsersScreen from '../screens/BlockedUsersScreen';
+import UserDropiesScreen from '../screens/UserDropiesScreen';
 
 const MainStack = createStackNavigator();
 
@@ -41,6 +43,8 @@ export default function Navigation() {
       <MainStack.Screen name="Profile" component={ProfileScreen} />
       <MainStack.Screen name="ProfileEdit" component={ProfileEditScreen} />
       <MainStack.Screen name="Settings" component={SettingsScreen} />
+      <MainStack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
+      <MainStack.Screen name="UserDropies" component={UserDropiesScreen} />
     </MainStack.Navigator>
   );
 }
