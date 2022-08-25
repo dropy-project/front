@@ -60,14 +60,13 @@ const HomeScreen = ({ navigation, route }) => {
         Animated.timing(backIconAnimatedValue, {
           toValue: 1,
           duration: 500,
-          delay: 500,
+          delay: 1000,
           useNativeDriver: false,
         }),
-        Animated.delay(1500),
+        Animated.delay(2000),
         Animated.timing(backIconAnimatedValue, {
           toValue: 0,
           duration: 500,
-          delay: 500,
           useNativeDriver: false,
         })
       ]);
@@ -102,10 +101,12 @@ const HomeScreen = ({ navigation, route }) => {
               transform: [{ scale: iconScale }],
               width: iconMinWidth,
             }}>
-              <FontAwesome5 name="satellite-dish" size={ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
-              <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
+              <View style={styles.backgroundGeolocIconInnerContainer}>
+                <FontAwesome5 name="satellite-dish" size={ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
+                <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
                 Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
-              </Text>
+                </Text>
+              </View>
             </Animated.View>
           </TouchableOpacity>
         </TouchableOpacity>
@@ -137,22 +138,27 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   backgroundGeolocIconContainer: {
-    ...Styles.center,
-    ...Styles.hardShadows,
+    ...Styles.softShadows,
     position: 'absolute',
-    flexDirection: 'row',
     height: ICON_OPENED_SIZE,
     justifyContent: 'space-between',
     bottom: -10,
     left: 40,
-    borderRadius: 100,
-    padding: 10,
     backgroundColor: Colors.white,
-    overflow: 'hidden',
+    borderRadius: 100,
   },
   backgroundGeolocationText: {
     position: 'absolute',
     ...Fonts.regular(12, Colors.darkGrey),
     marginLeft: ICON_OPENED_SIZE + 5,
+  },
+  backgroundGeolocIconInnerContainer: {
+    ...StyleSheet.absoluteFillObject,
+    overflow: 'hidden',
+    borderRadius: 100,
+    padding: 10,
+    backgroundColor: Colors.white,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

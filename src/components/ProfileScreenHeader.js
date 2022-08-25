@@ -74,9 +74,9 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
         <ProfileImage displayNameSize={40} displayName={user?.displayName} userId={externalUserId} />
         <LinearGradient
           pointerEvents='none'
-          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
-          start={{ x: 0.5, y: 0.5 }}
-          end={{ x: 0.5, y: 0 }}
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.3)']}
+          start={{ x: 0.5, y: 0.7 }}
+          end={{ x: 0.6, y: 0 }}
           style={StyleSheet.absoluteFillObject}
         />
       </Animated.View>

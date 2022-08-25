@@ -61,7 +61,7 @@ const UserDropiesScreen = ({ navigation }) => {
 
     try {
       const response = await API.deleteUserDropy(dropyId);
-      console.log('Delete API response', response);
+      console.log('Delete API response', response.data);
       setDropies(old => old.filter((dropy) => dropy.id !== dropyId));
     } catch (error) {
       sendAlert({
@@ -82,7 +82,7 @@ const UserDropiesScreen = ({ navigation }) => {
           <LoadingSpinner />
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <ScrollView indicatorStyle='black' showsVerticalScrollIndicator contentContainerStyle={styles.scrollViewContent}>
           {dropies.length === 0 && (
             <View style={{ height: responsiveHeight(80), ...Styles.center }}>
               <Text style={{ ...Fonts.regular(13, Colors.darkGrey) }}>{'You don\'t have dropped anything yet'}</Text>

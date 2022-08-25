@@ -59,7 +59,7 @@ const BlockedUsersScreen = ({ navigation }) => {
 
     try {
       const response = await API.unblockUser(userId);
-      console.log('Delete API response', response);
+      console.log('Unblock API response', response.data);
       setBlockedUsers(old => old.filter((user) => user.id !== userId));
     } catch (error) {
       sendAlert({
@@ -80,7 +80,7 @@ const BlockedUsersScreen = ({ navigation }) => {
           <LoadingSpinner />
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <ScrollView indicatorStyle='black' showsVerticalScrollIndicator contentContainerStyle={styles.scrollViewContent}>
           {blockedUsers.length === 0 && (
             <View style={{ height: responsiveHeight(80), ...Styles.center }}>
               <Text style={{ ...Fonts.regular(13, Colors.darkGrey) }}>{'You don\'t have blocked anyone yet'}</Text>

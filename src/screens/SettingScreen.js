@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     width: responsiveWidth(100),
     alignItems: 'center',
-    paddingBottom: 10,
+    paddingBottom: 25,
   },
   titleText: {
     ...Fonts.bold(13, Colors.darkGrey),
