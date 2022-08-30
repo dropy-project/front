@@ -50,7 +50,6 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-
     const unsubscribe = navigation.addListener('focus', () => {
       if(shouldAnimateIcon.current === false) return;
       shouldAnimateIcon.current = false;
@@ -92,9 +91,7 @@ const HomeScreen = ({ navigation, route }) => {
       <DropyMap dropiesAround={dropiesAround} retrieveDropy={retrieveDropy} />
       <SafeAreaView style={styles.avatarContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <ProfileAvatar
-            size={70}
-          />
+          <ProfileAvatar size={70} />
           <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
             <Animated.View style={{
               ...styles.backgroundGeolocIconContainer,

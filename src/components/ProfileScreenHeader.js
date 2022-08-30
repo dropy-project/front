@@ -21,7 +21,7 @@ import TouchableTooltip from './TouchableTooltip';
 export const MAX_HEADER_HEIGHT = responsiveHeight(45);
 export const MIN_HEADER_HEIGHT = responsiveHeight(24);
 
-const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showControls = false, conversation }) => {
+const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conversation }) => {
 
   const { showActionSheetWithOptions } = useActionSheet();
   const { sendAlert } = useOverlay();
@@ -71,7 +71,11 @@ const ProfileScreenHeader = ({ externalUserId, user, scrollAnimValue, showContro
     <Animated.View style={{ ...styles.animatedHeader, transform: [{ translateY: headerTranform }] }}>
 
       <Animated.View style={{ ...StyleSheet.absoluteFillObject, transform: [{ translateY: headerCancelTransform }] }}>
-        <ProfileImage displayNameSize={40} displayName={user?.displayName} userId={externalUserId} />
+        <ProfileImage
+          displayNameSize={40}
+          displayName={user?.displayName}
+          avatarUrl={user?.avatarUrl}
+        />
         <LinearGradient
           pointerEvents='none'
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.3)']}

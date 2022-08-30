@@ -118,10 +118,11 @@ const ProfileEditScreen = () => {
     try {
       const filePath = await compressImage(image.path);
       const response = await API.postProfilePicture(filePath);
-      console.log('API response : ', response.data);
-      await FastImage.clearDiskCache();
-      await FastImage.clearMemoryCache();
-      setUser({ ...user });
+      const avatarUrl = response.data;
+      setUser({
+        ...user,
+        avatarUrl,
+      });
     } catch (error) {
       sendAlert({
         title: 'Oh no...',

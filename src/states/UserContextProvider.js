@@ -10,7 +10,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     if (user == null)
       return;
-    console.log('Current user is', user?.username);
+    console.log('Local user profile loaded :', user?.username);
   }, [user]);
 
   return (

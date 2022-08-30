@@ -94,7 +94,6 @@ const ProfileScreen = ({ route, navigation }) => {
 
       <ProfileScreenHeader
         conversation={conversation}
-        externalUserId={externalUserId}
         showControls={externalUserId == null}
         user={displayedUser}
         scrollAnimValue={scrollAnimValue}

@@ -7,35 +7,33 @@ import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const ProfileImage = (props) => {
-  const { userId = null, displayName = null, displayNameSize = 20 } = props;
 
-  const { user } = useCurrentUser();
+  const { user: localUser } = useCurrentUser();
+  const {
+    avatarUrl = localUser.avatarUrl,
+    displayName = localUser.displayName,
+    displayNameSize = 20,
+  } = props;
 
   const [source, setSource] = useState(null);
-  const refreshCount = useRef(0);
-
-  const _displayName = displayName ?? user?.displayName ?? null;
 
   useEffect(() => {
-    if(user == null) return;
     setSource({
-      uri: API.profilePictureUrl(userId != null ? userId : user.id),
+      uri: avatarUrl,
       headers: API.getHeaders(),
-      refreshCount: ++refreshCount.current,
     });
-  }, [user]);
+  }, [avatarUrl]);
 
   if(source == null) {
     return (
       <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.purple3, ...Styles.center }}>
-        {_displayName && (<Text style={{ ...Fonts.bold(displayNameSize, Colors.white) }}>{_displayName.slice(0, 1).toUpperCase()}</Text>)}
+        {displayName && (<Text style={{ ...Fonts.bold(displayNameSize, Colors.white) }}>{displayName.slice(0, 1).toUpperCase()}</Text>)}
       </View>
     );
   }
 
   return (
     <FastImage
-      key={source.refreshCount}
       source={source}
       onError={() => setSource(null)}
       resizeMode='cover'
