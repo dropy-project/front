@@ -154,10 +154,6 @@ const postProfilePicture = async (filePath) => {
   return response;
 };
 
-const profilePictureUrl = (userId) => {
-  return `${API_BASE_URL}/user/profile/${userId}/picture`;
-};
-
 const deleteProfilePicture = async () => {
   const result = await axios.delete('/user/profile/picture');
   return result;
@@ -212,7 +208,6 @@ const API = {
   postProfileInfos,
   getProfile,
   postProfilePicture,
-  profilePictureUrl,
   reportUser,
   blockUser,
   deleteProfilePicture,
