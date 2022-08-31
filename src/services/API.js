@@ -52,7 +52,7 @@ const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
   var data = new FormData();
   data.append(mediaType, {
     uri: mediaPath,
-    name: `${mediaType}-${dropyId}`,
+    name: `${mediaPath}`,
     type: 'image/jpeg',
   });
 

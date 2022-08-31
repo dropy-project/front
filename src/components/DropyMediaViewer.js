@@ -7,7 +7,7 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import MEDIA_TYPES from '../utils/mediaTypes';
 import LoadingSpinner from './LoadingSpinner';
 
-const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject }) => {
+const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
 
   const [loading, setLoading] = useState(true);
   const [imageSource, setImageSource] = useState(null);
@@ -15,7 +15,7 @@ const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject
 
   useEffect(() => {
     setLoading(true);
-    switch (mediaType) {
+    switch (dropy.mediaType) {
     case MEDIA_TYPES.PICTURE:
       loadImageSource();
       break;
@@ -27,18 +27,18 @@ const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject
 
   const loadImageSource = () => {
     setImageSource({
-      uri: API.dropyMediaUrl(id),
+      uri: dropy.mediaUrl,
       headers: API.getHeaders(),
     });
   };
 
   const loadDropyText = async () => {
-    const result = await API.getDropyMedia(id);
+    const result = await API.getDropyMedia(dropy.id);
     setDropyText(result.data);
     setLoading(false);
   };
 
-  if(mediaType === MEDIA_TYPES.PICTURE) {
+  if(dropy.mediaType === MEDIA_TYPES.PICTURE) {
     return (
       <View style={style}>
         {loading && (
@@ -55,7 +55,7 @@ const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject
     );
   }
 
-  if (mediaType === MEDIA_TYPES.TEXT) {
+  if (dropy.mediaType === MEDIA_TYPES.TEXT) {
     return (
       <ScrollView style={style} contentContainerStyle={styles.textContentContainer}>
         {loading && (
@@ -68,7 +68,7 @@ const DropyMediaViewer = ({ id, mediaType, style = StyleSheet.absoluteFillObject
     );
   }
 
-  console.error(`DropyMediaViewer unsupported dropy type ${mediaType}`);
+  console.error(`DropyMediaViewer unsupported dropy type ${dropy.mediaType}`);
   return null;
 };
 
