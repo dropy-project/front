@@ -47,40 +47,6 @@ const refreshTokenUrl = () => {
   return `${API_BASE_URL}/refresh`;
 };
 
-const postDropyMediaFromPath = async (dropyId, mediaPath, mediaType) => {
-  // eslint-disable-next-line no-undef
-  var data = new FormData();
-  data.append(mediaType, {
-    uri: mediaPath,
-    name: `${mediaPath}`,
-    type: 'image/jpeg',
-  });
-
-  const response = await axios.post(`/dropy/add/${dropyId}/media`, data,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
-  );
-  return response;
-};
-
-const postDropyMediaData = async (dropyId, mediaData, mediaType) => {
-  // eslint-disable-next-line no-undef
-  var data = new FormData();
-  data.append(mediaType, mediaData);
-
-  const response = await axios.post(`/dropy/add/${dropyId}/media`, data,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
-  );
-  return response;
-};
-
 const postUserDeviceToken = (deviceToken) => {
   const result = axios.post('/user/updateDeviceToken', {
     deviceToken,
@@ -192,8 +158,6 @@ const API = {
   register,
   login,
   refreshTokenUrl,
-  postDropyMediaData,
-  postDropyMediaFromPath,
   userBackgroundGeolocationPingUrl,
   getDropyMedia,
   getDropy,
