@@ -52,7 +52,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
         color={Colors.white}
         onPressOptions={user.id === dropy.emitterId ? undefined : handleOptionsButtonPress}
       />
-      <DropyMediaViewer {...dropy} />
+      <DropyMediaViewer dropy={dropy} />
       {showBottoModal && (
         <FooterConfirmation onPress={openChat} dropy={dropy} textButton="Let's chat !" />
       )}

@@ -36,7 +36,7 @@ const FooterConfirmation = ({ dropy, onPress, textButton }) => {
             width={65}
             height={65}
             resizeMode="cover"
-            userId={dropy.emitterId}
+            avatarUrl={dropy.avatarUrl}
             displayName={dropy.emitterDisplayName}
           />
         </View>

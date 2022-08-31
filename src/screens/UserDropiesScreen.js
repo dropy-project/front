@@ -94,7 +94,7 @@ const UserDropiesScreen = ({ navigation }) => {
                 style={styles.dropyContainer}
                 onPress={() => navigation.navigate('DisplayDropyMedia', { dropy, showBottomModal: false })}
               >
-                <DropyMediaViewer id={dropy.id} mediaType={dropy.mediaType} />
+                <DropyMediaViewer dropy={dropy} />
                 <LinearGradient
                   colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
                   start={{ x: 0.5, y: 0.6 }}

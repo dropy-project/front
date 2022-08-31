@@ -29,7 +29,7 @@ const ConversationItem = ({
         <ProfileAvatar
           showStatusDot={true}
           isUserOnline={isOnline}
-          userId={user?.id}
+          avatarUrl={user?.avatarUrl}
           displayName={user?.displayName}
         />
       </TouchableOpacity>

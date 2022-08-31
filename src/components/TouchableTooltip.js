@@ -24,7 +24,12 @@ const TouchableTooltip = ({ style, children, tooltipText }) => {
       <Animated.View style={{ ...styles.tooltipContainer, opacity: tooltipAnimatedValue }}>
         <Text style={{ ...Fonts.regular(13, Colors.white) }}>{tooltipText}</Text>
       </Animated.View>
-      <TouchableOpacity delayPressOut={500} style={{ ...Styles.center, ...style }} onPressIn={() => setIsPressed(true)} onPressOut={() => setIsPressed(false)}>
+      <TouchableOpacity
+        delayPressOut={500}
+        style={{ ...Styles.center, ...style }}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
+      >
         {children}
       </TouchableOpacity>
     </View>

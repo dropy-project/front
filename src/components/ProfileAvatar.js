@@ -11,7 +11,7 @@ const ProfileAvatar = ({
   showStatusDot,
   isUserOnline,
   statusDotStyle,
-  userId,
+  avatarUrl,
   displayName,
   displayNameSize,
 }) => {
@@ -28,7 +28,11 @@ const ProfileAvatar = ({
         {showQuestionMark === true ? (
           <Text style={Fonts.bold(size / 3, Colors.white)}>?</Text>
         ) : (
-          <ProfileImage displayNameSize={displayNameSize} userId={userId} displayName={displayName} />
+          <ProfileImage
+            displayNameSize={displayNameSize}
+            avatarUrl={avatarUrl}
+            displayName={displayName}
+          />
         )}
       </View>
       {showStatusDot && (

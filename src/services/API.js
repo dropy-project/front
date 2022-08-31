@@ -58,10 +58,6 @@ const userBackgroundGeolocationPingUrl = () => {
   return `${API_BASE_URL}/user/backgroundGeolocationPing`;
 };
 
-const dropyMediaUrl = (dropyId) => {
-  return `${API_BASE_URL}/dropy/${dropyId}/media`;
-};
-
 const getDropyMedia = async (dropyId) => {
   const result = await axios.get(`/dropy/${dropyId}/media`);
   return result;
@@ -120,10 +116,6 @@ const postProfilePicture = async (filePath) => {
   return response;
 };
 
-const profilePictureUrl = (userId) => {
-  return `${API_BASE_URL}/user/profile/${userId}/picture`;
-};
-
 const deleteProfilePicture = async () => {
   const result = await axios.delete('/user/profile/picture');
   return result;
@@ -171,12 +163,10 @@ const API = {
   getDropy,
   postUserDeviceToken,
   getConversations,
-  dropyMediaUrl,
   serverVersionIsCompatible,
   postProfileInfos,
   getProfile,
   postProfilePicture,
-  profilePictureUrl,
   reportUser,
   blockUser,
   deleteProfilePicture,

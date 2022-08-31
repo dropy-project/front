@@ -12,10 +12,10 @@ export const createDropTimeString = (dropLifeTime) => {
     return `${Math.floor(dropLifeTime / ONE_MINUTE)}m`;
   } else if (dropLifeTime <= ONE_DAY) {
     return `${Math.floor(dropLifeTime / ONE_HOUR)}h`;
-  } else if (dropLifeTime <= ONE_MONTH) {
+  } else if (dropLifeTime <= ONE_YEAR) {
     return `${Math.floor(dropLifeTime / ONE_DAY)}d`;
   } else {
-    return `${Math.floor(dropLifeTime / ONE_MONTH)}y`;
+    return `${Math.floor(dropLifeTime / ONE_YEAR)}y`;
   }
 };
 
