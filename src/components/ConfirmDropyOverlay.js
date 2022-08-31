@@ -15,7 +15,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { mediaIsFile } from '../utils/mediaTypes';
-import API from '../services/API';
 
 import useGeolocation from '../hooks/useGeolocation';
 
@@ -83,18 +82,13 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       setAntiSpamOn(true);
       setOverlayState(OVERLAY_STATE.LOADING_POST);
 
-      const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude);
-      if(response.error != null) {
-        throw response.error;
+      let { dropyData } = dropyCreateParams;
+      if(mediaIsFile(dropyCreateParams.mediaType)) {
+        dropyData = await fetch(dropyCreateParams.dropyFilePath).then(r => r.blob());
       }
 
-      if(mediaIsFile(dropyCreateParams.mediaType)) {
-        const mediaResult = await API.postDropyMediaFromPath(response.data.id, dropyCreateParams.dropyFilePath, dropyCreateParams.mediaType);
-        console.log('[File upload] API response', mediaResult.data);
-      } else {
-        const mediaResult = await API.postDropyMediaData(response.data.id, dropyCreateParams.dropyData, dropyCreateParams.mediaType);
-        console.log('[Data upload] API response', mediaResult.data);
-      }
+      const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude, dropyCreateParams.mediaType, dropyData);
+      console.log('[Data upload] API response', response.status);
 
       setTimeout(() => {
         Haptics.notificationSuccess();

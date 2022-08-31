@@ -69,9 +69,9 @@ const useDropiesAroundSocket = () => {
     });
   }
 
-  const createDropy = (latitude, longitude) => {
+  const createDropy = (latitude, longitude, mediaType, content) => {
     return new Promise((resolve) => {
-      Socket.dropySocket.emit('dropy_created', { latitude, longitude }, resolve);
+      Socket.dropySocket.emit('dropy_created', { latitude, longitude, mediaType, content }, resolve);
     });
   };
 
