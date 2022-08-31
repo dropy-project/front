@@ -92,10 +92,6 @@ const userBackgroundGeolocationPingUrl = () => {
   return `${API_BASE_URL}/user/backgroundGeolocationPing`;
 };
 
-const dropyMediaUrl = (dropyId) => {
-  return `${API_BASE_URL}/dropy/${dropyId}/media`;
-};
-
 const getDropyMedia = async (dropyId) => {
   const result = await axios.get(`/dropy/${dropyId}/media`);
   return result;
@@ -203,7 +199,6 @@ const API = {
   getDropy,
   postUserDeviceToken,
   getConversations,
-  dropyMediaUrl,
   serverVersionIsCompatible,
   postProfileInfos,
   getProfile,
