@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     marginLeft: 3,
   },
   unreadMessagesCountContainer: {
-    backgroundColor: Colors.lightGrey,
+    backgroundColor: Colors.purple2,
     borderRadius: 10,
     paddingVertical: 2,
     paddingHorizontal: 6,
