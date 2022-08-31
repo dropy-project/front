@@ -89,7 +89,7 @@ const BlockedUsersScreen = ({ navigation }) => {
           {blockedUsers.map((user, index) => (
             <FadeInWrapper key={user.id} delay={index * 50}>
               <View style={styles.userContainer}>
-                <ProfileAvatar avatarUrl={user.avatarUrl} />
+                <ProfileAvatar avatarUrl={user.avatarUrl} displayName={user.displayName} />
                 <View style={{ flex: 1, justifyContent: 'center', marginLeft: 10 }}>
                   <Text style={{ ...Fonts.bold(14, Colors.darkGrey) }}>{user.displayName}</Text>
                   <Text style={{ ...Fonts.regular(10, Colors.darkGrey), marginTop: 5 }}>@{user.username}</Text>
