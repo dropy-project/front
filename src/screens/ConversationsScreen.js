@@ -12,7 +12,7 @@ const ConversationsScreen = ({ navigation, route }) => {
 
   const { conversationId = null } = route.params || {};
   const { sendAlert } = useOverlay();
-  const { loading, conversations, closeConversation } = useConversationSocket(handleSocketError);
+  const { loading, conversations, closeConversation, markConversationAsRead } = useConversationSocket(handleSocketError);
 
   const [initialized, setInitialized] = useState(false);
 
@@ -51,6 +51,11 @@ const ConversationsScreen = ({ navigation, route }) => {
     }
   };
 
+  const openConversation = (conversation) => {
+    markConversationAsRead(conversation.id);
+    navigation.navigate('Chat', { conversation });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader
@@ -74,7 +79,7 @@ const ConversationsScreen = ({ navigation, route }) => {
                   <ConversationItem
                     conversation={conversation}
                     onLongPress={() => handleLongPress(conversation)}
-                    onPress={() => navigation.navigate('Chat', { conversation })}
+                    onPress={() => openConversation(conversation)}
                     {...conversation}
                   />
                 </FadeInWrapper>

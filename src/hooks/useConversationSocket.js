@@ -74,7 +74,7 @@ const useConversationSocket = (onError = () => {}) => {
         return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
       });
 
-      const datedConversations = sortedConversations.map(c => {
+      const datedConversations = sortedConversations.map((c) => {
         return {
           ...c,
           lastMessageDate: messageTimeString(c.lastMessageDate),
@@ -96,7 +96,19 @@ const useConversationSocket = (onError = () => {}) => {
     });
   };
 
-  return { loading, conversations, closeConversation };
+  const markConversationAsRead = (conversationId) => {
+    setConversations(old => old.map(conversation => {
+      if(conversation.id === conversationId) {
+        return {
+          ...conversation,
+          unreadMessagesCount: 0,
+        };
+      }
+      return conversation;
+    }));
+  };
+
+  return { loading, conversations, closeConversation, markConversationAsRead };
 };
 
 export default useConversationSocket;
