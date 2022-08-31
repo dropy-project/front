@@ -16,11 +16,13 @@ const ProfileImage = (props) => {
   } = props;
 
   const [source, setSource] = useState(null);
+  const refreshCount = useRef(0);
 
   useEffect(() => {
     setSource({
       uri: avatarUrl,
       headers: API.getHeaders(),
+      refreshCount: ++refreshCount.current,
     });
   }, [avatarUrl]);
 
@@ -34,6 +36,7 @@ const ProfileImage = (props) => {
 
   return (
     <FastImage
+      key={source.refreshCount}
       source={source}
       onError={() => setSource(null)}
       resizeMode='cover'
