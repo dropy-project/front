@@ -55,12 +55,29 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
     });
 
     Socket.chatSocket.on('user_status', response => {
-      console.log(response);
       if (response.error != null) {
         console.error('Error getting user status', response.error);
         return;
       }
       setOtherUserConnected(response.data);
+    });
+
+    Socket.chatSocket.on('join_conversation', response => {
+      if (response.error != null) {
+        console.error('Error getting other user conversation joined', response.error);
+        return;
+      }
+
+      setMessagesBuffer((old) => {
+        const messages = [...old.messages];
+        messages[0].read = true;
+
+        return {
+          messages,
+          action: null,
+          loading: false,
+        };
+      });
     });
 
     Socket.chatSocket.on('close_conversation', (response) => {
@@ -135,10 +152,12 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         return;
       }
 
+      const { messageRead, messageId } = response.data;
+
       const newMessage = {
-        id: response.data,
+        id: messageId,
         content,
-        read: false,
+        read: messageRead,
         date: new Date(),
         sender: {
           displayName: user.displayName,

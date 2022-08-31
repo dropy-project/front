@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -49,15 +48,6 @@ const Bubble = ({ isLeft, content, date, read, showDate, hourDifference }) => {
         }}>
         <Text style={styles.textContent}>
           {content}
-          <View style={styles.timeStampContainer}>
-            {read && (
-              <Ionicons
-                name="checkmark-done"
-                size={17}
-                color={Colors.white}
-              />
-            )}
-          </View>
         </Text>
       </View>
       {showDate && (
@@ -66,7 +56,7 @@ const Bubble = ({ isLeft, content, date, read, showDate, hourDifference }) => {
           right: isLeft ? undefined : '7%',
           left: isLeft ? '7%' : undefined,
         }}>
-          {messageTimeString(date)}
+          {(read && !isLeft) && 'Read • '}{messageTimeString(date)}
         </Text>
       )}
       <DebugText showBoundingBox date={date}>{hourDifference}h diff | txt : [{content}]</DebugText>
@@ -106,12 +96,6 @@ const styles = StyleSheet.create({
     ...Fonts.bold(13, Colors.white),
     alignItems: 'center',
     flexDirection: 'row-reverse',
-  },
-  timeStampContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 10,
   },
   lastMessageTimeStampText: {
     position: 'absolute',

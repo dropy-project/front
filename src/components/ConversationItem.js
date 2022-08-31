@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -13,12 +12,13 @@ const ConversationItem = ({
   lastMessagePreview,
   lastMessageDate,
   isOnline,
-  isRead,
   onPress,
   onLongPress,
+  unreadMessagesCount = 0,
 }) => {
 
   const navigation = useNavigation();
+
   const openProfile = () => {
     navigation.navigate('Profile', { userId: user.id, conversation });
   };
@@ -35,19 +35,23 @@ const ConversationItem = ({
       </TouchableOpacity>
       <TouchableOpacity onLongPress={onLongPress} onPress={onPress} style={styles.infoContainer}>
         <View style={styles.infoTopContainer}>
-          <Text style={styles.usernameText}>{user?.displayName}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={styles.usernameText}>{user?.displayName}</Text>
+            {unreadMessagesCount > 0 && (
+              <View style={styles.unreadMessagesCountContainer}>
+                <Text style={{ ...Fonts.bold(13, Colors.white) }}>
+                  {unreadMessagesCount}
+                </Text>
+              </View>
+            )}
+          </View>
           <View style={{ ...styles.timeStampContainer }}>
-            <Ionicons
-              name="checkmark-done"
-              size={17}
-              color={isRead ? Colors.mainBlue : Colors.lightGrey}
-            />
             <Text style={styles.lastMessageTimeStampText}>
               {lastMessageDate}
             </Text>
           </View>
         </View>
-        <Text style={styles.lastMessageText} numberOfLines={1}>
+        <Text style={Fonts.bold(13, Colors.lightGrey)} numberOfLines={1}>
           {lastMessagePreview ?? `Start chatting with ${user?.displayName}`}
         </Text>
       </TouchableOpacity>
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   usernameText: {
-    ...Fonts.bold(20, 'black'),
+    ...Fonts.bold(17, Colors.darkGrey),
   },
   timeStampContainer: {
     display: 'flex',
@@ -94,7 +98,13 @@ const styles = StyleSheet.create({
     ...Fonts.bold(11, Colors.lightGrey),
     marginLeft: 3,
   },
-  lastMessageText: {
-    ...Fonts.bold(14, Colors.lightGrey),
+  unreadMessagesCountContainer: {
+    backgroundColor: Colors.purple2,
+    borderRadius: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    minWidth: 25,
+    marginLeft: 10,
+    ...Styles.center,
   },
 });
