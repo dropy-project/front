@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Platform } from 'react-native';
 
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
+import Geohash from 'ngeohash';
 
 import { useNavigation } from '@react-navigation/native';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
@@ -15,6 +16,8 @@ import mapStyleIOS from '../assets/mapStyleIOS.json';
 import API from '../services/API';
 import Haptics from '../utils/haptics';
 
+import useCurrentUser from '../hooks/useCurrentUser';
+import { GEOHASH_SIZE } from '../states/GeolocationContextProvider';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
@@ -26,6 +29,12 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
 
   const { sendBottomAlert } = useOverlay();
   const { userCoordinates, compassHeading, initialized: geolocationInitialized } = useInitializedGeolocation();
+  const { developerMode } = useCurrentUser();
+
+  const mapRef = useRef(null);
+  const [mapIsReady, setMapIsReady] = useState(false);
+
+  useMapViewSyncronizer(mapRef, mapIsReady, developerMode);
 
   const handleDropyPressed = async (dropy) => {
     try {
@@ -51,10 +60,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
       });
     }
   };
-
-  const mapRef = useRef(null);
-  const [mapIsReady, setMapIsReady] = useState(false);
-  useMapViewSyncronizer(mapRef, mapIsReady);
 
   return (
     <>
@@ -83,6 +88,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
         {dropiesAround.map((dropy) => (
           <DropyMapMarker  key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
         ))}
+        {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </MapView>
       <Sonar />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
@@ -94,9 +100,58 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
         style={StyleSheet.absoluteFillObject}
       />
       <DebugText marginBottom={100}>{JSON.stringify(userCoordinates, null, 2)}</DebugText>
-      <DebugText marginBottom={210}>{JSON.stringify(dropiesAround, null, 2)}</DebugText>
+      <DebugText marginBottom={300}>{JSON.stringify(dropiesAround, null, 2)}</DebugText>
     </>
   );
 };
 
 export default DropyMap;
+
+const MapDebugger = ({ userCoordinates }) => {
+  const [debugPolygons, setDebugPolygons] = useState([]);
+
+  useEffect(() => {
+    if(!userCoordinates) return;
+
+    const polygons = [];
+    for (const chunkInt of userCoordinates.geoHashs) {
+      const [
+        minlat,
+        minlon,
+        maxlat,
+        maxlon
+      ] = Geohash.decode_bbox_int(chunkInt, GEOHASH_SIZE);
+      polygons.push([
+        { latitude: minlat, longitude: minlon },
+        { latitude: maxlat, longitude: minlon },
+        { latitude: maxlat, longitude: maxlon },
+        { latitude: minlat, longitude: maxlon }
+      ]);
+    }
+
+    setDebugPolygons(polygons);
+  }, [userCoordinates]);
+
+  return (
+    <>
+      {debugPolygons.map((polygon, index) => (
+        <React.Fragment key={index}>
+          <Polygon
+            coordinates={polygon}
+            strokeColor='rgba(0,0,255,0.9)'
+            fillColor='rgba(100,0,255,0.2)'
+            strokeWidth={1}
+          />
+        </React.Fragment>
+      ))}
+      <Circle
+        center={{
+          latitude: userCoordinates?.latitude || 0,
+          longitude: userCoordinates?.longitude || 0,
+        }}
+        radius={30}
+      >
+      </Circle>
+    </>
+  );
+};

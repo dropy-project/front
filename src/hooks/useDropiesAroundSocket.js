@@ -48,6 +48,10 @@ const useDropiesAroundSocket = () => {
     };
   }, [geolocationInitialized]);
 
+  useEffect(() => {
+    console.log('ZONES UPDATE');
+  }, [userCoordinates.geoHashs[0]]);
+
   function updateAllDropiesAround() {
     if (Socket.dropySocket == null) return;
     if (Socket.dropySocket.connected === false) return;

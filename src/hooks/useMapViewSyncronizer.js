@@ -10,7 +10,7 @@ export const INITIAL_ZOOM = 17;
  * position and orientation
  * @param mapViewRef
  */
-const useMapViewSyncronizer = (mapViewRef, mapIsReady = true) => {
+const useMapViewSyncronizer = (mapViewRef, mapIsReady = true, developer = false) => {
 
   const { userCoordinates, compassHeading } = useGeolocation();
 
@@ -20,7 +20,7 @@ const useMapViewSyncronizer = (mapViewRef, mapIsReady = true) => {
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
-  }, [userCoordinates, compassHeading, mapIsReady]);
+  }, [userCoordinates, compassHeading, mapIsReady, developer]);
 
   const setMapCameraPosition = async () => {
     const currentCamera = await mapViewRef.current?.getCamera();
@@ -36,7 +36,7 @@ const useMapViewSyncronizer = (mapViewRef, mapIsReady = true) => {
         },
         pitch: INITIAL_PITCH,
         heading: compassHeading,
-        zoom: INITIAL_ZOOM,
+        zoom: developer ? 15 : INITIAL_ZOOM,
       },
       { duration }
     );

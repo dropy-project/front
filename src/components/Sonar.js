@@ -5,6 +5,8 @@ import Svg, { Circle, RadialGradient, Stop } from 'react-native-svg';
 import Styles, { Colors } from '../styles/Styles';
 import GlassCircleButton from './GlassCircleButton';
 
+const CENTER_ICON_SIZE = 15;
+
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 const Sonar = () => {
@@ -43,7 +45,11 @@ const Sonar = () => {
   });
 
   return (
-    <View pointerEvents='none' style={{ ...Styles.center }}>
+    <View pointerEvents='none' style={{
+      ...Styles.center,
+      ...StyleSheet.absoluteFillObject,
+      transform: [ { translateY: CENTER_ICON_SIZE / 2 }],
+    }}>
       <AnimatedSvg
         pointerEvents="none"
         style={{ ...styles.container, transform: [{ scale: sonarScale }], opacity: sonarOpacity }}
@@ -67,7 +73,7 @@ const Sonar = () => {
           cx="50" cy="50" r="50" fill="url(#grad)"
         />
       </AnimatedSvg>
-      <GlassCircleButton disabled size={15} />
+      <GlassCircleButton disabled size={CENTER_ICON_SIZE} />
     </View>
   );
 };
