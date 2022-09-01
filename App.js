@@ -19,7 +19,8 @@ import GeolocationProvider from './src/states/GeolocationContextProvider';
 import BackgroundGolocationContextProvider from './src/states/BackgroundGolocationContextProvider';
 import NotificationProvider from './src/states/NotificationProvider';
 import OverlayContextProvider from './src/states/OverlayContextProvider';
-import SocketProvider from './src/states/SocketProvider';
+import SocketContextProvider from './src/states/SocketContextProvider';
+import ConversationsContextProvider from './src/states/ConversationsContextProvider';
 
 
 Sentry.init({
@@ -40,9 +41,11 @@ const NavigationApp = () => {
           <NotificationProvider>
             <BackgroundGolocationContextProvider>
               <GeolocationProvider>
-                <SocketProvider>
-                  <Navigation />
-                </SocketProvider>
+                <SocketContextProvider>
+                  <ConversationsContextProvider>
+                    <Navigation />
+                  </ConversationsContextProvider>
+                </SocketContextProvider>
               </GeolocationProvider>
             </BackgroundGolocationContextProvider>
           </NotificationProvider>
