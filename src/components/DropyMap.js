@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Platform } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -6,7 +6,6 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
-import useMapViewSyncronizer, { INITIAL_PITCH, INITIAL_ZOOM } from '../hooks/useMapViewSyncronizer';
 import useOverlay from '../hooks/useOverlay';
 
 import mapStyleAndroid from '../assets/mapStyleAndroid.json';
@@ -20,7 +19,11 @@ import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
 import DebugText from './DebugText';
 
-const DropyMap = ({ dropiesAround, retrieveDropy }) => {
+const INITIAL_PITCH = 10;
+const INITIAL_ZOOM = 17;
+const MUSEUM_ZOOM = 10;
+
+const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedCoordinates = null }) => {
 
   const navigation = useNavigation();
 
@@ -53,8 +56,40 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
   };
 
   const mapRef = useRef(null);
+
   const [mapIsReady, setMapIsReady] = useState(false);
-  useMapViewSyncronizer(mapRef, mapIsReady);
+
+  useEffect(() => {
+    if(mapIsReady === false) return;
+    if(mapRef?.current == null) return;
+    if (userCoordinates == null) return;
+
+    setMapCameraPosition();
+  }, [userCoordinates, compassHeading, mapIsReady, museumVisible, selectedCoordinates]);
+
+  const setMapCameraPosition = async () => {
+    const currentCamera = await mapRef.current?.getCamera();
+    if (currentCamera == null) return;
+
+    console.log('Current camera', selectedCoordinates);
+    const position = selectedCoordinates ?? userCoordinates;
+
+    // eslint-disable-next-line no-undef
+    requestAnimationFrame(() => {
+      mapRef.current.animateCamera(
+        {
+          center: {
+            latitude: position.latitude,
+            longitude: position.longitude,
+          },
+          pitch: museumVisible ? 90 : INITIAL_PITCH,
+          heading: compassHeading,
+          zoom: museumVisible ? MUSEUM_ZOOM : INITIAL_ZOOM,
+        },
+        { duration: museumVisible ? 500 : 2000 }
+      );
+    });
+  };
 
   return (
     <>
@@ -84,7 +119,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
           <DropyMapMarker  key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
         ))}
       </MapView>
-      <Sonar />
+      <Sonar visible={!museumVisible} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
         pointerEvents='none'
