@@ -16,9 +16,11 @@ import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimen
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import FadeInWrapper from './FadeInWrapper';
+import LoadingSpinner from './LoadingSpinner';
 import ProfileImage from './ProfileImage';
 
-const MuseumOverlay = ({ visible = false, setSelectedCoodinates }) => {
+const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDropies }) => {
 
   const [render, setRender] = useState(false);
   const { sendAlert } = useOverlay();
@@ -56,12 +58,10 @@ const MuseumOverlay = ({ visible = false, setSelectedCoodinates }) => {
       setLoading(true);
       const response = await API.getUserDropies();
       setDropies(response.data);
+      setRetrievedDropies(response.data);
       setLoading(false);
 
-      setSelectedCoodinates({
-        latitude: response.data[0].latitude,
-        longitude: response.data[0].longitude,
-      });
+      setSelectedDropyIndex(0);
 
       console.log(JSON.stringify(response.data, null, 2));
     } catch (error) {
@@ -76,62 +76,92 @@ const MuseumOverlay = ({ visible = false, setSelectedCoodinates }) => {
   const onScroll = ({ nativeEvent }) => {
     const index = Math.round(nativeEvent.contentOffset.x / (responsiveWidth(80) + 20));
     const clampedIndex = Math.max(0, Math.min(dropies.length - 1, index));
-    setSelectedCoodinates({
-      latitude: dropies[clampedIndex].latitude,
-      longitude: dropies[clampedIndex].longitude,
-    });
+    setSelectedDropyIndex(clampedIndex);
   };
 
   if(!render) return null;
 
   return (
-    <Animated.View style={{ ...StyleSheet.absoluteFillObject, opacity: menuAnimatedValue }}>
+    <Animated.View style={{
+      ...styles.container,
+      opacity: menuAnimatedValue,
+    }}>
       <LinearGradient
-        colors={['rgba(0,0,0,0)', 'rgba(10,0,10,0.5)']}
-        start={{ x: 0.5, y: 0.3 }}
-        end={{ x: 0.5, y: 0.9 }}
+        colors={['rgba(0,0,0,0)', 'rgba(10,0,10,0.7)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1.5 }}
         style={StyleSheet.absoluteFillObject}
+        pointerEvents="none"
       />
-      <LinearGradient
-        colors={['rgba(0,0,0,0)', 'rgba(10,0,10,0.5)']}
-        start={{ x: 0.5, y: 1 }}
-        end={{ x: 0.5, y: 0.05 }}
-        style={StyleSheet.absoluteFillObject}
-      />
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContentContainer}
-        horizontal={true}
-        snapToInterval={responsiveWidth(80) + 20}
-        decelerationRate="fast"
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={20}
-        onScroll={onScroll}
-      >
-        {dropies.map(dropy => (
-          <View key={dropy.id} style={styles.dropyContainer}>
-            <View style={styles.profileContainer}>
-              <View style={styles.profileImage}>
-                <ProfileImage />
-              </View>
 
-              <View style={styles.profileInfos}>
-                <Text style={{ ...Fonts.bold(17, Colors.darkGrey) }}>Michel</Text>
-                <Text style={{ ...Fonts.regular(10, Colors.grey), marginTop: 3 }}>@Michel</Text>
-              </View>
-
-              <TouchableOpacity>
-                <Ionicons
-                  name="md-chatbubble-outline"
-                  size={30}
-                  color={Colors.grey}
-                  style={styles.icons}
-                />
-              </TouchableOpacity>
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <LoadingSpinner color={Colors.white} />
+        </View>
+      ) : (
+        <>
+          {dropies.length === 0 ? (
+            <View style={styles.loadingContainer}>
+              <Ionicons
+                name="md-bookmark-outline"
+                size={30}
+                color={Colors.white}
+              />
+              <Text style={{ ...Fonts.bold(17, Colors.white), marginTop: 20, maxWidth: '60%', textAlign: 'center' }}>
+                {'You haven\'t found any drops yet'}
+              </Text>
             </View>
-          </View>
-        ))}
-      </ScrollView>
+          ) : (
+            <ScrollView
+              style={styles.scrollView}
+              contentContainerStyle={styles.scrollViewContentContainer}
+              horizontal={true}
+              snapToInterval={responsiveWidth(80) + 20}
+              decelerationRate="fast"
+              showsHorizontalScrollIndicator={false}
+              scrollEventThrottle={20}
+              onScroll={onScroll}
+            >
+              {dropies.map((dropy, index) => (
+                <FadeInWrapper key={dropy.id} delay={index * 50}>
+                  <View style={styles.dropyContainer}>
+                    <View style={styles.profileContainer}>
+                      <View style={styles.profileImage}>
+                        <ProfileImage />
+                      </View>
+
+                      <View style={styles.profileInfos}>
+                        <Text style={{ ...Fonts.bold(17, Colors.darkGrey) }}>Michel</Text>
+                        <Text style={{ ...Fonts.regular(10, Colors.grey), marginTop: 3 }}>@Michel</Text>
+                      </View>
+
+                      <TouchableOpacity>
+                        <Ionicons
+                          name="md-chatbubble-outline"
+                          size={30}
+                          color={Colors.grey}
+                          style={styles.icons}
+                        />
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.dropInfosContainer}>
+                      <View style={styles.dropInfo}>
+                        <Text style={{ ...Fonts.bold(10, Colors.grey) }}>Dropped :</Text>
+                        <Text style={{ ...Fonts.bold(11, Colors.darkGrey), marginTop: 3 }}>13 days ago (@Michel)</Text>
+                      </View>
+                      <View style={styles.dropInfo}>
+                        <Text style={{ ...Fonts.bold(10, Colors.grey) }}>Found :</Text>
+                        <Text style={{ ...Fonts.bold(11, Colors.darkGrey), marginTop: 3 }}>2 days ago (@Michel)</Text>
+                      </View>
+                    </View>
+                  </View>
+                </FadeInWrapper>
+              ))}
+            </ScrollView>
+          )}
+        </>
+      )}
     </Animated.View>
   );
 };
@@ -139,6 +169,20 @@ const MuseumOverlay = ({ visible = false, setSelectedCoodinates }) => {
 export default MuseumOverlay;
 
 const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: responsiveHeight(40),
+  },
+  loadingContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    ...Styles.center,
+    bottom: responsiveHeight(20),
+  },
   scrollView: {
     position: 'absolute',
     bottom: responsiveHeight(20),
@@ -171,5 +215,15 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 15,
     justifyContent: 'center',
+  },
+  dropInfosContainer: {
+    marginTop: 10,
+    paddingHorizontal: 10,
+  },
+  dropInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 5,
   },
 });

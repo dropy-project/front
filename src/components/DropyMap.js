@@ -14,16 +14,18 @@ import mapStyleIOS from '../assets/mapStyleIOS.json';
 import API from '../services/API';
 import Haptics from '../utils/haptics';
 
+import { coordinatesDistance } from '../utils/coordinates';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
 import DebugText from './DebugText';
+import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 
 const INITIAL_PITCH = 10;
 const INITIAL_ZOOM = 17;
-const MUSEUM_ZOOM = 10;
+const MUSEUM_ZOOM = 13;
 
-const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedCoordinates = null }) => {
+const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
 
   const navigation = useNavigation();
 
@@ -65,14 +67,22 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedCoordin
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
-  }, [userCoordinates, compassHeading, mapIsReady, museumVisible, selectedCoordinates]);
+  }, [userCoordinates, compassHeading, mapIsReady, museumVisible, selectedDropyIndex]);
 
   const setMapCameraPosition = async () => {
     const currentCamera = await mapRef.current?.getCamera();
     if (currentCamera == null) return;
 
-    console.log('Current camera', selectedCoordinates);
-    const position = selectedCoordinates ?? userCoordinates;
+    let position = userCoordinates;
+    if(retrievedDropies != null && selectedDropyIndex != null && retrievedDropies[selectedDropyIndex] != null) {
+      position = {
+        latitude: retrievedDropies[selectedDropyIndex].latitude,
+        longitude: retrievedDropies[selectedDropyIndex].longitude,
+      };
+    }
+
+    const distanceBetweenCameraAndPosition = coordinatesDistance(currentCamera.center, position);
+    const duration = 2000 - Math.min(distanceBetweenCameraAndPosition, 1500);
 
     // eslint-disable-next-line no-undef
     requestAnimationFrame(() => {
@@ -82,11 +92,11 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedCoordin
             latitude: position.latitude,
             longitude: position.longitude,
           },
-          pitch: museumVisible ? 90 : INITIAL_PITCH,
+          pitch: museumVisible ? 45 : INITIAL_PITCH,
           heading: compassHeading,
           zoom: museumVisible ? MUSEUM_ZOOM : INITIAL_ZOOM,
         },
-        { duration: museumVisible ? 500 : 2000 }
+        { duration: museumVisible ? 500 : duration }
       );
     });
   };
@@ -115,9 +125,26 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedCoordin
         }}
         onMapLoaded={() => setMapIsReady(true)}
       >
-        {dropiesAround.map((dropy) => (
-          <DropyMapMarker  key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
-        ))}
+        {retrievedDropies != null ? (
+          <>
+            {retrievedDropies[selectedDropyIndex ?? 0] != null && (
+              <RetrievedDropyMapMarker
+                key={retrievedDropies[selectedDropyIndex ?? 0].id}
+                dropy={retrievedDropies[selectedDropyIndex ?? 0]}
+                onPress={() => navigation.navigate('DisplayDropyMedia', {
+                  dropy: retrievedDropies[selectedDropyIndex ?? 0],
+                  showBottomModal: false,
+                })}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {dropiesAround.map((dropy) => (
+              <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
+            ))}
+          </>
+        )}
       </MapView>
       <Sonar visible={!museumVisible} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />

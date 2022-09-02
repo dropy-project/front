@@ -37,7 +37,7 @@ const Sonar = ({ visible }) => {
     const anim = Animated.timing(visbleAnimatedValue, {
       toValue: visible ? 1 : 0,
       duration: 500,
-      delay: visible ? 1000 : 200,
+      delay: visible ? 1400 : 200,
       useNativeDriver: true,
       easing: Easing.elastic(1.1),
     });

@@ -37,7 +37,8 @@ const HomeScreen = ({ navigation, route }) => {
   const [confirmDropOverlayVisible, setConfirmDropOverlayVisible] = useState(false);
   const [museumOverlayVisible, setMuseumOverlayVisible] = useState(false);
 
-  const [selectedCoodinates, setSelectedCoodinates] = useState(null);
+  const [selectedDropyIndex, setSelectedDropyIndex] = useState(null);
+  const [retrievedDropies, setRetrievedDropies] = useState(null);
 
   useEffect(() => {
     shouldAnimateBackgroundGeolocIcon.current = true;
@@ -51,7 +52,8 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if(!museumOverlayVisible) {
-      setSelectedCoodinates(null);
+      setSelectedDropyIndex(null);
+      setRetrievedDropies(null);
     }
   }, [museumOverlayVisible]);
 
@@ -100,10 +102,11 @@ const HomeScreen = ({ navigation, route }) => {
       <StatusBar barStyle='dark-content' />
 
       <DropyMap
+        retrievedDropies={retrievedDropies}
         dropiesAround={dropiesAround}
         retrieveDropy={retrieveDropy}
         museumVisible={museumOverlayVisible}
-        selectedCoordinates={selectedCoodinates}
+        selectedDropyIndex={selectedDropyIndex}
       />
 
       <SafeAreaView style={styles.avatarContainer}>
@@ -128,7 +131,8 @@ const HomeScreen = ({ navigation, route }) => {
 
       <MuseumOverlay
         visible={museumOverlayVisible}
-        setSelectedCoodinates={setSelectedCoodinates}
+        setSelectedDropyIndex={setSelectedDropyIndex}
+        setRetrievedDropies={setRetrievedDropies}
       />
 
       <HomeScreenTabBar
