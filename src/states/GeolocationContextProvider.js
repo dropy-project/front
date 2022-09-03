@@ -20,7 +20,6 @@ const GeolocationProvider = ({ children }) => {
   const { requestForegroundGeolocation, geolocationForegroundState } = usePermissions();
 
   useEffectForegroundOnly(() => {
-    console.log('Effect');
     requestForegroundGeolocation();
     const geolocationWatchId = registerGeolocationListener();
     registerCompassListener();
