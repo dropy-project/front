@@ -9,7 +9,7 @@ const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 const Sonar = ({ visible }) => {
 
-  const visbleAnimatedValue = useRef(new Animated.Value(0)).current;
+  const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
   const sonarAnimatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const Sonar = ({ visible }) => {
   }, []);
 
   useEffect(() => {
-    const anim = Animated.timing(visbleAnimatedValue, {
+    const anim = Animated.timing(visibleAnimatedValue, {
       toValue: visible ? 1 : 0,
       duration: 500,
       delay: visible ? 1400 : 200,
@@ -56,10 +56,12 @@ const Sonar = ({ visible }) => {
   });
 
   return (
-    <Animated.View pointerEvents='none' style={{
-      ...Styles.center,
-      transform: [{ scale: visbleAnimatedValue }],
-    }}>
+    <Animated.View
+      pointerEvents='none'
+      style={{
+        ...Styles.center,
+        transform: [{ scale: visibleAnimatedValue }],
+      }}>
       <AnimatedSvg
         pointerEvents="none"
         style={{ ...styles.container, transform: [{ scale: sonarScale }], opacity: sonarOpacity }}
