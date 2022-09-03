@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import Socket from '../services/socket';
 import { decryptMessage, encryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
 import useCurrentUser from './useCurrentUser';
+import useSocket from './useSocket';
 
 export const MESSAGES_PER_PAGE = 30;
 
@@ -11,6 +11,8 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
 
   const navigation = useNavigation();
   const { user } = useCurrentUser();
+
+  const { chatSocket } = useSocket();
 
   const [messageBuffer, setMessagesBuffer] = useState({
     messages: [],
@@ -29,9 +31,9 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
   useEffect(() => {
 
     joinConversation();
-    Socket.chatSocket.on('connect', joinConversation);
+    chatSocket.on('connect', joinConversation);
 
-    Socket.chatSocket.on('message_sent', response => {
+    chatSocket.on('message_sent', response => {
       if (response.error != null) {
         onError(response.error);
         console.error('Error getting sent message', response.error);
@@ -54,7 +56,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
       });
     });
 
-    Socket.chatSocket.on('user_status', response => {
+    chatSocket.on('user_status', response => {
       if (response.error != null) {
         console.error('Error getting user status', response.error);
         return;
@@ -62,7 +64,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
       setOtherUserConnected(response.data);
     });
 
-    Socket.chatSocket.on('join_conversation', response => {
+    chatSocket.on('join_conversation', response => {
       if (response.error != null) {
         console.error('Error getting other user conversation joined', response.error);
         return;
@@ -80,7 +82,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
       });
     });
 
-    Socket.chatSocket.on('close_conversation', (response) => {
+    chatSocket.on('close_conversation', (response) => {
       if (response.error != null) {
         console.error('Conversation has not been closed correctly.', response.error);
         return;
@@ -94,15 +96,15 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
     });
 
     return () => {
-      Socket.chatSocket.emit('leave_conversation', conversationId, (response) => {
+      chatSocket.emit('leave_conversation', conversationId, (response) => {
         if(response.error != null)
           console.error('Error leaving conversation', response.error);
       });
 
-      Socket.chatSocket.off('connect');
-      Socket.chatSocket.off('message_sent');
-      Socket.chatSocket.off('user_status');
-      Socket.chatSocket.off('close_conversation');
+      chatSocket.off('connect');
+      chatSocket.off('message_sent');
+      chatSocket.off('user_status');
+      chatSocket.off('close_conversation');
     };
   }, []);
 
@@ -112,7 +114,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
       loading: true,
     }));
 
-    Socket.chatSocket.emit('join_conversation', conversationId, response => {
+    chatSocket.emit('join_conversation', conversationId, response => {
       if (response.error != null) {
         onError(response.error);
         console.error('Error joining conversation', response.error);
@@ -121,7 +123,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
       console.log(`Chat socket conversation joined ${conversationId} ${response.status}`);
     });
 
-    Socket.chatSocket.emit('list_messages', { conversationId, offset: 0, limit: MESSAGES_PER_PAGE }, response => {
+    chatSocket.emit('list_messages', { conversationId, offset: 0, limit: MESSAGES_PER_PAGE }, response => {
       if (response.error != null) {
         onError(response.error);
         console.error('Error getting conversation messages', response.error);
@@ -146,7 +148,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
   };
 
   const sendMessage = content => {
-    Socket.chatSocket.emit('message_sent', { content: encryptMessage(content), conversationId }, response => {
+    chatSocket.emit('message_sent', { content: encryptMessage(content), conversationId }, response => {
       if (response.error != null) {
         console.error('Error getting messages', response.error);
         return;
@@ -177,7 +179,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
   };
 
   const loadMoreMessages = () => {
-    Socket.chatSocket.emit('list_messages', {
+    chatSocket.emit('list_messages', {
       conversationId,
       offset: Math.round(messageBuffer.messages.length / MESSAGES_PER_PAGE),
       limit: MESSAGES_PER_PAGE,

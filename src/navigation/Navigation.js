@@ -31,7 +31,7 @@ export default function Navigation() {
       <MainStack.Screen name="Splash" component={Splash} />
       <MainStack.Screen name="Register" component={RegisterScreen} />
       <MainStack.Screen name="Home" component={HomeScreen} />
-      <MainStack.Screen name="Conversations" component={ConversationsScreen} />
+      <MainStack.Screen name="Conversations" component={ConversationsScreen}/>
       <MainStack.Screen name="Chat" component={ChatScreen} />
       <MainStack.Screen name="CreateDropyText" component={CreateDropyTextScreen} />
       <MainStack.Screen name="CreateDropyFromLibrary" component={CreateDropyFromLibrary} options={{ ...TransitionPresets.ModalSlideFromBottomIOS }} />
