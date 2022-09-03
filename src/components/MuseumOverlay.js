@@ -1,5 +1,6 @@
 
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
@@ -16,11 +17,14 @@ import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimen
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import { createDropTimeString } from '../utils/time';
 import FadeInWrapper from './FadeInWrapper';
 import LoadingSpinner from './LoadingSpinner';
 import ProfileImage from './ProfileImage';
 
 const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDropies }) => {
+
+  const navigation = useNavigation();
 
   const [render, setRender] = useState(false);
   const { sendAlert } = useOverlay();
@@ -56,7 +60,8 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
   const loadDropies = async () => {
     try {
       setLoading(true);
-      const response = await API.getUserDropies();
+      const response = await API.getUserRetrievedDropies();
+      JSON.stringify(response.data, null, 2);
       setDropies(response.data);
       setRetrievedDropies(response.data);
       setLoading(false);
@@ -77,6 +82,18 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
     const index = Math.round(nativeEvent.contentOffset.x / (responsiveWidth(80) + 20));
     const clampedIndex = Math.max(0, Math.min(dropies.length - 1, index));
     setSelectedDropyIndex(clampedIndex);
+  };
+
+  const openChat = async (conversationId) => {
+    try {
+      navigation.navigate('Conversations', { conversationId });
+    } catch (error) {
+      console.log('Open chat error', error?.response?.data ?? error);
+      sendAlert({
+        title: 'Oh that\'s bad...',
+        description: 'Looks like we can\'t load your conversations right now...',
+      });
+    }
   };
 
   if(!render) return null;
@@ -127,15 +144,15 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
                   <View style={styles.dropyContainer}>
                     <View style={styles.profileContainer}>
                       <View style={styles.profileImage}>
-                        <ProfileImage />
+                        <ProfileImage avatarUrl={dropy.emitter.avatarUrl} displayName={dropy.emitter.displayName} />
                       </View>
 
                       <View style={styles.profileInfos}>
-                        <Text style={{ ...Fonts.bold(17, Colors.darkGrey) }}>Michel</Text>
-                        <Text style={{ ...Fonts.regular(10, Colors.grey), marginTop: 3 }}>@Michel</Text>
+                        <Text style={{ ...Fonts.bold(17, Colors.darkGrey) }}>{dropy.emitter.displayName}</Text>
+                        <Text style={{ ...Fonts.regular(10, Colors.grey), marginTop: 3 }}>@{dropy.emitter.username}</Text>
                       </View>
 
-                      <TouchableOpacity>
+                      <TouchableOpacity onPress={() => openChat(dropy.conversationId)}>
                         <Ionicons
                           name="md-chatbubble-outline"
                           size={30}
@@ -148,11 +165,15 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
                     <View style={styles.dropInfosContainer}>
                       <View style={styles.dropInfo}>
                         <Text style={{ ...Fonts.bold(10, Colors.grey) }}>Dropped :</Text>
-                        <Text style={{ ...Fonts.bold(11, Colors.darkGrey), marginTop: 3 }}>13 days ago (@Michel)</Text>
+                        <Text style={{ ...Fonts.bold(11, Colors.darkGrey), marginTop: 3 }}>
+                          {createDropTimeString(new Date() - new Date(dropy.creationDate))} ago - {dropy.emitter.displayName}
+                        </Text>
                       </View>
                       <View style={styles.dropInfo}>
                         <Text style={{ ...Fonts.bold(10, Colors.grey) }}>Found :</Text>
-                        <Text style={{ ...Fonts.bold(11, Colors.darkGrey), marginTop: 3 }}>2 days ago (@Michel)</Text>
+                        <Text style={{ ...Fonts.bold(11, Colors.darkGrey), marginTop: 3 }}>
+                          {createDropTimeString(new Date() - new Date(dropy.creationDate))} ago - {dropy.retriever.displayName}
+                        </Text>
                       </View>
                     </View>
                   </View>

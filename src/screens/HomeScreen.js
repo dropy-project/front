@@ -20,6 +20,7 @@ import DropyMap from '../components/DropyMap';
 import useDropiesAroundSocket from '../hooks/useDropiesAroundSocket';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import MuseumOverlay from '../components/MuseumOverlay';
+import Haptics from '../utils/haptics';
 
 const BACKGROUND_GEOLOC_ICON_OPENED_SIZE = 40;
 
@@ -56,6 +57,12 @@ const HomeScreen = ({ navigation, route }) => {
       setRetrievedDropies(null);
     }
   }, [museumOverlayVisible]);
+
+  useEffect(() => {
+    if(selectedDropyIndex != null) {
+      Haptics.impactLight();
+    }
+  }, [selectedDropyIndex]);
 
   const closeConfirmDropOverlay = () => {
     setConfirmDropOverlayVisible(false);
