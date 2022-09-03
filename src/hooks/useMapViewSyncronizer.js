@@ -36,7 +36,7 @@ const useMapViewSyncronizer = (mapViewRef, mapIsReady = true, developer = false)
         },
         pitch: INITIAL_PITCH,
         heading: compassHeading,
-        zoom: developer ? 15 : INITIAL_ZOOM,
+        zoom: developer ? 15.3 : INITIAL_ZOOM,
       },
       { duration }
     );
