@@ -67,7 +67,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
-  }, [userCoordinates, compassHeading, mapIsReady, museumVisible, selectedDropyIndex]);
+  }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies]);
 
   const setMapCameraPosition = async () => {
     const currentCamera = await mapRef.current?.getCamera();
