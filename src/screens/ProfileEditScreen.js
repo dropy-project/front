@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 
 import FormInput from '../components/FormInput';
@@ -138,9 +137,7 @@ const ProfileEditScreen = () => {
     setPictureUploading(true);
     try {
       await API.deleteProfilePicture();
-      await FastImage.clearDiskCache();
-      await FastImage.clearMemoryCache();
-      setUser({ ...user });
+      setUser({ ...user, avatarUrl: null });
     } catch (error) {
       sendAlert({
         title: 'Oh no...',

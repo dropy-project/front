@@ -4,7 +4,7 @@ import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
-import useConversationSocket from '../hooks/useConversationSocket';
+import useConversationsSocket from '../hooks/useConversationsSocket';
 import useOverlay from '../hooks/useOverlay';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
@@ -12,9 +12,15 @@ const ConversationsScreen = ({ navigation, route }) => {
 
   const { conversationId = null } = route.params || {};
   const { sendAlert } = useOverlay();
-  const { loading, conversations, closeConversation, markConversationAsRead } = useConversationSocket(handleSocketError);
 
   const [initialized, setInitialized] = useState(false);
+
+  const {
+    loading,
+    conversations,
+    closeConversation,
+    markConversationAsRead,
+  } = useConversationsSocket();
 
   useEffect(() => {
     if(conversations == null || conversations.length === 0) return;
@@ -29,14 +35,6 @@ const ConversationsScreen = ({ navigation, route }) => {
 
     setInitialized(true);
   }, [conversations]);
-
-  async function handleSocketError() {
-    await sendAlert({
-      title: 'An error occurred',
-      description: 'Check your internet connection and try again',
-    });
-    navigation.goBack();
-  }
 
   const handleLongPress = async (conversation) => {
     const confirmed = await sendAlert({

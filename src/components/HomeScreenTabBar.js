@@ -17,6 +17,7 @@ import Haptics from '../utils/haptics';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useOverlay from '../hooks/useOverlay';
+import useUnreadConversation from '../hooks/useUnreadConversation';
 import GlassCircleButton from './GlassCircleButton';
 
 const mainButtonSize = responsiveHeight(7.5);
@@ -27,6 +28,8 @@ const HomeScreenTabBar = () => {
 
   const [dropyMenuIsOpen, setDropyMenuIsOpen] = useState(false);
   const [renderMenuOverlay, setRenderMenuOverlay] = useState(false);
+
+  const hasUnreadConversation = useUnreadConversation();
 
   const { sendAlert } = useOverlay();
 
@@ -92,14 +95,14 @@ const HomeScreenTabBar = () => {
           <Ionicons
             name="md-bookmark-outline"
             size={iconsSize}
-            color={Colors.grey}
+            color={Colors.darkGrey}
           />
         </TabBarItem>
-        <TabBarItem text="Chat" routeName="Conversations" showStatusDot>
+        <TabBarItem text="Chat" routeName="Conversations" showStatusDot={hasUnreadConversation}>
           <Ionicons
             name="md-chatbubble-outline"
             size={iconsSize}
-            color={Colors.grey}
+            color={Colors.darkGrey}
             style={styles.icons}
           />
         </TabBarItem>
@@ -244,16 +247,18 @@ const styles = StyleSheet.create({
   },
   tabText: {
     marginTop: 5,
-    ...Fonts.bold(10, Colors.grey),
+    ...Fonts.bold(10, Colors.darkGrey),
   },
   statusDot: {
-    backgroundColor: Colors.red,
-    width: 9,
-    height: 9,
+    backgroundColor: Colors.purple2,
+    width: 12,
+    height: 12,
     borderRadius: 10,
     position: 'absolute',
     top: 0,
-    right: '42%',
+    right: '40%',
+    borderColor: Colors.white,
+    borderWidth: 2,
   },
   dropyWheelContainer: {
     position: 'absolute',
