@@ -23,21 +23,25 @@ import GlassCircleButton from './GlassCircleButton';
 const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;
 
-const HomeScreenTabBar = () => {
+const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVisible }) => {
   const navigation = useNavigation();
+
+  const tabBarAnimatedValue = useRef(new Animated.Value(0)).current;
+  const mainButtonAnimatedValue = useRef(new Animated.Value(0)).current;
+  const wheelAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [dropyMenuIsOpen, setDropyMenuIsOpen] = useState(false);
   const [renderMenuOverlay, setRenderMenuOverlay] = useState(false);
+  const [renderMuseumCloseButton, setRenderMuseumCloseButton] = useState(false);
 
   const hasUnreadConversation = useUnreadConversation();
 
   const { sendAlert } = useOverlay();
 
-  const menuAnimatedValue = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Haptics.impactLight();
     setRenderMenuOverlay(true);
-    const anim = Animated.timing(menuAnimatedValue, {
+    const anim = Animated.timing(wheelAnimatedValue, {
       toValue: dropyMenuIsOpen ? 1 : 0,
       duration: 300,
       useNativeDriver: true,
@@ -50,9 +54,56 @@ const HomeScreenTabBar = () => {
     return anim.stop;
   }, [dropyMenuIsOpen]);
 
-  const plusIconRotation = menuAnimatedValue.interpolate({
+  useEffect(() => {
+    Haptics.impactLight();
+    const anim = Animated.timing(tabBarAnimatedValue, {
+      toValue: museumVisible ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    anim.start();
+    return anim.stop;
+  }, [museumVisible]);
+
+  useEffect(() => {
+    Haptics.impactLight();
+    setRenderMuseumCloseButton(true);
+    const anim = Animated.timing(mainButtonAnimatedValue, {
+      toValue: museumVisible ? 1 : 0,
+      duration: 400,
+      useNativeDriver: true,
+      easing: Easing.elastic(1.1),
+    });
+    anim.start(({ finished }) => {
+      if (finished && !museumVisible)
+        setRenderMuseumCloseButton(false);
+    });
+    return anim.stop;
+  }, [museumVisible]);
+
+  const plusIconRotation = wheelAnimatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '45deg'],
+  });
+
+  const tabBarTranslateY = tabBarAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, responsiveHeight(20)],
+  });
+
+  const glassButtonOpacity = tabBarAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0],
+  });
+
+  const glassButtonScale = mainButtonAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0.5],
+  });
+
+  const museumCloseButtonScale = mainButtonAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.5, 1],
   });
 
   const handleAddPicture = () => {
@@ -81,17 +132,27 @@ const HomeScreenTabBar = () => {
 
   return (
     <View style={styles.container}>
-      <Svg
-        height="100%"
-        width={responsiveWidth(100)}
-        viewBox="0 0 375 87"
-        style={styles.backgroundSvg}
-        preserveAspectRatio="none"
+      <Animated.View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          transform: [{ translateY :tabBarTranslateY }],
+        }}
       >
-        <Path d={d} fill="white" />
-      </Svg>
-      <View style={styles.tabsContainer}>
-        <TabBarItem text="Drops">
+        <Svg
+          height="100%"
+          width={responsiveWidth(100)}
+          viewBox="0 0 375 87"
+          style={styles.backgroundSvg}
+          preserveAspectRatio="none"
+        >
+          <Path d={d} fill="white" />
+        </Svg>
+      </Animated.View>
+      <Animated.View style={{
+        ...styles.tabsContainer,
+        transform: [{ translateY :tabBarTranslateY }],
+      }}>
+        <TabBarItem text="Drops" onPress={onMuseumOpenPressed}>
           <Ionicons
             name="md-bookmark-outline"
             size={iconsSize}
@@ -106,13 +167,13 @@ const HomeScreenTabBar = () => {
             style={styles.icons}
           />
         </TabBarItem>
-      </View>
+      </Animated.View>
       {renderMenuOverlay && (
         <>
           <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => setDropyMenuIsOpen(false)}>
-            <Animated.View style={{ ...styles.backgroundOverlay, opacity: menuAnimatedValue }} />
+            <Animated.View style={{ ...styles.backgroundOverlay, opacity: wheelAnimatedValue }} />
           </TouchableOpacity>
-          <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={menuAnimatedValue}>
+          <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={wheelAnimatedValue}>
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
               <SimpleLineIcons name="picture" size={30} color={Colors.grey} />
             </TouchableOpacity>
@@ -128,15 +189,35 @@ const HomeScreenTabBar = () => {
           </DropyWheel>
         </>
       )}
-      <GlassCircleButton
-        style={styles.mainButton}
-        size={mainButtonSize}
-        onPress={() => setDropyMenuIsOpen(!dropyMenuIsOpen)}
-      >
-        <Animated.View style={{ transform: [{ rotate: plusIconRotation }] }}>
-          <FontAwesome5 name="plus" size={20} color="white" />
+
+      <Animated.View style={{
+        ...styles.mainButton,
+        opacity: glassButtonOpacity,
+        transform: [{ scale: glassButtonScale }],
+      }}>
+        <GlassCircleButton
+          size={mainButtonSize}
+          onPress={() => setDropyMenuIsOpen(!dropyMenuIsOpen)}
+        >
+          <Animated.View style={{ transform: [{ rotate: plusIconRotation }] }}>
+            <FontAwesome5 name="plus" size={20} color="white" />
+          </Animated.View>
+        </GlassCircleButton>
+      </Animated.View>
+
+      {renderMuseumCloseButton && (
+        <Animated.View style={{
+          ...styles.mainButton,
+          opacity: tabBarAnimatedValue,
+          transform: [{ scale: museumCloseButtonScale }],
+        }}>
+          <TouchableOpacity onPress={onMuseumClosePressed} style={styles.closeMuseumButton}>
+            <View style={{ transform: [{ rotate: '45deg' }] }}>
+              <FontAwesome5 name="plus" size={20} color={Colors.darkGrey} />
+            </View>
+          </TouchableOpacity>
         </Animated.View>
-      </GlassCircleButton>
+      )}
     </View>
   );
 };
@@ -177,7 +258,7 @@ const DropyWheelItem = ({ children, index, childCount, size }) => {
   );
 };
 
-const TabBarItem = ({ children, text, showStatusDot, routeName }) => {
+const TabBarItem = ({ children, text, showStatusDot, routeName, onPress }) => {
 
   const { sendAlert } = useOverlay();
   const navigation = useNavigation();
@@ -195,7 +276,7 @@ const TabBarItem = ({ children, text, showStatusDot, routeName }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.tabBtn} onPress={goToRoute}>
+    <TouchableOpacity style={styles.tabBtn} onPress={onPress ?? goToRoute}>
       {children}
       {showStatusDot && <View style={styles.statusDot} />}
       <Text style={styles.tabText}>{text}</Text>
@@ -273,6 +354,14 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     ...Styles.center,
     ...Styles.hardShadows,
+  },
+  closeMuseumButton: {
+    backgroundColor: Colors.white,
+    width: mainButtonSize,
+    height: mainButtonSize,
+    borderRadius: mainButtonSize,
+    ...Styles.center,
+    ...Styles.softShadows,
   },
 });
 

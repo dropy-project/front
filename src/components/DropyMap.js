@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Platform } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -6,7 +6,6 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
-import useMapViewSyncronizer, { INITIAL_PITCH, INITIAL_ZOOM } from '../hooks/useMapViewSyncronizer';
 import useOverlay from '../hooks/useOverlay';
 
 import mapStyleAndroid from '../assets/mapStyleAndroid.json';
@@ -15,12 +14,18 @@ import mapStyleIOS from '../assets/mapStyleIOS.json';
 import API from '../services/API';
 import Haptics from '../utils/haptics';
 
+import { coordinatesDistance } from '../utils/coordinates';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
 import DebugText from './DebugText';
+import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 
-const DropyMap = ({ dropiesAround, retrieveDropy }) => {
+const INITIAL_PITCH = 10;
+const INITIAL_ZOOM = 17;
+const MUSEUM_ZOOM = 13;
+
+const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
 
   const navigation = useNavigation();
 
@@ -53,8 +58,48 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
   };
 
   const mapRef = useRef(null);
+
   const [mapIsReady, setMapIsReady] = useState(false);
-  useMapViewSyncronizer(mapRef, mapIsReady);
+
+  useEffect(() => {
+    if(mapIsReady === false) return;
+    if(mapRef?.current == null) return;
+    if (userCoordinates == null) return;
+
+    setMapCameraPosition();
+  }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies]);
+
+  const setMapCameraPosition = async () => {
+    const currentCamera = await mapRef.current?.getCamera();
+    if (currentCamera == null) return;
+
+    let position = userCoordinates;
+    if(retrievedDropies != null && selectedDropyIndex != null && retrievedDropies[selectedDropyIndex] != null) {
+      position = {
+        latitude: retrievedDropies[selectedDropyIndex].latitude,
+        longitude: retrievedDropies[selectedDropyIndex].longitude,
+      };
+    }
+
+    const distanceBetweenCameraAndPosition = coordinatesDistance(currentCamera.center, position);
+    const duration = 2000 - Math.min(distanceBetweenCameraAndPosition, 1500);
+
+    // eslint-disable-next-line no-undef
+    requestAnimationFrame(() => {
+      mapRef.current.animateCamera(
+        {
+          center: {
+            latitude: position.latitude,
+            longitude: position.longitude,
+          },
+          pitch: museumVisible ? 45 : INITIAL_PITCH,
+          heading: compassHeading,
+          zoom: museumVisible ? MUSEUM_ZOOM : INITIAL_ZOOM,
+        },
+        { duration: museumVisible ? 500 : duration }
+      );
+    });
+  };
 
   return (
     <>
@@ -80,11 +125,28 @@ const DropyMap = ({ dropiesAround, retrieveDropy }) => {
         }}
         onMapLoaded={() => setMapIsReady(true)}
       >
-        {dropiesAround.map((dropy) => (
-          <DropyMapMarker  key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
-        ))}
+        {retrievedDropies != null ? (
+          <>
+            {retrievedDropies[selectedDropyIndex ?? 0] != null && (
+              <RetrievedDropyMapMarker
+                key={retrievedDropies[selectedDropyIndex ?? 0].id}
+                dropy={retrievedDropies[selectedDropyIndex ?? 0]}
+                onPress={() => navigation.navigate('DisplayDropyMedia', {
+                  dropy: retrievedDropies[selectedDropyIndex ?? 0],
+                  showBottomModal: false,
+                })}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {dropiesAround.map((dropy) => (
+              <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
+            ))}
+          </>
+        )}
       </MapView>
-      <Sonar />
+      <Sonar visible={!museumVisible} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
         pointerEvents='none'

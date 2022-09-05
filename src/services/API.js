@@ -138,6 +138,11 @@ const getUserDropies = async () => {
   return result;
 };
 
+const getUserRetrievedDropies = async () => {
+  const result = await axios.get('/dropy/userRetrieved');
+  return result;
+};
+
 const deleteUserDropy = async (dropyId) => {
   const result = await axios.delete(`/dropy/${dropyId}`);
   return result;
@@ -174,6 +179,7 @@ const API = {
   deleteUserDropy,
   getBlockedUsers,
   unblockUser,
+  getUserRetrievedDropies,
 };
 
 export default API;

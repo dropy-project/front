@@ -38,9 +38,9 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       title: 'Drop',
     }, (buttonIndex) => {
       if (buttonIndex === 0) {
-        reportUser(dropy.emitterId, sendAlert, dropy.id);
+        reportUser(dropy.emitter.id, sendAlert, dropy.id);
       } else if (buttonIndex === 1) {
-        blockUser(dropy.emitterId, sendAlert, navigation);
+        blockUser(dropy.emitter.id, sendAlert, navigation);
       }
     });
   };
@@ -50,7 +50,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       <StatusBar barStyle="light-content" />
       <GoBackHeader
         color={Colors.white}
-        onPressOptions={user.id === dropy.emitterId ? undefined : handleOptionsButtonPress}
+        onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}
       />
       <DropyMediaViewer dropy={dropy} />
       {showBottoModal && (
