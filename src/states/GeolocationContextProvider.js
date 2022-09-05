@@ -31,8 +31,7 @@ const GeolocationProvider = ({ children }) => {
 
   const registerGeolocationListener = () => Geolocation.watchPosition(
     (infos) => {
-      const { coords } = infos;
-      const { latitude, longitude } = coords;
+      const { latitude, longitude } = infos.coords;
 
       const hash = Geohash.encode_int(latitude, longitude, GEOHASH_SIZE);
       const geoHashs = [hash, ...Geohash.neighbors_int(hash, GEOHASH_SIZE)];
