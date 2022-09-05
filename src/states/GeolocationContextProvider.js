@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
 import Geolocation from 'react-native-geolocation-service';
 import CompassHeading from 'react-native-compass-heading';
+import Geohash from 'ngeohash';
 
 import usePermissions from '../hooks/usePermissions';
 import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
@@ -8,6 +9,8 @@ import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 import GeolocationModal from '../components/overlays/GeolocationModal';
 
 export const GeolocationContext = createContext(null);
+
+export const GEOHASH_SIZE = 32;
 
 const GeolocationProvider = ({ children }) => {
 
@@ -28,8 +31,16 @@ const GeolocationProvider = ({ children }) => {
 
   const registerGeolocationListener = () => Geolocation.watchPosition(
     (infos) => {
-      const { coords } = infos;
-      setUserCoordinates(coords);
+      const { latitude, longitude } = infos.coords;
+
+      const hash = Geohash.encode_int(latitude, longitude, GEOHASH_SIZE);
+      const geoHashs = [hash, ...Geohash.neighbors_int(hash, GEOHASH_SIZE)];
+
+      setUserCoordinates({
+        latitude,
+        longitude,
+        geoHashs,
+      });
     },
     console.warn,
     {

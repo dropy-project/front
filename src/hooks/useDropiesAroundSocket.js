@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import useCurrentUser from './useCurrentUser';
-import useTravelDistanceCallback from './useTravelDistanceCallback';
 import { useInitializedGeolocation } from './useGeolocation';
 import useSocket from './useSocket';
 
@@ -13,17 +12,11 @@ const useDropiesAroundSocket = () => {
 
   const [dropiesAround, setDropiesAround] = useState([]);
 
-  useTravelDistanceCallback(updateAllDropiesAround, 100);
-
   useEffect(() => {
     if (geolocationInitialized === false) return;
     if (dropySocket == null) return;
 
-    updateAllDropiesAround();
-    dropySocket.on('connect', updateAllDropiesAround);
-
     dropySocket.on('dropy_created', (response) => {
-
       if (response.error != null) {
         console.error('Error getting created dropy', response.error);
         return;
@@ -50,26 +43,22 @@ const useDropiesAroundSocket = () => {
     };
   }, [geolocationInitialized]);
 
-  function updateAllDropiesAround() {
-    if (dropySocket == null) return;
-    if (dropySocket.connected === false) return;
-    if(userCoordinates == null) return;
+  useEffect(() => {
+    dropySocket.emit('zones_update', { zones: userCoordinates.geoHashs }, (response) => {
 
-    dropySocket.emit('all_dropies_around', {
-      latitude: userCoordinates.latitude,
-      longitude: userCoordinates.longitude,
-    }, (response) => {
       if(response.error != null) {
-        console.error('Error getting dropies around', response.error);
+        console.error('Error updating zones', response.error);
         return;
       }
+
       const dropies = response.data.slice(0, 30).map((dropy) =>  ({
         ...dropy,
         isUserDropy: dropy.emitterId === user.id,
       }));
+
       setDropiesAround(dropies ?? []);
     });
-  }
+  }, [userCoordinates.geoHashs[0]]);
 
   const createDropy = (latitude, longitude, mediaType, content) => {
     return new Promise((resolve) => {
@@ -78,6 +67,7 @@ const useDropiesAroundSocket = () => {
   };
 
   const retrieveDropy = (dropyId) => {
+    setDropiesAround(olds => olds.filter(dropy => dropy.id !== dropyId));
     return new Promise((resolve) => {
       dropySocket.emit('dropy_retrieved', { dropyId }, resolve);
     });
