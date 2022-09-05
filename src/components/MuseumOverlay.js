@@ -61,14 +61,12 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
     try {
       setLoading(true);
       const response = await API.getUserRetrievedDropies();
-      JSON.stringify(response.data, null, 2);
+
       setDropies(response.data);
       setRetrievedDropies(response.data);
       setLoading(false);
 
       setSelectedDropyIndex(0);
-
-      console.log(JSON.stringify(response.data, null, 2));
     } catch (error) {
       sendAlert({
         title: 'Oh no...',
@@ -85,15 +83,7 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
   };
 
   const openChat = async (conversationId) => {
-    try {
-      navigation.navigate('Conversations', { conversationId });
-    } catch (error) {
-      console.log('Open chat error', error?.response?.data ?? error);
-      sendAlert({
-        title: 'Oh that\'s bad...',
-        description: 'Looks like we can\'t load your conversations right now...',
-      });
-    }
+    navigation.navigate('Conversations', { conversationId });
   };
 
   if(!render) return null;

@@ -13,8 +13,6 @@ import useCurrentUser from '../hooks/useCurrentUser';
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { dropy, showBottoModal } = route.params || {};
 
-  console.log(JSON.stringify(dropy, null, 2));
-
   const { user } = useCurrentUser();
   const { sendAlert } = useOverlay();
   const { showActionSheetWithOptions } = useActionSheet();
