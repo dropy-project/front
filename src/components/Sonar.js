@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, StyleSheet, View } from 'react-native';
+import { Animated, Easing, StyleSheet } from 'react-native';
 
 import Svg, { Circle, RadialGradient, Stop } from 'react-native-svg';
 import Styles, { Colors } from '../styles/Styles';
@@ -9,20 +9,21 @@ const CENTER_ICON_SIZE = 15;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-const Sonar = () => {
+const Sonar = ({ visible }) => {
 
-  const sonarAnimation = useRef(new Animated.Value(0)).current;
+  const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
+  const sonarAnimatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const anim = Animated.loop(
       Animated.sequence([
-        Animated.timing(sonarAnimation, {
+        Animated.timing(sonarAnimatedValue, {
           toValue: 1,
           duration: 3000,
           useNativeDriver: true,
           easing: Easing.ease,
         }),
-        Animated.timing(sonarAnimation, {
+        Animated.timing(sonarAnimatedValue, {
           toValue: 0,
           duration: 0,
           useNativeDriver: true,
@@ -34,22 +35,36 @@ const Sonar = () => {
     return anim.stop;
   }, []);
 
-  const sonarScale = sonarAnimation.interpolate({
+  useEffect(() => {
+    const anim = Animated.timing(visibleAnimatedValue, {
+      toValue: visible ? 1 : 0,
+      duration: 500,
+      delay: visible ? 1400 : 200,
+      useNativeDriver: true,
+      easing: Easing.elastic(1.1),
+    });
+    anim.start();
+    return anim.stop;
+  }, [visible]);
+
+  const sonarScale = sonarAnimatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 3],
   });
 
-  const sonarOpacity = sonarAnimation.interpolate({
+  const sonarOpacity = sonarAnimatedValue.interpolate({
     inputRange: [0.7, 1],
     outputRange: [1, 0],
   });
 
   return (
-    <View pointerEvents='none' style={{
-      ...Styles.center,
-      ...StyleSheet.absoluteFillObject,
-      transform: [ { translateY: CENTER_ICON_SIZE / 2 }],
-    }}>
+    <Animated.View
+      pointerEvents='none'
+      style={{
+        ...Styles.center,
+        ...StyleSheet.absoluteFillObject,
+        transform: [ { translateY: CENTER_ICON_SIZE / 2 }, { scale: visibleAnimatedValue }],
+      }}>
       <AnimatedSvg
         pointerEvents="none"
         style={{ ...styles.container, transform: [{ scale: sonarScale }], opacity: sonarOpacity }}
@@ -74,7 +89,7 @@ const Sonar = () => {
         />
       </AnimatedSvg>
       <GlassCircleButton disabled size={CENTER_ICON_SIZE} />
-    </View>
+    </Animated.View>
   );
 };
 

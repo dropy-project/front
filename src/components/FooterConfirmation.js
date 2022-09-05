@@ -36,12 +36,12 @@ const FooterConfirmation = ({ dropy, onPress, textButton }) => {
             width={65}
             height={65}
             resizeMode="cover"
-            avatarUrl={dropy.avatarUrl}
-            displayName={dropy.emitterDisplayName}
+            avatarUrl={dropy.emitter.avatarUrl}
+            displayName={dropy.emitter.displayName}
           />
         </View>
         <View style={styles.infoDropy}>
-          <Text style={styles.profileName}>@{dropy.emitterDisplayName}</Text>
+          <Text style={styles.profileName}>@{dropy.emitter.displayName}</Text>
           <Text style={styles.dropyDate}>Dropped here {createDropTimeString(new Date() - new Date(dropy.creationDate))} ago</Text>
         </View>
       </View>

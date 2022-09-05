@@ -1,21 +1,27 @@
-import { useEffect, useState } from 'react';
-import Socket from '../services/socket';
+import React, { createContext, useEffect, useState } from 'react';
+import useSocket from '../hooks/useSocket';
 import { decryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
 
-const useConversationSocket = (onError = () => {}) => {
+export const ConversationsContext = createContext(null);
+
+const ConversationsContextProvider = ({ children }) => {
+
   const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState([]);
 
+  const { chatSocket } = useSocket();
+
   useEffect(() => {
-    if(Socket.chatSocket == null) return;
+    console.log(chatSocket);
+    if(chatSocket == null) return;
+
 
     listConversations();
-    Socket.chatSocket.on('connect', listConversations);
+    chatSocket.on('connect', listConversations);
 
-    Socket.chatSocket.on('conversation_updated', (response) => {
+    chatSocket.on('conversation_updated', (response) => {
       if (response.error != null) {
-        onError(response.error);
         console.error('Conversation has not been updated correctly.', response.error);
         return;
       }
@@ -40,9 +46,8 @@ const useConversationSocket = (onError = () => {}) => {
       });
     });
 
-    Socket.chatSocket.on('close_conversation', (response) => {
+    chatSocket.on('close_conversation', (response) => {
       if (response.error != null) {
-        onError(response.error);
         console.error('Conversation has not been closed correctly.', response.error);
         return;
       }
@@ -52,20 +57,19 @@ const useConversationSocket = (onError = () => {}) => {
     });
 
     return () => {
-      Socket.chatSocket.off('connect');
-      Socket.chatSocket.off('conversation_updated');
-      Socket.chatSocket.off('close_conversation');
+      chatSocket.off('connect');
+      chatSocket.off('conversation_updated');
+      chatSocket.off('close_conversation');
     };
-  }, []);
+  }, [chatSocket]);
 
   const listConversations = () => {
     setLoading(true);
-    Socket.chatSocket.emit('list_conversations', (response) => {
-      if(Socket.chatSocket == null) return;
-      if(Socket.chatSocket.connected === false) return;
+    chatSocket.emit('list_conversations', (response) => {
+      if(chatSocket == null) return;
+      if(chatSocket.connected === false) return;
 
       if (response.error != null) {
-        onError(response.error);
         console.error('Error while getting conversations', response.error);
         return;
       }
@@ -92,7 +96,7 @@ const useConversationSocket = (onError = () => {}) => {
     setConversations(old => old.filter(conversation => conversation.id !== conversationId));
 
     return new Promise((resolve) => {
-      Socket.chatSocket.emit('close_conversation', conversationId, resolve);
+      chatSocket.emit('close_conversation', conversationId, resolve);
     });
   };
 
@@ -108,7 +112,16 @@ const useConversationSocket = (onError = () => {}) => {
     }));
   };
 
-  return { loading, conversations, closeConversation, markConversationAsRead };
+  return (
+    <ConversationsContext.Provider value={{
+      loading,
+      conversations,
+      closeConversation,
+      markConversationAsRead,
+    }}>
+      {children}
+    </ConversationsContext.Provider>
+  );
 };
 
-export default useConversationSocket;
+export default ConversationsContextProvider;

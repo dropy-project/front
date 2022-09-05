@@ -19,24 +19,30 @@ import DropyMap from '../components/DropyMap';
 
 import useDropiesAroundSocket from '../hooks/useDropiesAroundSocket';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
+import MuseumOverlay from '../components/MuseumOverlay';
+import Haptics from '../utils/haptics';
 
-const ICON_OPENED_SIZE = 40;
+const BACKGROUND_GEOLOC_ICON_OPENED_SIZE = 40;
 
 const HomeScreen = ({ navigation, route }) => {
 
   const { dropyCreateParams = null } = route.params || {};
 
-  const backIconAnimatedValue = useRef(new Animated.Value(0)).current;
-
-  const [confirmDropOverlayVisible, setConfirmDropOverlayVisible] = useState(false);
+  const backgroundGeolocIconAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const { dropiesAround, createDropy, retrieveDropy } = useDropiesAroundSocket();
 
   const { backgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
-  const shouldAnimateIcon = useRef(true);
+  const shouldAnimateBackgroundGeolocIcon = useRef(true);
+
+  const [confirmDropOverlayVisible, setConfirmDropOverlayVisible] = useState(false);
+  const [museumOverlayVisible, setMuseumOverlayVisible] = useState(false);
+
+  const [selectedDropyIndex, setSelectedDropyIndex] = useState(null);
+  const [retrievedDropies, setRetrievedDropies] = useState(null);
 
   useEffect(() => {
-    shouldAnimateIcon.current = true;
+    shouldAnimateBackgroundGeolocIcon.current = true;
   }, [backgroundGeolocationEnabled]);
 
   useEffect(() => {
@@ -45,25 +51,38 @@ const HomeScreen = ({ navigation, route }) => {
     }
   }, [dropyCreateParams]);
 
+  useEffect(() => {
+    if(!museumOverlayVisible) {
+      setSelectedDropyIndex(null);
+      setRetrievedDropies(null);
+    }
+  }, [museumOverlayVisible]);
+
+  useEffect(() => {
+    if(selectedDropyIndex != null) {
+      Haptics.impactLight();
+    }
+  }, [selectedDropyIndex]);
+
   const closeConfirmDropOverlay = () => {
     setConfirmDropOverlayVisible(false);
   };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if(shouldAnimateIcon.current === false) return;
-      shouldAnimateIcon.current = false;
+      if(shouldAnimateBackgroundGeolocIcon.current === false) return;
+      shouldAnimateBackgroundGeolocIcon.current = false;
 
 
       const anim = Animated.sequence([
-        Animated.timing(backIconAnimatedValue, {
+        Animated.timing(backgroundGeolocIconAnimatedValue, {
           toValue: 1,
           duration: 500,
           delay: 1000,
           useNativeDriver: false,
         }),
         Animated.delay(2000),
-        Animated.timing(backIconAnimatedValue, {
+        Animated.timing(backgroundGeolocIconAnimatedValue, {
           toValue: 0,
           duration: 500,
           useNativeDriver: false,
@@ -75,20 +94,28 @@ const HomeScreen = ({ navigation, route }) => {
     return unsubscribe;
   }, []);
 
-  const iconScale = backIconAnimatedValue.interpolate({
+  const iconScale = backgroundGeolocIconAnimatedValue.interpolate({
     inputRange: [0, 0.1, 1],
     outputRange: [backgroundGeolocationEnabled ? 0.7 : 0.5, 1, 1],
   });
 
-  const iconMinWidth = backIconAnimatedValue.interpolate({
+  const iconMinWidth = backgroundGeolocIconAnimatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [ICON_OPENED_SIZE, 270],
+    outputRange: [BACKGROUND_GEOLOC_ICON_OPENED_SIZE, 270],
   });
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle='dark-content' />
-      <DropyMap dropiesAround={dropiesAround} retrieveDropy={retrieveDropy} />
+
+      <DropyMap
+        retrievedDropies={retrievedDropies}
+        dropiesAround={dropiesAround}
+        retrieveDropy={retrieveDropy}
+        museumVisible={museumOverlayVisible}
+        selectedDropyIndex={selectedDropyIndex}
+      />
+
       <SafeAreaView style={styles.avatarContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <ProfileAvatar size={70} />
@@ -99,7 +126,7 @@ const HomeScreen = ({ navigation, route }) => {
               width: iconMinWidth,
             }}>
               <View style={styles.backgroundGeolocIconInnerContainer}>
-                <FontAwesome5 name="satellite-dish" size={ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
+                <FontAwesome5 name="satellite-dish" size={BACKGROUND_GEOLOC_ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
                 <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
                 Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
                 </Text>
@@ -108,13 +135,27 @@ const HomeScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </TouchableOpacity>
       </SafeAreaView>
-      <HomeScreenTabBar />
+
+      <MuseumOverlay
+        visible={museumOverlayVisible}
+        setSelectedDropyIndex={setSelectedDropyIndex}
+        setRetrievedDropies={setRetrievedDropies}
+      />
+
+      <HomeScreenTabBar
+        onMuseumOpenPressed={() => setMuseumOverlayVisible(true)}
+        onMuseumClosePressed={() => setMuseumOverlayVisible(false)}
+        museumVisible={museumOverlayVisible}
+      />
+
       <ConfirmDropyOverlay
         createDropy={createDropy}
         dropyCreateParams={dropyCreateParams}
         visible={confirmDropOverlayVisible}
         onCloseOverlay={closeConfirmDropOverlay}
       />
+
+
     </View>
   );
 };
@@ -137,7 +178,7 @@ const styles = StyleSheet.create({
   backgroundGeolocIconContainer: {
     ...Styles.softShadows,
     position: 'absolute',
-    height: ICON_OPENED_SIZE,
+    height: BACKGROUND_GEOLOC_ICON_OPENED_SIZE,
     justifyContent: 'space-between',
     bottom: -10,
     left: 40,
@@ -147,7 +188,7 @@ const styles = StyleSheet.create({
   backgroundGeolocationText: {
     position: 'absolute',
     ...Fonts.regular(12, Colors.darkGrey),
-    marginLeft: ICON_OPENED_SIZE + 5,
+    marginLeft: BACKGROUND_GEOLOC_ICON_OPENED_SIZE + 5,
   },
   backgroundGeolocIconInnerContainer: {
     ...StyleSheet.absoluteFillObject,
