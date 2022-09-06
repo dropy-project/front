@@ -44,6 +44,7 @@ const useDropiesAroundSocket = () => {
   }, [geolocationInitialized]);
 
   useEffect(() => {
+    if(userCoordinates?.geoHashs == null) return;
     dropySocket.emit('zones_update', { zones: userCoordinates.geoHashs }, (response) => {
 
       if(response.error != null) {
@@ -58,7 +59,7 @@ const useDropiesAroundSocket = () => {
 
       setDropiesAround(dropies ?? []);
     });
-  }, [userCoordinates.geoHashs[0]]);
+  }, [userCoordinates?.geoHashs[0]]);
 
   const createDropy = (latitude, longitude, mediaType, content) => {
     return new Promise((resolve) => {

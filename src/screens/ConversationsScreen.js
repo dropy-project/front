@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
@@ -8,12 +8,9 @@ import useConversationsSocket from '../hooks/useConversationsSocket';
 import useOverlay from '../hooks/useOverlay';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-const ConversationsScreen = ({ navigation, route }) => {
+const ConversationsScreen = ({ navigation }) => {
 
-  const { conversationId = null } = route.params || {};
   const { sendAlert } = useOverlay();
-
-  const [initialized, setInitialized] = useState(false);
 
   const {
     loading,
@@ -21,20 +18,6 @@ const ConversationsScreen = ({ navigation, route }) => {
     closeConversation,
     markConversationAsRead,
   } = useConversationsSocket();
-
-  useEffect(() => {
-    if(conversations == null || conversations.length === 0) return;
-    if(initialized) return;
-
-    if(conversationId != null) {
-      const toOpenConversation = conversations.find(conversation => conversation.id === conversationId);
-      if(toOpenConversation != null) {
-        navigation.navigate('Chat', { conversation: toOpenConversation  });
-      }
-    }
-
-    setInitialized(true);
-  }, [conversations]);
 
   const handleLongPress = async (conversation) => {
     const confirmed = await sendAlert({
