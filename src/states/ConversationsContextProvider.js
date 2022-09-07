@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { createContext, useEffect, useState } from 'react';
 import useSocket from '../hooks/useSocket';
 import { decryptMessage } from '../utils/encrypt';
@@ -7,6 +8,7 @@ export const ConversationsContext = createContext(null);
 
 const ConversationsContextProvider = ({ children }) => {
 
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState([]);
 
@@ -112,12 +114,19 @@ const ConversationsContextProvider = ({ children }) => {
     }));
   };
 
+  const openChat = (conversationId) => {
+    const conversation = conversations.find(c => c.id === conversationId);
+    if(conversation == null) return;
+    navigation.navigate('Chat', { conversation });
+  };
+
   return (
     <ConversationsContext.Provider value={{
       loading,
       conversations,
       closeConversation,
       markConversationAsRead,
+      openChat,
     }}>
       {children}
     </ConversationsContext.Provider>
