@@ -9,7 +9,7 @@ const CENTER_ICON_SIZE = 15;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-const Sonar = ({ visible }) => {
+const Sonar = ({ visible, zoomValue }) => {
 
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
   const sonarAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -57,13 +57,22 @@ const Sonar = ({ visible }) => {
     outputRange: [1, 0],
   });
 
+  useEffect(() => {
+    const scale = -(1 - (zoomValue / 15)) * 10;
+    console.log(zoomValue * 100);
+
+  }, [zoomValue]);
+
   return (
     <Animated.View
       pointerEvents='none'
       style={{
         ...Styles.center,
         ...StyleSheet.absoluteFillObject,
-        transform: [ { translateY: CENTER_ICON_SIZE / 2 }, { scale: visibleAnimatedValue }],
+        transform: [
+          { translateY: CENTER_ICON_SIZE / 2 },
+          { scale: Math.max(0.4, -(1 - (zoomValue / 15)) * 10) }
+        ],
       }}>
       <AnimatedSvg
         pointerEvents="none"

@@ -24,8 +24,10 @@ import DebugText from './DebugText';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 
-const INITIAL_PITCH = 10;
+const INITIAL_PITCH = 0;
+const MIN_ZOOM = 16;
 const INITIAL_ZOOM = 17;
+const MAX_ZOOM = 18;
 const MUSEUM_ZOOM = 13;
 
 const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
@@ -35,6 +37,8 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   const { sendBottomAlert } = useOverlay();
   const { userCoordinates, compassHeading, initialized: geolocationInitialized } = useInitializedGeolocation();
   const { developerMode } = useCurrentUser();
+
+  const [zoomValue, setZoomValue] = useState(INITIAL_ZOOM);
 
   const mapRef = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
@@ -114,7 +118,9 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}
-        zoomEnabled={false}
+        zoomEnabled={true}
+        minZoomLevel={developerMode ? 15 : MIN_ZOOM}
+        maxZoomLevel={MAX_ZOOM}
         showsCompass={false}
         initialCamera={{
           center: {
@@ -127,6 +133,14 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
           altitude: 0,
         }}
         onMapLoaded={() => setMapIsReady(true)}
+        showsPointsOfInterest={false}
+        cacheEnabled
+        onRegionChange={(region) => {
+          // console.log('onRegionChange', region, details);
+          // const zoom = Math.log(360 / region.longitudeDelta) / Math.LN2;
+          // const distanceDelta = Math.exp(Math.log(360) - (zoom * Math.LN2));
+          setZoomValue(Math.max(region.longitudeDelta, region.latitudeDelta));
+        }}
       >
         {retrievedDropies != null ? (
           <>
@@ -150,7 +164,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         )}
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </MapView>
-      <Sonar visible={!museumVisible} />
+      <Sonar zoomValue={zoomValue} visible={!museumVisible} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
         pointerEvents='none'
