@@ -101,7 +101,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
           },
           pitch: museumVisible ? 45 : INITIAL_PITCH,
           heading: compassHeading,
-          zoom: museumVisible ? MUSEUM_ZOOM : INITIAL_ZOOM,
+          // zoom: museumVisible ? MUSEUM_ZOOM : INITIAL_ZOOM,
         },
         { duration: museumVisible ? 500 : duration }
       );
@@ -158,7 +158,12 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         ) : (
           <>
             {dropiesAround.map((dropy) => (
-              <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
+              <DropyMapMarker
+                key={`${dropy.id}_${dropy.isInRange}`}
+                isInRange={dropy.isInRange}
+                dropy={dropy}
+                onPress={() => handleDropyPressed(dropy)}
+              />
             ))}
           </>
         )}

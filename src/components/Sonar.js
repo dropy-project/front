@@ -58,8 +58,8 @@ const Sonar = ({ visible, zoomValue }) => {
   });
 
   useEffect(() => {
-    const scale = -(1 - (zoomValue / 15)) * 10;
-    console.log(zoomValue * 100);
+    // const scale = -(1 - (zoomValue / 15)) * 10;
+    // console.log(zoomValue * 100);
 
   }, [zoomValue]);
 
@@ -71,7 +71,7 @@ const Sonar = ({ visible, zoomValue }) => {
         ...StyleSheet.absoluteFillObject,
         transform: [
           { translateY: CENTER_ICON_SIZE / 2 },
-          { scale: Math.max(0.4, -(1 - (zoomValue / 15)) * 10) }
+          { scale: Math.max(0.6, -(1 - (zoomValue / 15)) * 10) }
         ],
       }}>
       <AnimatedSvg
