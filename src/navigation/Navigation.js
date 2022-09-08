@@ -15,6 +15,7 @@ import SettingsScreen from '../screens/SettingScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
 import BlockedUsersScreen from '../screens/BlockedUsersScreen';
 import UserDropiesScreen from '../screens/UserDropiesScreen';
+import Onboarding from '../screens/Onboarding';
 
 const MainStack = createStackNavigator();
 
@@ -43,6 +44,7 @@ export default function Navigation() {
       <MainStack.Screen name="Settings" component={SettingsScreen} />
       <MainStack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
       <MainStack.Screen name="UserDropies" component={UserDropiesScreen} />
+      <MainStack.Screen name="Onboarding" component={Onboarding} />
     </MainStack.Navigator>
   );
 }
