@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView, Text, View, FlatList } from 'react-native';
 import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
@@ -46,28 +46,26 @@ const ConversationsScreen = ({ navigation }) => {
       {loading ? (
         <LoadingSpinner selfCenter />
       ) : (
-        <>
-          {conversations.length === 0 ? (
+        <FlatList
+          data={conversations}
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContent}
+          ListEmptyComponent={() => {
             <View style={{ flex: 1, ...Styles.center }}>
               <Text style={{ ...Fonts.ligth(15, Colors.grey), textAlign: 'center' }}>Find drops, begin new conversations!</Text>
-            </View>
-          ) : (
-            <ScrollView
-              style={styles.scrollView}
-              contentContainerStyle={styles.scrollViewContent}>
-              {conversations.map((conversation, index) => (
-                <FadeInWrapper key={conversation.id} delay={index * 50}>
-                  <ConversationItem
-                    conversation={conversation}
-                    onLongPress={() => handleLongPress(conversation)}
-                    onPress={() => openConversation(conversation)}
-                    {...conversation}
-                  />
-                </FadeInWrapper>
-              ))}
-            </ScrollView>
+            </View>;
+          }}
+          renderItem={({ item: conversation, index }) => (
+            <FadeInWrapper key={conversation.id} delay={index * 50}>
+              <ConversationItem
+                conversation={conversation}
+                onLongPress={() => handleLongPress(conversation)}
+                onPress={() => openConversation(conversation)}
+                {...conversation}
+              />
+            </FadeInWrapper>
           )}
-        </>
+        />
       )}
     </SafeAreaView>
   );
