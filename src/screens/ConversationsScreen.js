@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
@@ -17,7 +17,12 @@ const ConversationsScreen = ({ navigation }) => {
     conversations,
     closeConversation,
     markConversationAsRead,
+    listConversations,
   } = useConversationsSocket();
+
+  useEffect(() => {
+    listConversations();
+  }, []);
 
   const handleLongPress = async (conversation) => {
     const confirmed = await sendAlert({
