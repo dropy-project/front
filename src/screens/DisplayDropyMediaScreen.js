@@ -9,6 +9,7 @@ import DropyMediaViewer from '../components/DropyMediaViewer';
 import useOverlay from '../hooks/useOverlay';
 import { blockUser, reportUser } from '../utils/profiles';
 import useCurrentUser from '../hooks/useCurrentUser';
+import useConversationsSocket from '../hooks/useConversationsSocket';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { dropy, showBottoModal } = route.params || {};
@@ -16,19 +17,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { user } = useCurrentUser();
   const { sendAlert } = useOverlay();
   const { showActionSheetWithOptions } = useActionSheet();
-
-  const openChat = async () => {
-    try {
-      navigation.goBack();
-      navigation.navigate('Conversations', { conversationId: dropy.conversationId });
-    } catch (error) {
-      console.log('Open chat error', error?.response?.data ?? error);
-      sendAlert({
-        title: 'Oh that\'s bad...',
-        description: 'Looks like we can\'t load your conversations right now...',
-      });
-    }
-  };
+  const { openChat } = useConversationsSocket();
 
   const handleOptionsButtonPress = () => {
     showActionSheetWithOptions({
@@ -54,7 +43,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       />
       <DropyMediaViewer dropy={dropy} />
       {showBottoModal && (
-        <FooterConfirmation onPress={openChat} dropy={dropy} textButton="Let's chat !" />
+        <FooterConfirmation onPress={() => openChat(dropy.chatConversationId)} dropy={dropy} textButton="Let's chat !" />
       )}
     </SafeAreaView>
   );

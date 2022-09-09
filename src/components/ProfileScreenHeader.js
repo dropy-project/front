@@ -15,6 +15,7 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useOverlay from '../hooks/useOverlay';
 import { blockUser, PRONOUNS, reportUser } from '../utils/profiles';
+import useConversationsSocket from '../hooks/useConversationsSocket';
 import ProfileImage from './ProfileImage';
 import TouchableTooltip from './TouchableTooltip';
 
@@ -25,6 +26,7 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
 
   const { showActionSheetWithOptions } = useActionSheet();
   const { sendAlert } = useOverlay();
+  const { openChat } = useConversationsSocket();
 
   const navigation = useNavigation();
 
@@ -133,11 +135,8 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
               </TouchableOpacity>
               {conversation != null && (
                 <Animated.View style={{ opacity: editOpacity }}>
-                  <TouchableOpacity onPress={() => {
-                    navigation.goBack();
-                    navigation.navigate('Chat', { conversation });
-                  }}
-                  style={{ position: 'absolute', top: '100%', paddingTop: 25 }}>
+                  <TouchableOpacity onPress={() => openChat(conversation.id)}
+                    style={{ position: 'absolute', top: '100%', paddingTop: 25 }}>
                     <Ionicons
                       name="md-chatbubble-outline"
                       size={30}
