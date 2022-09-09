@@ -4,7 +4,7 @@ import useCurrentUser from './useCurrentUser';
 import { useInitializedGeolocation } from './useGeolocation';
 import useSocket from './useSocket';
 
-const REACH_DISTANCE = 100;
+const REACH_DISTANCE_METERS = 100;
 
 const useDropiesAroundSocket = () => {
 
@@ -34,7 +34,7 @@ const useDropiesAroundSocket = () => {
         longitude: newDropy.longitude,
       };
 
-      const isInRange = coordinatesDistance(userCoordinates, dropyPosition) < REACH_DISTANCE;
+      const isInRange = coordinatesDistance(userCoordinates, dropyPosition) < REACH_DISTANCE_METERS;
       setDropiesAround(olds => [
         ...olds,
         response.data,
@@ -72,7 +72,7 @@ const useDropiesAroundSocket = () => {
           longitude: dropy.longitude,
         };
 
-        const isInRange = coordinatesDistance(userCoordinates, dropyPosition) < REACH_DISTANCE;
+        const isInRange = coordinatesDistance(userCoordinates, dropyPosition) < REACH_DISTANCE_METERS;
         return {
           ...dropy,
           isUserDropy: dropy.emitterId === user.id,
@@ -98,7 +98,7 @@ const useDropiesAroundSocket = () => {
       const distance = coordinatesDistance(userCoordinates, dropyPosition);
       return {
         ...dropy,
-        isInRange: distance < REACH_DISTANCE,
+        isInRange: distance < REACH_DISTANCE_METERS,
       };
     }));
   };
