@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet } from 'react-native';
 
 import Svg, { Circle, RadialGradient, Stop } from 'react-native-svg';
-import Styles, { Colors } from '../styles/Styles';
+import Styles, { Colors, Map } from '../styles/Styles';
 import GlassCircleButton from './GlassCircleButton';
 
 const CENTER_ICON_SIZE = 15;
@@ -49,19 +49,13 @@ const Sonar = ({ visible, zoomValue }) => {
 
   const sonarScale = sonarAnimatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 3],
+    outputRange: [0, 3.5],
   });
 
   const sonarOpacity = sonarAnimatedValue.interpolate({
     inputRange: [0.7, 1],
     outputRange: [1, 0],
   });
-
-  useEffect(() => {
-    // const scale = -(1 - (zoomValue / 15)) * 10;
-    // console.log(zoomValue * 100);
-
-  }, [zoomValue]);
 
   return (
     <Animated.View
@@ -71,7 +65,7 @@ const Sonar = ({ visible, zoomValue }) => {
         ...StyleSheet.absoluteFillObject,
         transform: [
           { translateY: CENTER_ICON_SIZE / 2 },
-          { scale: Math.max(0.6, -(1 - (zoomValue / 15)) * 10) }
+          { scale: Math.max(0.3, -(1 - (zoomValue / Map.MIN_ZOOM)) * 10) }
         ],
       }}>
       <AnimatedSvg

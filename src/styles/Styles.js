@@ -85,4 +85,11 @@ export const Fonts = {
   }),
 };
 
+export const Map = {
+  INITIAL_PITCH: 0,
+  INITIAL_ZOOM: 17,
+  MIN_ZOOM: 16,
+  MAX_ZOOM: 18,
+};
+
 export default Styles;
