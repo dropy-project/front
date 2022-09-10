@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -6,16 +6,18 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View
 } from 'react-native';
 import { Colors, Fonts } from '../styles/Styles';
 
 
 const FormInput = (props, ref) => {
-  const { onEdited = () => {}, title = '""', placeholder = '', defaultValue = '', inputStyle } = props;
+  const { onEdited = () => {}, title = null, placeholder = '', defaultValue = '', inputStyle, style, isPassword = false } = props;
 
   const [value, setValue] = useState(defaultValue);
   const [selected, setSelected] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [valid, setValid] = useState(true);
 
@@ -34,9 +36,9 @@ const FormInput = (props, ref) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={{ ...styles.container, ...style }}
     >
-      <Text style={styles.text}>{title}</Text>
+      {title != null && (<Text style={styles.text}>{title}</Text>)}
       <View style={{
         ...styles.textInputContainer,
         ...inputStyle,
@@ -48,9 +50,12 @@ const FormInput = (props, ref) => {
           onChangeText={(text) => setValue(text)}
           style={{ ...Fonts.regular(12, Colors.darkGrey), ...styles.textInput }}
           placeholder={placeholder}
-          placeholderTextColor={Colors.lightGrey}
+          placeholderTextColor={Colors.grey}
           returnKeyType="done"
           onEndEditing={() => onEdited(value)}
+          textAlignVertical="top"
+          secureTextEntry={isPassword && !showPassword}
+
           {...props}
         />
         {selected && props.maxLength != null && (
@@ -58,8 +63,17 @@ const FormInput = (props, ref) => {
             {value?.length || 0}/{props.maxLength}
           </Text>
         )}
-        {!selected && (
+        {!selected && !isPassword && (
           <Feather style={{ marginLeft: 4 }} name="edit-2" size={15} color={Colors.darkGrey} />
+        )}
+        {isPassword && (
+          <TouchableOpacity onPress={() =>  setShowPassword(old => !old)}>
+            {showPassword ? (
+              <Ionicons name="eye-off-sharp" style={{ marginLeft: 4 }} size={20} color={Colors.darkGrey} />
+            ) : (
+              <Ionicons name="eye" style={{ marginLeft: 4 }} size={20} color={Colors.darkGrey} />
+            )}
+          </TouchableOpacity>
         )}
       </View>
     </KeyboardAvoidingView>
@@ -90,5 +104,6 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
+    padding: 0,
   },
 });
