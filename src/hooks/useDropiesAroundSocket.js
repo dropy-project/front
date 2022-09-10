@@ -5,7 +5,7 @@ import { useInitializedGeolocation } from './useGeolocation';
 import useSocket from './useSocket';
 
 const REACH_DISTANCE_METERS = 100;
-const EMIT_LIMIT_DISTANCE_METERS = 25;
+const EMIT_LIMIT_DISTANCE_METERS = 60;
 
 const useDropiesAroundSocket = () => {
 
@@ -122,8 +122,8 @@ const useDropiesAroundSocket = () => {
 
     const distanceFromUser = coordinatesDistance(userCoordinates, dropyCoordinates);
     const reachable = distanceFromUser < REACH_DISTANCE_METERS;
-    const isInEmitRestrictedRange = distanceFromUser < EMIT_LIMIT_DISTANCE_METERS;
     const isUserDropy = rawDropy.emitterId === user.id;
+    const isInEmitRestrictedRange = distanceFromUser < EMIT_LIMIT_DISTANCE_METERS && isUserDropy;
     return { ...rawDropy, isUserDropy, reachable, isInEmitRestrictedRange };
   };
 
