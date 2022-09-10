@@ -106,7 +106,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   const onRegionChange = (region) => {
     const zoom = Math.log2(360 * (Dimensions.get('screen').width / 256 / region.longitudeDelta));
     if(!museumVisible) {
-      setZoomValue(Math.max(zoom));
+      setZoomValue(zoom);
     }
   };
 
