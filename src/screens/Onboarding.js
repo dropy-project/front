@@ -40,9 +40,16 @@ export default function Onboarding() {
       {currentViewIndex === 0 && (
         <DropyLogo height={70} width={70} color={'green'}/>
       )}
-      <View style={{ ...StyleSheet.absoluteFillObject, width: (responsiveWidth(100) * 8), height: responsiveHeight(40), backgroundColor: 'red', transform: [{ translateX: -responsiveWidth(100) * 4 }] }}>
-        <OnboardingLines width={(responsiveWidth(100) * 8)} height="100%" />
-      </View>
+      <Animated.View style={{
+        position: 'absolute',
+        top: responsiveHeight(10),
+        left: 0,
+        width: (responsiveWidth(100)) * 8,
+        height: responsiveHeight(30),
+        transform: [{ translateX: Animated.add(translateViewAnimatedValue, -50) }],
+      }}>
+        <OnboardingLines width={'100%'} height={'100%'} />
+      </Animated.View>
       <View style={styles.viewContainer}>
         <Animated.View style={{ transform: [{ translateX: translateViewAnimatedValue }], flexDirection: 'row' }}>
           <View style={styles.view}>

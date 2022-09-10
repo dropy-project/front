@@ -1,8 +1,6 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
-
 
 const GlassButton = ({ children, onPress, buttonText, style, disabled, fontSize = 19 }) => (
   <TouchableOpacity disabled={disabled} onPress={onPress} style={{ ...styles.container, ...style }} >
@@ -20,8 +18,10 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 18,
     backgroundColor: Colors.purple1,
-    overflow: 'hidden',
     ...Styles.center,
     ...Styles.hardShadows,
+    shadowRadius: 13,
+    shadowOffset: { width: 0, height: 8 },
+    shadowColor: Colors.purple1,
   },
 });
