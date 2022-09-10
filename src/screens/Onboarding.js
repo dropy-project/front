@@ -10,7 +10,10 @@ import React, { useRef, useState , useEffect } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign } from '@expo/vector-icons';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
-import Styles, { Colors } from '../styles/Styles';
+import Styles, { Colors, Fonts } from '../styles/Styles';
+import GoBackHeader from '../components/GoBackHeader';
+import OnboardingLines from '../assets/svgs/onboarding_lines.svg';
+import GlassButton from '../components/GlassButton';
 
 export default function Onboarding() {
 
@@ -31,21 +34,37 @@ export default function Onboarding() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <DropyLogo height={70} width={70} color={'green'}/>
+      {currentViewIndex > 0 && (
+        <GoBackHeader onPressGoBack={() => setCurrentViewIndex(old => old - 1)}/>
+      )}
+      {currentViewIndex === 0 && (
+        <DropyLogo height={70} width={70} color={'green'}/>
+      )}
+      <View style={{ ...StyleSheet.absoluteFillObject, width: (responsiveWidth(100) * 8), height: responsiveHeight(40), backgroundColor: 'red', transform: [{ translateX: -responsiveWidth(100) * 4 }] }}>
+        <OnboardingLines width={(responsiveWidth(100) * 8)} height="100%" />
+      </View>
       <View style={styles.viewContainer}>
         <Animated.View style={{ transform: [{ translateX: translateViewAnimatedValue }], flexDirection: 'row' }}>
           <View style={styles.view}>
             <Text style={styles.emoji}>👋</Text>
-            <View>
-              <Text>Hey there</Text>
-              <Text>ready to drop ?</Text>
+            <View style={{ marginBottom: 30 }}>
+              <Text style={styles.title}>Hey there</Text>
+              <Text style={styles.subtitle}>ready to drop ?</Text>
             </View>
-            <Button onPress={() => setCurrentViewIndex(1)} />
+            <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10 }} >
+              <AntDesign name="arrowright" size={32} color="white"/>
+            </GlassButton>
+            <TouchableOpacity>
+              <Text style={{ paddingBottom: 20, ...Fonts.bold(13, Colors.grey) }}>I already have an account</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.view}>
             <Text>BITE to drop ?</Text>
-            <Button onPress={() => setCurrentViewIndex(0)} />
+            <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)}  style={{ paddingHorizontal: 50, paddingVertical: 10 }}>
+              {/* <AntDesign name="arrowright" size={32} color="white"/> */}
+              <Text style={{ ...Fonts.bold(16, Colors.white) }}>turn on</Text>
+            </GlassButton>
           </View>
 
           <View style={styles.view}>
@@ -56,16 +75,29 @@ export default function Onboarding() {
           </View>
         </Animated.View>
       </View>
+      <DotIndicator currentIndex={currentViewIndex - 1} />
     </SafeAreaView>
   );
 }
 
-const Button = ({ onPress, disabled = false }) => (
-  <TouchableOpacity onPress={onPress} style={{ ...styles.button, opacity: disabled ? 0.5 : 1 }} disabled={disabled}>
-    <AntDesign name="arrowright" size={32} color="white"/>
-  </TouchableOpacity>
-);
-
+const DotIndicator = ({ currentIndex, isSkippable = true }) => {
+  const dots = [];
+  for (let i = 0; i < 7; i++) {
+    dots.push(
+      <View key={i} style={{ ...styles.dot, backgroundColor: currentIndex === i ? Colors.grey : Colors.lightGrey }} />
+    );
+  }
+  return (
+    <View style={styles.indicatorContainer}>
+      {dots}
+      {isSkippable && (
+        <TouchableOpacity>
+          <Text style={styles.skipText}>skip</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -88,14 +120,33 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 40,
+    marginTop: 20,
   },
-  button: {
-    backgroundColor: Colors.purple1,
-    borderRadius: 18,
-    ...Styles.softShadows,
-    ...Styles.center,
-    paddingHorizontal: 15,
-    paddingVertical: 7,
+  title: {
+    ...Fonts.bold(30, Colors.darkGrey),
+  },
+  subtitle: {
+    ...Fonts.bold(15, Colors.lightGrey),
+
+  },
+  // Dot indicator component
+  indicatorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  skipText: {
+    ...Fonts.bold(13, Colors.darkGrey),
+    position: 'absolute',
+    bottom: -10,
+    right: -60,
   },
 
 });
