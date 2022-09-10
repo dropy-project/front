@@ -5,7 +5,8 @@ import {
   Animated,
   TouchableOpacity,
   SafeAreaView,
-  Easing
+  Easing,
+  BackHandler
 } from 'react-native';
 import React, { useRef, useState , useEffect } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
@@ -23,6 +24,17 @@ export default function Onboarding() {
 
   const translateViewAnimatedValue = useRef(new Animated.Value(0)).current;
   const translateWavesAnimatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      setCurrentViewIndex(old => {
+        if(old - 1 < 0) return old;
+        return old - 1;
+      });
+      return true;
+    });
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     const anim = Animated.parallel([
