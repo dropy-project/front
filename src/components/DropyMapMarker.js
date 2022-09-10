@@ -7,7 +7,7 @@ import DropyPopup from '../assets/svgs/dropyPopup.svg';
 
 import { createDropTimeString } from '../utils/time';
 
-const DropyMapMarker = ({ dropy, onPress }) => {
+const DropyMapMarker = ({ dropy, onPress, isInRange = false }) => {
   const [dropTimeString, setDropTimeString] = useState('0s');
 
   useEffect(() => {
@@ -28,6 +28,8 @@ const DropyMapMarker = ({ dropy, onPress }) => {
 
     return () => clearInterval(interval);
   }, [dropy?.isUserDropy]);
+
+  if(!isInRange && !dropy?.isUserDropy) return <RadarMarker dropy={dropy} />;
 
   return (
     <Marker
@@ -74,6 +76,35 @@ const DropyMapMarker = ({ dropy, onPress }) => {
 export default React.memo(DropyMapMarker, (prevProps, nextProps) => {
   return prevProps.dropy.id === nextProps.dropy.id;
 });
+
+const RadarMarker = ({ dropy }) => {
+  return (
+    <Marker
+      coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
+      tracksViewChanges={true}
+    >
+      <View style={{ ...Styles.center, width: 40, height: 40 }}>
+        <View style={{
+          width: 14,
+          height: 14,
+          borderRadius: 20,
+          backgroundColor: Colors.white,
+          ...Styles.center,
+          ...Styles.hardShadows,
+          shadowRadius: 5,
+          shadowOffset: { width: 0, height: 0 },
+        }}>
+          <View style={{
+            width: '60%',
+            height: '60%',
+            borderRadius: 5,
+            backgroundColor: Colors.mainBlue,
+          }} />
+        </View>
+      </View>
+    </Marker>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -2,28 +2,28 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet } from 'react-native';
 
 import Svg, { Circle, RadialGradient, Stop } from 'react-native-svg';
-import Styles, { Colors } from '../styles/Styles';
+import Styles, { Colors, Map } from '../styles/Styles';
 import GlassCircleButton from './GlassCircleButton';
 
 const CENTER_ICON_SIZE = 15;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-const Sonar = ({ visible }) => {
+const Sonar = ({ visible, zoomValue }) => {
 
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
-  const sonarAnimatedValue = useRef(new Animated.Value(0)).current;
+  const sonarWaveAnimatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const anim = Animated.loop(
       Animated.sequence([
-        Animated.timing(sonarAnimatedValue, {
+        Animated.timing(sonarWaveAnimatedValue, {
           toValue: 1,
           duration: 3000,
           useNativeDriver: true,
           easing: Easing.ease,
         }),
-        Animated.timing(sonarAnimatedValue, {
+        Animated.timing(sonarWaveAnimatedValue, {
           toValue: 0,
           duration: 0,
           useNativeDriver: true,
@@ -38,21 +38,21 @@ const Sonar = ({ visible }) => {
   useEffect(() => {
     const anim = Animated.timing(visibleAnimatedValue, {
       toValue: visible ? 1 : 0,
-      duration: 500,
+      duration: visible ? 500 : 200,
       delay: visible ? 1400 : 200,
       useNativeDriver: true,
-      easing: Easing.elastic(1.1),
+      easing: visible ? Easing.elastic(1.1) : undefined,
     });
     anim.start();
     return anim.stop;
   }, [visible]);
 
-  const sonarScale = sonarAnimatedValue.interpolate({
+  const sonarWaveScale = sonarWaveAnimatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 3],
+    outputRange: [0, 3.5],
   });
 
-  const sonarOpacity = sonarAnimatedValue.interpolate({
+  const sonarWaveOpacity = sonarWaveAnimatedValue.interpolate({
     inputRange: [0.7, 1],
     outputRange: [1, 0],
   });
@@ -63,11 +63,21 @@ const Sonar = ({ visible }) => {
       style={{
         ...Styles.center,
         ...StyleSheet.absoluteFillObject,
-        transform: [ { translateY: CENTER_ICON_SIZE / 2 }, { scale: visibleAnimatedValue }],
+        transform: [
+          { translateY: CENTER_ICON_SIZE / 2 },
+          { scale: Animated.multiply(
+            Math.max(0.3, -(1 - (zoomValue / Map.MIN_ZOOM)) * 10),
+            visibleAnimatedValue
+          ) }
+        ],
       }}>
       <AnimatedSvg
         pointerEvents="none"
-        style={{ ...styles.container, transform: [{ scale: sonarScale }], opacity: sonarOpacity }}
+        style={{
+          ...styles.container,
+          transform: [{ scale: sonarWaveScale }],
+          opacity: sonarWaveOpacity,
+        }}
         height="100"
         width="100"
       >

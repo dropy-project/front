@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
+import { coordinatesDistance } from '../utils/coordinates';
 import useCurrentUser from './useCurrentUser';
 import { useInitializedGeolocation } from './useGeolocation';
 import useSocket from './useSocket';
+
+const REACH_DISTANCE_METERS = 100;
 
 const useDropiesAroundSocket = () => {
 
@@ -25,7 +28,18 @@ const useDropiesAroundSocket = () => {
       console.log('New dropy emitter ', newDropy.emitterId);
 
       newDropy.isUserDropy = newDropy.emitterId === user.id;
-      setDropiesAround(olds => [...olds, response.data]);
+
+      const dropyPosition = {
+        latitude: newDropy.latitude,
+        longitude: newDropy.longitude,
+      };
+
+      const isInRange = coordinatesDistance(userCoordinates, dropyPosition) < REACH_DISTANCE_METERS;
+      setDropiesAround(olds => [
+        ...olds,
+        response.data,
+        isInRange
+      ]);
     });
 
     dropySocket.on('dropy_retrieved', (response) => {
@@ -52,14 +66,42 @@ const useDropiesAroundSocket = () => {
         return;
       }
 
-      const dropies = response.data.slice(0, 30).map((dropy) =>  ({
-        ...dropy,
-        isUserDropy: dropy.emitterId === user.id,
-      }));
+      const dropies = response.data.slice(0, 30).map((dropy) =>  {
+        const dropyPosition = {
+          latitude: dropy.latitude,
+          longitude: dropy.longitude,
+        };
+
+        const isInRange = coordinatesDistance(userCoordinates, dropyPosition) < REACH_DISTANCE_METERS;
+        return {
+          ...dropy,
+          isUserDropy: dropy.emitterId === user.id,
+          isInRange,
+        };
+      });
 
       setDropiesAround(dropies ?? []);
     });
   }, [userCoordinates?.geoHashs[0]]);
+
+  useEffect(() => {
+    if (userCoordinates == null) return;
+    checkForDropiesInRange();
+  }, [userCoordinates]);
+
+  const checkForDropiesInRange = async () => {
+    setDropiesAround(old => old.map(dropy => {
+      const dropyPosition = {
+        latitude: dropy.latitude,
+        longitude: dropy.longitude,
+      };
+      const distance = coordinatesDistance(userCoordinates, dropyPosition);
+      return {
+        ...dropy,
+        isInRange: distance < REACH_DISTANCE_METERS,
+      };
+    }));
+  };
 
   const createDropy = (latitude, longitude, mediaType, content) => {
     return new Promise((resolve) => {
