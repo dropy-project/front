@@ -18,6 +18,7 @@ import Haptics from '../utils/haptics';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useOverlay from '../hooks/useOverlay';
 import useUnreadConversation from '../hooks/useUnreadConversation';
+import useCurrentUser from '../hooks/useCurrentUser';
 import GlassCircleButton from './GlassCircleButton';
 
 const mainButtonSize = responsiveHeight(7.5);
@@ -25,6 +26,7 @@ const iconsSize = 30;
 
 const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVisible, canEmitDropy }) => {
   const navigation = useNavigation();
+  const { developerMode } = useCurrentUser();
 
   const tabBarAnimatedValue = useRef(new Animated.Value(0)).current;
   const mainButtonAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -130,17 +132,29 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
     });
   };
 
-  const onPressGlassButton = () => {
+  const onPressGlassButton = async () => {
     if(canEmitDropy) {
       setDropyMenuIsOpen(!dropyMenuIsOpen);
       return;
     }
-    sendAlert({
-      title: 'Take it easy!',
-      description: 'You can\'t drop at the same location twice in a row.',
-      validateText: 'OK !',
-    });
+    if(!dropyMenuIsOpen) {
+      const validated = await sendAlert({
+        title: 'Take it easy!',
+        description: 'You can\'t drop at the same location twice in a row.',
+        validateText: 'OK !',
+        denyText: developerMode ? 'DEV_ADD' : undefined,
+      });
+      setDropyMenuIsOpen(!validated && developerMode);
+    } else {
+      setDropyMenuIsOpen(!dropyMenuIsOpen);
+    }
   };
+
+  useEffect(() => {
+    if(!canEmitDropy) {
+      setDropyMenuIsOpen(false);
+    }
+  }, [canEmitDropy]);
 
   return (
     <View style={styles.container}>
