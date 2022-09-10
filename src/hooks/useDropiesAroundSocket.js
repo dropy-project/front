@@ -5,7 +5,7 @@ import { useInitializedGeolocation } from './useGeolocation';
 import useSocket from './useSocket';
 
 const REACH_DISTANCE_METERS = 100;
-const EMIT_LIMIT_DISTANCE_METERS = 50;
+const EMIT_LIMIT_DISTANCE_METERS = 25;
 
 const useDropiesAroundSocket = () => {
 
