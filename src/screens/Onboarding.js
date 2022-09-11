@@ -10,11 +10,12 @@ import {
   Linking,
   Image
 } from 'react-native';
-import React, { useRef, useState , useEffect } from 'react';
+import React, { useRef, useState , useEffect, useContext } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign , MaterialCommunityIcons , FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { Permission, request, check, requestNotifications } from 'react-native-permissions';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import GoBackHeader from '../components/GoBackHeader';
@@ -27,8 +28,14 @@ import { compressImage } from '../utils/files';
 import API from '../services/API';
 import useOverlay from '../hooks/useOverlay';
 import useCurrentUser from '../hooks/useCurrentUser';
+import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
+import { NotificationContext } from '../states/NotificationContextProvider';
+import usePermissions from '../hooks/usePermissions';
 
 export default function Onboarding({ navigation }) {
+
+  const { setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
+
 
   const translateWavesAnimatedValue = useRef(new Animated.Value(0)).current;
   const viewSliderRef = useRef(null);
@@ -36,6 +43,10 @@ export default function Onboarding({ navigation }) {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const passwordConfirmationInputRef = useRef(null);
+
+  const { requestForegroundGeolocation } = usePermissions();
+
+  const { setupNotifications } = useContext(NotificationContext);
 
   const { sendAlert } = useOverlay();
   const { setUser } = useCurrentUser();
@@ -228,7 +239,7 @@ export default function Onboarding({ navigation }) {
             <Text style={{ ...styles.title, fontSize: 35 }}>Hey there</Text>
             <Text style={{ ...styles.subtitle, fontSize: 20 }}>ready to drop ?</Text>
           </View>
-          <GlassButton onPress={() => viewSliderRef.current?.nextView()} style={styles.nextButton}>
+          <GlassButton onPress={() => viewSliderRef.current?.goToView(5)} style={styles.nextButton}>
             <AntDesign name="arrowright" size={32} color="white"/>
           </GlassButton>
         </View>
@@ -248,7 +259,7 @@ export default function Onboarding({ navigation }) {
             disabled={displayName === ''}
             onPress={() => {
               const isValid = displayNameInputRef.current?.isValid();
-              isValid && viewSliderRef.current?.nextView();
+              isValid && viewSliderRef.current?.goToView(3);
               isValid && Keyboard.dismiss();
             }}
             style={styles.nextButton}
@@ -269,13 +280,13 @@ export default function Onboarding({ navigation }) {
               <MaterialCommunityIcons name="image-plus" size={40} color="white" />
             )}
           </TouchableOpacity>
-          <GlassButton disabled={profilePicturePath == null} onPress={() => viewSliderRef.current?.nextView()}
+          <GlassButton disabled={profilePicturePath == null} onPress={() => viewSliderRef.current?.goToView(4)}
             style={styles.nextButton} >
             <AntDesign name="arrowright" size={32} color="white"/>
           </GlassButton>
         </View>
 
-        <View style={styles.view}>
+        <View style={{ ...styles.view }}>
           <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Secure your account !</Text>
           <FormInput
             ref={emailInputRef}
@@ -310,11 +321,10 @@ export default function Onboarding({ navigation }) {
                 passwordConfirmationInputRef.current?.setInvalid();
               }
               const isValid = emailValid && passwordValid && passwordConfirmationValid && samePasswords;
-              isValid && viewSliderRef.current?.nextView();
+              isValid && viewSliderRef.current?.goToView(5);
               isValid && Keyboard.dismiss();
             }}
-            style={styles.nextButton}
-          >
+            style={{ ...styles.nextButton, marginBottom: 15, width: 150 }}>
             <AntDesign name="arrowright" size={32} color="white"/>
           </GlassButton>
         </View>
@@ -325,7 +335,11 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.subtitle}>{'Or you won\'t be able to use the app'}</Text>
           </View>
           <MaterialIcons name="location-pin" size={60} color={Colors.grey} />
-          <GlassButton onPress={() => viewSliderRef.current?.nextView()} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
+          <GlassButton onPress={() => {
+            requestForegroundGeolocation();
+            viewSliderRef.current?.goToView(6);
+          }}
+          style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
           </GlassButton>
         </View>
@@ -336,7 +350,10 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.subtitle}>Turn on notifications</Text>
           </View>
           <MaterialCommunityIcons name="bell-ring" size={50} color={Colors.grey} />
-          <GlassButton onPress={() => viewSliderRef.current?.nextView()} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
+          <GlassButton onPress={() => {
+            setupNotifications();
+            viewSliderRef.current?.goToView(7);
+          }} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
           </GlassButton>
         </View>
@@ -350,7 +367,10 @@ export default function Onboarding({ navigation }) {
             </TouchableOpacity>
           </View>
           <FontAwesome5 name="satellite" size={50} color={Colors.grey} />
-          <GlassButton onPress={() => viewSliderRef.current?.nextView()} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
+          <GlassButton onPress={() => {
+            setBackgroundGeolocationEnabled(true);
+            viewSliderRef.current?.goToView(8);
+          }} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
           </GlassButton>
         </View>

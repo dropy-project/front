@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lighterGrey,
     width: '100%',
     borderRadius: 10,
-    padding: 10,
+    padding: Platform.OS === 'ios' ? 10 : 0,
   },
   textInput: {
     flex: 1,

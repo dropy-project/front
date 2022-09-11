@@ -17,7 +17,7 @@ import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
 import GeolocationProvider from './src/states/GeolocationContextProvider';
 import BackgroundGolocationContextProvider from './src/states/BackgroundGolocationContextProvider';
-import NotificationProvider from './src/states/NotificationProvider';
+import NotificationContextProvider from './src/states/NotificationContextProvider';
 import OverlayContextProvider from './src/states/OverlayContextProvider';
 import SocketContextProvider from './src/states/SocketContextProvider';
 import ConversationsContextProvider from './src/states/ConversationsContextProvider';
@@ -38,7 +38,7 @@ const NavigationApp = () => {
     <NavigationContainer>
       <OverlayContextProvider>
         <UserProvider>
-          <NotificationProvider>
+          <NotificationContextProvider>
             <BackgroundGolocationContextProvider>
               <GeolocationProvider>
                 <SocketContextProvider>
@@ -48,7 +48,7 @@ const NavigationApp = () => {
                 </SocketContextProvider>
               </GeolocationProvider>
             </BackgroundGolocationContextProvider>
-          </NotificationProvider>
+          </NotificationContextProvider>
         </UserProvider>
       </OverlayContextProvider>
     </NavigationContainer>

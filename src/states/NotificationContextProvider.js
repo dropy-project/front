@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Notifications } from 'react-native-notifications';
 import { Platform } from 'react-native';
@@ -22,7 +22,9 @@ export const extractNotificationPayload = (notification) => {
   }
 };
 
-const NotificationProvider = ({ children }) => {
+export const NotificationContext = createContext(null);
+
+const NotificationContextProvider = ({ children }) => {
 
   const { user } = useCurrentUser();
   const navigation = useNavigation();
@@ -32,17 +34,17 @@ const NotificationProvider = ({ children }) => {
   const [notificationData, setNotificationData] = useState(null);
 
   useEffectForegroundOnly(() => {
-    if(user != null)
-      setupNotifications();
+    if(user == null) return;
+    setupNotifications();
+    sendDeviceToken();
   }, [user]);
 
   const setupNotifications = () => {
     if(initialized) return;
     setInitialized(true);
 
+    console.log('Setu notifications');
     Notifications.registerRemoteNotifications();
-
-    sendDeviceToken();
 
     const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
       console.error('Notification registation error', event);
@@ -105,11 +107,11 @@ const NotificationProvider = ({ children }) => {
   };
 
   return (
-    <>
+    <NotificationContext.Provider value={{ setupNotifications  }}>
       {children}
       <Notification data={notificationData} onDone={() => setNotificationData(null)} />
-    </>
+    </ NotificationContext.Provider>
   );
 };
 
-export default NotificationProvider;
+export default NotificationContextProvider;

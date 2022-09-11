@@ -8,7 +8,7 @@ import useOverlay from '../hooks/useOverlay';
 
 import API from '../services/API';
 
-import { extractNotificationPayload } from '../states/NotificationProvider';
+import { extractNotificationPayload } from '../states/NotificationContextProvider';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const Splash = ({ navigation }) => {

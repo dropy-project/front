@@ -28,6 +28,11 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
         setCurrentViewIndex(currentViewIndex - 1);
       }
     },
+    goToView(index) {
+      if (index >= 0 && index < children.length) {
+        setCurrentViewIndex(index);
+      }
+    },
   }));
 
   useEffect(() => {
