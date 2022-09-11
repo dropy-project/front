@@ -148,16 +148,15 @@ export default function Onboarding({ navigation }) {
         newsletterChecked
       );
       if (profilePicturePath) {
-        // const response = await API.postProfilePicture(profilePicturePath);
-        // const avatarUrl = response.data;
-        // setUser({
-        //   ...userInfos,
-        //   avatarUrl,
-        // });
+        const response = await API.postProfilePicture(profilePicturePath);
+        const avatarUrl = response.data;
+        setUser({
+          ...userInfos,
+          avatarUrl,
+        });
       } else {
-        // PUTE
+        setUser(userInfos);
       }
-      setUser(userInfos);
       navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
       console.error(error.response.data);
