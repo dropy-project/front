@@ -23,7 +23,15 @@ const register = async (displayName, email, password, newsLetter) => {
     password,
     newsLetter,
   });
-  return response.data;
+
+  const  { accessToken, refreshToken, expires, profile: user } = response.data;
+
+  axios = Axios.create(AXIOS_PARAMS);
+  axios.defaults.headers.common['Authorization'] = accessToken;
+
+  await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
+
+  return user;
 };
 
 const login = async (email, password) => {

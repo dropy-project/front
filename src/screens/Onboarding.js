@@ -52,8 +52,6 @@ export default function Onboarding({ navigation }) {
 
   const { showActionSheetWithOptions } = useActionSheet();
 
-
-
   useEffect(() => {
     const anim = Animated.timing(translateWavesAnimatedValue, {
       toValue: currentViewIndex * -responsiveWidth(100),
@@ -66,19 +64,16 @@ export default function Onboarding({ navigation }) {
   }, [currentViewIndex]);
 
   const onPressEditPicture = () => {
-    const options = profilePicturePath == null ?
-      {
-        options: ['Take a photo', 'Choose from library', 'Cancel'],
-        cancelButtonIndex: 2,
-        title: 'Where do you want to get your picture from?',
-      }
-      :
-      {
-        options: ['Take a photo', 'Choose from library','Delete picture', 'Cancel'],
-        destructiveButtonIndex: 2,
-        cancelButtonIndex: 3,
-        title: 'Where do you want to get your picture from?',
-      };
+    const options = profilePicturePath == null ? {
+      options: ['Take a photo', 'Choose from library', 'Cancel'],
+      cancelButtonIndex: 2,
+      title: 'Where do you want to get your picture from?',
+    } : {
+      options: ['Take a photo', 'Choose from library','Delete picture', 'Cancel'],
+      destructiveButtonIndex: 2,
+      cancelButtonIndex: 3,
+      title: 'Where do you want to get your picture from?',
+    };
 
     showActionSheetWithOptions(options, (buttonIndex) => {
       if (buttonIndex === 0) {
@@ -146,13 +141,12 @@ export default function Onboarding({ navigation }) {
 
   const handleRegister = async () => {
     try {
-      await API.register(
+      const userInfos = await API.register(
         displayName,
         email,
         password,
         newsletterChecked
       );
-      const userInfos = await API.login(email, password);
       if (profilePicturePath) {
         // const response = await API.postProfilePicture(profilePicturePath);
         // const avatarUrl = response.data;
