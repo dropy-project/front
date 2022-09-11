@@ -11,9 +11,21 @@ import {
 } from 'react-native';
 import { Colors, Fonts } from '../styles/Styles';
 
+const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/; // at least 8 characters, 1 uppercase, 1 lowercase, 1 number
 
 const FormInput = (props, ref) => {
-  const { onEdited = () => {}, title = null, placeholder = '', defaultValue = '', inputStyle, style, isPassword = false } = props;
+  const {
+    onEdited = () => {},
+    title = null, placeholder = '',
+    defaultValue = '',
+    inputStyle,
+    style,
+    isPassword = false,
+    isEmail = false,
+    maxLength,
+    minLength,
+  } = props;
 
   const [value, setValue] = useState(defaultValue);
   const [selected, setSelected] = useState(false);
@@ -22,15 +34,23 @@ const FormInput = (props, ref) => {
   const [valid, setValid] = useState(true);
 
   useEffect(() => {
-    onEdited(value !== defaultValue);
+    onEdited(value.trim());
+    setValid(true);
   }, [value]);
 
   useImperativeHandle(ref, () => ({
     getValue: () => value.trim(),
     isValid: () => {
-      setValid(value?.trim().length > 0);
-      return value?.trim().length > 0;
+      const notEmpty = value.trim() !== '';
+      const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
+      const passwordValid = (!isPassword || PASSWORD_REGEX.test(value.trim()));
+      const maxLengthValid = (!maxLength || value.trim().length <= maxLength);
+      const minLengthValid = (!minLength || value.trim().length >= minLength);
+      const inputValid =  notEmpty && emailValid && maxLengthValid && minLengthValid && passwordValid;
+      setValid(inputValid);
+      return inputValid;
     },
+    setInvalid: () => setValid(false),
   }));
 
   return (
@@ -58,9 +78,9 @@ const FormInput = (props, ref) => {
 
           {...props}
         />
-        {selected && props.maxLength != null && (
-          <Text style={{ ...Fonts.bold(10, (value?.length || 0) === props.maxLength ? Colors.red : Colors.grey) }}>
-            {value?.length || 0}/{props.maxLength}
+        {selected && maxLength != null && (
+          <Text style={{ ...Fonts.bold(10, (value?.length || 0) === maxLength ? Colors.red : Colors.grey) }}>
+            {value?.length || 0}/{maxLength}
           </Text>
         )}
         {!selected && !isPassword && (

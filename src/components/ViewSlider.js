@@ -1,4 +1,4 @@
-import React, { useRef , useState , useEffect } from 'react';
+import React, { useRef , useState , useEffect, useImperativeHandle, forwardRef } from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,24 @@ import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimen
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { DotIndicator } from './DotIndicator';
 
-export default function ViewSlider({ children, onViewIndexChanged }) {
+const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
 
-  const [currentViewIndex, setCurrentViewIndex] = useState(0);
+  const [currentViewIndex, setCurrentViewIndex] = useState(1);
 
-  const translateViewAnimatedValue = useRef(new Animated.Value(0)).current;
+  const translateViewAnimatedValue = useRef(new Animated.Value(currentViewIndex * -responsiveWidth(100))).current;
+
+  useImperativeHandle(ref, () => ({
+    nextView() {
+      if (currentViewIndex < children.length - 1) {
+        setCurrentViewIndex(currentViewIndex + 1);
+      }
+    },
+    previousView() {
+      if (currentViewIndex > 0) {
+        setCurrentViewIndex(currentViewIndex - 1);
+      }
+    },
+  }));
 
   useEffect(() => {
     onViewIndexChanged(currentViewIndex);
@@ -23,9 +36,7 @@ export default function ViewSlider({ children, onViewIndexChanged }) {
       toValue: currentViewIndex * -responsiveWidth(100),
       duration: 500,
       useNativeDriver: true,
-      //   easing: Easing.ease,
     });
-
     anim.start();
     return () => anim.stop();
   }, [currentViewIndex]);
@@ -46,16 +57,19 @@ export default function ViewSlider({ children, onViewIndexChanged }) {
       <Animated.View style={{ transform: [{ translateX: translateViewAnimatedValue }], flexDirection: 'row' }}>
         {children}
       </Animated.View>
-      {currentViewIndex === 0 ? (
-        <TouchableOpacity style={{ ...Styles.center, position: 'absolute', bottom: 0, alignSelf: 'center' }}>
+      {currentViewIndex === 1 && (
+        <TouchableOpacity style={{ ...Styles.center, position: 'absolute', bottom: 0, width: '100%' }} onPress={() => setCurrentViewIndex(0)}>
           <Text style={{ marginBottom: 20, ...Fonts.bold(13, Colors.grey) }}>I already have an account</Text>
         </TouchableOpacity>
-      ) : (
-        <DotIndicator currentIndex={currentViewIndex - 1} />
+      )}
+      {currentViewIndex > 1 && (
+        <DotIndicator currentIndex={currentViewIndex - 1} onPressSkip={() => setCurrentViewIndex(old => old + 1)} isSkippable={currentViewIndex === 3 || currentViewIndex === 7}/>
       )}
     </View>
   );
-}
+};
+
+export default forwardRef(ViewSlider);
 
 const styles = StyleSheet.create({
   viewContainer: {

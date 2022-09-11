@@ -1,12 +1,15 @@
 import { View, Text, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Styles, { Colors } from '../styles/Styles';
 
-export default function FormCheckBox({ text }) {
+export default function FormCheckBox({ text, onChanged = () => {} }) {
 
   const [checked, setChecked] = useState(false);
 
+  useEffect(() => {
+    onChanged(checked);
+  }, [checked]);
 
   const textBeforeBrackets = text?.split('{')[0];
   const textBetweenBrackets = (text?.match(/{(.*?)}/) ?? [])[1];
@@ -56,7 +59,7 @@ const styles = StyleSheet.create({
   },
   hyperlink: {
     fontSize: 16,
-    color: Colors.mainBlue,
+    color: '#44a0eb',
     textDecorationLine: 'underline',
   },
 
