@@ -360,7 +360,7 @@ export default function Onboarding({ navigation }) {
           <Text style={styles.emoji}>😃</Text>
           <Text style={{ ...Fonts.bold(30, Colors.darkGrey) }}>Almost there !</Text>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <FormCheckBox text={'I agree with dropy\'s {terms & conditions}'} onChanged={setTermsChecked}/>
+            <FormCheckBox text={'I agree with dropy\'s {terms & conditions}'} onChanged={setTermsChecked} textUrl='https://dropy-app.com/privacy-policy.html'/>
             <FormCheckBox text={'subscribe to dropy\'s newsletter'} onChanged={setNewsletterChecked}/>
           </View>
           <GlassButton onPress={handleRegister} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }} disabled={!termsChecked}>

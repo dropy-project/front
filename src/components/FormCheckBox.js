@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet , Linking } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Styles, { Colors } from '../styles/Styles';
 
-export default function FormCheckBox({ text, onChanged = () => {} }) {
+export default function FormCheckBox({ text, onChanged = () => {}, textUrl }) {
 
   const [checked, setChecked] = useState(false);
 
@@ -22,7 +22,7 @@ export default function FormCheckBox({ text, onChanged = () => {} }) {
       <View style={{ paddingHorizontal: 10 }}>
         {textBeforeBrackets !== '' && <Text style={styles.text}>{textBeforeBrackets}</Text>}
         {textBetweenBrackets != null && (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => textUrl != null && Linking.openURL(textUrl)}>
             <Text style={styles.hyperlink}>{textBetweenBrackets}</Text>
           </TouchableOpacity>
         )}
