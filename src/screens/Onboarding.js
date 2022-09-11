@@ -5,52 +5,33 @@ import {
   Animated,
   TouchableOpacity,
   SafeAreaView,
-  Easing,
-  BackHandler
+  Easing
 } from 'react-native';
 import React, { useRef, useState , useEffect } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign , MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign , MaterialCommunityIcons , FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import GoBackHeader from '../components/GoBackHeader';
 import OnboardingLines from '../assets/svgs/onboarding_lines.svg';
 import GlassButton from '../components/GlassButton';
 import FormInput from '../components/FormInput';
-
+import FormCheckBox from '../components/FormCheckBox';
+import ViewSlider from '../components/ViewSlider';
 export default function Onboarding() {
+
+  const translateWavesAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
 
-  const translateViewAnimatedValue = useRef(new Animated.Value(0)).current;
-  const translateWavesAnimatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      setCurrentViewIndex(old => {
-        if(old - 1 < 0) return old;
-        return old - 1;
-      });
-      return true;
+    const anim = Animated.timing(translateWavesAnimatedValue, {
+      toValue: currentViewIndex * -responsiveWidth(100),
+      duration: 600,
+      useNativeDriver: true,
+      easing: Easing.bezier(.44,.23,.06,1.04),
     });
-    return () => backHandler.remove();
-  }, []);
-
-  useEffect(() => {
-    const anim = Animated.parallel([
-      Animated.timing(translateViewAnimatedValue, {
-        toValue: currentViewIndex * -responsiveWidth(100),
-        duration: 500,
-        useNativeDriver: true,
-      //   easing: Easing.ease,
-      }),
-      Animated.timing(translateWavesAnimatedValue, {
-        toValue: currentViewIndex * -responsiveWidth(100),
-        duration: 600,
-        useNativeDriver: true,
-        easing: Easing.bezier(.44,.23,.06,1.04),
-      })
-    ]);
     anim.start();
     return () => anim.stop();
   }, [currentViewIndex]);
@@ -73,77 +54,98 @@ export default function Onboarding() {
       }}>
         <OnboardingLines width={'100%'} height={'100%'} />
       </Animated.View>
-      <View>
 
-        <View style={styles.viewContainer}>
-          <Animated.View style={{ transform: [{ translateX: translateViewAnimatedValue }], flexDirection: 'row' }}>
-            <View style={styles.view}>
-              <Text style={styles.emoji}>👋</Text>
-              <View style={{ marginBottom: 30, ...Styles.center }}>
-                <Text style={{ ...Fonts.bold(30, Colors.darkGrey) }}>Hey there</Text>
-                <Text style={{ ...Fonts.bold(15, Colors.lightGrey) }}>ready to drop ?</Text>
-              </View>
-              <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
-                <AntDesign name="arrowright" size={32} color="white"/>
-              </GlassButton>
-            </View>
-            <View style={styles.view}>
-              <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>{'Let\'s start gently'}</Text>
-              <FormInput placeholder="What's your name" maxLength={25} style={{ width: '80%' }} inputStyle={{ backgroundColor: Colors.lighterGrey }} />
-              <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
-                <AntDesign name="arrowright" size={32} color="white"/>
-              </GlassButton>
-            </View>
-            <View style={styles.view}>
-              <View style={{ marginBottom: 30, ...Styles.center }}>
-                <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Show me your smile !</Text>
-                <Text style={{ ...Fonts.bold(13, Colors.darkGrey) }}>Set a profile picture</Text>
-              </View>
-              <ProfilePictureContainer/>
-              <GlassButton disabled={false} onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
-                <AntDesign name="arrowright" size={32} color="white"/>
-              </GlassButton>
-            </View>
-            <View style={styles.view}>
-              <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Secure your account !</Text>
-              <FormInput placeholder="email" maxLength={25} style={{ width: '80%' }} inputStyle={{ backgroundColor: Colors.lighterGrey }} />
-              <FormInput placeholder="password" style={{ width: '80%' }} inputStyle={{ backgroundColor: Colors.lighterGrey }} isPassword={true}/>
-              <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
-                <AntDesign name="arrowright" size={32} color="white"/>
-              </GlassButton>
-            </View>
-          </Animated.View>
+      <ViewSlider onViewIndexChanged={setCurrentViewIndex}>
+        <View style={styles.view}>
+          <Text style={styles.emoji}>👋</Text>
+          <View style={{ marginBottom: 30, ...Styles.center }}>
+            <Text style={{ ...Fonts.bold(30, Colors.darkGrey) }}>Hey there</Text>
+            <Text style={{ ...Fonts.bold(15, Colors.lightGrey) }}>ready to drop ?</Text>
+          </View>
+          <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
+            <AntDesign name="arrowright" size={32} color="white"/>
+          </GlassButton>
         </View>
-        {currentViewIndex === 0 ? (
-          <TouchableOpacity style={{ ...Styles.center, position: 'absolute', bottom: 0, alignSelf: 'center' }}>
-            <Text style={{ marginBottom: 20, ...Fonts.bold(13, Colors.grey) }}>I already have an account</Text>
-          </TouchableOpacity>
-        ) : (
-          <DotIndicator currentIndex={currentViewIndex - 1} />
-        )}
-      </View>
+
+        <View style={styles.view}>
+          <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>{'Let\'s start gently'}</Text>
+          <FormInput placeholder="What's your name" maxLength={25} style={{ width: '80%' }} inputStyle={{ backgroundColor: Colors.lighterGrey }} />
+          <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
+            <AntDesign name="arrowright" size={32} color="white"/>
+          </GlassButton>
+        </View>
+
+        <View style={styles.view}>
+          <View style={{ marginBottom: 30, ...Styles.center }}>
+            <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Show me your smile !</Text>
+            <Text style={{ ...Fonts.bold(13, Colors.darkGrey) }}>Set a profile picture</Text>
+          </View>
+          <ProfilePictureContainer/>
+          <GlassButton disabled={false} onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
+            <AntDesign name="arrowright" size={32} color="white"/>
+          </GlassButton>
+        </View>
+
+        <View style={styles.view}>
+          <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Secure your account !</Text>
+          <FormInput placeholder="email" maxLength={25} style={{ width: '80%' }} inputStyle={{ backgroundColor: Colors.lighterGrey }} />
+          <FormInput placeholder="password" style={{ width: '80%' }} inputStyle={{ backgroundColor: Colors.lighterGrey }} isPassword={true}/>
+          <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
+            <AntDesign name="arrowright" size={32} color="white"/>
+          </GlassButton>
+        </View>
+
+        <View style={styles.view}>
+          <View style={{ marginBottom: 30, ...Styles.center }}>
+            <Text style={{ ...Fonts.bold(20, Colors.darkGrey), textAlign: 'center' }}>We need you to turn on geolocation</Text>
+            <Text style={{ ...Fonts.bold(13, Colors.darkGrey) }}>{'Or you won\'t be able to use the app'}</Text>
+          </View>
+          <MaterialIcons name="location-pin" size={60} color={Colors.grey} />
+          <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 50, paddingVertical: 10, marginBottom: 60 }}>
+            <Text style={{ ...Fonts.bold(15, Colors.white) }}>turn on</Text>
+          </GlassButton>
+        </View>
+
+        <View style={styles.view}>
+          <View style={{ marginBottom: 30, ...Styles.center }}>
+            <Text style={{ ...Fonts.bold(20, Colors.darkGrey), textAlign: 'center' }}>{'Don\'t miss your personnal messages '}</Text>
+            <Text style={{ ...Fonts.bold(13, Colors.darkGrey) }}>Turn on notifications</Text>
+          </View>
+          <MaterialCommunityIcons name="bell-ring" size={60} color="grey" />
+          <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 50, paddingVertical: 10, marginBottom: 60 }}>
+            <Text style={{ ...Fonts.bold(15, Colors.white) }}>turn on</Text>
+          </GlassButton>
+        </View>
+
+        <View style={styles.view}>
+          <View style={{ marginBottom: 30, ...Styles.center }}>
+            <Text style={{ ...Fonts.bold(20, Colors.darkGrey), textAlign: 'center' }}>{'Don\'t miss drops around you'}</Text>
+            <Text style={{ ...Fonts.bold(13, Colors.darkGrey), textAlign: 'center' }}>Turn on background geolocation and get notified when there are drops around you</Text>
+            <TouchableOpacity>
+              <Text style={{ ...Fonts.regular(13, Colors.mainBlue) }}>learn more</Text>
+            </TouchableOpacity>
+          </View>
+          <FontAwesome5 name="satellite" size={60} color="grey" />
+          <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 50, paddingVertical: 10, marginBottom: 60 }}>
+            <Text style={{ ...Fonts.bold(15, Colors.white) }}>turn on</Text>
+          </GlassButton>
+        </View>
+
+        <View style={styles.view}>
+          <Text style={styles.emoji}>😃</Text>
+          <Text style={{ ...Fonts.bold(30, Colors.darkGrey) }}>Almost there !</Text>
+          <View style={{ marginBottom: 30, ...Styles.center }}>
+            <FormCheckBox text={'I agree with dropy\'s {terms & conditions}'}/>
+            <FormCheckBox text={'subscribe to dropy\'s newsletter'}/>
+          </View>
+          <GlassButton onPress={() => setCurrentViewIndex(old => old + 1)} style={{ paddingHorizontal: 20, paddingVertical: 10, marginBottom: 40 }} >
+            <AntDesign name="arrowright" size={32} color="white"/>
+          </GlassButton>
+        </View>
+      </ViewSlider>
     </SafeAreaView>
   );
 }
-
-const DotIndicator = ({ currentIndex, isSkippable = true }) => {
-  const dots = [];
-  for (let i = 0; i < 7; i++) {
-    dots.push(
-      <View key={i} style={{ ...styles.dot, backgroundColor: currentIndex === i ? Colors.grey : Colors.lightGrey }} />
-    );
-  }
-  return (
-    <View style={styles.indicatorContainer}>
-      {dots}
-      {isSkippable && (
-        <TouchableOpacity>
-          <Text style={styles.skipText}>skip</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-};
 
 const ProfilePictureContainer = ({ onPress }) => {
 
@@ -161,13 +163,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     ...Styles.safeAreaView,
   },
-  viewContainer: {
-    width: responsiveWidth(100),
-    height: responsiveHeight(50),
-    // borderColor: 'blue',
-    // borderWidth: 1,
-    flexDirection: 'row',
-  },
   view: {
     width: responsiveWidth(100),
     height: responsiveHeight(50),
@@ -179,27 +174,4 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginTop: 20,
   },
-  // Dot indicator component
-  indicatorContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    position: 'absolute',
-    bottom: 0,
-    alignSelf: 'center' ,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 5,
-    marginHorizontal: 5,
-  },
-  skipText: {
-    ...Fonts.bold(13, Colors.darkGrey),
-    position: 'absolute',
-    bottom: -10,
-    right: -60,
-  },
-
 });
