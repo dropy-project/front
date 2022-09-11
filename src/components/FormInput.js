@@ -34,19 +34,19 @@ const FormInput = (props, ref) => {
   const [valid, setValid] = useState(true);
 
   useEffect(() => {
-    onEdited(value.trim());
+    onEdited(value?.trim());
     setValid(true);
   }, [value]);
 
   useImperativeHandle(ref, () => ({
-    getValue: () => value.trim(),
+    getValue: () => value?.trim(),
     isValid: () => {
-      const notEmpty = value.trim() !== '';
+      const notEmpty = value?.trim() !== '';
       const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
       const passwordValid = (!isPassword || PASSWORD_REGEX.test(value.trim()));
-      const maxLengthValid = (!maxLength || value.trim().length <= maxLength);
-      const minLengthValid = (!minLength || value.trim().length >= minLength);
-      const inputValid =  notEmpty && emailValid && maxLengthValid && minLengthValid && passwordValid;
+      const maxLengthValid = (!maxLength || value?.trim().length <= maxLength);
+      const minLengthValid = (!minLength || value?.trim().length >= minLength);
+      const inputValid =  value != null && notEmpty && emailValid && maxLengthValid && minLengthValid && passwordValid;
       setValid(inputValid);
       return inputValid;
     },

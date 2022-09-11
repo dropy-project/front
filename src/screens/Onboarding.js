@@ -26,8 +26,9 @@ import ViewSlider from '../components/ViewSlider';
 import { compressImage } from '../utils/files';
 import API from '../services/API';
 import useOverlay from '../hooks/useOverlay';
+import useCurrentUser from '../hooks/useCurrentUser';
 
-export default function Onboarding() {
+export default function Onboarding({ navigation }) {
 
   const translateWavesAnimatedValue = useRef(new Animated.Value(0)).current;
   const viewSliderRef = useRef(null);
@@ -37,6 +38,7 @@ export default function Onboarding() {
   const passwordConfirmationInputRef = useRef(null);
 
   const { sendAlert } = useOverlay();
+  const { setUser } = useCurrentUser();
 
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
   const [displayName, setDisplayName] = useState('');
@@ -142,6 +144,42 @@ export default function Onboarding() {
     }
   };
 
+  const handleRegister = async () => {
+    try {
+      await API.register(
+        displayName,
+        email,
+        password,
+        newsletterChecked
+      );
+      const userInfos = await API.login(email, password);
+      if (profilePicturePath) {
+        // const response = await API.postProfilePicture(profilePicturePath);
+        // const avatarUrl = response.data;
+        // setUser({
+        //   ...userInfos,
+        //   avatarUrl,
+        // });
+      } else {
+        // PUTE
+      }
+      setUser(userInfos);
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const userInfos = await API.login(email, password);
+      setUser(userInfos);
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {currentViewIndex === 0 && (
@@ -174,19 +212,17 @@ export default function Onboarding() {
             placeholder="email"
             style={{ width: '80%' }}
             inputStyle={{ backgroundColor: Colors.lighterGrey }}
+            onChangeText={setEmail}
           />
           <FormInput
             placeholder="password"
             style={{ width: '80%' }}
             inputStyle={{ backgroundColor: Colors.lighterGrey }}
             isPassword={true}
+            onChangeText={setPassword}
           />
           <GlassButton
-            onPress={() => {
-              const isValid = true; // TODO PUTE;
-              isValid && viewSliderRef.current?.nextView();
-              isValid && Keyboard.dismiss();
-            }}
+            onPress={handleLogin}
             style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}
           >
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>Login</Text>
@@ -254,7 +290,7 @@ export default function Onboarding() {
             placeholder="email"
             maxLength={25}
             style={{ width: '80%' }}
-            inputStyle={{ backgroundColor: Colors.lighterGrey }} 
+            inputStyle={{ backgroundColor: Colors.lighterGrey }}
             isEmail={true}/>
           <FormInput
             ref={passwordInputRef}
@@ -334,7 +370,7 @@ export default function Onboarding() {
             <FormCheckBox text={'I agree with dropy\'s {terms & conditions}'} onChanged={setTermsChecked}/>
             <FormCheckBox text={'subscribe to dropy\'s newsletter'} onChanged={setNewsletterChecked}/>
           </View>
-          <GlassButton onPress={() => viewSliderRef.current?.nextView()} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }} disabled={!termsChecked}>
+          <GlassButton onPress={handleRegister} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }} disabled={!termsChecked}>
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>Start</Text>
           </GlassButton>
         </View>
