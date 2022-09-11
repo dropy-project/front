@@ -75,7 +75,8 @@ const FormInput = (props, ref) => {
           onEndEditing={() => onEdited(value)}
           textAlignVertical="top"
           secureTextEntry={isPassword && !showPassword}
-
+          autoCapitalize={isEmail || isPassword ? 'none' : 'sentences'}
+          autoCorrect={isEmail || isPassword ? false : true}
           {...props}
         />
         {selected && maxLength != null && (

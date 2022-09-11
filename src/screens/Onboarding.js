@@ -281,7 +281,6 @@ export default function Onboarding({ navigation }) {
             ref={emailInputRef}
             onEdited={setEmail}
             placeholder="email"
-            maxLength={25}
             style={{ width: '80%' }}
             inputStyle={{ backgroundColor: Colors.lighterGrey }}
             isEmail={true}/>
