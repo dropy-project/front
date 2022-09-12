@@ -126,6 +126,7 @@ const ConversationsContextProvider = ({ children }) => {
       conversations,
       closeConversation,
       markConversationAsRead,
+      listConversations,
       openChat,
     }}>
       {children}
