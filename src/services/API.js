@@ -1,5 +1,3 @@
-import { getUniqueId } from 'react-native-device-info';
-
 import Axios from 'axios';
 import Storage from '../utils/storage';
 import AppInfo from '../../app.json';
@@ -18,19 +16,28 @@ const getHeaders = () => {
   return axios.defaults.headers.common;
 };
 
-const register = async (displayName) => {
-  const uid = getUniqueId();
+const register = async (displayName, email, password, newsLetter) => {
   const response = await axios.post('/register', {
-    uid,
     displayName,
+    email,
+    password,
+    newsLetter,
   });
-  return response.data;
+
+  const  { accessToken, refreshToken, expires, profile: user } = response.data;
+
+  axios = Axios.create(AXIOS_PARAMS);
+  axios.defaults.headers.common['Authorization'] = accessToken;
+
+  await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
+
+  return user;
 };
 
-const login = async () => {
-  const uid = getUniqueId();
+const login = async (email, password) => {
   const response = await axios.post('/login', {
-    uid,
+    email,
+    password,
   });
 
   const  { accessToken, refreshToken, expires, profile: user } = response.data;

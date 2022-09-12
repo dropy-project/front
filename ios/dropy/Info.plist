@@ -43,6 +43,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to acces your camera</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow $(PRODUCT_NAME) to use the location</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use the location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

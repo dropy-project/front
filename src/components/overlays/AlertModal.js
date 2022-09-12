@@ -70,10 +70,8 @@ const AlertModal = ({ visible, data }) => {
             onPress={lastData?.onPressValidate}
             buttonText={lastData?.validateText}
             style={styles.validateButton}
-            te
             fontSize={14}
-          >
-          </GlassButton>
+          />
         </View>
       </Animated.View>
     </Animated.View>
@@ -140,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     ...Styles.hardShadows,
     ...Styles.center,
-    paddingHorizontal: 10,
+    paddingHorizontal: 18,
     paddingVertical: 10,
   },
 });

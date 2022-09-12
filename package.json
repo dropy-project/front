@@ -32,7 +32,7 @@
     "react-native-background-geolocation": "^4.7.1",
     "react-native-compass-heading": "^1.4.1",
     "react-native-config": "^1.4.6",
-    "react-native-device-info": "^9.0.2",
+    "react-native-device-info": "^10.1.1",
     "react-native-fast-image": "^8.5.11",
     "react-native-geolocation-service": "^5.3.0",
     "react-native-gesture-handler": "^2.4.2",

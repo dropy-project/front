@@ -240,16 +240,17 @@ const ProfileEditScreen = () => {
 
         <FormInput
           ref={displayNameInputRef}
-          onEdited={(edited) => edited && setEdited(true)}
+          onEdited={() => setEdited(true)}
           title="Name"
           defaultValue={user.displayName}
           placeholder="What's your name?"
           maxLength={25}
+          minLength={3}
         />
 
         <FormInput
           ref={aboutInputRef}
-          onEdited={(edited) => edited && setEdited(true)}
+          onEdited={() => setEdited(true)}
           title="About"
           defaultValue={user.about}
           placeholder="What makes you special?"

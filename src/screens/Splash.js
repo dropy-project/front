@@ -38,7 +38,7 @@ const Splash = ({ navigation }) => {
   useEffectForegroundOnly(() => {
     API.serverVersionIsCompatible().then(compatible => {
       if (compatible) {
-        login();
+        navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
       } else {
         sendAlert({
           title: 'Server version is not compatible',

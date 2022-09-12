@@ -38,8 +38,9 @@ const NotificationProvider = ({ children }) => {
   } = useConversationsSocket();
 
   useEffectForegroundOnly(() => {
-    if(user != null)
-      setupNotifications();
+    if(user == null) return;
+    setupNotifications();
+    sendDeviceToken();
   }, [user]);
 
   const setupNotifications = () => {
@@ -47,8 +48,6 @@ const NotificationProvider = ({ children }) => {
     setInitialized(true);
 
     Notifications.registerRemoteNotifications();
-
-    sendDeviceToken();
 
     const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
       console.error('Notification registation error', event);

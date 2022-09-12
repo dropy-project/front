@@ -1,42 +1,73 @@
-import { Feather } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
-  KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View
 } from 'react-native';
 import { Colors, Fonts } from '../styles/Styles';
 
+const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/; // at least 8 characters, 1 uppercase, 1 lowercase, 1 number
 
 const FormInput = (props, ref) => {
-  const { onEdited = () => {}, title = '""', placeholder = '', defaultValue = '', inputStyle } = props;
+  const {
+    onEdited = () => {},
+    title = null, placeholder = '',
+    defaultValue = '',
+    inputStyle,
+    style,
+    isPassword = false,
+    isEmail = false,
+    maxLength,
+    minLength,
+  } = props;
 
   const [value, setValue] = useState(defaultValue);
   const [selected, setSelected] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [valid, setValid] = useState(true);
+  const [validityErrorMessage, setValidityErrorMessage] = useState('');
 
   useEffect(() => {
-    onEdited(value !== defaultValue);
+    onEdited(value?.trim());
+    setValid(true);
   }, [value]);
 
   useImperativeHandle(ref, () => ({
-    getValue: () => value.trim(),
+    getValue: () => value?.trim(),
     isValid: () => {
-      setValid(value?.trim().length > 0);
-      return value?.trim().length > 0;
+      const notEmpty = value?.trim() !== '';
+      const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
+      if(!emailValid) {
+        setValidityErrorMessage('This is not a valid email');
+      }
+      const passwordValid = (!isPassword || PASSWORD_REGEX.test(value.trim()));
+      if(!passwordValid) {
+        setValidityErrorMessage('Requires 8 characters, 1 uppercase, 1 number');
+      }
+      const maxLengthValid = (!maxLength || value?.trim().length <= maxLength);
+      const minLengthValid = (!minLength || value?.trim().length >= minLength);
+      if(!minLengthValid) {
+        setValidityErrorMessage(`Must be at least ${minLength} characters`);
+      }
+      const inputValid =  value != null && notEmpty && emailValid && maxLengthValid && minLengthValid && passwordValid;
+      setValid(inputValid);
+      return inputValid;
+    },
+    setInvalid: (reason = null) => {
+      setValid(false);
+      reason && setValidityErrorMessage(reason);
     },
   }));
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <Text style={styles.text}>{title}</Text>
+    <View style={{ ...styles.container, ...style }}>
+      {title != null && (<Text style={styles.text}>{title}</Text>)}
       <View style={{
         ...styles.textInputContainer,
         ...inputStyle,
@@ -46,23 +77,41 @@ const FormInput = (props, ref) => {
           onFocus={() => setSelected(true)}
           onBlur={() => setSelected(false)}
           onChangeText={(text) => setValue(text)}
-          style={{ ...Fonts.regular(12, Colors.darkGrey), ...styles.textInput }}
+          style={{ ...Fonts.regular(12, Colors.darkGrey), ...styles.textInput, textAlignVertical: 'top' }}
           placeholder={placeholder}
-          placeholderTextColor={Colors.lightGrey}
+          placeholderTextColor={Colors.grey}
           returnKeyType="done"
           onEndEditing={() => onEdited(value)}
+          textAlignVertical="top"
+          secureTextEntry={isPassword && !showPassword}
+          autoCapitalize={isEmail || isPassword ? 'none' : 'sentences'}
+          autoCorrect={isEmail || isPassword ? false : true}
           {...props}
         />
-        {selected && props.maxLength != null && (
-          <Text style={{ ...Fonts.bold(10, (value?.length || 0) === props.maxLength ? Colors.red : Colors.grey) }}>
-            {value?.length || 0}/{props.maxLength}
+        {(!valid && validityErrorMessage !== '') && (
+          <Text style={{ ...Fonts.regular(10, Colors.red), ...styles.errorMessage }}>
+            {validityErrorMessage}
           </Text>
         )}
-        {!selected && (
+        {selected && maxLength != null && (
+          <Text style={{ ...Fonts.bold(10, (value?.length || 0) === maxLength ? Colors.red : Colors.grey) }}>
+            {value?.length || 0}/{maxLength}
+          </Text>
+        )}
+        {!selected && !isPassword && (
           <Feather style={{ marginLeft: 4 }} name="edit-2" size={15} color={Colors.darkGrey} />
         )}
+        {isPassword && (
+          <TouchableOpacity hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }} onPress={() =>  setShowPassword(old => !old)}>
+            {showPassword ? (
+              <Ionicons name="eye-off-sharp" style={{ marginLeft: 4 }} size={15} color={Colors.darkGrey} />
+            ) : (
+              <Ionicons name="eye" style={{ marginLeft: 4 }} size={15} color={Colors.darkGrey} />
+            )}
+          </TouchableOpacity>
+        )}
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -86,9 +135,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lighterGrey,
     width: '100%',
     borderRadius: 10,
-    padding: 10,
+    padding: Platform.OS === 'ios' ? 10 : 0,
+    paddingLeft: 10,
+    paddingTop: Platform.OS === 'ios' ? 10 : 10,
+    paddingRight: Platform.OS === 'ios' ? 0 : 10,
   },
   textInput: {
     flex: 1,
+    padding: 0,
+  },
+  errorMessage: {
+    position: 'absolute',
+    bottom: -20,
+    left: 0,
+    maxWidth: '80%',
   },
 });
