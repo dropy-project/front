@@ -32,7 +32,6 @@ const Splash = ({ navigation }) => {
       return;
     }
 
-    // choper le token de l'utilisateur depuis le storage (si existe)*
     const userTokenData = await Storage.getItem('@auth_tokens');
     if (userTokenData == null) {
       navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
