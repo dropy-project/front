@@ -6,8 +6,9 @@ import Svg2 from '../assets/svgs/add_drop_2.svg';
 import Svg3 from '../assets/svgs/add_drop_3.svg';
 import Styles, { Colors } from '../styles/Styles';
 
-const GlassCircleButton = ({ style, children, onPress, size = 70 }) => (
+const GlassCircleButton = ({ style, children, onPress, size = 70, activeOpacity }) => (
   <TouchableOpacity
+    activeOpacity={activeOpacity}
     onPress={onPress}
     style={{ ...styles.container, ...style }}
   >

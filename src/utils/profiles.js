@@ -4,6 +4,7 @@ export const PRONOUNS = {
   UNKOWN: 'I prefer not to tell',
   HE_HIM: 'He/Him',
   SHE_HER: 'She/Her',
+  OTHER: 'Other',
 };
 
 export const reportUser = async (userId, sendAlert, dropyId = undefined) => {

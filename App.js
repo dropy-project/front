@@ -38,17 +38,17 @@ const NavigationApp = () => {
     <NavigationContainer>
       <OverlayContextProvider>
         <UserProvider>
-          <NotificationProvider>
-            <BackgroundGolocationContextProvider>
-              <GeolocationProvider>
-                <SocketContextProvider>
-                  <ConversationsContextProvider>
+          <BackgroundGolocationContextProvider>
+            <GeolocationProvider>
+              <SocketContextProvider>
+                <ConversationsContextProvider>
+                  <NotificationProvider>
                     <Navigation />
-                  </ConversationsContextProvider>
-                </SocketContextProvider>
-              </GeolocationProvider>
-            </BackgroundGolocationContextProvider>
-          </NotificationProvider>
+                  </NotificationProvider>
+                </ConversationsContextProvider>
+              </SocketContextProvider>
+            </GeolocationProvider>
+          </BackgroundGolocationContextProvider>
         </UserProvider>
       </OverlayContextProvider>
     </NavigationContainer>

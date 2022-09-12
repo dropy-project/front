@@ -54,6 +54,11 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
     extrapolate: 'clamp',
   });
 
+  const profilePictureScale = scrollAnimValue.interpolate({
+    inputRange: [-200, 0, MIN_HEADER_HEIGHT],
+    outputRange: [1.1, 1, 1.2],
+  });
+
   const handleOptionsButtonPress = () => {
     showActionSheetWithOptions({
       options: ['Report user', 'Block user', 'Cancel'],
@@ -73,11 +78,13 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
     <Animated.View style={{ ...styles.animatedHeader, transform: [{ translateY: headerTranform }] }}>
 
       <Animated.View style={{ ...StyleSheet.absoluteFillObject, transform: [{ translateY: headerCancelTransform }] }}>
-        <ProfileImage
-          displayNameSize={40}
-          displayName={user?.displayName}
-          avatarUrl={user?.avatarUrl}
-        />
+        <Animated.View style={{ transform: [{ scale: profilePictureScale }] }}>
+          <ProfileImage
+            displayNameSize={40}
+            displayName={user?.displayName}
+            avatarUrl={user?.avatarUrl}
+          />
+        </Animated.View>
         <LinearGradient
           pointerEvents='none'
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.3)']}

@@ -9,6 +9,7 @@ import useCurrentUser from '../hooks/useCurrentUser';
 import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 
 import Notification from '../components/Notification';
+import useConversationsSocket from '../hooks/useConversationsSocket';
 
 export const extractNotificationPayload = (notification) => {
   if(Platform.OS === 'android') {
@@ -28,8 +29,13 @@ const NotificationProvider = ({ children }) => {
   const navigation = useNavigation();
 
   const [initialized, setInitialized] = useState(false);
+  const [pendingConversationToOpen, setPendingConversationToOpen] = useState(null);
 
   const [notificationData, setNotificationData] = useState(null);
+
+  const {
+    conversations,
+  } = useConversationsSocket();
 
   useEffectForegroundOnly(() => {
     if(user != null)
@@ -69,7 +75,7 @@ const NotificationProvider = ({ children }) => {
       const payload = extractNotificationPayload(notification);
       if(payload == null) return;
 
-      openConversation(payload);
+      setPendingConversationToOpen(payload);
     });
 
     Notifications.ios.setBadgeCount(0);
@@ -81,8 +87,16 @@ const NotificationProvider = ({ children }) => {
     };
   };
 
-  const openConversation = (conversation) => {
-    if(conversation?.id == null) return;
+  useEffectForegroundOnly(() => {
+    if(conversations == null) return;
+    if(pendingConversationToOpen != null) {
+      openConversation(pendingConversationToOpen);
+      setPendingConversationToOpen(null);
+    }
+  }, [pendingConversationToOpen, conversations]);
+
+  const openConversation = (conversationId) => {
+    const conversation = conversations.find(c => c.id === conversationId);
     navigation.reset({
       index: 2,
       routes: [
