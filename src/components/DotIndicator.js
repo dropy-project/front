@@ -5,7 +5,7 @@ import { Colors, Fonts } from '../styles/Styles';
 export const DotIndicator = ({ currentIndex, isSkippable = false, onPressSkip }) => {
   return (
     <View style={styles.indicatorContainer}>
-      {[...new Array(7)].map((_, i) => (
+      {[...new Array(6)].map((_, i) => (
         <View key={i} style={{ ...styles.dot, backgroundColor: currentIndex  - 1 === i ? Colors.grey : Colors.lightGrey }} />
       ))}
       {isSkippable && (

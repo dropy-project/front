@@ -38,8 +38,11 @@ export default function Onboarding({ navigation }) {
 
 
   const translateWavesAnimatedValue = useRef(new Animated.Value(0)).current;
+  const dropyLogoAnimatedValue = useRef(new Animated.Value(0)).current;
+
   const viewSliderRef = useRef(null);
   const displayNameInputRef = useRef(null);
+  const loginEmailInputRef = useRef(null);
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const passwordConfirmationInputRef = useRef(null);
@@ -73,6 +76,19 @@ export default function Onboarding({ navigation }) {
     anim.start();
     return () => anim.stop();
   }, [currentViewIndex]);
+
+  useEffect(() => {
+    const anim = Animated.timing(dropyLogoAnimatedValue, {
+      toValue: currentViewIndex === 1 ? 1 : 0,
+      duration: 600,
+      useNativeDriver: true,
+      easing: currentViewIndex === 1 ? Easing.elastic(1.5) : Easing.bezier(.43,-0.59,.4,.64),
+    });
+    anim.start();
+    return () => anim.stop();
+  }, [currentViewIndex]);
+
+
 
   const onPressEditPicture = () => {
     const options = profilePicturePath == null ? {
@@ -175,6 +191,13 @@ export default function Onboarding({ navigation }) {
   };
 
   const handleLogin = async () => {
+    const emailValid = loginEmailInputRef.current?.isValid();
+
+    if(!emailValid) {
+      console.log('email not valid');
+      return;
+    }
+
     try {
       const userInfos = await API.login(email, password);
       setUser(userInfos);
@@ -194,38 +217,53 @@ export default function Onboarding({ navigation }) {
       {currentViewIndex > 1 && (
         <GoBackHeader onPressGoBack={() => viewSliderRef.current?.previousView()}/>
       )}
+
       {currentViewIndex === 1 && (
-        <DropyLogo height={70} width={70}/>
+        <View />
       )}
+
       <Animated.View style={{
         position: 'absolute',
         top: responsiveHeight(10),
         left: 0,
-        width: (responsiveWidth(100)) * 8,
+        width: (responsiveWidth(100)) * 10,
         height: responsiveHeight(30),
-        transform: [{ translateX: Animated.add(translateWavesAnimatedValue, -50) }],
+        transform: [{ translateX: Animated.add(translateWavesAnimatedValue, -responsiveWidth(20)) }],
       }}>
-        <OnboardingLines width={'100%'} height={'100%'} />
+        <OnboardingLines preserveAspectRatio="xMinYMin slice" width={'100%'} height={'100%'} />
+      </Animated.View>
+
+      <Animated.View style={{
+        position: 'absolute',
+        top: responsiveHeight(10),
+        transform: [{ scale: dropyLogoAnimatedValue }],
+        ...Styles.center,
+        opacity: dropyLogoAnimatedValue,
+      }}>
+        <DropyLogo height={70} width={70}/>
       </Animated.View>
 
       <ViewSlider ref={viewSliderRef} onViewIndexChanged={setCurrentViewIndex}>
 
         <View style={styles.view}>
           <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Welcome back !</Text>
-          <FormInput
-            placeholder="email"
-            style={{ width: '80%' }}
-            inputStyle={{ backgroundColor: Colors.lighterGrey }}
-            onChangeText={setEmail}
-          />
-          <FormInput
-            placeholder="password"
-            style={{ width: '80%' }}
-            inputStyle={{ backgroundColor: Colors.lighterGrey }}
-            isPassword={true}
-            onChangeText={setPassword}
-          />
+          <View style={{ width: '80%' }}>
+            <FormInput
+              ref={loginEmailInputRef}
+              placeholder="email"
+              inputStyle={{ backgroundColor: Colors.lighterGrey }}
+              onEdited={setEmail}
+              isEmail
+            />
+            <FormInput
+              placeholder="password"
+              inputStyle={{ backgroundColor: Colors.lighterGrey }}
+              isPassword
+              onEdited={setPassword}
+            />
+          </View>
           <GlassButton
+            disabled={email.length === 0 || password.length === 0}
             onPress={handleLogin}
             style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}
           >
@@ -288,27 +326,26 @@ export default function Onboarding({ navigation }) {
 
         <View style={{ ...styles.view }}>
           <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Secure your account !</Text>
-          <FormInput
-            ref={emailInputRef}
-            onEdited={setEmail}
-            placeholder="email"
-            style={{ width: '80%' }}
-            inputStyle={{ backgroundColor: Colors.lighterGrey }}
-            isEmail={true}/>
-          <FormInput
-            ref={passwordInputRef}
-            onEdited={setPassword}
-            placeholder="password"
-            style={{ width: '80%' }}
-            inputStyle={{ backgroundColor: Colors.lighterGrey }}
-            isPassword={true}/>
-          <FormInput
-            ref={passwordConfirmationInputRef}
-            onEdited={setPasswordConfirmation}
-            placeholder="confirm password"
-            style={{ width: '80%' }}
-            inputStyle={{ backgroundColor: Colors.lighterGrey }}
-            isPassword={true}/>
+          <View style={{ width: '80%' }}>
+            <FormInput
+              ref={emailInputRef}
+              onEdited={setEmail}
+              placeholder="email"
+              inputStyle={{ backgroundColor: Colors.lighterGrey }}
+              isEmail/>
+            <FormInput
+              ref={passwordInputRef}
+              onEdited={setPassword}
+              placeholder="password"
+              inputStyle={{ backgroundColor: Colors.lighterGrey }}
+              isPassword/>
+            <FormInput
+              ref={passwordConfirmationInputRef}
+              onEdited={setPasswordConfirmation}
+              placeholder="confirm password"
+              inputStyle={{ backgroundColor: Colors.lighterGrey }}
+              isPassword/>
+          </View>
           <GlassButton
             disabled={email === '' || password === '' || passwordConfirmation === ''}
             onPress={() => {
@@ -324,7 +361,7 @@ export default function Onboarding({ navigation }) {
               isValid && viewSliderRef.current?.goToView(5);
               isValid && Keyboard.dismiss();
             }}
-            style={{ ...styles.nextButton, marginBottom: 15, width: 150 }}>
+            style={{ ...styles.nextButton, width: 150 }}>
             <AntDesign name="arrowright" size={32} color="white"/>
           </GlassButton>
         </View>
@@ -393,6 +430,7 @@ export default function Onboarding({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.white,
     flex: 1,
     ...Styles.center,
     justifyContent: 'space-between',

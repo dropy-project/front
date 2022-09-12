@@ -67,7 +67,7 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
           <Text style={{ marginBottom: 20, ...Fonts.bold(13, Colors.grey) }}>I already have an account</Text>
         </TouchableOpacity>
       )}
-      {currentViewIndex > 1 && (
+      {currentViewIndex > 1 && currentViewIndex < children.length - 1 && (
         <DotIndicator currentIndex={currentViewIndex - 1} onPressSkip={() => setCurrentViewIndex(old => old + 1)} isSkippable={currentViewIndex === 3 || currentViewIndex === 7}/>
       )}
     </View>
