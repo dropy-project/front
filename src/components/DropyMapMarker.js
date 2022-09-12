@@ -7,7 +7,7 @@ import DropyPopup from '../assets/svgs/dropyPopup.svg';
 
 import { createDropTimeString } from '../utils/time';
 
-const DropyMapMarker = ({ dropy, onPress, isInRange = false }) => {
+const DropyMapMarker = ({ dropy, onPress }) => {
   const [dropTimeString, setDropTimeString] = useState('0s');
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const DropyMapMarker = ({ dropy, onPress, isInRange = false }) => {
     return () => clearInterval(interval);
   }, [dropy?.isUserDropy]);
 
-  if(!isInRange && !dropy?.isUserDropy) return <RadarMarker dropy={dropy} />;
+  if(!dropy.reachable && !dropy?.isUserDropy) return <RadarMarker dropy={dropy} />;
 
   return (
     <Marker

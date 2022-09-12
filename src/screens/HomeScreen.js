@@ -30,7 +30,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   const backgroundGeolocIconAnimatedValue = useRef(new Animated.Value(0)).current;
 
-  const { dropiesAround, createDropy, retrieveDropy } = useDropiesAroundSocket();
+  const { dropiesAround, createDropy, retrieveDropy, canEmitDropy } = useDropiesAroundSocket();
 
   const { backgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
   const shouldAnimateBackgroundGeolocIcon = useRef(true);
@@ -146,6 +146,7 @@ const HomeScreen = ({ navigation, route }) => {
         onMuseumOpenPressed={() => setMuseumOverlayVisible(true)}
         onMuseumClosePressed={() => setMuseumOverlayVisible(false)}
         museumVisible={museumOverlayVisible}
+        canEmitDropy={canEmitDropy}
       />
 
       <ConfirmDropyOverlay

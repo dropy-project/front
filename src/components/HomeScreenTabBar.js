@@ -18,13 +18,15 @@ import Haptics from '../utils/haptics';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useOverlay from '../hooks/useOverlay';
 import useUnreadConversation from '../hooks/useUnreadConversation';
+import useCurrentUser from '../hooks/useCurrentUser';
 import GlassCircleButton from './GlassCircleButton';
 
 const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;
 
-const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVisible }) => {
+const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVisible, canEmitDropy }) => {
   const navigation = useNavigation();
+  const { developerMode } = useCurrentUser();
 
   const tabBarAnimatedValue = useRef(new Animated.Value(0)).current;
   const mainButtonAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -130,6 +132,30 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
     });
   };
 
+  const onPressGlassButton = async () => {
+    if(canEmitDropy) {
+      setDropyMenuIsOpen(!dropyMenuIsOpen);
+      return;
+    }
+    if(!dropyMenuIsOpen) {
+      const validated = await sendAlert({
+        title: 'Take it easy!',
+        description: 'You can\'t drop at the same location twice in a row.',
+        validateText: 'OK !',
+        denyText: developerMode ? 'DEV_ADD' : undefined,
+      });
+      setDropyMenuIsOpen(!validated && developerMode);
+    } else {
+      setDropyMenuIsOpen(!dropyMenuIsOpen);
+    }
+  };
+
+  useEffect(() => {
+    if(!canEmitDropy) {
+      setDropyMenuIsOpen(false);
+    }
+  }, [canEmitDropy]);
+
   return (
     <View style={styles.container}>
       <Animated.View
@@ -197,11 +223,23 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
       }}>
         <GlassCircleButton
           size={mainButtonSize}
-          onPress={() => setDropyMenuIsOpen(!dropyMenuIsOpen)}
+          onPress={onPressGlassButton}
+          activeOpacity={canEmitDropy ? 0.5 : 0.8}
         >
-          <Animated.View style={{ transform: [{ rotate: plusIconRotation }] }}>
-            <FontAwesome5 name="plus" size={20} color="white" />
-          </Animated.View>
+          {canEmitDropy ? (
+            <Animated.View style={{ transform: [{ rotate: plusIconRotation }] }}>
+              <FontAwesome5 name="plus" size={20} color={Colors.white} />
+            </Animated.View>
+          ) : (
+            <View style={{
+              ...Styles.center,
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: Colors.lightGrey,
+              opacity: 0.5,
+            }}>
+              <Entypo name="block" size={24} color={Colors.white} />
+            </View>
+          )}
         </GlassCircleButton>
       </Animated.View>
 

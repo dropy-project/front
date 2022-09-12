@@ -104,10 +104,9 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   };
 
   const onRegionChange = (region) => {
+    if(museumVisible) return;
     const zoom = Math.log2(360 * (Dimensions.get('screen').width / 256 / region.longitudeDelta));
-    if(!museumVisible) {
-      setZoomValue(zoom);
-    }
+    setZoomValue(zoom);
   };
 
   return (
@@ -156,8 +155,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
           <>
             {dropiesAround.map((dropy) => (
               <DropyMapMarker
-                key={`${dropy.id}_${dropy.isInRange}`}
-                isInRange={dropy.isInRange}
+                key={`${dropy.id}_${dropy.reachable}`}
                 dropy={dropy}
                 onPress={() => handleDropyPressed(dropy)}
               />
