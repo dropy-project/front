@@ -64,6 +64,8 @@ const useDropiesAroundSocket = () => {
 
   useEffect(() => {
     if(userCoordinates?.geoHashs == null) return;
+    if (dropySocket == null) return;
+
     dropySocket.emit('zones_update', { zones: userCoordinates.geoHashs }, (response) => {
 
       if(response.error != null) {

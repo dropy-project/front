@@ -165,6 +165,31 @@ const unblockUser = async (userId) => {
   return result;
 };
 
+const refreshToken = async (token) => {
+  const response = await axios.post('/refresh', {
+    refreshToken: token,
+  });
+
+  const  { accessToken, refreshToken, expires } = response.data;
+
+  axios = Axios.create(AXIOS_PARAMS);
+  axios.defaults.headers.common['Authorization'] = accessToken;
+
+  await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
+
+  return response;
+};
+
+const getUserProfile = async () => {
+  const response = await axios.get('/user/profile');
+  return response;
+};
+
+const logout = () => {
+  axios = Axios.create(AXIOS_PARAMS);
+  return Storage.removeItem('@auth_tokens');
+};
+
 const API = {
   getHeaders,
   register,
@@ -187,6 +212,9 @@ const API = {
   getBlockedUsers,
   unblockUser,
   getUserRetrievedDropies,
+  refreshToken,
+  getUserProfile,
+  logout,
 };
 
 export default API;

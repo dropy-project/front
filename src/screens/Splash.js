@@ -10,44 +10,52 @@ import API from '../services/API';
 
 import { extractNotificationPayload } from '../states/NotificationProvider';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import Storage from '../utils/storage';
 
 const Splash = ({ navigation }) => {
 
   const { setUser, user } = useCurrentUser();
-  const [error, setError] = useState(null);
 
   const { sendAlert } = useOverlay();
 
-  const login = async () => {
-    setError(null);
-    try {
-      const user = await API.login();
-      setUser(user);
-    } catch (error) {
-      if (error.response?.status === 409) {
-        console.log('No user found linked to this device UID');
-        navigation.reset({ index: 0, routes: [{ name: 'Register' }] });
-        return;
-      }
+  useEffectForegroundOnly(() => {
+    launch();
+  }, []);
 
-      console.error('Login error', error?.response?.data || error);
-      setError(error?.response?.data || error);
+  const launch = async () => {
+    const isCompatibleWithServer = await API.serverVersionIsCompatible();
+    if(!isCompatibleWithServer) {
+      sendAlert({
+        title: 'Server version is not compatible',
+        description: 'Please update the app to the latest version',
+      });
+      return;
+    }
+
+    // choper le token de l'utilisateur depuis le storage (si existe)*
+    const userTokenData = await Storage.getItem('@auth_tokens');
+    if (userTokenData == null) {
+      navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
+      return;
+    }
+
+    // Check if token is expired
+    if (userTokenData.expires < Date.now()) {
+      try {
+        await API.refreshToken(userTokenData.refreshToken);
+        const response = await API.getUserProfile();
+        const user = response.data;
+        setUser(user);
+      } catch (error) {
+        console.error('Refresh token error', error?.response?.data || error);
+        navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
+      }
+    } else {
+      const response = await API.getUserProfile();
+      const user = response.data;
+      setUser(user);
     }
   };
-
-  useEffectForegroundOnly(() => {
-    API.serverVersionIsCompatible().then(compatible => {
-      if (compatible) {
-        navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
-      } else {
-        sendAlert({
-          title: 'Server version is not compatible',
-          description: 'Please update the app to the latest version',
-        });
-        setError('Server is not compatible with this app version');
-      }
-    });
-  }, []);
 
   useEffect(() => {
     if (user != null) handleLoginSuccess();
@@ -73,32 +81,7 @@ const Splash = ({ navigation }) => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={{ ...Fonts.regular(15, Colors.darkGrey) }}>
-        {user == null ? `Login process${error ? ' failed' : ''}` : `${user.username} | Loading app ...`}
-      </Text>
-      {error != null && (
-        <>
-          <Text style={{ ...Fonts.ligth(10, Colors.darkGrey), marginTop: 20 }}>
-            {`${error}`}
-          </Text>
-          <TouchableOpacity onPress={login} style={{ marginTop: 30 }}>
-            <Text style={{ ...Fonts.regular(15, Colors.red) }}>
-          [Retry]
-            </Text>
-          </TouchableOpacity>
-        </>
-      )}
-    </View>
-  );
+  return null;
 };
 
 export default Splash;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    ...Styles.center,
-  },
-});
