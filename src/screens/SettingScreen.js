@@ -18,6 +18,7 @@ import { BackgroundGeolocationContext } from '../states/BackgroundGolocationCont
 import useCurrentUser from '../hooks/useCurrentUser';
 import DebugText from '../components/DebugText';
 import FormToggle from '../components/FormToggle';
+import API from '../services/API';
 
 const SettingsScreen = ({ navigation }) => {
 
@@ -90,6 +91,18 @@ const SettingsScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/terms-conditions.html')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Terms & Conditions</Text>
           <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+        </TouchableOpacity>
+
+        <View style={styles.spacer} />
+
+        <TouchableOpacity
+          style={{ ...styles.linkContainer, ...Styles.center }}
+          onPress={() => {
+            API.logout();
+            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] });
+          }}
+        >
+          <Text style={{ ...Fonts.bold(12, Colors.red) }}>Logout</Text>
         </TouchableOpacity>
 
         <View style={styles.spacer} />

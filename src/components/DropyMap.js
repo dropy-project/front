@@ -88,7 +88,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
     // eslint-disable-next-line no-undef
     requestAnimationFrame(() => {
-      mapRef.current.animateCamera(
+      mapRef.current?.animateCamera(
         {
           center: {
             latitude: position.latitude,
