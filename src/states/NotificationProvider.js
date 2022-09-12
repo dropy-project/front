@@ -47,7 +47,6 @@ const NotificationProvider = ({ children }) => {
     if(initialized) return;
     setInitialized(true);
 
-    console.log('Setu notifications');
     Notifications.registerRemoteNotifications();
 
     const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
