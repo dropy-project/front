@@ -78,7 +78,7 @@ export default function Onboarding({ navigation }) {
   useEffect(() => {
     const anim = Animated.timing(dropyLogoAnimatedValue, {
       toValue: currentViewIndex === 1 ? 1 : 0,
-      duration: 600,
+      duration: currentViewIndex === 1 ? 600 : 200,
       useNativeDriver: true,
       easing: currentViewIndex === 1 ? Easing.elastic(1.5) : Easing.bezier(.43,-0.59,.4,.64),
     });
@@ -205,6 +205,7 @@ export default function Onboarding({ navigation }) {
     }
   };
 
+
   return (
     <SafeAreaView style={styles.container}>
       {currentViewIndex === 0 && (
@@ -220,13 +221,15 @@ export default function Onboarding({ navigation }) {
 
       <Animated.View style={{
         position: 'absolute',
-        top: responsiveHeight(10),
+        top: responsiveHeight(100) < 800 ? 20 : 80,
         left: 0,
-        width: (responsiveWidth(100)) * 10,
-        height: responsiveHeight(30),
-        transform: [{ translateX: Animated.add(translateWavesAnimatedValue, -responsiveWidth(20)) }],
+        width: (responsiveWidth(100)) * 8.5,
+        height: responsiveWidth(55),
+        transform: [
+          { translateX: Animated.add(translateWavesAnimatedValue, -responsiveWidth(20)) }
+        ],
       }}>
-        <OnboardingLines preserveAspectRatio="xMinYMin slice" width={'100%'} height={'100%'} />
+        <OnboardingLines preserveAspectRatio="xMinXMin slice" width={'120%'} height={'120%'} />
       </Animated.View>
 
       <Animated.View style={{
@@ -283,7 +286,7 @@ export default function Onboarding({ navigation }) {
           <FormInput
             placeholder="What's your name"
             maxLength={25}
-            style={{ width: '80%', paddingLeft: 10 }}
+            style={{ width: '80%' }}
             inputStyle={{ backgroundColor: Colors.lighterGrey }}
             onEdited={setDisplayName}
             ref={displayNameInputRef}
@@ -338,7 +341,7 @@ export default function Onboarding({ navigation }) {
             <FormInput
               ref={passwordConfirmationInputRef}
               onEdited={setPasswordConfirmation}
-              placeholder="confirm password"
+              placeholder="Password confirmation"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword/>
           </View>
@@ -350,7 +353,7 @@ export default function Onboarding({ navigation }) {
               const passwordConfirmationValid = passwordConfirmationInputRef.current?.isValid();
               const samePasswords = passwordInputRef.current?.getValue() === passwordConfirmationInputRef.current?.getValue();
               if (!samePasswords) {
-                passwordInputRef.current?.setInvalid();
+                passwordInputRef.current?.setInvalid('Passwords does not match');
                 passwordConfirmationInputRef.current?.setInvalid();
               }
               const isValid = emailValid && passwordValid && passwordConfirmationValid && samePasswords;
@@ -426,6 +429,7 @@ export default function Onboarding({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    // transform: [{ scale: 0.05 }],
     backgroundColor: Colors.white,
     flex: 1,
     ...Styles.center,
@@ -434,7 +438,7 @@ const styles = StyleSheet.create({
   },
   view: {
     width: responsiveWidth(100),
-    height: responsiveHeight(50),
+    height: 400,
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: 30,

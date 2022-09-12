@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     ...Styles.center,
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 20,
   },
   checkBox: {
     width: 30,

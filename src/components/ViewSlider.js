@@ -86,22 +86,30 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
       )}
       <KeyboardSpacer
         onToggle={setKeyboardOpen}
-        topSpacing={-responsiveWidth(20)}
+        topSpacing={-50}
       />
       <Animated.View style={{
         transform: [{ translateX: translateViewAnimatedValue }],
         flexDirection: 'row',
-        height: responsiveHeight(50),
+        alignItems: 'flex-end',
       }}>
         {children}
       </Animated.View>
       {currentViewIndex === 1 && (
-        <TouchableOpacity style={{ ...Styles.center, position: 'absolute', bottom: 0, width: '100%' }} onPress={() => setCurrentViewIndex(0)}>
-          <Text style={{ marginBottom: 20, ...Fonts.bold(13, Colors.grey) }}>I already have an account</Text>
+        <TouchableOpacity
+          style={{ ...Styles.center, position: 'absolute', bottom: 0, width: '100%' }}
+          onPress={() => setCurrentViewIndex(0)}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Text style={{ marginBottom: 10, ...Fonts.bold(13, Colors.grey) }}>I already have an account</Text>
         </TouchableOpacity>
       )}
       {currentViewIndex > 1 && currentViewIndex < children.length - 1 && (
-        <DotIndicator currentIndex={currentViewIndex - 1} onPressSkip={() => setCurrentViewIndex(old => old + 1)} isSkippable={currentViewIndex === 3 || currentViewIndex === 7}/>
+        <DotIndicator
+          currentIndex={currentViewIndex - 1}
+          onPressSkip={() => setCurrentViewIndex(old => old + 1)}
+          isSkippable={currentViewIndex === 3 || currentViewIndex === 7}
+        />
       )}
     </View>
   );
@@ -113,8 +121,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: responsiveWidth(100),
-    // borderColor: 'blue',
-    // borderWidth: 1,
     flexDirection: 'column-reverse',
   },
 });

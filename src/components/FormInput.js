@@ -31,6 +31,7 @@ const FormInput = (props, ref) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [valid, setValid] = useState(true);
+  const [validityErrorMessage, setValidityErrorMessage] = useState('');
 
   useEffect(() => {
     onEdited(value?.trim());
@@ -42,14 +43,26 @@ const FormInput = (props, ref) => {
     isValid: () => {
       const notEmpty = value?.trim() !== '';
       const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
+      if(!emailValid) {
+        setValidityErrorMessage('This is not a valid email');
+      }
       const passwordValid = (!isPassword || PASSWORD_REGEX.test(value.trim()));
+      if(!passwordValid) {
+        setValidityErrorMessage('Requires 8 characters, 1 uppercase, 1 number');
+      }
       const maxLengthValid = (!maxLength || value?.trim().length <= maxLength);
       const minLengthValid = (!minLength || value?.trim().length >= minLength);
+      if(!minLengthValid) {
+        setValidityErrorMessage(`Must be at least ${minLength} characters`);
+      }
       const inputValid =  value != null && notEmpty && emailValid && maxLengthValid && minLengthValid && passwordValid;
       setValid(inputValid);
       return inputValid;
     },
-    setInvalid: () => setValid(false),
+    setInvalid: (reason = null) => {
+      setValid(false);
+      reason && setValidityErrorMessage(reason);
+    },
   }));
 
   return (
@@ -75,6 +88,11 @@ const FormInput = (props, ref) => {
           autoCorrect={isEmail || isPassword ? false : true}
           {...props}
         />
+        {(!valid && validityErrorMessage !== '') && (
+          <Text style={{ ...Fonts.regular(10, Colors.red), ...styles.errorMessage }}>
+            {validityErrorMessage}
+          </Text>
+        )}
         {selected && maxLength != null && (
           <Text style={{ ...Fonts.bold(10, (value?.length || 0) === maxLength ? Colors.red : Colors.grey) }}>
             {value?.length || 0}/{maxLength}
@@ -84,11 +102,11 @@ const FormInput = (props, ref) => {
           <Feather style={{ marginLeft: 4 }} name="edit-2" size={15} color={Colors.darkGrey} />
         )}
         {isPassword && (
-          <TouchableOpacity onPress={() =>  setShowPassword(old => !old)}>
+          <TouchableOpacity hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }} onPress={() =>  setShowPassword(old => !old)}>
             {showPassword ? (
-              <Ionicons name="eye-off-sharp" style={{ marginLeft: 4 }} size={20} color={Colors.darkGrey} />
+              <Ionicons name="eye-off-sharp" style={{ marginLeft: 4 }} size={15} color={Colors.darkGrey} />
             ) : (
-              <Ionicons name="eye" style={{ marginLeft: 4 }} size={20} color={Colors.darkGrey} />
+              <Ionicons name="eye" style={{ marginLeft: 4 }} size={15} color={Colors.darkGrey} />
             )}
           </TouchableOpacity>
         )}
@@ -118,11 +136,17 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 10,
     padding: Platform.OS === 'ios' ? 10 : 0,
-    paddingLeft: Platform.OS === 'ios' ? 0 : 5,
-    paddingTop: Platform.OS === 'ios' ? 0 : 5,
+    paddingLeft: Platform.OS === 'ios' ? 10 : 5,
+    paddingTop: Platform.OS === 'ios' ? 10 : 5,
   },
   textInput: {
     flex: 1,
     padding: 0,
+  },
+  errorMessage: {
+    position: 'absolute',
+    bottom: -20,
+    left: 0,
+    maxWidth: '80%',
   },
 });

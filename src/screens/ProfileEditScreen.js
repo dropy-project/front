@@ -245,6 +245,7 @@ const ProfileEditScreen = () => {
           defaultValue={user.displayName}
           placeholder="What's your name?"
           maxLength={25}
+          minLength={3}
         />
 
         <FormInput
