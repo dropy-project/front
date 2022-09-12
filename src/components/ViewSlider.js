@@ -7,6 +7,7 @@ import {
   BackHandler,
   StyleSheet
 } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { DotIndicator } from './DotIndicator';
@@ -14,8 +15,12 @@ import { DotIndicator } from './DotIndicator';
 const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
 
   const [currentViewIndex, setCurrentViewIndex] = useState(1);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
+  const keyboardOverlayAnimatedValue = useRef(new Animated.Value(0)).current;
   const translateViewAnimatedValue = useRef(new Animated.Value(currentViewIndex * -responsiveWidth(100))).current;
+
+  const [renderKeyboardOverlay, setRenderKeyboardOverlay] = useState(false);
 
   useImperativeHandle(ref, () => ({
     nextView() {
@@ -47,6 +52,17 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
   }, [currentViewIndex]);
 
   useEffect(() => {
+    setRenderKeyboardOverlay(true);
+    const anim = Animated.timing(keyboardOverlayAnimatedValue, {
+      toValue: keyboardOpen ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    });
+    anim.start();
+    return () => anim.stop(({ finished }) => finished && setRenderKeyboardOverlay(keyboardOpen));
+  }, [keyboardOpen]);
+
+  useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       setCurrentViewIndex(old => {
         if(old - 1 < 0) return old;
@@ -58,8 +74,25 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
   }, []);
 
   return (
-    <View style={styles.viewContainer}>
-      <Animated.View style={{ transform: [{ translateX: translateViewAnimatedValue }], flexDirection: 'row' }}>
+    <View style={styles.container}>
+      {renderKeyboardOverlay && (
+        <Animated.View style={{
+          position: 'absolute',
+          width: responsiveWidth(100),
+          height: responsiveHeight(100),
+          backgroundColor: 'rgba(250, 250, 250, 0.95)',
+          opacity: keyboardOverlayAnimatedValue,
+        }}/>
+      )}
+      <KeyboardSpacer
+        onToggle={setKeyboardOpen}
+        topSpacing={-responsiveWidth(20)}
+      />
+      <Animated.View style={{
+        transform: [{ translateX: translateViewAnimatedValue }],
+        flexDirection: 'row',
+        height: responsiveHeight(50),
+      }}>
         {children}
       </Animated.View>
       {currentViewIndex === 1 && (
@@ -77,11 +110,11 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
 export default forwardRef(ViewSlider);
 
 const styles = StyleSheet.create({
-  viewContainer: {
+  container: {
+    flex: 1,
     width: responsiveWidth(100),
-    height: responsiveHeight(50),
     // borderColor: 'blue',
     // borderWidth: 1,
-    flexDirection: 'row',
+    flexDirection: 'column-reverse',
   },
 });

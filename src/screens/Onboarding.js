@@ -36,7 +36,6 @@ export default function Onboarding({ navigation }) {
 
   const { setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
 
-
   const translateWavesAnimatedValue = useRef(new Animated.Value(0)).current;
   const dropyLogoAnimatedValue = useRef(new Animated.Value(0)).current;
 
@@ -361,7 +360,7 @@ export default function Onboarding({ navigation }) {
               isValid && viewSliderRef.current?.goToView(5);
               isValid && Keyboard.dismiss();
             }}
-            style={{ ...styles.nextButton, width: 150 }}>
+            style={{ ...styles.nextButton }}>
             <AntDesign name="arrowright" size={32} color="white"/>
           </GlassButton>
         </View>

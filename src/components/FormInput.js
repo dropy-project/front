@@ -1,7 +1,6 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
-  KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
@@ -54,10 +53,7 @@ const FormInput = (props, ref) => {
   }));
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ ...styles.container, ...style }}
-    >
+    <View style={{ ...styles.container, ...style }}>
       {title != null && (<Text style={styles.text}>{title}</Text>)}
       <View style={{
         ...styles.textInputContainer,
@@ -97,7 +93,7 @@ const FormInput = (props, ref) => {
           </TouchableOpacity>
         )}
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
