@@ -101,7 +101,9 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
           onPress={() => setCurrentViewIndex(0)}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Text style={{ marginBottom: 10, ...Fonts.bold(13, Colors.grey) }}>I already have an account</Text>
+          <Text style={{ marginBottom: 10, ...Fonts.bold(13, Colors.lightGrey) }}>
+            I already have an account
+          </Text>
         </TouchableOpacity>
       )}
       {currentViewIndex > 1 && currentViewIndex < children.length - 1 && (

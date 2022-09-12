@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Notifications } from 'react-native-notifications';
 import { Platform } from 'react-native';
@@ -22,9 +22,7 @@ export const extractNotificationPayload = (notification) => {
   }
 };
 
-export const NotificationContext = createContext(null);
-
-const NotificationContextProvider = ({ children }) => {
+const NotificationProvider = ({ children }) => {
 
   const { user } = useCurrentUser();
   const navigation = useNavigation();
@@ -107,11 +105,11 @@ const NotificationContextProvider = ({ children }) => {
   };
 
   return (
-    <NotificationContext.Provider value={{ setupNotifications  }}>
+    <>
       {children}
       <Notification data={notificationData} onDone={() => setNotificationData(null)} />
-    </ NotificationContext.Provider>
+    </>
   );
 };
 
-export default NotificationContextProvider;
+export default NotificationProvider;

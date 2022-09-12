@@ -8,13 +8,16 @@ import {
   Easing,
   Keyboard,
   Linking,
-  Image
+  Image,
+  Platform
 } from 'react-native';
 import React, { useRef, useState , useEffect, useContext } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign , MaterialCommunityIcons , FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import GoBackHeader from '../components/GoBackHeader';
@@ -28,8 +31,6 @@ import API from '../services/API';
 import useOverlay from '../hooks/useOverlay';
 import useCurrentUser from '../hooks/useCurrentUser';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
-import { NotificationContext } from '../states/NotificationContextProvider';
-import usePermissions from '../hooks/usePermissions';
 
 export default function Onboarding({ navigation }) {
 
@@ -44,10 +45,6 @@ export default function Onboarding({ navigation }) {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const passwordConfirmationInputRef = useRef(null);
-
-  const { requestForegroundGeolocation } = usePermissions();
-
-  const { setupNotifications } = useContext(NotificationContext);
 
   const { sendAlert } = useOverlay();
   const { setUser } = useCurrentUser();
@@ -184,6 +181,11 @@ export default function Onboarding({ navigation }) {
       }
       navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
+      sendAlert({
+        title: 'Oups an error has occured',
+        description: 'Check your internet connection',
+        validateText: 'Ok',
+      });
       console.error(error.response.data);
     }
   };
@@ -201,10 +203,94 @@ export default function Onboarding({ navigation }) {
       setUser(userInfos);
       navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
+      if(error.response.status === 404) {
+        sendAlert({
+          title: 'This account does not exists',
+          description: 'Check your email',
+          validateText: 'Ok',
+        });
+        return;
+      }
+      if(error.response.status === 403) {
+        sendAlert({
+          title: 'Oups... invalid credentials',
+          description: 'Check your email and password',
+          validateText: 'Ok',
+        });
+        return;
+      }
+      sendAlert({
+        title: 'Oups an error has occured',
+        description: 'Check your internet connection',
+        validateText: 'Ok',
+      });
       console.error(error.response.data);
+      console.error(error.response.status);
     }
   };
 
+  const handleGeolocationPermissions = async () => {
+    let result = null;
+    if(Platform.OS === 'ios') {
+      result = await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
+    } else {
+      result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    }
+
+    switch(result) {
+      case RESULTS.UNAVAILABLE:
+        await sendAlert({
+          title: 'Location not supported',
+          description: 'You\'re device does not support location services',
+        });
+        break;
+      case RESULTS.DENIED:
+        notGrantedAlert('Location access');
+        break;
+      case RESULTS.BLOCKED:
+        notGrantedAlert('Location access');
+        break;
+      case RESULTS.GRANTED:
+        viewSliderRef.current?.goToView(6);
+        break;
+    }
+  };
+
+  const handleNotificationsPermissions = async () => {
+    let result = await requestNotifications(['alert', 'sound', 'badge', 'criticalAlert']);
+
+    console.log(result);
+    switch(result.status) {
+      case RESULTS.DENIED:
+      case RESULTS.BLOCKED:
+        viewSliderRef.current?.goToView(8);
+        break;
+      case RESULTS.GRANTED:
+        viewSliderRef.current?.goToView(7);
+        break;
+    }
+  };
+
+  const handleBackgroundGeolocationPermissions = async () => {
+    try {
+      await BackgroundGeolocation.requestPermission();
+      setBackgroundGeolocationEnabled(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      viewSliderRef.current?.goToView(8);
+    }
+  };
+
+
+  const notGrantedAlert = async (serviceName) => {
+    const alertResult = await sendAlert({
+      title: `${serviceName} not granted`,
+      description: `You need to grant ${serviceName.toLowerCase()} in your settings`,
+      validateText: 'Open settings',
+    });
+    alertResult && Linking.openSettings();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -276,7 +362,7 @@ export default function Onboarding({ navigation }) {
             <Text style={{ ...styles.title, fontSize: 35 }}>Hey there</Text>
             <Text style={{ ...styles.subtitle, fontSize: 20 }}>ready to drop ?</Text>
           </View>
-          <GlassButton onPress={() => viewSliderRef.current?.goToView(2)} style={styles.nextButton}>
+          <GlassButton onPress={() => viewSliderRef.current?.goToView(6)} style={styles.nextButton}>
             <AntDesign name="arrowright" size={32} color="white"/>
           </GlassButton>
         </View>
@@ -371,11 +457,9 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.subtitle}>{'Or you won\'t be able to use the app'}</Text>
           </View>
           <MaterialIcons name="location-pin" size={60} color={Colors.grey} />
-          <GlassButton onPress={() => {
-            requestForegroundGeolocation();
-            viewSliderRef.current?.goToView(6);
-          }}
-          style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
+          <GlassButton
+            onPress={handleGeolocationPermissions}
+            style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
           </GlassButton>
         </View>
@@ -386,10 +470,7 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.subtitle}>Turn on notifications</Text>
           </View>
           <MaterialCommunityIcons name="bell-ring" size={50} color={Colors.grey} />
-          <GlassButton onPress={() => {
-            setupNotifications();
-            viewSliderRef.current?.goToView(7);
-          }} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
+          <GlassButton onPress={handleNotificationsPermissions} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
           </GlassButton>
         </View>
@@ -403,10 +484,10 @@ export default function Onboarding({ navigation }) {
             </TouchableOpacity>
           </View>
           <FontAwesome5 name="satellite" size={50} color={Colors.grey} />
-          <GlassButton onPress={() => {
-            setBackgroundGeolocationEnabled(true);
-            viewSliderRef.current?.goToView(8);
-          }} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
+          <GlassButton
+            onPress={handleBackgroundGeolocationPermissions}
+            style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}
+          >
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
           </GlassButton>
         </View>
