@@ -15,7 +15,6 @@ import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimen
 import { AntDesign , MaterialCommunityIcons , FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { Permission, request, check, requestNotifications } from 'react-native-permissions';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import GoBackHeader from '../components/GoBackHeader';
@@ -249,13 +248,13 @@ export default function Onboarding({ navigation }) {
           <View style={{ width: '80%' }}>
             <FormInput
               ref={loginEmailInputRef}
-              placeholder="email"
+              placeholder="Email"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               onEdited={setEmail}
               isEmail
             />
             <FormInput
-              placeholder="password"
+              placeholder="Password"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               onEdited={setPassword}
@@ -276,7 +275,7 @@ export default function Onboarding({ navigation }) {
             <Text style={{ ...styles.title, fontSize: 35 }}>Hey there</Text>
             <Text style={{ ...styles.subtitle, fontSize: 20 }}>ready to drop ?</Text>
           </View>
-          <GlassButton onPress={() => viewSliderRef.current?.goToView(5)} style={styles.nextButton}>
+          <GlassButton onPress={() => viewSliderRef.current?.goToView(2)} style={styles.nextButton}>
             <AntDesign name="arrowright" size={32} color="white"/>
           </GlassButton>
         </View>
@@ -286,7 +285,7 @@ export default function Onboarding({ navigation }) {
           <FormInput
             placeholder="What's your name"
             maxLength={25}
-            style={{ width: '80%' }}
+            style={{ width: '80%', paddingLeft: 10 }}
             inputStyle={{ backgroundColor: Colors.lighterGrey }}
             onEdited={setDisplayName}
             ref={displayNameInputRef}
@@ -329,13 +328,13 @@ export default function Onboarding({ navigation }) {
             <FormInput
               ref={emailInputRef}
               onEdited={setEmail}
-              placeholder="email"
+              placeholder="Email"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isEmail/>
             <FormInput
               ref={passwordInputRef}
               onEdited={setPassword}
-              placeholder="password"
+              placeholder="Password"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword/>
             <FormInput

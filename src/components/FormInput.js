@@ -64,7 +64,7 @@ const FormInput = (props, ref) => {
           onFocus={() => setSelected(true)}
           onBlur={() => setSelected(false)}
           onChangeText={(text) => setValue(text)}
-          style={{ ...Fonts.regular(12, Colors.darkGrey), ...styles.textInput }}
+          style={{ ...Fonts.regular(12, Colors.darkGrey), ...styles.textInput, textAlignVertical: 'top' }}
           placeholder={placeholder}
           placeholderTextColor={Colors.grey}
           returnKeyType="done"
@@ -118,6 +118,8 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 10,
     padding: Platform.OS === 'ios' ? 10 : 0,
+    paddingLeft: Platform.OS === 'ios' ? 0 : 5,
+    paddingTop: Platform.OS === 'ios' ? 0 : 5,
   },
   textInput: {
     flex: 1,
