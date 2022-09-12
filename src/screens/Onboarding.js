@@ -208,9 +208,7 @@ export default function Onboarding({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {currentViewIndex === 0 && (
-        <View style={{ transform: [{ scaleX: -1 }], width: responsiveWidth(100) }}>
-          <GoBackHeader onPressGoBack={() => viewSliderRef.current?.nextView()}/>
-        </View>
+        <GoBackHeader inverted onPressGoBack={() => viewSliderRef.current?.nextView()}/>
       )}
       {currentViewIndex > 1 && (
         <GoBackHeader onPressGoBack={() => viewSliderRef.current?.previousView()}/>

@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const GoBackHeader = ({
+  inverted,
   style,
   onPressGoBack,
   onPressOptions,
@@ -16,12 +17,12 @@ const GoBackHeader = ({
   const navigation = useNavigation();
 
   return (
-    <View style={{ ...styles.container, ...style }}>
+    <View style={[{ ...styles.container, ...style }, inverted && { flexDirection: 'row-reverse' }]}>
       <TouchableOpacity
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         onPress={onPressGoBack ? onPressGoBack : () => navigation.goBack()}
         style={styles.button}>
-        <Feather name="arrow-left" size={30} color={color} />
+        <Feather name={inverted ? 'arrow-right' : 'arrow-left'} size={30} color={color} />
       </TouchableOpacity>
       <Text style={{ ...styles.tipsStyle, ...textStyle, color }}>{text}</Text>
 
