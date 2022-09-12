@@ -58,7 +58,6 @@ const GeolocationProvider = ({ children }) => {
       userCoordinates,
       compassHeading,
     }}>
-      {/* {geolocationForegroundState === 'granted' ? children : <GeolocationModal />} */}
       {children}
     </GeolocationContext.Provider>
   );
