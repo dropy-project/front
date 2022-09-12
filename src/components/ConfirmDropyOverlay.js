@@ -116,27 +116,32 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
   return (
     <Animated.View style={{ ...StyleSheet.absoluteFillObject, opacity: fadeAnimatedValue }}>
       <LinearGradient
+        colors={['rgba(10,0,10,0.7)', 'rgba(0,0,0,0)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 0.3 }}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <LinearGradient
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.9)']}
         start={{ x: 0.5, y: 0.3 }}
         end={{ x: 0.5, y: 0.9 }}
         style={StyleSheet.absoluteFillObject}
-      >
-        <SafeAreaView style={styles.container}>
-          <GoBackHeader onPressGoBack={closeOverlay}/>
-          <View style={[StyleSheet.absoluteFillObject, Styles.center]}>
-            <AnimatedDropyPreviewBox filePath={dropyCreateParams.dropyFilePath} overlayState={overlayState} onPress={goBackToOriginRoute} />
-          </View>
-          <Animated.View style={{ ...styles.avatarsContainer, transform: [{ scale: bottomContainerScaleAnimatedValue }] }}>
-            <ProfileAvatar size={100} style={{ transform: [{ rotate: '-30deg' }] }} />
-            <Entypo name="plus" size={35} color={Colors.lightGrey} />
-            <ProfileAvatar size={100} style={{ transform: [{ rotate: '30deg' }] }} showQuestionMark />
-          </Animated.View>
-          <Animated.View style={{ ...styles.bottomContainer, transform: [{ scale : bottomContainerScaleAnimatedValue }] }}>
-            <Text style={styles.dropText}>{'It\'s time to drop this into the unkown'}</Text>
-            <GlassButton buttonText="DROP !" onPress={sendDrop} style={styles.dropButtonStyle} fontSize={18} />
-          </Animated.View>
-        </SafeAreaView>
-      </LinearGradient>
+      />
+      <SafeAreaView style={styles.container}>
+        <GoBackHeader onPressGoBack={closeOverlay} color={Colors.white} />
+        <View style={[StyleSheet.absoluteFillObject, Styles.center]}>
+          <AnimatedDropyPreviewBox filePath={dropyCreateParams.dropyFilePath} overlayState={overlayState} onPress={goBackToOriginRoute} />
+        </View>
+        <Animated.View style={{ ...styles.avatarsContainer, transform: [{ scale: bottomContainerScaleAnimatedValue }] }}>
+          <ProfileAvatar size={100} style={{ transform: [{ rotate: '-30deg' }] }} />
+          <Entypo name="plus" size={35} color={Colors.lightGrey} />
+          <ProfileAvatar size={100} style={{ transform: [{ rotate: '30deg' }] }} showQuestionMark />
+        </Animated.View>
+        <Animated.View style={{ ...styles.bottomContainer, transform: [{ scale : bottomContainerScaleAnimatedValue }] }}>
+          <Text style={styles.dropText}>{'It\'s time to drop this into the unkown'}</Text>
+          <GlassButton buttonText="DROP !" onPress={sendDrop} style={styles.dropButtonStyle} fontSize={18} />
+        </Animated.View>
+      </SafeAreaView>
     </Animated.View>
   );
 };

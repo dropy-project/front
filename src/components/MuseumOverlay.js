@@ -1,6 +1,5 @@
 
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
@@ -14,6 +13,7 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import useConversationsSocket from '../hooks/useConversationsSocket';
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -24,10 +24,9 @@ import ProfileImage from './ProfileImage';
 
 const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDropies }) => {
 
-  const navigation = useNavigation();
-
   const [render, setRender] = useState(false);
   const { sendAlert } = useOverlay();
+  const { openChat } = useConversationsSocket();
 
   const menuAnimatedValue = useRef(new Animated.Value(0)).current;
 
@@ -80,10 +79,6 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
     const index = Math.round(nativeEvent.contentOffset.x / (responsiveWidth(80) + 20));
     const clampedIndex = Math.max(0, Math.min(dropies.length - 1, index));
     setSelectedDropyIndex(clampedIndex);
-  };
-
-  const openChat = async (conversationId) => {
-    navigation.navigate('Conversations', { conversationId });
   };
 
   if(!render) return null;

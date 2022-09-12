@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 
 import MapView, { Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,15 +18,12 @@ import Haptics from '../utils/haptics';
 import useCurrentUser from '../hooks/useCurrentUser';
 import { GEOHASH_SIZE } from '../states/GeolocationContextProvider';
 import { coordinatesDistance } from '../utils/coordinates';
+import { Map } from '../styles/Styles';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import DropyMapMarker from './DropyMapMarker';
 import DebugText from './DebugText';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
-
-const INITIAL_PITCH = 10;
-const INITIAL_ZOOM = 17;
-const MUSEUM_ZOOM = 13;
 
 const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
 
@@ -35,6 +32,8 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   const { sendBottomAlert } = useOverlay();
   const { userCoordinates, compassHeading, initialized: geolocationInitialized } = useInitializedGeolocation();
   const { developerMode } = useCurrentUser();
+
+  const [zoomValue, setZoomValue] = useState(Map.INITIAL_ZOOM);
 
   const mapRef = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
@@ -95,13 +94,19 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
             latitude: position.latitude,
             longitude: position.longitude,
           },
-          pitch: museumVisible ? 45 : INITIAL_PITCH,
+          pitch: museumVisible ? Map.MUSEUM_PITCH : Map.INITIAL_PITCH,
           heading: compassHeading,
-          zoom: museumVisible ? MUSEUM_ZOOM : INITIAL_ZOOM,
+          zoom: museumVisible ? Map.MUSEUM_ZOOM : zoomValue,
         },
         { duration: museumVisible ? 500 : duration }
       );
     });
+  };
+
+  const onRegionChange = (region) => {
+    if(museumVisible) return;
+    const zoom = Math.log2(360 * (Dimensions.get('screen').width / 256 / region.longitudeDelta));
+    setZoomValue(zoom);
   };
 
   return (
@@ -114,7 +119,9 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}
-        zoomEnabled={false}
+        zoomEnabled={!museumVisible}
+        minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
+        maxZoomLevel={Map.MAX_ZOOM}
         showsCompass={false}
         initialCamera={{
           center: {
@@ -122,11 +129,14 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
             longitude: userCoordinates?.longitude || 0,
           },
           heading: compassHeading || 0,
-          pitch: INITIAL_PITCH,
-          zoom: INITIAL_ZOOM,
+          pitch: Map.INITIAL_PITCH,
+          zoom: Map.INITIAL_ZOOM,
           altitude: 0,
         }}
         onMapLoaded={() => setMapIsReady(true)}
+        showsPointsOfInterest={false}
+        cacheEnabled
+        onRegionChange={onRegionChange}
       >
         {retrievedDropies != null ? (
           <>
@@ -144,13 +154,17 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         ) : (
           <>
             {dropiesAround.map((dropy) => (
-              <DropyMapMarker key={dropy.id} dropy={dropy} onPress={() => handleDropyPressed(dropy)} />
+              <DropyMapMarker
+                key={`${dropy.id}_${dropy.reachable}`}
+                dropy={dropy}
+                onPress={() => handleDropyPressed(dropy)}
+              />
             ))}
           </>
         )}
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </MapView>
-      <Sonar visible={!museumVisible} />
+      <Sonar zoomValue={zoomValue} visible={!museumVisible} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
         pointerEvents='none'

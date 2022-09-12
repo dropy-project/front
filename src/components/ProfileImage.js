@@ -19,12 +19,17 @@ const ProfileImage = (props) => {
   const refreshCount = useRef(0);
 
   useEffect(() => {
+    if (avatarUrl === null) {
+      setSource(null);
+      return;
+    }
     setSource({
       uri: avatarUrl,
       headers: API.getHeaders(),
       refreshCount: ++refreshCount.current,
     });
   }, [avatarUrl]);
+
 
   if(source == null) {
     return (

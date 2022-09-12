@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import LinearGradient from 'react-native-linear-gradient';
 import { Colors } from '../styles/Styles';
 
 import FooterConfirmation from '../components/FooterConfirmation';
@@ -9,6 +10,7 @@ import DropyMediaViewer from '../components/DropyMediaViewer';
 import useOverlay from '../hooks/useOverlay';
 import { blockUser, reportUser } from '../utils/profiles';
 import useCurrentUser from '../hooks/useCurrentUser';
+import useConversationsSocket from '../hooks/useConversationsSocket';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { dropy, showBottoModal } = route.params || {};
@@ -16,19 +18,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { user } = useCurrentUser();
   const { sendAlert } = useOverlay();
   const { showActionSheetWithOptions } = useActionSheet();
-
-  const openChat = async () => {
-    try {
-      navigation.goBack();
-      navigation.navigate('Conversations', { conversationId: dropy.conversationId });
-    } catch (error) {
-      console.log('Open chat error', error?.response?.data ?? error);
-      sendAlert({
-        title: 'Oh that\'s bad...',
-        description: 'Looks like we can\'t load your conversations right now...',
-      });
-    }
-  };
+  const { openChat } = useConversationsSocket();
 
   const handleOptionsButtonPress = () => {
     showActionSheetWithOptions({
@@ -47,14 +37,21 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <DropyMediaViewer dropy={dropy} style={{ ...StyleSheet.absoluteFillObject }}/>
+      <LinearGradient
+        colors={['rgba(10,0,10,0.7)', 'rgba(0,0,0,0)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 0.2 }}
+        style={StyleSheet.absoluteFillObject}
+        pointerEvents="none"
+      />
       <StatusBar barStyle="light-content" />
       <GoBackHeader
         color={Colors.white}
         onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}
       />
-      <DropyMediaViewer dropy={dropy} />
       {showBottoModal && (
-        <FooterConfirmation onPress={openChat} dropy={dropy} textButton="Let's chat !" />
+        <FooterConfirmation onPress={() => openChat(dropy.chatConversationId)} dropy={dropy} textButton="Let's chat !" />
       )}
     </SafeAreaView>
   );
