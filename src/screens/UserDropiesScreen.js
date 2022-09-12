@@ -1,8 +1,8 @@
 import { Feather } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import {
+  FlatList,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -82,13 +82,17 @@ const UserDropiesScreen = ({ navigation }) => {
           <LoadingSpinner />
         </View>
       ) : (
-        <ScrollView indicatorStyle='black' showsVerticalScrollIndicator contentContainerStyle={styles.scrollViewContent}>
-          {dropies.length === 0 && (
+        <FlatList
+          data={dropies}
+          indicatorStyle='black'
+          showsVerticalScrollIndicator
+          contentContainerStyle={styles.scrollViewContent}
+          ListEmptyComponent={() => (
             <View style={{ height: responsiveHeight(80), ...Styles.center }}>
               <Text style={{ ...Fonts.regular(13, Colors.darkGrey) }}>{'You don\'t have dropped anything yet'}</Text>
             </View>
           )}
-          {dropies.map((dropy, index) => (
+          renderItem={({ item: dropy, index }) => (
             <FadeInWrapper key={dropy.id} delay={index * 50}>
               <TouchableOpacity
                 style={styles.dropyContainer}
@@ -105,7 +109,7 @@ const UserDropiesScreen = ({ navigation }) => {
                   <View>
                     <Text style={{ ...Fonts.bold(12, Colors.white) }}>Dropped {chunckHeaderTimeString(dropy.creationDate).toLowerCase()}</Text>
                     <Text style={{ ...Fonts.regular(10, Colors.white), marginTop: 2 }}>
-                      {dropy.retrieverId == null ? 'Not found' : 'Found'}
+                      {dropy.retriever.id == null ? 'Not found' : `Found by @${dropy.retriever.username}`}
                     </Text>
                   </View>
                   <TouchableOpacity onPress={() => deleteDropy(dropy.id)}>
@@ -114,8 +118,8 @@ const UserDropiesScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
             </FadeInWrapper>
-          ))}
-        </ScrollView>
+          )}
+        />
       )}
     </SafeAreaView>
   );

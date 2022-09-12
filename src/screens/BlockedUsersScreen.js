@@ -1,8 +1,8 @@
 import { Feather } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import {
+  FlatList,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -80,13 +80,17 @@ const BlockedUsersScreen = ({ navigation }) => {
           <LoadingSpinner />
         </View>
       ) : (
-        <ScrollView indicatorStyle='black' showsVerticalScrollIndicator contentContainerStyle={styles.scrollViewContent}>
-          {blockedUsers.length === 0 && (
+        <FlatList
+          indicatorStyle='black'
+          data={blockedUsers}
+          showsVerticalScrollIndicator
+          contentContainerStyle={styles.scrollViewContent}
+          ListEmptyComponent={() => (
             <View style={{ height: responsiveHeight(80), ...Styles.center }}>
               <Text style={{ ...Fonts.regular(13, Colors.darkGrey) }}>{'You don\'t have blocked anyone yet'}</Text>
             </View>
           )}
-          {blockedUsers.map((user, index) => (
+          renderItem={({ item: user, index }) => (
             <FadeInWrapper key={user.id} delay={index * 50}>
               <View style={styles.userContainer}>
                 <ProfileAvatar avatarUrl={user.avatarUrl} displayName={user.displayName} />
@@ -99,8 +103,8 @@ const BlockedUsersScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
             </FadeInWrapper>
-          ))}
-        </ScrollView>
+          )}
+        />
       )}
     </SafeAreaView>
   );

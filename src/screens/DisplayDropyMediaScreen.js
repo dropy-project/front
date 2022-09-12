@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import LinearGradient from 'react-native-linear-gradient';
 import { Colors } from '../styles/Styles';
 
 import FooterConfirmation from '../components/FooterConfirmation';
@@ -36,12 +37,19 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <DropyMediaViewer dropy={dropy} style={{ ...StyleSheet.absoluteFillObject }}/>
+      <LinearGradient
+        colors={['rgba(10,0,10,0.7)', 'rgba(0,0,0,0)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 0.2 }}
+        style={StyleSheet.absoluteFillObject}
+        pointerEvents="none"
+      />
       <StatusBar barStyle="light-content" />
       <GoBackHeader
         color={Colors.white}
         onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}
       />
-      <DropyMediaViewer dropy={dropy} />
       {showBottoModal && (
         <FooterConfirmation onPress={() => openChat(dropy.chatConversationId)} dropy={dropy} textButton="Let's chat !" />
       )}
