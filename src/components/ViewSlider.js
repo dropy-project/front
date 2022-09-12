@@ -5,7 +5,9 @@ import {
   Animated,
   TouchableOpacity,
   BackHandler,
-  StyleSheet
+  StyleSheet,
+  Platform,
+  Keyboard
 } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
@@ -73,6 +75,15 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
     return () => backHandler.remove();
   }, []);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       {renderKeyboardOverlay && (
@@ -84,10 +95,7 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
           opacity: keyboardOverlayAnimatedValue,
         }}/>
       )}
-      <KeyboardSpacer
-        onToggle={setKeyboardOpen}
-        topSpacing={-50}
-      />
+      {Platform.OS === 'ios' && <KeyboardSpacer onToggle={setKeyboardOpen} topSpacing={-50}/>}
       <Animated.View style={{
         transform: [{ translateX: translateViewAnimatedValue }],
         flexDirection: 'row',

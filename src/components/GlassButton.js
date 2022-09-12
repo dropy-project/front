@@ -1,22 +1,25 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const GlassButton = ({ children, onPress, buttonText, style, disabled, fontSize = 19 }) => (
-  <TouchableOpacity disabled={disabled} onPress={onPress}>
-    <View style={{ ...styles.container, ...style, opacity: disabled ? 0.5 : 1 }}>
-      {children == null ? (
-        <Text style={{
-          ...Fonts.bold(fontSize, Colors.white),
-          letterSpacing: 1,
-          textAlign: 'center',
-        }}>
-          {buttonText}
-        </Text>
-      ) :
-        children
-      }
-    </View>
+  <TouchableOpacity onPress={onPress} disabled={disabled} style={{
+    ...styles.container,
+    ...style,
+    backgroundColor: disabled ? Colors.purple2 : Colors.purple1,
+  }}>
+    {children == null ? (
+      <Text style={{
+        ...Fonts.bold(fontSize, Colors.white),
+        letterSpacing: 1,
+        textAlign: 'center',
+        opacity: disabled ? 0.5 : 1,
+      }}>
+        {buttonText}
+      </Text>
+    ) :
+      children
+    }
   </TouchableOpacity>
 );
 

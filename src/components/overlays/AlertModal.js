@@ -71,8 +71,7 @@ const AlertModal = ({ visible, data }) => {
             buttonText={lastData?.validateText}
             style={styles.validateButton}
             fontSize={14}
-          >
-          </GlassButton>
+          />
         </View>
       </Animated.View>
     </Animated.View>

@@ -136,8 +136,9 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 10,
     padding: Platform.OS === 'ios' ? 10 : 0,
-    paddingLeft: Platform.OS === 'ios' ? 10 : 5,
-    paddingTop: Platform.OS === 'ios' ? 10 : 5,
+    paddingLeft: 10,
+    paddingTop: Platform.OS === 'ios' ? 10 : 10,
+    paddingRight: Platform.OS === 'ios' ? 0 : 10,
   },
   textInput: {
     flex: 1,

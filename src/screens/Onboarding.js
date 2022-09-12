@@ -295,10 +295,15 @@ export default function Onboarding({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {currentViewIndex === 0 && (
-        <GoBackHeader inverted onPressGoBack={() => viewSliderRef.current?.nextView()}/>
+        <GoBackHeader inverted onPressGoBack={() => {
+          viewSliderRef.current?.nextView();
+        }}/>
       )}
       {currentViewIndex > 1 && (
-        <GoBackHeader onPressGoBack={() => viewSliderRef.current?.previousView()}/>
+        <GoBackHeader onPressGoBack={() => {
+          Keyboard?.dismiss();
+          viewSliderRef.current?.previousView();
+        }}/>
       )}
 
       {currentViewIndex === 1 && (
@@ -362,22 +367,23 @@ export default function Onboarding({ navigation }) {
             <Text style={{ ...styles.title, fontSize: 35 }}>Hey there</Text>
             <Text style={{ ...styles.subtitle, fontSize: 20 }}>ready to drop ?</Text>
           </View>
-          <GlassButton onPress={() => viewSliderRef.current?.goToView(6)} style={styles.nextButton}>
+          <GlassButton onPress={() => viewSliderRef.current?.goToView(2)} style={styles.nextButton}>
             <AntDesign name="arrowright" size={32} color="white"/>
           </GlassButton>
         </View>
 
         <View style={styles.view}>
           <Text style={styles.title}>{'Let\'s start gently'}</Text>
-          <FormInput
-            placeholder="What's your name"
-            maxLength={25}
-            style={{ width: '80%' }}
-            inputStyle={{ backgroundColor: Colors.lighterGrey }}
-            onEdited={setDisplayName}
-            ref={displayNameInputRef}
-            minLength={3}
-          />
+          <View style={{ width: '80%' }}>
+            <FormInput
+              placeholder="What's your name"
+              maxLength={25}
+              inputStyle={{ backgroundColor: Colors.lighterGrey }}
+              onEdited={setDisplayName}
+              ref={displayNameInputRef}
+              minLength={3}
+            />
+          </View>
           <GlassButton
             disabled={displayName === ''}
             onPress={() => {
@@ -440,7 +446,7 @@ export default function Onboarding({ navigation }) {
               const samePasswords = passwordInputRef.current?.getValue() === passwordConfirmationInputRef.current?.getValue();
               if (!samePasswords) {
                 passwordInputRef.current?.setInvalid('Passwords does not match');
-                passwordConfirmationInputRef.current?.setInvalid();
+                passwordConfirmationInputRef.current?.setInvalid('Passwords does not match');
               }
               const isValid = emailValid && passwordValid && passwordConfirmationValid && samePasswords;
               isValid && viewSliderRef.current?.goToView(5);
