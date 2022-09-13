@@ -28,24 +28,7 @@ const ConversationsContextProvider = ({ children }) => {
         return;
       }
 
-      setConversations(old => {
-        const updatedConversation = {
-          ...response.data,
-          lastMessageDate: messageTimeString(response.data.lastMessageDate),
-          lastMessagePreview: decryptMessage(response.data.lastMessagePreview),
-        };
-
-        const newConversations = [
-          updatedConversation,
-          ...old.filter(conversation => conversation.id !== response.data.id)
-        ];
-
-        const sortedConversations = newConversations.sort((a, b) => {
-          return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
-        });
-
-        return sortedConversations;
-      });
+      createOrUpdateConversation(response.data);
     });
 
     chatSocket.on('close_conversation', (response) => {
@@ -65,12 +48,31 @@ const ConversationsContextProvider = ({ children }) => {
     };
   }, [chatSocket]);
 
+  const createOrUpdateConversation = (conversation) => {
+    setConversations(old => {
+      const updatedConversation = {
+        ...conversation,
+        lastMessageDate: messageTimeString(conversation.lastMessageDate),
+        lastMessagePreview: decryptMessage(conversation.lastMessagePreview),
+      };
+
+      const newConversations = [
+        updatedConversation,
+        ...old.filter(c => c.id !== conversation.id)
+      ];
+
+      const sortedConversations = newConversations.sort((a, b) => {
+        return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
+      });
+
+      return sortedConversations;
+    });
+  };
+
   const listConversations = () => {
+    if(chatSocket == null) return;
     setLoading(true);
     chatSocket.emit('list_conversations', (response) => {
-      if(chatSocket == null) return;
-      if(chatSocket.connected === false) return;
-
       if (response.error != null) {
         console.error('Error while getting conversations', response.error);
         return;
@@ -94,11 +96,22 @@ const ConversationsContextProvider = ({ children }) => {
   };
 
   const closeConversation = (conversationId) => {
-
     setConversations(old => old.filter(conversation => conversation.id !== conversationId));
-
     return new Promise((resolve) => {
       chatSocket.emit('close_conversation', conversationId, resolve);
+    });
+  };
+
+  const createConversation = (dropyId) => {
+    if(chatSocket == null) return;
+    chatSocket.emit('create_conversation', { dropyId }, (response) => {
+      if (response.error != null) {
+        console.error('Error while opening conversations', response.error);
+        return;
+      }
+      const conversation = response.data;
+      createOrUpdateConversation(conversation);
+      navigation.navigate('Chat', { conversation });
     });
   };
 
@@ -127,6 +140,7 @@ const ConversationsContextProvider = ({ children }) => {
       closeConversation,
       markConversationAsRead,
       listConversations,
+      createConversation,
       openChat,
     }}>
       {children}
