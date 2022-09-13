@@ -55,11 +55,11 @@ const ConversationsScreen = ({ navigation }) => {
           data={conversations}
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewContent}
-          ListEmptyComponent={() => {
+          ListEmptyComponent={() => (
             <View style={{ flex: 1, ...Styles.center }}>
               <Text style={{ ...Fonts.ligth(15, Colors.grey), textAlign: 'center' }}>Find drops, begin new conversations!</Text>
-            </View>;
-          }}
+            </View>
+          )}
           renderItem={({ item: conversation, index }) => (
             <FadeInWrapper key={conversation.id} delay={index * 50}>
               <ConversationItem

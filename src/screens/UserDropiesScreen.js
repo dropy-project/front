@@ -109,7 +109,7 @@ const UserDropiesScreen = ({ navigation }) => {
                   <View>
                     <Text style={{ ...Fonts.bold(12, Colors.white) }}>Dropped {chunckHeaderTimeString(dropy.creationDate).toLowerCase()}</Text>
                     <Text style={{ ...Fonts.regular(10, Colors.white), marginTop: 2 }}>
-                      {dropy.retriever.id == null ? 'Not found' : `Found by @${dropy.retriever.username}`}
+                      {dropy?.retriever?.id == null ? 'Not found' : `Found by @${dropy?.retriever?.username}`}
                     </Text>
                   </View>
                   <TouchableOpacity onPress={() => deleteDropy(dropy.id)}>
