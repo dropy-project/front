@@ -178,8 +178,8 @@ export default function Onboarding({ navigation }) {
             avatarUrl,
           });
         } catch (error) {
-          console.error('Error while uploading profile picture', error);
-          console.log(userInfos);
+          // If the profile picture upload fails, we still register the user
+          console.error('Error while uploading profile picture', error, userInfos);
           setUser(userInfos);
         }
       } else {
@@ -244,9 +244,8 @@ export default function Onboarding({ navigation }) {
   };
 
   useEffect(() => {
-    if(user == null) {
-      return;
-    }
+    if(user == null) return;
+    console.log('Onboarding done sucessfully', user);
     navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
   }, [user]);
 
