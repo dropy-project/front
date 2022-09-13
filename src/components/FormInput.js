@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: Platform.OS === 'ios' ? 10 : 0,
     paddingLeft: 10,
-    paddingTop: Platform.OS === 'ios' ? 10 : 10,
-    paddingRight: Platform.OS === 'ios' ? 0 : 10,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   textInput: {
     flex: 1,
