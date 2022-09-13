@@ -259,7 +259,6 @@ export default function Onboarding({ navigation }) {
   const handleNotificationsPermissions = async () => {
     let result = await requestNotifications(['alert', 'sound', 'badge', 'criticalAlert']);
 
-    console.log(result);
     switch(result.status) {
       case RESULTS.DENIED:
       case RESULTS.BLOCKED:

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect } from 'react';
 import { Notifications } from 'react-native-notifications';
 
 import useCurrentUser from '../hooks/useCurrentUser';
@@ -9,7 +8,6 @@ import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 
 import { extractNotificationPayload } from '../states/NotificationProvider';
-import Styles, { Colors, Fonts } from '../styles/Styles';
 import Storage from '../utils/storage';
 
 const Splash = ({ navigation }) => {
@@ -38,21 +36,20 @@ const Splash = ({ navigation }) => {
       return;
     }
 
-    // Check if token is expired
-    if (userTokenData.expires < Date.now()) {
-      try {
+    try {
+      if (userTokenData.expires < Date.now()) {
         await API.refreshToken(userTokenData.refreshToken);
         const response = await API.getUserProfile();
         const user = response.data;
         setUser(user);
-      } catch (error) {
-        console.error('Refresh token error', error?.response?.data || error);
-        navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
+      } else {
+        const response = await API.getUserProfile();
+        const user = response.data;
+        setUser(user);
       }
-    } else {
-      const response = await API.getUserProfile();
-      const user = response.data;
-      setUser(user);
+    } catch (error) {
+      console.error('Auto login error', error?.response?.data || error);
+      navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
     }
   };
 
