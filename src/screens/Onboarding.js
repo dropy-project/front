@@ -31,6 +31,10 @@ import API from '../services/API';
 import useOverlay from '../hooks/useOverlay';
 import useCurrentUser from '../hooks/useCurrentUser';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
+import LoadingSpinner from '../components/LoadingSpinner';
+
+// eslint-disable-next-line no-undef
+const DEBUG = __DEV__;
 
 export default function Onboarding({ navigation }) {
 
@@ -49,12 +53,14 @@ export default function Onboarding({ navigation }) {
   const { sendAlert } = useOverlay();
   const { user, setUser } = useCurrentUser();
 
+  const [loading, setLoading] = useState(false);
+
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
-  const [displayName, setDisplayName] = useState('');
+  const [displayName, setDisplayName] = useState(DEBUG ? `Michel${Math.random() * 2000}` : '');
   const [profilePicturePath, setProfilePicturePath] = useState(null);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [email, setEmail] = useState(DEBUG ? 'michel.debug@dropy-app.com' : '');
+  const [password, setPassword] = useState(DEBUG ? 'Michel1234SuperSecu' : '');
+  const [passwordConfirmation, setPasswordConfirmation] = useState(DEBUG ? 'Michel1234SuperSecu' : '');
 
   const [termsChecked, setTermsChecked] = useState(false);
   const [newsletterChecked, setNewsletterChecked] = useState(false);
@@ -82,8 +88,6 @@ export default function Onboarding({ navigation }) {
     anim.start();
     return () => anim.stop();
   }, [currentViewIndex]);
-
-
 
   const onPressEditPicture = () => {
     const options = profilePicturePath == null ? {
@@ -162,6 +166,7 @@ export default function Onboarding({ navigation }) {
   };
 
   const handleRegister = async () => {
+    setLoading(true);
     try {
       const userInfos = await API.register(
         displayName,
@@ -202,10 +207,13 @@ export default function Onboarding({ navigation }) {
         validateText: 'Ok',
       });
       console.error(error.response.data);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogin = async () => {
+    setLoading(true);
     const emailValid = loginEmailInputRef.current?.isValid();
 
     if(!emailValid) {
@@ -240,6 +248,8 @@ export default function Onboarding({ navigation }) {
       });
       console.error(error.response.data);
       console.error(error.response.status);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -363,12 +373,14 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               onEdited={setEmail}
               isEmail
+              defaultValue={email}
             />
             <FormInput
               placeholder="Password"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               onEdited={setPassword}
+              defaultValue={password}
             />
           </View>
           <GlassButton
@@ -376,7 +388,12 @@ export default function Onboarding({ navigation }) {
             onPress={handleLogin}
             style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}
           >
-            <Text style={{ ...Fonts.bold(15, Colors.white) }}>Login</Text>
+            <Text style={{ ...Fonts.bold(15, Colors.white), opacity: loading ? 0 : 1 }}>Login</Text>
+            {loading && (
+              <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
+                <LoadingSpinner size={20} color={Colors.white} />
+              </View>
+            )}
           </GlassButton>
         </View>
 
@@ -401,6 +418,7 @@ export default function Onboarding({ navigation }) {
               onEdited={setDisplayName}
               ref={displayNameInputRef}
               minLength={3}
+              defaultValue={displayName}
             />
           </View>
           <GlassButton
@@ -442,19 +460,25 @@ export default function Onboarding({ navigation }) {
               onEdited={setEmail}
               placeholder="Email"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
-              isEmail/>
+              isEmail
+              defaultValue={email}
+            />
             <FormInput
               ref={passwordInputRef}
               onEdited={setPassword}
               placeholder="Password"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
-              isPassword/>
+              isPassword
+              defaultValue={password}
+            />
             <FormInput
               ref={passwordConfirmationInputRef}
               onEdited={setPasswordConfirmation}
               placeholder="Password confirmation"
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
-              isPassword/>
+              isPassword
+              defaultValue={passwordConfirmation}
+            />
           </View>
           <GlassButton
             disabled={email === '' || password === '' || passwordConfirmation === ''}
@@ -525,7 +549,12 @@ export default function Onboarding({ navigation }) {
             <FormCheckBox text={'subscribe to dropy\'s newsletter'} onChanged={setNewsletterChecked}/>
           </View>
           <GlassButton onPress={handleRegister} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }} disabled={!termsChecked}>
-            <Text style={{ ...Fonts.bold(15, Colors.white) }}>Start</Text>
+            <Text style={{ ...Fonts.bold(15, Colors.white), opacity: loading ? 0 : 1 }}>Start</Text>
+            {loading && (
+              <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
+                <LoadingSpinner size={20} color={Colors.white} />
+              </View>
+            )}
           </GlassButton>
         </View>
       </ViewSlider>

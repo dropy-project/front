@@ -99,7 +99,10 @@ const SettingsScreen = ({ navigation }) => {
           style={{ ...styles.linkContainer, ...Styles.center }}
           onPress={() => {
             API.logout();
-            navigation.reset({ index: 0, routes: [{ name: 'Splash' }] });
+            navigation.reset({ index: 0, routes: [{
+              name: 'Splash',
+              params: { cancelAutoLogin: true } }
+            ] });
           }}
         >
           <Text style={{ ...Fonts.bold(12, Colors.red) }}>Logout</Text>

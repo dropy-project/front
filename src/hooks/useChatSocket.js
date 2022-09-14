@@ -104,6 +104,7 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
       chatSocket.off('connect');
       chatSocket.off('message_sent');
       chatSocket.off('user_status');
+      chatSocket.off('join_conversation');
       chatSocket.off('close_conversation');
     };
   }, []);

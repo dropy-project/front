@@ -85,8 +85,10 @@ const serverVersionIsCompatible = async () => {
     const result = await axios.get(`/version/${AppInfo.requiredServerVersion}`);
     return result.status === 200;
   } catch (error) {
-    console.error('Checking server version error : ', error?.response ?? error);
-    return error.response.status !== 418;
+    if(error?.response?.status === 418) {
+      return false;
+    }
+    throw error;
   }
 };
 
