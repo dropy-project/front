@@ -40,7 +40,6 @@ const SocketContextProvider = ({ children }) => {
   useEffectForegroundOnly(() => {
     if(user == null) return;
     if(initialized === true) return;
-
     manager.current = new Manager(SOCKET_BASE_URL, {
       transports: ['websocket'],
       reconnection: true,
@@ -86,7 +85,7 @@ const SocketContextProvider = ({ children }) => {
         if (isTemporaryDisconnected.current) {
           reconnectSocketsFromTemporaryDisconnection();
         }
-      } else if (nextAppState === (Platform.OS === 'ios' ? 'background' : 'inactive')) {
+      } else if (nextAppState.match(/inactive|background/)) {
         if (chatSocket.current?.connected || dropySocket.current?.connected) {
           temporaryDisconnectSockets();
         }
