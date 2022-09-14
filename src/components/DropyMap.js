@@ -12,7 +12,6 @@ import useOverlay from '../hooks/useOverlay';
 import mapStyleAndroid from '../assets/mapStyleAndroid.json';
 import mapStyleIOS from '../assets/mapStyleIOS.json';
 
-import API from '../services/API';
 import Haptics from '../utils/haptics';
 
 import useCurrentUser from '../hooks/useCurrentUser';
@@ -46,12 +45,11 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
       Haptics.impactHeavy();
 
-      const response = await retrieveDropy(dropy.id);
-      if(response.error != null) {
-        throw response.error;
+      const result = await retrieveDropy(dropy.id);
+      if(result.error != null) {
+        throw result.error;
       }
 
-      const result = await API.getDropy(dropy.id);
       navigation.navigate('GetDropy', { dropy: result.data });
 
     } catch (error) {

@@ -47,7 +47,7 @@ export default function Onboarding({ navigation }) {
   const passwordConfirmationInputRef = useRef(null);
 
   const { sendAlert } = useOverlay();
-  const { setUser } = useCurrentUser();
+  const { user, setUser } = useCurrentUser();
 
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
   const [displayName, setDisplayName] = useState('');
@@ -170,17 +170,32 @@ export default function Onboarding({ navigation }) {
         newsletterChecked
       );
       if (profilePicturePath) {
-        const response = await API.postProfilePicture(profilePicturePath);
-        const avatarUrl = response.data;
-        setUser({
-          ...userInfos,
-          avatarUrl,
-        });
+        try {
+          const response = await API.postProfilePicture(profilePicturePath);
+          const avatarUrl = response.data;
+          setUser({
+            ...userInfos,
+            avatarUrl,
+          });
+        } catch (error) {
+          // If the profile picture upload fails, we still register the user
+          console.error('Error while uploading profile picture', error, userInfos);
+          setUser(userInfos);
+        }
       } else {
         setUser(userInfos);
       }
-      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
+      if(error.response.status === 409) {
+        const validated = await sendAlert({
+          title: 'This email is already registered',
+          description: 'You can register instead',
+          validateText: 'Register',
+          denyText: 'Ok',
+        });
+        validated && viewSliderRef.current?.goToView(0);
+        return;
+      }
       sendAlert({
         title: 'Oups an error has occured',
         description: 'Check your internet connection',
@@ -201,7 +216,6 @@ export default function Onboarding({ navigation }) {
     try {
       const userInfos = await API.login(email, password);
       setUser(userInfos);
-      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
       if(error.response.status === 404) {
         sendAlert({
@@ -228,6 +242,12 @@ export default function Onboarding({ navigation }) {
       console.error(error.response.status);
     }
   };
+
+  useEffect(() => {
+    if(user == null) return;
+    console.log('Onboarding done sucessfully', user);
+    navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+  }, [user]);
 
   const handleGeolocationPermissions = async () => {
     let result = null;

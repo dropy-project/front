@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, SafeAreaView, Text, View, FlatList } from 'react-native';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
 import GoBackHeader from '../components/GoBackHeader';
@@ -56,7 +57,7 @@ const ConversationsScreen = ({ navigation }) => {
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewContent}
           ListEmptyComponent={() => (
-            <View style={{ flex: 1, ...Styles.center }}>
+            <View style={{ flex: 1, height: responsiveHeight(80), ...Styles.center }}>
               <Text style={{ ...Fonts.ligth(15, Colors.grey), textAlign: 'center' }}>Find drops, begin new conversations!</Text>
             </View>
           )}

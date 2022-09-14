@@ -16,12 +16,12 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
   useEffect(() => {
     setLoading(true);
     switch (dropy.mediaType) {
-    case MEDIA_TYPES.PICTURE:
-      loadImageSource();
-      break;
-    case MEDIA_TYPES.TEXT:
-      loadDropyText();
-      break;
+      case MEDIA_TYPES.PICTURE:
+        loadImageSource();
+        break;
+      case MEDIA_TYPES.TEXT:
+        loadDropyText();
+        break;
     }
   }, []);
 

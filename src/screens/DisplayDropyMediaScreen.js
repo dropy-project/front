@@ -18,7 +18,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { user } = useCurrentUser();
   const { sendAlert } = useOverlay();
   const { showActionSheetWithOptions } = useActionSheet();
-  const { openChat } = useConversationsSocket();
+  const { createConversation } = useConversationsSocket();
 
   const handleOptionsButtonPress = () => {
     showActionSheetWithOptions({
@@ -33,6 +33,11 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
         blockUser(dropy.emitter.id, sendAlert, navigation);
       }
     });
+  };
+
+  const openConversation = () => {
+    navigation.popToTop();
+    createConversation(dropy.id);
   };
 
   return (
@@ -51,7 +56,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
         onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}
       />
       {showBottoModal && (
-        <FooterConfirmation onPress={() => openChat(dropy.chatConversationId)} dropy={dropy} textButton="Let's chat !" />
+        <FooterConfirmation onPress={openConversation} dropy={dropy} textButton="Let's chat !" />
       )}
     </SafeAreaView>
   );
