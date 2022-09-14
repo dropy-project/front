@@ -15,9 +15,7 @@ const ConversationsContextProvider = ({ children }) => {
   const { chatSocket } = useSocket();
 
   useEffect(() => {
-    console.log(chatSocket);
     if(chatSocket == null) return;
-
 
     listConversations();
     chatSocket.on('connect', listConversations);
