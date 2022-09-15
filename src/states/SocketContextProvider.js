@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
-import { AppState, View, StyleSheet, Platform } from 'react-native';
+import { AppState, View, StyleSheet } from 'react-native';
 
 import { Manager } from 'socket.io-client';
 
