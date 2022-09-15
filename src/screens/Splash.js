@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Notifications } from 'react-native-notifications';
 
 import useCurrentUser from '../hooks/useCurrentUser';
@@ -18,23 +18,13 @@ const Splash = ({ navigation, route }) => {
 
   const { sendAlert } = useOverlay();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   useEffectForegroundOnly(() => {
     launch();
   }, []);
 
   useEffect(() => {
-    if (user != null) {
-      setIsLoggedIn(true);
+    if (user != null && !cancelAutoLogin) {
       handleLoginSuccess();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user == null && isLoggedIn) {
-      // User has been logged out
-      navigateToOnboarding();
     }
   }, [user]);
 
@@ -51,6 +41,7 @@ const Splash = ({ navigation, route }) => {
     if(cancelAutoLogin) {
       console.log('Splash launch : auto login cancelled');
       setUser(null);
+      navigateToOnboarding();
       return;
     }
 
@@ -91,6 +82,9 @@ const Splash = ({ navigation, route }) => {
 
   const autoLogin = async () => {
     const userTokenData = await Storage.getItem('@auth_tokens');
+    if(userTokenData == null) {
+      return null;
+    }
 
     if (userTokenData.expires < Date.now()) {
       await API.refreshToken(userTokenData.refreshToken);

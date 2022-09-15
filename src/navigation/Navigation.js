@@ -25,7 +25,7 @@ export default function Navigation() {
       screenOptions={{
         headerShown: false,
         cardStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: 'white',
         },
       }}
     >
