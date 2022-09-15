@@ -78,7 +78,7 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
     <Animated.View style={{ ...styles.animatedHeader, transform: [{ translateY: headerTranform }] }}>
 
       <Animated.View style={{ ...StyleSheet.absoluteFillObject, transform: [{ translateY: headerCancelTransform }] }}>
-        <Animated.View style={{ transform: [{ scale: profilePictureScale }] }}>
+        <Animated.View style={{ ...StyleSheet.absoluteFillObject, transform: [{ scale: profilePictureScale }] }}>
           <ProfileImage
             displayNameSize={40}
             displayName={user?.displayName}
