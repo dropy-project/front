@@ -31,7 +31,6 @@ const useDropiesAroundSocket = () => {
 
       setDropiesAround(olds => {
         const newDropies = [...olds, processDropy(newDropy, user, userCoordinates)];
-
         const restrictedRange = newDropies.some((dropy) => dropy.isInEmitRestrictedRange);
         setCanEmitDropy(!restrictedRange);
 

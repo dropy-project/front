@@ -1,7 +1,6 @@
 import API from '../services/API';
 
 export const PRONOUNS = {
-  UNKNOWN: 'I prefer not to tell',
   HE_HIM: 'He/Him',
   SHE_HER: 'She/Her',
   OTHER: 'Other',

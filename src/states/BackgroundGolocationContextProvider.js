@@ -4,14 +4,7 @@ https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philo
 */
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
@@ -31,17 +24,11 @@ const BackgroundGolocationProvider = ({ children }) => {
   const [logs, setLogs] = useState(null);
 
   useEffect(() => {
-    const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, (error) => {
-      console.warn('[onLocation] ERROR: ', error);
-    });
+    const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, () => {});
 
-    const motionChangeSubscriber = BackgroundGeolocation.onMotionChange((location) => {
-      console.log('[onMotionChange]', location);
-    });
+    const motionChangeSubscriber = BackgroundGeolocation.onMotionChange(() => {});
 
-    const activityChangeSubscriber = BackgroundGeolocation.onActivityChange((activity) => {
-      console.log('[onActivityChange]', activity);
-    });
+    const activityChangeSubscriber = BackgroundGeolocation.onActivityChange(() => {});
 
     const authorizationChangeSubscriber = BackgroundGeolocation.onAuthorization((event) => {
       if (event.success) {
@@ -138,32 +125,14 @@ const BackgroundGolocationProvider = ({ children }) => {
     }
   };
 
-  const showLogs = async () => {
-    const data = await BackgroundGeolocation.logger.getLog({
-      limit: 200,
-    });
-    if(logs == null) {
-      setLogs(data);
-      console.log(data);
-    } else {
-      setLogs(null);
-    }
-  };
-
   return (
     <BackgroundGeolocationContext.Provider value={{
       backgroundGeolocationEnabled,
       setBackgroundGeolocationEnabled,
-      showLogs,
     }}>
       {children}
       {logs != null && (
         <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.8)', ...Styles.center }}>
-          <ScrollView contentContainerStyle={{ paddingVertical: 200 }}>
-            <Text style={{ ...Fonts.ligth(8, Colors.white), padding: 10 }}>
-              {logs}
-            </Text>
-          </ScrollView>
           <TouchableOpacity style={{ position: 'absolute', bottom: 30 }} onPress={() => setLogs(null)}>
             <Text style={{ ...Fonts.bold(14, Colors.white) }}>Close</Text>
           </TouchableOpacity>
