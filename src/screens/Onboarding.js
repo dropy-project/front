@@ -220,6 +220,9 @@ export default function Onboarding({ navigation }) {
       return;
     }
 
+    await requestGeolocationPermissions();
+    await requestNotificationsPermissions();
+
     try {
       const userInfos = await API.login(email, password);
       setUser(userInfos);
@@ -257,7 +260,7 @@ export default function Onboarding({ navigation }) {
     navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
   }, [user]);
 
-  const handleGeolocationPermissions = async () => {
+  const requestGeolocationPermissions = async (onSuccess = () => {}) => {
     let result = null;
     setLoading(true);
 
@@ -281,30 +284,30 @@ export default function Onboarding({ navigation }) {
         notGrantedAlert('Location access');
         break;
       case RESULTS.GRANTED:
-        viewSliderRef.current?.goToView(6);
+        onSuccess();
         break;
     }
     setLoading(false);
   };
 
-  const handleNotificationsPermissions = async () => {
+  const requestNotificationsPermissions = async (onSuccess = () => {}, onFailed = () => {}) => {
     setLoading(true);
     let result = await requestNotifications(['alert', 'sound', 'badge', 'criticalAlert']);
 
     switch(result.status) {
       case RESULTS.DENIED:
       case RESULTS.BLOCKED:
-        viewSliderRef.current?.goToView(8);
+        onFailed();
         break;
       case RESULTS.GRANTED:
-        viewSliderRef.current?.goToView(7);
+        onSuccess();
         break;
     }
 
     setLoading(false);
   };
 
-  const handleBackgroundGeolocationPermissions = async () => {
+  const requestBackgroundGeolocationPermissions = async (onSuccess = () => {}) => {
     setLoading(true);
     try {
       await BackgroundGeolocation.requestPermission();
@@ -312,7 +315,7 @@ export default function Onboarding({ navigation }) {
     } catch (error) {
       console.error(error);
     } finally {
-      viewSliderRef.current?.goToView(8);
+      onSuccess();
       setLoading(false);
     }
   };
@@ -504,7 +507,7 @@ export default function Onboarding({ navigation }) {
           <MaterialIcons name="location-pin" size={60} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
-            onPress={handleGeolocationPermissions}
+            onPress={() => requestGeolocationPermissions(() => viewSliderRef.current?.goToView(6))}
             text="Turn on"
           />
         </View>
@@ -517,7 +520,10 @@ export default function Onboarding({ navigation }) {
           <MaterialCommunityIcons name="bell-ring" size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
-            onPress={handleNotificationsPermissions}
+            onPress={() => requestNotificationsPermissions(
+              () => viewSliderRef.current?.goToView(7),
+              () => viewSliderRef.current?.goToView(8)
+            )}
             text="Turn on"
           />
         </View>
@@ -533,7 +539,7 @@ export default function Onboarding({ navigation }) {
           <FontAwesome5 name="satellite" size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
-            onPress={handleBackgroundGeolocationPermissions}
+            onPress={() => requestBackgroundGeolocationPermissions(() => viewSliderRef.current?.goToView(8))}
             text="Turn on"
           />
         </View>

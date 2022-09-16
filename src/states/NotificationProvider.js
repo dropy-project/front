@@ -33,9 +33,7 @@ const NotificationProvider = ({ children }) => {
 
   const [notificationData, setNotificationData] = useState(null);
 
-  const {
-    conversations,
-  } = useConversationsSocket();
+  const { conversations } = useConversationsSocket();
 
   useEffectForegroundOnly(() => {
     if(user == null) return;

@@ -107,7 +107,7 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
         <TouchableOpacity
           style={{ ...Styles.center, position: 'absolute', bottom: 0, width: '100%' }}
           onPress={() => setCurrentViewIndex(0)}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
         >
           <Text style={{ marginBottom: 10, ...Fonts.bold(13, Colors.lightGrey) }}>
             I already have an account
