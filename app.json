@@ -2,12 +2,12 @@
   "name": "Dropy",
   "displayName": "Dropy",
   
-  "version": "0.0.6",
+  "version": "0.0.7",
   "versionFlag": "private-alpha",
-  "requiredServerVersion": "0.0.6",
+  "requiredServerVersion": "0.0.8",
 
   "customAPI": null,
   "customSocket": null,
 
-  "productionMode": false
+  "productionMode": true
 }
