@@ -92,7 +92,7 @@ export const Fonts = {
 
 export const Map = {
   INITIAL_PITCH: 0,
-  INITIAL_ZOOM: 17,
+  INITIAL_ZOOM: 17.3,
   MIN_ZOOM: 16,
   MAX_ZOOM: 18,
   MIN_ZOOM_DEVELOPER: 15,

@@ -85,7 +85,7 @@ const SocketContextProvider = ({ children }) => {
         if (isTemporaryDisconnected.current) {
           reconnectSocketsFromTemporaryDisconnection();
         }
-      } else if (nextAppState.match(/inactive|background/)) {
+      } else if (nextAppState === 'background') {
         if (chatSocket.current?.connected || dropySocket.current?.connected) {
           temporaryDisconnectSockets();
         }

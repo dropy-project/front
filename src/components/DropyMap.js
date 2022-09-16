@@ -94,18 +94,18 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
           },
           pitch: museumVisible ? Map.MUSEUM_PITCH : Map.INITIAL_PITCH,
           heading: compassHeading,
-          zoom: museumVisible ? Map.MUSEUM_ZOOM : zoomValue,
+          zoom: museumVisible ? Map.MUSEUM_ZOOM : undefined,
         },
         { duration: museumVisible ? 500 : duration }
       );
     });
   };
 
-  const onRegionChange = (region) => {
-    if(museumVisible) return;
-    const zoom = Math.log2(360 * (Dimensions.get('screen').width / 256 / region.longitudeDelta));
-    setZoomValue(zoom);
-  };
+  // const onRegionChange = (region) => {
+  //   if(museumVisible) return;
+  //   const zoom = Math.log2(360 * (Dimensions.get('screen').width / 256 / Math.min(region.longitudeDelta, region.latitudeDelta)));
+  //   setZoomValue(zoom);
+  // };
 
   return (
     <>
@@ -117,9 +117,10 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}
-        zoomEnabled={!museumVisible}
-        minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
-        maxZoomLevel={Map.MAX_ZOOM}
+        // zoomEnabled={!museumVisible}
+        zoomEnabled={false}
+        // minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
+        // maxZoomLevel={Map.MAX_ZOOM}
         showsCompass={false}
         initialCamera={{
           center: {
@@ -133,7 +134,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         }}
         onMapLoaded={() => setMapIsReady(true)}
         showsPointsOfInterest={false}
-        onRegionChange={onRegionChange}
+        // onRegionChange={onRegionChange}
       >
         {retrievedDropies != null ? (
           <>
