@@ -133,7 +133,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         }}
         onMapLoaded={() => setMapIsReady(true)}
         showsPointsOfInterest={false}
-        cacheEnabled
         onRegionChange={onRegionChange}
       >
         {retrievedDropies != null ? (

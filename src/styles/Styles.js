@@ -2,6 +2,8 @@ import { Platform } from 'react-native';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const FONT_SIZE_SCALE_FACTOR = 7;
+const IS_IOS = Platform.OS === 'ios';
+
 const scaleFromFigma = size => responsiveFontSize(size / FONT_SIZE_SCALE_FACTOR);
 
 export const Colors = {
@@ -21,37 +23,40 @@ export const Colors = {
 
   red: '#f28888',
   green: '#8FDCB7',
+
+  androidShadows: '#1d1d57',
+  androidSoftShadows: '#697180',
 };
 
 const Styles = {
   hardShadows: {
-    shadowColor: Colors.mainBlue,
+    shadowColor: IS_IOS ? Colors.mainBlue : Colors.androidShadows,
 
-    shadowOpacity: 0.5,
+    shadowOpacity: 10,
     shadowRadius: 12,
 
-    elevation: 7,
+    elevation: 15,
     shadowOffset: {
       width: 0,
-      height: Platform.OS !== 'ios' ? 0 : 5,
+      height: IS_IOS ? 0 : 5,
     },
   },
   softShadows: {
-    shadowColor: Colors.mainBlue,
+    shadowColor: IS_IOS ? Colors.mainBlue : Colors.androidSoftShadows,
     shadowOpacity: 0.25,
     shadowRadius: 15,
-    elevation: 5,
+    elevation: 10,
 
     shadowOffset: {
       width: 0,
-      height: Platform.OS !== 'ios' ? 0 : 5,
+      height: 0,
     },
   },
   blueShadow: {
-    shadowColor: Colors.mainBlue,
+    shadowColor: IS_IOS ? Colors.mainBlue : Colors.androidShadows,
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    elevation: 5,
+    elevation: 10,
 
     shadowOffset: {
       width: 0,
@@ -63,7 +68,7 @@ const Styles = {
     justifyContent: 'center',
   },
   safeAreaView: {
-    paddingTop: Platform.OS === 'ios' ? 0 : 20,
+    paddingTop: IS_IOS ? 0 : 20,
   },
 };
 
