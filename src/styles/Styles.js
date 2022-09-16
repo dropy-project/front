@@ -32,7 +32,7 @@ const Styles = {
   hardShadows: {
     shadowColor: IS_IOS ? Colors.mainBlue : Colors.androidShadows,
 
-    shadowOpacity: 10,
+    shadowOpacity: 0.5,
     shadowRadius: 12,
 
     elevation: 15,

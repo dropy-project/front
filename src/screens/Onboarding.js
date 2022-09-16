@@ -191,6 +191,7 @@ export default function Onboarding({ navigation }) {
         setUser(userInfos);
       }
     } catch (error) {
+      setLoading(false);
       if(error.response.status === 409) {
         const validated = await sendAlert({
           title: 'This email is already registered',
@@ -207,8 +208,6 @@ export default function Onboarding({ navigation }) {
         validateText: 'Ok',
       });
       console.error(error.response.data);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -225,6 +224,7 @@ export default function Onboarding({ navigation }) {
       const userInfos = await API.login(email, password);
       setUser(userInfos);
     } catch (error) {
+      setLoading(false);
       if(error.response.status === 404) {
         sendAlert({
           title: 'This account does not exists',
@@ -248,8 +248,6 @@ export default function Onboarding({ navigation }) {
       });
       console.error(error.response.data);
       console.error(error.response.status);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -261,8 +259,10 @@ export default function Onboarding({ navigation }) {
 
   const handleGeolocationPermissions = async () => {
     let result = null;
+    setLoading(true);
+
     if(Platform.OS === 'ios') {
-      result = await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
+      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     } else {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
     }
@@ -284,9 +284,11 @@ export default function Onboarding({ navigation }) {
         viewSliderRef.current?.goToView(6);
         break;
     }
+    setLoading(false);
   };
 
   const handleNotificationsPermissions = async () => {
+    setLoading(true);
     let result = await requestNotifications(['alert', 'sound', 'badge', 'criticalAlert']);
 
     switch(result.status) {
@@ -298,9 +300,12 @@ export default function Onboarding({ navigation }) {
         viewSliderRef.current?.goToView(7);
         break;
     }
+
+    setLoading(false);
   };
 
   const handleBackgroundGeolocationPermissions = async () => {
+    setLoading(true);
     try {
       await BackgroundGeolocation.requestPermission();
       setBackgroundGeolocationEnabled(true);
@@ -308,9 +313,9 @@ export default function Onboarding({ navigation }) {
       console.error(error);
     } finally {
       viewSliderRef.current?.goToView(8);
+      setLoading(false);
     }
   };
-
 
   const notGrantedAlert = async (serviceName) => {
     const alertResult = await sendAlert({
@@ -383,18 +388,11 @@ export default function Onboarding({ navigation }) {
               defaultValue={password}
             />
           </View>
-          <GlassButton
-            disabled={email.length === 0 || password.length === 0}
+          <LoadingGlassButton
             onPress={handleLogin}
-            style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}
-          >
-            <Text style={{ ...Fonts.bold(15, Colors.white), opacity: loading ? 0 : 1 }}>Login</Text>
-            {loading && (
-              <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
-                <LoadingSpinner size={20} color={Colors.white} />
-              </View>
-            )}
-          </GlassButton>
+            disabled={email.length === 0 || password.length === 0}
+            text="Login"
+          />
         </View>
 
         <View style={styles.view}>
@@ -403,9 +401,10 @@ export default function Onboarding({ navigation }) {
             <Text style={{ ...styles.title, fontSize: 35 }}>Hey there</Text>
             <Text style={{ ...styles.subtitle, fontSize: 20 }}>ready to drop ?</Text>
           </View>
-          <GlassButton onPress={() => viewSliderRef.current?.goToView(2)} style={styles.nextButton}>
-            <AntDesign name="arrowright" size={32} color="white"/>
-          </GlassButton>
+          <LoadingGlassButton
+            onPress={() => viewSliderRef.current?.goToView(2)}
+            disabled={displayName === ''}
+          />
         </View>
 
         <View style={styles.view}>
@@ -421,17 +420,15 @@ export default function Onboarding({ navigation }) {
               defaultValue={displayName}
             />
           </View>
-          <GlassButton
-            disabled={displayName === ''}
+          <LoadingGlassButton
+            loading={loading}
             onPress={() => {
               const isValid = displayNameInputRef.current?.isValid();
               isValid && viewSliderRef.current?.goToView(3);
               isValid && Keyboard.dismiss();
             }}
-            style={styles.nextButton}
-          >
-            <AntDesign name="arrowright" size={32} color="white"/>
-          </GlassButton>
+            disabled={displayName === ''}
+          />
         </View>
 
         <View style={styles.view}>
@@ -446,10 +443,11 @@ export default function Onboarding({ navigation }) {
               <MaterialCommunityIcons name="image-plus" size={40} color="white" />
             )}
           </TouchableOpacity>
-          <GlassButton disabled={profilePicturePath == null} onPress={() => viewSliderRef.current?.goToView(4)}
-            style={styles.nextButton} >
-            <AntDesign name="arrowright" size={32} color="white"/>
-          </GlassButton>
+          <LoadingGlassButton
+            loading={loading}
+            onPress={() => viewSliderRef.current?.goToView(4)}
+            disabled={profilePicturePath == null}
+          />
         </View>
 
         <View style={{ ...styles.view }}>
@@ -480,8 +478,8 @@ export default function Onboarding({ navigation }) {
               defaultValue={passwordConfirmation}
             />
           </View>
-          <GlassButton
-            disabled={email === '' || password === '' || passwordConfirmation === ''}
+          <LoadingGlassButton
+            loading={loading}
             onPress={() => {
               const emailValid = emailInputRef.current?.isValid();
               const passwordValid = passwordInputRef.current?.isValid();
@@ -495,9 +493,8 @@ export default function Onboarding({ navigation }) {
               isValid && viewSliderRef.current?.goToView(5);
               isValid && Keyboard.dismiss();
             }}
-            style={{ ...styles.nextButton }}>
-            <AntDesign name="arrowright" size={32} color="white"/>
-          </GlassButton>
+            disabled={email === '' || password === '' || passwordConfirmation === ''}
+          />
         </View>
 
         <View style={styles.view}>
@@ -506,11 +503,11 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.subtitle}>{'Or you won\'t be able to use the app'}</Text>
           </View>
           <MaterialIcons name="location-pin" size={60} color={Colors.grey} />
-          <GlassButton
+          <LoadingGlassButton
+            loading={loading}
             onPress={handleGeolocationPermissions}
-            style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
-            <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
-          </GlassButton>
+            text="Turn on"
+          />
         </View>
 
         <View style={styles.view}>
@@ -519,9 +516,11 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.subtitle}>Turn on notifications</Text>
           </View>
           <MaterialCommunityIcons name="bell-ring" size={50} color={Colors.grey} />
-          <GlassButton onPress={handleNotificationsPermissions} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}>
-            <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
-          </GlassButton>
+          <LoadingGlassButton
+            loading={loading}
+            onPress={handleNotificationsPermissions}
+            text="Turn on"
+          />
         </View>
 
         <View style={styles.view}>
@@ -533,12 +532,11 @@ export default function Onboarding({ navigation }) {
             </TouchableOpacity>
           </View>
           <FontAwesome5 name="satellite" size={50} color={Colors.grey} />
-          <GlassButton
+          <LoadingGlassButton
+            loading={loading}
             onPress={handleBackgroundGeolocationPermissions}
-            style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }}
-          >
-            <Text style={{ ...Fonts.bold(15, Colors.white) }}>Turn on</Text>
-          </GlassButton>
+            text="Turn on"
+          />
         </View>
 
         <View style={styles.view}>
@@ -548,19 +546,37 @@ export default function Onboarding({ navigation }) {
             <FormCheckBox text={'I agree with dropy\'s {terms & conditions}'} onChanged={setTermsChecked} textUrl='https://dropy-app.com/privacy-policy.html'/>
             <FormCheckBox text={'subscribe to dropy\'s newsletter'} onChanged={setNewsletterChecked}/>
           </View>
-          <GlassButton onPress={handleRegister} style={{ ...styles.nextButton, paddingVertical: 15, width: 150 }} disabled={!termsChecked}>
-            <Text style={{ ...Fonts.bold(15, Colors.white), opacity: loading ? 0 : 1 }}>Start</Text>
-            {loading && (
-              <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
-                <LoadingSpinner size={20} color={Colors.white} />
-              </View>
-            )}
-          </GlassButton>
+          <LoadingGlassButton
+            loading={loading}
+            onPress={handleRegister}
+            disabled={!termsChecked}
+            text="Start"
+          />
         </View>
       </ViewSlider>
     </SafeAreaView>
   );
 }
+
+const LoadingGlassButton = ({ loading, onPress, disabled, text }) => (
+  <GlassButton
+    onPress={onPress}
+    style={text ? { ...styles.nextButton, paddingVertical: 15, width: 150 } : styles.nextButton}
+    disabled={disabled}
+  >
+    {text ? (
+      <Text style={{ ...Fonts.bold(15, Colors.white), opacity: loading ? 0 : 1 }}>{text}</Text>
+    ) : (
+      <AntDesign name="arrowright" size={32} color="white"/>
+    )}
+
+    {loading && (
+      <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
+        <LoadingSpinner size={20} color={Colors.white} />
+      </View>
+    )}
+  </GlassButton>
+);
 
 const styles = StyleSheet.create({
   container: {
