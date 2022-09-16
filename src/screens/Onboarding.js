@@ -403,7 +403,6 @@ export default function Onboarding({ navigation }) {
           </View>
           <LoadingGlassButton
             onPress={() => viewSliderRef.current?.goToView(2)}
-            disabled={displayName === ''}
           />
         </View>
 
