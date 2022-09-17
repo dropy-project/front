@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet } from 'react-native';
-
 import Svg, { Circle, RadialGradient, Stop } from 'react-native-svg';
 import Styles, { Colors, Map } from '../styles/Styles';
 import GlassCircleButton from './GlassCircleButton';
 
-const CENTER_ICON_SIZE = 15;
+export const CENTER_ICON_SIZE = 15;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Platform, Dimensions } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 import MapView, { Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,6 +18,7 @@ import useCurrentUser from '../hooks/useCurrentUser';
 import { GEOHASH_SIZE } from '../states/GeolocationContextProvider';
 import { coordinatesDistance } from '../utils/coordinates';
 import { Map } from '../styles/Styles';
+import AnimatedFlask from './AnimatedFlask';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import DropyMapMarker from './DropyMapMarker';
 import DebugText from './DebugText';
@@ -162,6 +163,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         )}
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </MapView>
+      <AnimatedFlask visible={!museumVisible} />
       <Sonar zoomValue={zoomValue} visible={!museumVisible} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
