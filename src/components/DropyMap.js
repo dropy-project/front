@@ -24,6 +24,7 @@ import DropyMapMarker from './DropyMapMarker';
 import DebugText from './DebugText';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
+import EnergyModal from './EnergyModal';
 
 const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
 
@@ -164,6 +165,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </MapView>
       <AnimatedFlask visible={!museumVisible} />
+      <EnergyModal />
       <Sonar zoomValue={zoomValue} visible={!museumVisible} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
