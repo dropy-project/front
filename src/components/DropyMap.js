@@ -29,8 +29,6 @@ import FadeInWrapper from './FadeInWrapper';
 
 const MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD = 5;
 
-const MAX_ENERGY = 90;
-
 const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
 
   const navigation = useNavigation();
@@ -74,9 +72,15 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
       console.log('repsonse.data', result.data.energy);
       console.log('user energy', user.energy);
 
-      setUser({ ...user, energy: result.data.energy, lastEnergyIncrement: result.data.energy - user.energy });
-
       navigation.navigate('GetDropy', { dropy: result.data.dropy });
+
+      setTimeout(() => {
+        setUser(oldUser => ({
+          ...oldUser,
+          energy: result.data.energy,
+          lastEnergyIncrement: result.data.energy - user.energy,
+        }));
+      }, 500);
 
     } catch (error) {
       console.error('Dropy pressed error', error);
@@ -205,7 +209,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <AnimatedFlask energy={user.energy * 100 / MAX_ENERGY}/>
+          <AnimatedFlask />
           <FadeInWrapper visible={showZoomButton}>
             <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
               <MaterialIcons name="my-location" size={20} color={Colors.darkGrey} />
@@ -217,7 +221,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         </FadeInWrapper>
       </SafeAreaView>
 
-      <EnergyModal navigation={navigation}/>
+      <EnergyModal />
       <Sonar cameraData={cameraData} visible={!museumVisible} compassHeading={compassHeading} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient

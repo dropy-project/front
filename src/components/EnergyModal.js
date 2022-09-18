@@ -1,49 +1,50 @@
 import { Animated, Easing, StyleSheet, Text } from 'react-native';
 import React, { useRef , useEffect } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useCurrentUser from '../hooks/useCurrentUser';
 
-const EnergyModal = ({ navigation }) => {
+const EnergyModal = () => {
 
+  const isFocused = useIsFocused();
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const { user, setUser } = useCurrentUser();
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (user.lastEnergyIncrement == null) return;
+    if(isFocused) {
+      return animatePopup();
+    }
+  }, [isFocused, user.lastEnergyIncrement]);
 
-      const anim = Animated.sequence([
-        Animated.timing(visibleAnimatedValue, {
-          toValue: 1,
-          duration: 500,
-          delay: 1000,
-          useNativeDriver: true,
-          easing:Easing.elastic(1.1),
-        }),
-        Animated.delay(4000),
-        Animated.timing(visibleAnimatedValue, {
-          toValue:  0,
-          duration: 200,
-          delay: 300,
-          useNativeDriver: true,
-          easing: undefined,
-        })
-      ]);
-      anim.start(({ finished }) => {
-        console.log('LAAAAAAAAAAAAAAAAA');
-        if (finished) {
-          setUser({ ...user, lastEnergyIncrement: null });
-          console.log('ICIIIIIIIIIIIIIIIII');
-        }
-      });
-      return anim.stop;
+  const animatePopup = () => {
+    if (user.lastEnergyIncrement == null) return;
+    const anim = Animated.sequence([
+      Animated.delay(500),
+      Animated.timing(visibleAnimatedValue, {
+        toValue: 1,
+        duration: 500,
+        delay: 1000,
+        useNativeDriver: true,
+        easing:Easing.elastic(1.1),
+      }),
+      Animated.delay(4000),
+      Animated.timing(visibleAnimatedValue, {
+        toValue:  0,
+        duration: 200,
+        delay: 300,
+        useNativeDriver: true,
+        easing: undefined,
+      })
+    ]);
+    anim.start(({ finished }) => {
+      if (finished) {
+        setUser(oldUser => ({ ...oldUser, lastEnergyIncrement: null }));
+      }
     });
-    return unsubscribe;
-  }, []);
-
-  console.log('lastEnergyIncrement', user.lastEnergyIncrement);
+    return anim.stop;
+  };
 
 
   return (

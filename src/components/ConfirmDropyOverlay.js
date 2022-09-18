@@ -91,10 +91,11 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       }
 
       const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude, dropyCreateParams.mediaType, dropyData);
-      setUser({ ...user, energy: response.data.energy, lastEnergyIncrement: response.data.energy - user.energy });
-      console.log('[Data upload] API response', response.status);
-      console.log('[Data upload] energy', response.data.energy - user.energy);
-      console.log('[Data upload]', response.data.energy);
+      setUser(oldUser => ({
+        ...oldUser,
+        energy: response.data.energy,
+        lastEnergyIncrement: response.data.energy - user.energy,
+      }));
 
       setTimeout(() => {
         Haptics.notificationSuccess();

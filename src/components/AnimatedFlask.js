@@ -2,17 +2,29 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View, Animated } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 import Styles, { Colors } from '../styles/Styles';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
+const MAX_ENERGY = 90;
 
-const AnimatedFlask = ({ color = Colors.purple2, energy, size = 60,  visible = true }) => {
+const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
   const pathAnimatedValue = useRef(new Animated.Value(0)).current;
   const path2AnimatedValue = useRef(new Animated.Value(0)).current;
   const flaskFillAnimatedValue = useRef(new Animated.Value(0)).current;
 
-  const energyClamped = Math.min(Math.max(energy, 0), 100);
+  const { user } = useCurrentUser();
+  const isFocused = useIsFocused();
+
+  const energyClamped = Math.min(Math.max((user.energy * 100 / MAX_ENERGY), 0), 100);
+
+  useEffect(() => {
+    if(isFocused) {
+      return animateFill();
+    }
+  }, [isFocused, user.lastEnergyIncrement]);
 
   useEffect(() => {
     pathAnimatedValue.setValue(Math.random());
@@ -50,15 +62,18 @@ const AnimatedFlask = ({ color = Colors.purple2, energy, size = 60,  visible = t
     return loop.stop;
   }, []);
 
-  useEffect(() => {
-    const anim = Animated.timing(flaskFillAnimatedValue, {
-      toValue: energyClamped / 100,
-      duration: 2000,
-      useNativeDriver: true,
-    });
+  const animateFill = () => {
+    console.log('ANIMATE FILL');
+    const anim = Animated.sequence([
+      Animated.delay(500),
+      Animated.timing(flaskFillAnimatedValue, {
+        toValue: energyClamped / 100,
+        duration: 2000,
+        useNativeDriver: true,
+      })
+    ]);
     anim.start();
-    return anim.stop;
-  }, [energyClamped]);
+  };
 
   const pathFlaskTranslate = flaskFillAnimatedValue.interpolate({
     inputRange: [0, 1],
@@ -77,72 +92,70 @@ const AnimatedFlask = ({ color = Colors.purple2, energy, size = 60,  visible = t
 
   return (
     <View style={{ marginBottom: 10 }}>
-      { visible && (
-        <View style={{
-          borderBottomLeftRadius: 20,
-          borderBottomRightRadius: 20,
-          ...Styles.center }}>
+      <View style={{
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        ...Styles.center }}>
+        <View
+          style={{
+            ...styles.flaskContainer,
+            height: size * 1.8,
+            width: size * 0.25,
+            borderRadiusBottom: size,
+            borderWidth: 2,
+            borderColor: 'white',
+          }}>
+          <Animated.View
+            style={{
+              ...styles.flaskFill,
+              backgroundColor: color,
+              height: '110%',
+              transform: [{ translateY: pathFlaskTranslate }],
+            }}
+          />
+          <AnimatedSvg
+            width="240"
+            height="40"
+            viewBox="0 0 824 39"
+            style={{
+              position: 'absolute',
+              bottom:93,
+              transform: [{ translateX: pathTranslate }, { translateY: pathFlaskTranslate }],
+              opacity: 0.7,
+            }}>
+            <Path
+              fill={color}
+              d="M 21 28 C 21 28 -18.914803 46.585373 21 26 C 60.914803 5.414623 76.159401 8.829062 113 23 C 145.672577 35.567688 178.94249 -14.561428 241 18 C 277.601013 37.204456 320.646027 4.706551 365 17 C 433.746216 36.054169 484.215912 -0.820065 539 13 C 581.190247 23.643089 609.878418 -14.94294 679 13 C 738.92572 37.225441 786.059143 -10.737301 821 13 L 821 28 L 21 28 Z"
+            />
+          </AnimatedSvg>
+          <AnimatedSvg
+            width="240"
+            height="40"
+            viewBox="0 0 824 39"
+            style={{
+              position: 'absolute',
+              bottom:94,
+              transform: [{ translateX: path2Translate },{ translateY: pathFlaskTranslate }],
+            }}>
+            <Path
+              fill={color}
+              d="M 21 28 C 21 28 -18.914803 46.585373 21 26 C 60.914803 5.414623 76.159401 8.829062 113 23 C 145.672577 35.567688 178.94249 -14.561428 241 18 C 277.601013 37.204456 320.646027 4.706551 365 17 C 433.746216 36.054169 484.215912 -0.820065 539 13 C 581.190247 23.643089 609.878418 -14.94294 679 13 C 738.92572 37.225441 786.059143 -10.737301 821 13 L 821 28 L 21 28 Z"
+            />
+          </AnimatedSvg>
+          <View style={styles.lightBounceOverlay} />
           <View
             style={{
-              ...styles.flaskContainer,
-              height: size * 1.8,
-              width: size * 0.25,
-              borderRadiusBottom: size,
-              borderWidth: 2,
-              borderColor: 'white',
-            }}>
-            <Animated.View
-              style={{
-                ...styles.flaskFill,
-                backgroundColor: color,
-                height: '110%',
-                transform: [{ translateY: pathFlaskTranslate }],
-              }}
-            />
-            <AnimatedSvg
-              width="240"
-              height="40"
-              viewBox="0 0 824 39"
-              style={{
-                position: 'absolute',
-                bottom:93,
-                transform: [{ translateX: pathTranslate }, { translateY: pathFlaskTranslate }],
-                opacity: 0.7,
-              }}>
-              <Path
-                fill={color}
-                d="M 21 28 C 21 28 -18.914803 46.585373 21 26 C 60.914803 5.414623 76.159401 8.829062 113 23 C 145.672577 35.567688 178.94249 -14.561428 241 18 C 277.601013 37.204456 320.646027 4.706551 365 17 C 433.746216 36.054169 484.215912 -0.820065 539 13 C 581.190247 23.643089 609.878418 -14.94294 679 13 C 738.92572 37.225441 786.059143 -10.737301 821 13 L 821 28 L 21 28 Z"
-              />
-            </AnimatedSvg>
-            <AnimatedSvg
-              width="240"
-              height="40"
-              viewBox="0 0 824 39"
-              style={{
-                position: 'absolute',
-                bottom:94,
-                transform: [{ translateX: path2Translate },{ translateY: pathFlaskTranslate }],
-              }}>
-              <Path
-                fill={color}
-                d="M 21 28 C 21 28 -18.914803 46.585373 21 26 C 60.914803 5.414623 76.159401 8.829062 113 23 C 145.672577 35.567688 178.94249 -14.561428 241 18 C 277.601013 37.204456 320.646027 4.706551 365 17 C 433.746216 36.054169 484.215912 -0.820065 539 13 C 581.190247 23.643089 609.878418 -14.94294 679 13 C 738.92572 37.225441 786.059143 -10.737301 821 13 L 821 28 L 21 28 Z"
-              />
-            </AnimatedSvg>
-            <View style={styles.lightBounceOverlay} />
-            <View
-              style={{
-                ...styles.flaskOutline,
-                borderWidth: size * 0.03,
-                borderBottomLeftRadius: size,
-                borderBottomRightRadius: size,
-              }}
-            />
-          </View>
-          <View style={{ backgroundColor: 'white', borderRadius: 50, height: 20, width: 20, position: 'absolute', top: -15, ...Styles.center }}>
-            <MaterialCommunityIcons name="lightning-bolt" size={size * 0.25} color={Colors.purple2} />
-          </View>
+              ...styles.flaskOutline,
+              borderWidth: size * 0.03,
+              borderBottomLeftRadius: size,
+              borderBottomRightRadius: size,
+            }}
+          />
         </View>
-      )}
+        <View style={{ backgroundColor: 'white', borderRadius: 50, height: 20, width: 20, position: 'absolute', top: -15, ...Styles.center }}>
+          <MaterialCommunityIcons name="lightning-bolt" size={size * 0.25} color={Colors.purple2} />
+        </View>
+      </View>
     </View>
   );
 };
