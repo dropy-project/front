@@ -61,7 +61,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         throw result.error;
       }
 
-      navigation.navigate('GetDropy', { dropy: result.data });
+      navigation.navigate('GetDropy', { dropy: result.data.dropy });
 
     } catch (error) {
       console.error('Dropy pressed error', error);

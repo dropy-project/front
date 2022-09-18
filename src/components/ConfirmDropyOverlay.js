@@ -91,8 +91,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       }
 
       const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude, dropyCreateParams.mediaType, dropyData);
-      console.log('rksdjn;', response.data.energy);
-      setUser({ ...user, energy: response.data.energy, lastEnergyIncrement: user.energy - response.data.energy });
+      setUser({ ...user, energy: response.data.energy, lastEnergyIncrement: response.data.energy - user.energy });
       console.log('[Data upload] API response', response.status);
 
       setTimeout(() => {

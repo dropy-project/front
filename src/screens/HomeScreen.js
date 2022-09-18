@@ -116,7 +116,7 @@ const HomeScreen = ({ navigation, route }) => {
         selectedDropyIndex={selectedDropyIndex}
       />
 
-      <SafeAreaView style={styles.avatarContainer} pointerEvents="none">
+      <SafeAreaView style={styles.avatarContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={{ width: 80 }}>
           <ProfileAvatar size={70} />
           <TouchableOpacity onPress={() => navigation.navigate('Settings')}>

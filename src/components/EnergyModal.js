@@ -9,7 +9,6 @@ const EnergyModal = ({ energy }) => {
 
 
   useEffect(() => {
-    console.log('EnergyModal', energy);
     if (energy == null) return;
     const anim = Animated.sequence([
       Animated.timing(visibleAnimatedValue, {
@@ -35,7 +34,7 @@ const EnergyModal = ({ energy }) => {
 
   return (
     <Animated.View style={{ ...styles.conainter, transform: [{ scale: visibleAnimatedValue }] }}>
-      <Text style={styles.energy}>+{energy}</Text>
+      <Text style={styles.energy}>{energy > 0 ? `+ ${energy}` : energy}</Text>
       <MaterialCommunityIcons name="lightning-bolt" size={24} color="white" />
     </Animated.View>
   );
