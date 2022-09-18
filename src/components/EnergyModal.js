@@ -3,21 +3,34 @@ import React, { useRef , useEffect } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-const EnergyModal = ({ energy = 30, visible = true }) => {
+const EnergyModal = ({ energy }) => {
 
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
 
+
   useEffect(() => {
-    const anim = Animated.timing(visibleAnimatedValue, {
-      toValue: visible ? 1 : 0,
-      duration: visible ? 500 : 200,
-      delay: visible ? 1000 : 300,
-      useNativeDriver: true,
-      easing: visible ? Easing.elastic(1.1) : undefined,
-    });
+    console.log('EnergyModal', energy);
+    if (energy == null) return;
+    const anim = Animated.sequence([
+      Animated.timing(visibleAnimatedValue, {
+        toValue: 1,
+        duration: 500,
+        delay: 1000,
+        useNativeDriver: true,
+        easing:Easing.elastic(1.1),
+      }),
+      Animated.delay(4000),
+      Animated.timing(visibleAnimatedValue, {
+        toValue:  0,
+        duration: 200,
+        delay: 300,
+        useNativeDriver: true,
+        easing: undefined,
+      })
+    ]);
     anim.start();
     return anim.stop;
-  }, [visible]);
+  }, [energy]);
 
 
   return (

@@ -39,7 +39,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
     compassHeading,
     initialized: geolocationInitialized,
   } = useInitializedGeolocation();
-  const { developerMode } = useCurrentUser();
+  const { developerMode, user } = useCurrentUser();
 
   const [cameraData, setCameraData] = useState(null);
   const [headingLocked, setHeadingLocked] = useState(false);
@@ -188,8 +188,9 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </MapView>
 
-      <SafeAreaView style={styles.avatarContainer}>
+      <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
+          <AnimatedFlask energy={user.energy * 90 / 100}/>
           <FadeInWrapper visible={showZoomButton}>
             <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
               <MaterialIcons name="my-location" size={20} color={Colors.darkGrey} />
@@ -201,6 +202,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         </FadeInWrapper>
       </SafeAreaView>
 
+      <EnergyModal energy={user.lastEnergyIncrement}/>
       <Sonar cameraData={cameraData} visible={!museumVisible} compassHeading={compassHeading} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
@@ -268,13 +270,12 @@ const MapDebugger = ({ userCoordinates }) => {
 };
 
 const styles = StyleSheet.create({
-  avatarContainer: {
+  controlsView: {
     ...Styles.safeAreaView,
     position: 'absolute',
     bottom: 130,
     width: '85%',
     flexDirection: 'row-reverse',
-    padding: 30,
   },
   lockButton: {
     marginTop: 15,

@@ -7,10 +7,12 @@ import Styles, { Colors } from '../styles/Styles';
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-const AnimatedFlask = ({ color = Colors.purple2, energy = 80, size = 60,  visible = true }) => {
+const AnimatedFlask = ({ color = Colors.purple2, energy, size = 60,  visible = true }) => {
   const pathAnimatedValue = useRef(new Animated.Value(0)).current;
   const path2AnimatedValue = useRef(new Animated.Value(0)).current;
   const flaskFillAnimatedValue = useRef(new Animated.Value(0)).current;
+
+  const energyClamped = Math.min(Math.max(energy, 0), 100);
 
   useEffect(() => {
     pathAnimatedValue.setValue(Math.random());
@@ -50,13 +52,13 @@ const AnimatedFlask = ({ color = Colors.purple2, energy = 80, size = 60,  visibl
 
   useEffect(() => {
     const anim = Animated.timing(flaskFillAnimatedValue, {
-      toValue: energy / 100,
+      toValue: energyClamped / 100,
       duration: 2000,
       useNativeDriver: true,
     });
     anim.start();
     return anim.stop;
-  }, [energy]);
+  }, [energyClamped]);
 
   const pathFlaskTranslate = flaskFillAnimatedValue.interpolate({
     inputRange: [0, 1],
@@ -74,12 +76,9 @@ const AnimatedFlask = ({ color = Colors.purple2, energy = 80, size = 60,  visibl
   });
 
   return (
-    <>
+    <View style={{ marginBottom: 10 }}>
       { visible && (
         <View style={{
-          position: 'absolute',
-          right: 10,
-          bottom: 250,
           borderBottomLeftRadius: 20,
           borderBottomRightRadius: 20,
           ...Styles.center }}>
@@ -95,7 +94,7 @@ const AnimatedFlask = ({ color = Colors.purple2, energy = 80, size = 60,  visibl
             <Animated.View
               style={{
                 ...styles.flaskFill,
-                backgroundColor: Colors.purple3,
+                backgroundColor: color,
                 height: '110%',
                 transform: [{ translateY: pathFlaskTranslate }],
               }}
@@ -144,7 +143,7 @@ const AnimatedFlask = ({ color = Colors.purple2, energy = 80, size = 60,  visibl
           </View>
         </View>
       )}
-    </>
+    </View>
   );
 };
 

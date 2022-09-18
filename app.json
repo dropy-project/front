@@ -6,8 +6,8 @@
   "versionFlag": "private-alpha",
   "requiredServerVersion": "0.0.8",
 
-  "customAPI": null,
-  "customSocket": null,
+  "customAPI": "http://10.0.2.2:3000",
+  "customSocket": "http://10.0.2.2:4000",
 
   "productionMode": false
 }
