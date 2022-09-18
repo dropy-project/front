@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, StyleSheet } from 'react-native';
-import Svg, { Circle, RadialGradient, Stop } from 'react-native-svg';
+import { Animated, Easing, StyleSheet, View } from 'react-native';
+
+import Svg, { Circle, LinearGradient, Path, RadialGradient, Stop } from 'react-native-svg';
 import Styles, { Colors, Map } from '../styles/Styles';
 import GlassCircleButton from './GlassCircleButton';
 
@@ -8,7 +9,7 @@ export const CENTER_ICON_SIZE = 15;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-const Sonar = ({ visible, zoomValue }) => {
+const Sonar = ({ visible, cameraData, compassHeading }) => {
 
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
   const sonarWaveAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -56,6 +57,11 @@ const Sonar = ({ visible, zoomValue }) => {
     outputRange: [1, 0],
   });
 
+  const zoomScale = Math.max(
+    0.3,
+    (((cameraData?.zoom || 1) - Map.MIN_ZOOM) / (Map.MAX_ZOOM - Map.MIN_ZOOM))
+  );
+
   return (
     <Animated.View
       pointerEvents='none'
@@ -65,11 +71,28 @@ const Sonar = ({ visible, zoomValue }) => {
         transform: [
           { translateY: CENTER_ICON_SIZE / 2 },
           { scale: Animated.multiply(
-            Math.max(0.3, -(1 - (zoomValue / Map.MIN_ZOOM)) * 10),
+            zoomScale,
             visibleAnimatedValue
           ) }
         ],
       }}>
+      <View style={{
+        ...styles.directionPointerContainer,
+        transform: [
+          { rotate: `${(-cameraData?.heading || 0) + compassHeading}deg` },
+          { translateY: -10 }
+        ],
+      }}>
+        <View style={styles.directionPointer}>
+          <Svg viewBox='0 0 177 148' width={33} height={33}>
+            <Path fill="url(#grad)" d='M1.65191 30.2667C-0.840453 25.5698 1.25381 19.7886 6.25162 17.9734C22.72 11.9919 58.0604 0.5 86.5 0.5C114.94 0.5 150.28 11.9919 166.748 17.9734C171.746 19.7886 173.84 25.5698 171.348 30.2667L108.875 148H86.5H64.125L1.65191 30.2667Z' />
+            <LinearGradient id="grad" x1="0%" y1="10%" x2="0%" y2="100%">
+              <Stop offset="0%" stopColor="rgb(100,25,255, 0.1)" stopOpacity="0" />
+              <Stop offset="100%" stopColor={Colors.mainBlue} stopOpacity="0.3" />
+            </LinearGradient>
+          </Svg>
+        </View>
+      </View>
       <AnimatedSvg
         pointerEvents="none"
         style={{
@@ -81,13 +104,7 @@ const Sonar = ({ visible, zoomValue }) => {
         width="100"
       >
         <RadialGradient
-          id="grad"
-          cx="50%"
-          cy="50%"
-          rx="50%"
-          ry="50%"
-          fx="50%"
-          fy="50%"
+          id="grad" cx="50%" cy="50%" rx="50%" ry="50%" fx="50%" fy="50%"
           gradientUnits="userSpaceOnUse"
         >
           <Stop offset="50%" stopColor="rgba(255,255,255,0)" stopOpacity="0" />
@@ -107,5 +124,16 @@ export default Sonar;
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
+  },
+  directionPointerContainer: {
+    ...Styles.center,
+    width: 30,
+    height: 30,
+    position: 'absolute',
+  },
+  directionPointer: {
+    position: 'absolute',
+    ...Styles.center,
+    top: -5,
   },
 });
