@@ -2,39 +2,53 @@ import { Animated, Easing, StyleSheet, Text } from 'react-native';
 import React, { useRef , useEffect } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import useCurrentUser from '../hooks/useCurrentUser';
 
-const EnergyModal = ({ energy }) => {
+const EnergyModal = ({ navigation }) => {
 
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
 
+  const { user, setUser } = useCurrentUser();
 
   useEffect(() => {
-    if (energy == null) return;
-    const anim = Animated.sequence([
-      Animated.timing(visibleAnimatedValue, {
-        toValue: 1,
-        duration: 500,
-        delay: 1000,
-        useNativeDriver: true,
-        easing:Easing.elastic(1.1),
-      }),
-      Animated.delay(4000),
-      Animated.timing(visibleAnimatedValue, {
-        toValue:  0,
-        duration: 200,
-        delay: 300,
-        useNativeDriver: true,
-        easing: undefined,
-      })
-    ]);
-    anim.start();
-    return anim.stop;
-  }, [energy]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (user.lastEnergyIncrement == null) return;
+
+      const anim = Animated.sequence([
+        Animated.timing(visibleAnimatedValue, {
+          toValue: 1,
+          duration: 500,
+          delay: 1000,
+          useNativeDriver: true,
+          easing:Easing.elastic(1.1),
+        }),
+        Animated.delay(4000),
+        Animated.timing(visibleAnimatedValue, {
+          toValue:  0,
+          duration: 200,
+          delay: 300,
+          useNativeDriver: true,
+          easing: undefined,
+        })
+      ]);
+      anim.start(({ finished }) => {
+        console.log('LAAAAAAAAAAAAAAAAA');
+        if (finished) {
+          setUser({ ...user, lastEnergyIncrement: null });
+          console.log('ICIIIIIIIIIIIIIIIII');
+        }
+      });
+      return anim.stop;
+    });
+    return unsubscribe;
+  }, []);
+
+  console.log('lastEnergyIncrement', user.lastEnergyIncrement);
 
 
   return (
     <Animated.View style={{ ...styles.conainter, transform: [{ scale: visibleAnimatedValue }] }}>
-      <Text style={styles.energy}>{energy > 0 ? `+ ${energy}` : energy}</Text>
+      <Text style={styles.lastEnergyIncrement}>{user?.lastEnergyIncrement > 0 ? `+ ${user?.lastEnergyIncrement}` : user?.lastEnergyIncrement}</Text>
       <MaterialCommunityIcons name="lightning-bolt" size={24} color="white" />
     </Animated.View>
   );
@@ -55,7 +69,7 @@ const styles = StyleSheet.create({
     bottom: 150,
     ...Styles.softShadows,
   },
-  energy: {
+  lastEnergyIncrement: {
     ...Fonts.bold(16, 'white'),
   },
 
