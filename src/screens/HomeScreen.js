@@ -116,8 +116,8 @@ const HomeScreen = ({ navigation, route }) => {
         selectedDropyIndex={selectedDropyIndex}
       />
 
-      <SafeAreaView style={styles.avatarContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+      <SafeAreaView style={styles.avatarContainer} pointerEvents="none">
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={{ width: 80 }}>
           <ProfileAvatar size={70} />
           <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
             <Animated.View style={{
@@ -155,8 +155,6 @@ const HomeScreen = ({ navigation, route }) => {
         visible={confirmDropOverlayVisible}
         onCloseOverlay={closeConfirmDropOverlay}
       />
-
-
     </View>
   );
 };

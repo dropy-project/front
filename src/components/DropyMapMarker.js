@@ -81,7 +81,7 @@ const RadarMarker = ({ dropy }) => {
   return (
     <Marker
       coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
-      tracksViewChanges={true}
+      anchor={{ x: 0.5, y: 0.5 }}
     >
       <View style={{ ...Styles.center, width: 40, height: 40 }}>
         <View style={{
