@@ -25,6 +25,8 @@ import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import FadeInWrapper from './FadeInWrapper';
 
+const MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD = 5;
+
 const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
 
   const navigation = useNavigation();
@@ -115,16 +117,17 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   const onPanDrag = async () => {
     if(museumVisible) return;
     const camera = await mapRef.current.getCamera();
-    if(Math.abs(camera.heading - compassHeading) > 5) {
+    if(Math.abs(camera.heading - compassHeading) > MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD) {
       setHeadingLocked(false);
     }
   };
 
-  const toggleHeadingLock = () => setHeadingLocked(old => {
-    if(!old) {
-      setMapCameraPosition(true);
-    }
-    return !old;
+  const forceCameraToLockHeading = () => setMapCameraPosition(true);
+
+  const toggleHeadingLock = () => setHeadingLocked(locked => {
+    const newLockedValue = !locked;
+    if(newLockedValue) forceCameraToLockHeading();
+    return newLockedValue;
   });
 
   return (
