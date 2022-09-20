@@ -68,6 +68,9 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
+  - Mapbox-iOS-SDK (5.9.0):
+    - MapboxMobileEvents (= 0.10.2)
+  - MapboxMobileEvents (0.10.2)
   - Permission-Camera (3.3.1):
     - RNPermissions
   - Permission-LocationAccuracy (3.3.1):
@@ -301,13 +304,27 @@ PODS:
     - React-Core
   - react-native-geolocation-service (5.3.0):
     - React
-  - react-native-google-maps (1.1.0):
+  - react-native-google-maps (1.3.1):
     - Google-Maps-iOS-Utils (= 4.1.0)
     - GoogleMaps (= 7.0.0)
     - React-Core
   - react-native-image-resizer (1.4.5):
     - React-Core
-  - react-native-maps (1.1.0):
+  - react-native-mapbox-gl (8.6.0-beta.0):
+    - Mapbox-iOS-SDK (~> 5.9.0)
+    - React
+    - React-Core
+    - react-native-mapbox-gl/DynamicLibrary (= 8.6.0-beta.0)
+    - react-native-mapbox-gl/StaticLibraryFixer (= 8.6.0-beta.0)
+  - react-native-mapbox-gl/DynamicLibrary (8.6.0-beta.0):
+    - Mapbox-iOS-SDK (~> 5.9.0)
+    - React
+    - React-Core
+  - react-native-mapbox-gl/StaticLibraryFixer (8.6.0-beta.0):
+    - Mapbox-iOS-SDK (~> 5.9.0)
+    - React
+    - React-Core
+  - react-native-maps (1.3.1):
     - React-Core
   - react-native-notifications (4.3.1):
     - React-Core
@@ -473,6 +490,7 @@ DEPENDENCIES:
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
+  - "react-native-mapbox-gl (from `../node_modules/@react-native-mapbox-gl/maps`)"
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-notifications (from `../node_modules/react-native-notifications`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -508,6 +526,8 @@ SPEC REPOS:
     - Google-Maps-iOS-Utils
     - GoogleMaps
     - libwebp
+    - Mapbox-iOS-SDK
+    - MapboxMobileEvents
     - SDWebImage
     - SDWebImageWebPCoder
     - Sentry
@@ -598,6 +618,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-image-resizer:
     :path: "../node_modules/react-native-image-resizer"
+  react-native-mapbox-gl:
+    :path: "../node_modules/@react-native-mapbox-gl/maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-notifications:
@@ -674,6 +696,8 @@ SPEC CHECKSUMS:
   Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
   GoogleMaps: 6e9c923ca035989709fcb5771544fda4cc5fa2a4
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
+  Mapbox-iOS-SDK: a5915700ec84bc1a7f8b3e746d474789e35b7956
+  MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
   Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
   Permission-LocationAccuracy: 43d7a6b3d736a90168e9fc7117a721ca44722f83
   Permission-LocationAlways: fbf36cbdcabc3101f1168ad1ec45cfc5a6448cc4
@@ -699,9 +723,10 @@ SPEC CHECKSUMS:
   react-native-config: 7cd105e71d903104e8919261480858940a6b9c0e
   react-native-geolocation: 69f4fd37650b8e7fee91816d395e62dd16f5ab8d
   react-native-geolocation-service: f32ef48fa665bd710207a3ac39bc127cac9cb993
-  react-native-google-maps: ddb50b6803641170d52c22d24629c51086bbd27e
+  react-native-google-maps: 751f1dd2362c09d4ac45b09970d78f138a109268
   react-native-image-resizer: d9fb629a867335bdc13230ac2a58702bb8c8828f
-  react-native-maps: de23d141fa0289d1896739d0ddc8c5d11d9ca800
+  react-native-mapbox-gl: b92795f61ff130323e6d25693bd68b081e105455
+  react-native-maps: f4067ffa5044ade5bf98d6dde15014318a537c2f
   react-native-notifications: 33ec77006f7987bb22de8f1665889abc633b9196
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
@@ -733,6 +758,6 @@ SPEC CHECKSUMS:
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
 
-PODFILE CHECKSUM: a9927f6991feaf7ebf7d589bf703ab6b9010fb03
+PODFILE CHECKSUM: 998c9f4f3a4f651ad65f623d9ae7fca6d945d713
 
 COCOAPODS: 1.11.3

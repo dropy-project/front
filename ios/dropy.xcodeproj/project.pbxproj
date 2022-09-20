@@ -200,6 +200,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				96F25D24A8AD4B718B04249C /* Upload Debug Symbols to Sentry */,
 				1A85BD27A3061740C6029E26 /* [CP] Copy Pods Resources */,
+				6B07B5537E7224AC51F758AB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -297,6 +298,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dropy/Pods-dropy-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6B07B5537E7224AC51F758AB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-dropy/Pods-dropy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-dropy/Pods-dropy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dropy/Pods-dropy-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		96F25D24A8AD4B718B04249C /* Upload Debug Symbols to Sentry */ = {
