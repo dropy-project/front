@@ -21,7 +21,7 @@ const EnergyModal = () => {
   const animatePopup = () => {
     if (user.lastEnergyIncrement == null) return;
     const anim = Animated.sequence([
-      Animated.delay(500),
+      Animated.delay(2000),
       Animated.timing(visibleAnimatedValue, {
         toValue: 1,
         duration: 500,
