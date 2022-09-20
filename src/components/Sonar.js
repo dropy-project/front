@@ -59,7 +59,7 @@ const Sonar = ({ visible, cameraData, compassHeading }) => {
 
   const zoomScale = Math.max(
     0.3,
-    (((cameraData?.zoom || 1) - Map.MIN_ZOOM) / (Map.MAX_ZOOM - Map.MIN_ZOOM))
+    (((cameraData?.zoomLevel || 1) - Map.MIN_ZOOM) / (Map.MAX_ZOOM - Map.MIN_ZOOM))
   );
 
   return (
@@ -69,7 +69,6 @@ const Sonar = ({ visible, cameraData, compassHeading }) => {
         ...Styles.center,
         ...StyleSheet.absoluteFillObject,
         transform: [
-          { translateY: CENTER_ICON_SIZE / 2 },
           { scale: Animated.multiply(
             zoomScale,
             visibleAnimatedValue
