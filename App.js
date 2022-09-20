@@ -21,6 +21,7 @@ import NotificationProvider from './src/states/NotificationProvider';
 import OverlayContextProvider from './src/states/OverlayContextProvider';
 import SocketContextProvider from './src/states/SocketContextProvider';
 import ConversationsContextProvider from './src/states/ConversationsContextProvider';
+import MapboxGL from '@react-native-mapbox-gl/maps';
 
 
 Sentry.init({
@@ -32,6 +33,8 @@ Sentry.init({
   // We recommend adjusting this value in production.
   tracesSampleRate: 1.0,
 });
+
+MapboxGL.setAccessToken('pk.eyJ1IjoiZHJvcHkiLCJhIjoiY2w4YWQ5eXlhMGZ1aTNucGIxMGV6dW9ldSJ9.5624esQHo1lP5BFVo4f7Jg');
 
 const NavigationApp = () => {
   return (

@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Platform, TouchableOpacity, SafeAreaView } from 'react-native';
 
-import MapView, {  Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 import Geohash from 'ngeohash';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import MapView, { Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
 import useOverlay from '../hooks/useOverlay';
 
@@ -81,6 +81,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
     const currentCamera = await mapRef.current?.getCamera();
     if (currentCamera == null) return;
+    setCameraData(currentCamera);
 
     let position = userCoordinates;
     if(retrievedDropies != null && selectedDropyIndex != null && retrievedDropies[selectedDropyIndex] != null) {
@@ -99,28 +100,31 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
             longitude: position.longitude,
           },
           pitch: museumVisible ? Map.MUSEUM_PITCH : Map.INITIAL_PITCH,
-          heading: headingLocked || forceHeading ? compassHeading : undefined,
-          zoom: museumVisible ? Map.MUSEUM_ZOOM : (forceZoom ? Map.MAX_ZOOM : undefined),
+          // heading: headingLocked || forceHeading ? compassHeading : undefined,
+          heading: compassHeading,
+          // zoom: museumVisible ? Map.MUSEUM_ZOOM : (forceZoom ? Map.MAX_ZOOM : undefined),
+          zoom: museumVisible ? Map.MUSEUM_ZOOM : Map.MAX_ZOOM,
         },
-        { duration: 200 }
+        { duration: 1000 }
       );
     });
   };
 
-  const onRegionChange = async () => {
-    if(museumVisible) return;
-    const camera = await mapRef.current.getCamera();
-    setShowZoomButton(camera.zoom < Map.MAX_ZOOM - 0.1);
-    setCameraData(camera);
-  };
+  // const onRegionChange = async () => {
+  //   if(museumVisible) return;
+  //   const camera = await mapRef.current.getCamera();
+  //   setShowZoomButton(camera.zoom < Map.MAX_ZOOM - 0.1);
+  //   setCameraData(camera);
+  // };
 
-  const onPanDrag = async () => {
-    if(museumVisible) return;
-    const camera = await mapRef.current.getCamera();
-    if(Math.abs(camera.heading - compassHeading) > MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD) {
-      setHeadingLocked(false);
-    }
-  };
+  // const onPanDrag = async () => {
+  //   console.log('onPanDrag', new Date());
+  //   if(museumVisible) return;
+  //   const camera = await mapRef.current.getCamera();
+  //   if(Math.abs(camera.heading - compassHeading) > MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD) {
+  //     setHeadingLocked(false);
+  //   }
+  // };
 
   const forceCameraToLockHeading = () => setMapCameraPosition(true);
 
@@ -132,7 +136,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
   return (
     <>
-      <MapView
+      {/* <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         customMapStyle={Platform.OS === 'android' ? mapStyleAndroid : mapStyleIOS}
@@ -141,10 +145,19 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         rotateEnabled={true}
         scrollEnabled={false}
         zoomEnabled={!museumVisible}
-        minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
+        minZoomLevel={Map.MIN_ZOOM}
         maxZoomLevel={Map.MAX_ZOOM}
         showsCompass={false}
-        onPanDrag={onPanDrag}
+        // onPanDrag={onPanDrag}
+        // liteMode
+        moveOnMarkerPress={false}
+        zoomControlEnabled={false}
+        showsBuildings={false}
+        showsIndoors={false}
+        scrollDuringRotateOrZoomEnabled={false}
+        toolbarEnabled={false}
+        zoomTapEnabled={false}
+        followUserLocation={false}
         initialCamera={{
           center: {
             latitude: userCoordinates?.latitude || 0,
@@ -157,7 +170,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         }}
         onMapLoaded={() => setMapIsReady(true)}
         showsPointsOfInterest={false}
-        onRegionChange={onRegionChange}
+        // onRegionChange={onRegionChange}
       >
         {retrievedDropies != null ? (
           <>
@@ -184,7 +197,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
           </>
         )}
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
-      </MapView>
+      </MapView> */}
 
       <SafeAreaView style={styles.avatarContainer}>
         <FadeInWrapper visible={!museumVisible}>
