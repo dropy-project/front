@@ -84,7 +84,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         rotateEnabled
         styleURL='mapbox://styles/dropy/cl8afrx4z000y15tb5fiyr2s9'
         onDidFinishRenderingMapFully={() => setMapIsReady(true)}
-        onRegionIsChanging={(data) => {
+        onRegionDidChange={(data) => {
           setShowZoomButton(data.properties.zoomLevel < Map.MAX_ZOOM - 0.1);
           setCameraData(data.properties);
         }}
@@ -102,7 +102,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
       <SafeAreaView style={styles.avatarContainer}>
         <FadeInWrapper visible={!museumVisible}>
           <FadeInWrapper visible={showZoomButton}>
-            <TouchableOpacity onPress={() => mapCameraRef.current.zoomTo(Map.MAX_ZOOM, 500)} style={styles.lockButton}>
+            <TouchableOpacity onPress={() => mapCameraRef.current.zoomTo(Map.MIN_ZOOM, 500)} style={styles.lockButton}>
               <MaterialIcons name="my-location" size={20} color={Colors.darkGrey} />
             </TouchableOpacity>
           </FadeInWrapper>

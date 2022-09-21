@@ -13,6 +13,7 @@ import {
 import * as Sentry from '@sentry/react-native';
 import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet';
 
+import MapboxGL from '@react-native-mapbox-gl/maps';
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
 import GeolocationProvider from './src/states/GeolocationContextProvider';
@@ -21,7 +22,6 @@ import NotificationProvider from './src/states/NotificationProvider';
 import OverlayContextProvider from './src/states/OverlayContextProvider';
 import SocketContextProvider from './src/states/SocketContextProvider';
 import ConversationsContextProvider from './src/states/ConversationsContextProvider';
-import MapboxGL from '@react-native-mapbox-gl/maps';
 
 
 Sentry.init({
