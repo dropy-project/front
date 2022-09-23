@@ -9,7 +9,7 @@ import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 import ReconnectingOverlay from '../components/overlays/ReconnectingOverlay';
 
 const log = (...params) => {
-  console.log('\x1b[33m[ Sockets Context Provider ]\x1b[0m', ...params);
+  console.log('\x1b[33m[ Sockets ]\x1b[0m', ...params);
 };
 
 import AppInfo from '../../app.json';
@@ -32,8 +32,6 @@ const SocketContextProvider = ({ children }) => {
 
   const [dropySocketConnected, setDropySocketConnected] = useState(false);
   const [chatSocketConnected, setChatSocketConnected] = useState(false);
-
-  const isTemporaryDisconnected = useRef(false);
 
   const allSocketsConnected = dropySocketConnected && chatSocketConnected;
 
@@ -80,33 +78,33 @@ const SocketContextProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
+    if(allSocketsConnected) return;
+    if(dropySocket.current?.connected === false) {
+      log('Reconnecting dropy socket');
+      dropySocket.current.connect();
+    }
+    if(chatSocket.current?.connected === false) {
+      log('Reconnecting chat socket');
+      chatSocket.current?.connect();
+    }
+  }, [allSocketsConnected]);
+
+  useEffect(() => {
     const appStateListener = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'active') {
-        if (isTemporaryDisconnected.current) {
-          reconnectSocketsFromTemporaryDisconnection();
+        if(dropySocket.current?.connected === false) {
+          setDropySocketConnected(false);
         }
-      } else if (nextAppState === 'background') {
-        if (chatSocket.current?.connected || dropySocket.current?.connected) {
-          temporaryDisconnectSockets();
+        if(chatSocket.current?.connected === false) {
+          setChatSocketConnected(false);
+        }
+        if (dropySocket.current?.connected && chatSocket.current?.connected) {
+          log('Sockets are connected');
         }
       }
     });
     return appStateListener.remove;
   }, []);
-
-  const reconnectSocketsFromTemporaryDisconnection = () => {
-    log('Reconnecting sockets from temporary disconnection');
-    dropySocket?.current.connect();
-    chatSocket?.current.connect();
-    isTemporaryDisconnected.current = false;
-  };
-
-  const temporaryDisconnectSockets = () => {
-    log('Temporary disconnecting sockets');
-    dropySocket?.current.disconnect();
-    chatSocket?.current.disconnect();
-    isTemporaryDisconnected.current = true;
-  };
 
   return(
     <View style={StyleSheet.absoluteFillObject}>
