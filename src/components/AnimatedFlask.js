@@ -19,8 +19,6 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
   const { user } = useCurrentUser();
   const isFocused = useIsFocused();
 
-  const energyClamped = Math.min(Math.max((user.energy * 100 / MAX_ENERGY), 0), 100);
-
   useEffect(() => {
     if(isFocused) {
       return animateFill();
@@ -64,7 +62,10 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
   }, []);
 
   const animateFill = () => {
-    console.log('ANIMATE FILL');
+    if (user.lastEnergyIncrement == null) return;
+    const energyClamped = Math.min(Math.max((user.energy * 100 / MAX_ENERGY), 0), 100);
+    console.log('ANIMATE FILL', energyClamped);
+
     const anim = Animated.sequence([
       Animated.delay(500),
       Animated.timing(flaskFillAnimatedValue, {

@@ -15,7 +15,7 @@ import ChatHeader from '../components/ChatHeader';
 const ONE_HOUR = 60 * 60 * 1000;
 
 const ChatScreen = ({ route, navigation }) => {
-  const { conversation } = route.params;
+  const { conversation, popToTopOnQuit = false } = route.params;
 
   const flatListRef = useRef(null);
 
@@ -75,7 +75,11 @@ const ChatScreen = ({ route, navigation }) => {
         ListEmptyComponent={<LoadingSpinner selfCenter/>}
         onEndReached={loadMoreMessages}
       />
-      <ChatHeader conversation={conversation} otherUserConnected={otherUserConnected}/>
+      <ChatHeader
+        popToTopOnQuit={popToTopOnQuit}
+        conversation={conversation}
+        otherUserConnected={otherUserConnected}
+      />
     </View>
   );
 };
