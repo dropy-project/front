@@ -6,9 +6,10 @@ import { useIsFocused } from '@react-navigation/native';
 import Styles, { Colors } from '../styles/Styles';
 import useCurrentUser from '../hooks/useCurrentUser';
 
+const MAX_ENERGY = 90;
+const FLASK_BORDER_RADIUS = 20;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
-const MAX_ENERGY = 90;
 
 const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
   const pathAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -101,9 +102,6 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
             ...styles.flaskContainer,
             height: size * 1.8,
             width: size * 0.25,
-            borderRadiusBottom: size,
-            borderWidth: 2,
-            borderColor: 'white',
           }}>
           <Animated.View
             style={{
@@ -119,7 +117,7 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
             viewBox="0 0 824 39"
             style={{
               position: 'absolute',
-              bottom:93,
+              bottom: 102,
               transform: [{ translateX: pathTranslate }, { translateY: pathFlaskTranslate }],
               opacity: 0.7,
             }}>
@@ -134,7 +132,7 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
             viewBox="0 0 824 39"
             style={{
               position: 'absolute',
-              bottom:94,
+              bottom: 101,
               transform: [{ translateX: path2Translate },{ translateY: pathFlaskTranslate }],
             }}>
             <Path
@@ -146,9 +144,7 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
           <View
             style={{
               ...styles.flaskOutline,
-              borderWidth: size * 0.03,
-              borderBottomLeftRadius: size,
-              borderBottomRightRadius: size,
+              borderWidth: size * 0.06,
             }}
           />
         </View>
@@ -164,8 +160,8 @@ export default AnimatedFlask;
 
 const styles = StyleSheet.create({
   flaskContainer: {
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: FLASK_BORDER_RADIUS,
+    borderBottomRightRadius: FLASK_BORDER_RADIUS,
     overflow: 'hidden',
     ...Styles.center,
   },
@@ -176,6 +172,8 @@ const styles = StyleSheet.create({
     bottom: -1,
     right: -1,
     borderColor: 'white',
+    borderBottomLeftRadius: FLASK_BORDER_RADIUS,
+    borderBottomRightRadius: FLASK_BORDER_RADIUS,
   },
   flaskFill: {
     width: '100%',
