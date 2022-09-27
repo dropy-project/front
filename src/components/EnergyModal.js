@@ -72,5 +72,4 @@ const styles = StyleSheet.create({
   lastEnergyIncrement: {
     ...Fonts.bold(16, 'white'),
   },
-
 });
