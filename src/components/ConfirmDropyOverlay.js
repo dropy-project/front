@@ -91,6 +91,9 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       }
 
       const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude, dropyCreateParams.mediaType, dropyData);
+      if(response.error != null) {
+        throw response.error;
+      }
       setUser(oldUser => ({
         ...oldUser,
         energy: response.data.energy,
