@@ -64,7 +64,6 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
   const animateFill = () => {
     if (user.lastEnergyIncrement == null) return;
     const energyClamped = Math.min(Math.max((user.energy * 100 / MAX_ENERGY), 0), 100);
-    console.log('ANIMATE FILL', energyClamped);
 
     const anim = Animated.sequence([
       Animated.delay(500),
