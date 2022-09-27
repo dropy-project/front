@@ -69,9 +69,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         throw result.error;
       }
 
-      console.log('repsonse.data', result.data.energy);
-      console.log('user energy', user.energy);
-
       navigation.navigate('GetDropy', { dropy: result.data.dropy });
 
       setTimeout(() => {
