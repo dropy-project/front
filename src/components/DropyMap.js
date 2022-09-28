@@ -7,7 +7,8 @@ import Geohash from 'ngeohash';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import MapView, { Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
-import MapboxGL from '@react-native-mapbox-gl/maps';
+import MapboxGL from '@rnmapbox/maps';
+import { UserTrackingMode } from '@rnmapbox/maps/javascript/components/Camera';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
 import useOverlay from '../hooks/useOverlay';
 
@@ -47,18 +48,18 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   const [showZoomButton, setShowZoomButton] = useState(false);
 
   const mapCameraRef = useRef(null);
-  const [mapIsReady, setMapIsReady] = useState(false);
+  const [mapIsReady, setMapIsReady] = useState(true);
 
   const handleDropyPressed = async (dropy) => {
     try {
-      if(dropy == null) return;
+      if (dropy == null) return;
       if (userCoordinates == null) return;
       if (dropy?.isUserDropy) return;
 
       Haptics.impactHeavy();
 
       const result = await retrieveDropy(dropy.id);
-      if(result.error != null) {
+      if (result.error != null) {
         throw result.error;
       }
 
@@ -84,7 +85,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         rotateEnabled
         styleURL='mapbox://styles/dropy/cl8afrx4z000y15tb5fiyr2s9'
         onDidFinishRenderingMapFully={() => setMapIsReady(true)}
-        onRegionDidChange={(data) => {
+        onRegionIsChanging={(data) => {
           setShowZoomButton(data.properties.zoomLevel < Map.MAX_ZOOM - 0.1);
           setCameraData(data.properties);
         }}
@@ -92,7 +93,8 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
         <MapboxGL.Camera
           ref={mapCameraRef}
           followUserLocation
-          followUserMode={headingLocked ? 'compass' : 'normal'}
+          followUserMode={UserTrackingMode.Follow}
+          followHeading={compassHeading}
           defaultSettings={{ zoomLevel: Map.INITIAL_ZOOM }}
           minZoomLevel={Map.MIN_ZOOM}
           maxZoomLevel={Map.MAX_ZOOM}
@@ -135,7 +137,7 @@ const MapDebugger = ({ userCoordinates }) => {
   const [debugPolygons, setDebugPolygons] = useState([]);
 
   useEffect(() => {
-    if(!userCoordinates) return;
+    if (!userCoordinates) return;
 
     const polygons = [];
     for (const chunkInt of userCoordinates.geoHashs) {

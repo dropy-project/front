@@ -13,7 +13,7 @@ import {
 import * as Sentry from '@sentry/react-native';
 import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet';
 
-import MapboxGL from '@react-native-mapbox-gl/maps';
+import MapboxGL from '@rnmapbox/maps';
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
 import GeolocationProvider from './src/states/GeolocationContextProvider';
