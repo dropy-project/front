@@ -1,33 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Platform, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
-import Geohash from 'ngeohash';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
-import MapView, { Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapboxGL from '@rnmapbox/maps';
 import { UserTrackingMode } from '@rnmapbox/maps/javascript/components/Camera';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
 import useOverlay from '../hooks/useOverlay';
 
-import mapStyleAndroid from '../assets/mapStyleAndroid.json';
-import mapStyleIOS from '../assets/mapStyleIOS.json';
-
 import Haptics from '../utils/haptics';
 
 import useCurrentUser from '../hooks/useCurrentUser';
-import { GEOHASH_SIZE } from '../states/GeolocationContextProvider';
 import Styles, { Colors, Map } from '../styles/Styles';
+import mapStyle from '../assets/mapStyle.json';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
-import DropyMapMarker from './DropyMapMarker';
 import DebugText from './DebugText';
-import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import FadeInWrapper from './FadeInWrapper';
 
-const MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD = 5;
 
 const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
 
@@ -74,17 +66,21 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
     }
   };
 
+  // console.log(headingLocked, compassHeading);
+
   return (
     <>
-      <MapboxGL.MapView style={StyleSheet.absoluteFillObject}
+      <MapboxGL.MapView
+        style={StyleSheet.absoluteFillObject}
         logoEnabled={false}
         compassEnabled={false}
         pitchEnabled={false}
         scrollEnabled={false}
+        scaleBarEnabled={false}
+        attributionEnabled={false}
         zoomEnabled
         rotateEnabled
         styleURL='mapbox://styles/dropy/cl8afrx4z000y15tb5fiyr2s9'
-        onDidFinishRenderingMapFully={() => setMapIsReady(true)}
         onRegionIsChanging={(data) => {
           setShowZoomButton(data.properties.zoomLevel < Map.MAX_ZOOM - 0.1);
           setCameraData(data.properties);
@@ -92,19 +88,20 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
       >
         <MapboxGL.Camera
           ref={mapCameraRef}
-          followUserLocation
           followUserMode={UserTrackingMode.Follow}
-          followHeading={compassHeading}
+          followHeading={headingLocked ? compassHeading : undefined}
+          centerCoordinate={[userCoordinates?.longitude, userCoordinates?.latitude]}
           defaultSettings={{ zoomLevel: Map.INITIAL_ZOOM }}
           minZoomLevel={Map.MIN_ZOOM}
+          animationDuration={2000}
+          animationMode="easeTo"
           maxZoomLevel={Map.MAX_ZOOM}
         />
       </MapboxGL.MapView>
-
       <SafeAreaView style={styles.avatarContainer}>
         <FadeInWrapper visible={!museumVisible}>
           <FadeInWrapper visible={showZoomButton}>
-            <TouchableOpacity onPress={() => mapCameraRef.current.zoomTo(Map.MIN_ZOOM, 500)} style={styles.lockButton}>
+            <TouchableOpacity onPress={() => mapCameraRef.current.zoomTo(Map.MAX_ZOOM, 500)} style={styles.lockButton}>
               <MaterialIcons name="my-location" size={20} color={Colors.darkGrey} />
             </TouchableOpacity>
           </FadeInWrapper>
@@ -132,55 +129,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 };
 
 export default DropyMap;
-
-const MapDebugger = ({ userCoordinates }) => {
-  const [debugPolygons, setDebugPolygons] = useState([]);
-
-  useEffect(() => {
-    if (!userCoordinates) return;
-
-    const polygons = [];
-    for (const chunkInt of userCoordinates.geoHashs) {
-      const [
-        minlat,
-        minlon,
-        maxlat,
-        maxlon
-      ] = Geohash.decode_bbox_int(chunkInt, GEOHASH_SIZE);
-      polygons.push([
-        { latitude: minlat, longitude: minlon },
-        { latitude: maxlat, longitude: minlon },
-        { latitude: maxlat, longitude: maxlon },
-        { latitude: minlat, longitude: maxlon }
-      ]);
-    }
-
-    setDebugPolygons(polygons);
-  }, [userCoordinates]);
-
-  return (
-    <>
-      {debugPolygons.map((polygon, index) => (
-        <React.Fragment key={index}>
-          <Polygon
-            coordinates={polygon}
-            strokeColor='rgba(0,0,255,0.9)'
-            fillColor='rgba(100,0,255,0.2)'
-            strokeWidth={1}
-          />
-        </React.Fragment>
-      ))}
-      <Circle
-        center={{
-          latitude: userCoordinates?.latitude || 0,
-          longitude: userCoordinates?.longitude || 0,
-        }}
-        radius={30}
-      >
-      </Circle>
-    </>
-  );
-};
 
 const styles = StyleSheet.create({
   avatarContainer: {

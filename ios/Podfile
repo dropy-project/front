@@ -11,6 +11,7 @@ install! 'cocoapods',
 
 target 'dropy' do
   use_expo_modules!
+  $RNMapboxMapsImpl = 'mapbox'
 
   # React Native Maps dependencies
   rn_maps_path = '../node_modules/react-native-maps'

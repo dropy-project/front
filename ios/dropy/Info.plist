@@ -8,6 +8,8 @@
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>MBXAccessToken</key>
+	<string>pk.eyJ1IjoiZHJvcHkiLCJhIjoiY2w4YWQ5eXlhMGZ1aTNucGIxMGV6dW9ldSJ9.5624esQHo1lP5BFVo4f7Jg</string>
 	<key>CFBundleDisplayName</key>
 	<string></string>
 	<key>CFBundleExecutable</key>
