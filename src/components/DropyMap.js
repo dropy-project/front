@@ -1,17 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Platform, TouchableOpacity, SafeAreaView } from 'react-native';
 
-import MapView, {   PROVIDER_GOOGLE } from 'react-native-maps';
+import  {  PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
 import useOverlay from '../hooks/useOverlay';
 
-import mapStyleAndroid from '../assets/mapStyleAndroid.json';
-import mapStyleIOS from '../assets/mapStyleIOS.json';
+
 
 import Haptics from '../utils/haptics';
 
@@ -24,12 +22,17 @@ import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import FadeInWrapper from './FadeInWrapper';
 import MapDebugger from './MapDebugger';
+import OSMapView from './OSMapView';
 
 const MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD = 5;
 
-const ANDROID_ZOOMS_PRESETS = [Map.MAX_ZOOM, Map.MIDDLE_ZOOM,  Map.MIN_ZOOM];
-
-const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
+const DropyMap = ({
+  dropiesAround,
+  retrieveDropy,
+  museumVisible,
+  selectedDropyIndex = null,
+  retrievedDropies = null,
+}) => {
 
   const navigation = useNavigation();
 
@@ -44,8 +47,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   const [cameraData, setCameraData] = useState(null);
   const [headingLocked, setHeadingLocked] = useState(false);
   const [showZoomButton, setShowZoomButton] = useState(false);
-
-  const [, setAndroidZoomPresetIndex] = useState(0);
 
   const mapRef = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
@@ -76,14 +77,14 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
   useEffect(() => {
     if(mapIsReady === false) return;
-    if(mapRef?.current == null) return;
+    if(mapRef?.current?.getMapRef().getCamera() == null) return;
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
   }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies]);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
-    const currentCamera = await mapRef.current?.getCamera();
+    const currentCamera = await mapRef.current?.getMapRef()?.getCamera();
     if (currentCamera == null) return;
 
     let position = userCoordinates;
@@ -96,7 +97,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
     // eslint-disable-next-line no-undef
     requestAnimationFrame(() => {
-      mapRef.current?.animateCamera(
+      mapRef.current?.getMapRef()?.animateCamera(
         {
           center: {
             latitude: position.latitude,
@@ -112,15 +113,17 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   };
 
   const onRegionChange = async () => {
+    return;
     if(museumVisible) return;
-    const camera = await mapRef.current.getCamera();
+    const camera = await mapRef.current?.getMapRef()?.getCamera();
     setShowZoomButton(camera.zoom < Map.MAX_ZOOM - 0.1);
     setCameraData(camera);
   };
 
   const onPanDrag = async () => {
+    return;
     if(museumVisible) return;
-    const camera = await mapRef.current.getCamera();
+    const camera = await mapRef.current?.getMapRef()?.getCamera();
     if(Math.abs(camera.heading - compassHeading) > MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD) {
       setHeadingLocked(false);
     }
@@ -134,97 +137,59 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
     return newLockedValue;
   });
 
-  const zoomIn = () => {
-    setAndroidZoomPresetIndex(index => {
-      if(index === ANDROID_ZOOMS_PRESETS.length - 1) return index;
-      mapRef.current?.animateCamera({ zoom: ANDROID_ZOOMS_PRESETS[index + 1] }, { duration: 200 });
-      return index + 1;
-    });
-  };
-
-  const zoomOut = () => {
-    setAndroidZoomPresetIndex(index => {
-      if(index === 0) return index;
-      mapRef.current?.animateCamera({ zoom: ANDROID_ZOOMS_PRESETS[index - 1] }, { duration: 200 });
-      return index - 1;
-    });
-  };
-
-  const pinchGesture = Gesture.Pinch()
-    .onEnd((e) => {
-      if (e.velocity > 0) {
-        zoomOut();
-      }
-      else {
-        zoomIn();
-      }
-    });
-
-  const Map = () => (
-    <MapView
-      ref={mapRef}
-      provider={PROVIDER_GOOGLE}
-      customMapStyle={Platform.OS === 'android' ? mapStyleAndroid : mapStyleIOS}
-      style={StyleSheet.absoluteFillObject}
-      pitchEnabled={false}
-      rotateEnabled={true}
-      scrollEnabled={false}
-      zoomEnabled={Platform.OS === 'ios' && !museumVisible}
-      minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
-      maxZoomLevel={Map.MAX_ZOOM}
-      showsCompass={false}
-      onPanDrag={onPanDrag}
-      initialCamera={{
-        center: {
-          latitude: userCoordinates?.latitude || 0,
-          longitude: userCoordinates?.longitude || 0,
-        },
-        heading: compassHeading || 0,
-        pitch: Map.INITIAL_PITCH,
-        zoom: Map.INITIAL_ZOOM,
-        altitude: 0,
-      }}
-      onMapLoaded={() => setMapIsReady(true)}
-      showsPointsOfInterest={false}
-      onRegionChange={(region) => onRegionChange(region)}
-    >
-      {retrievedDropies != null ? (
-        <>
-          {retrievedDropies[selectedDropyIndex ?? 0] != null && (
-            <RetrievedDropyMapMarker
-              key={retrievedDropies[selectedDropyIndex ?? 0].id}
-              dropy={retrievedDropies[selectedDropyIndex ?? 0]}
-              onPress={() => navigation.navigate('DisplayDropyMedia', {
-                dropy: retrievedDropies[selectedDropyIndex ?? 0],
-                showBottomModal: false,
-              })}
-            />
-          )}
-        </>
-      ) : (
-        <>
-          {dropiesAround.map((dropy) => (
-            <DropyMapMarker
-              key={`${dropy.id}_${dropy.reachable}`}
-              dropy={dropy}
-              onPress={() => handleDropyPressed(dropy)}
-            />
-          ))}
-        </>
-      )}
-      {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
-    </MapView>
-  );
-
   return (
     <>
-      {Platform.OS === 'android' ? (
-        <GestureDetector gesture={Gesture.Race(pinchGesture)}>
-          <Map />
-        </GestureDetector>
-      ) : (
-        <Map />
-      )}
+      <OSMapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={StyleSheet.absoluteFillObject}
+        zoomEnabled={Platform.OS === 'ios' && !museumVisible}
+        minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
+        maxZoomLevel={Map.MAX_ZOOM}
+        scrollEnabled={false}
+        pitchEnabled={false}
+        showsCompass={false}
+        onRegionChange={onRegionChange}
+        onPanDrag={onPanDrag}
+        initialCamera={{
+          center: {
+            latitude:  44.65,
+            longitude:  -0.857,
+          },
+          heading:  1,
+          pitch: Map.INITIAL_PITCH,
+          zoom: Map.INITIAL_ZOOM,
+          altitude: 0,
+        }}
+        showsPointsOfInterest={false}
+        onMapLoaded={() => setMapIsReady(true)}
+      >
+        {retrievedDropies != null ? (
+          <>
+            {retrievedDropies[selectedDropyIndex ?? 0] != null && (
+              <RetrievedDropyMapMarker
+                key={retrievedDropies[selectedDropyIndex ?? 0].id}
+                dropy={retrievedDropies[selectedDropyIndex ?? 0]}
+                onPress={() => navigation.navigate('DisplayDropyMedia', {
+                  dropy: retrievedDropies[selectedDropyIndex ?? 0],
+                  showBottomModal: false,
+                })}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {dropiesAround.map((dropy) => (
+              <DropyMapMarker
+                key={`${dropy.id}_${dropy.reachable}`}
+                dropy={dropy}
+                onPress={() => handleDropyPressed(dropy)}
+              />
+            ))}
+          </>
+        )}
+        {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
+      </OSMapView>
 
       <SafeAreaView style={styles.avatarContainer}>
         <FadeInWrapper visible={!museumVisible}>
