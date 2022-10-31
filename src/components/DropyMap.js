@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Platform, TouchableOpacity, SafeAreaView } from 'react-native';
 
-import MapView, {  Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, {   PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
-import Geohash from 'ngeohash';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
@@ -17,7 +16,6 @@ import mapStyleIOS from '../assets/mapStyleIOS.json';
 import Haptics from '../utils/haptics';
 
 import useCurrentUser from '../hooks/useCurrentUser';
-import { GEOHASH_SIZE } from '../states/GeolocationContextProvider';
 import Styles, { Colors, Map } from '../styles/Styles';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import DropyMapMarker from './DropyMapMarker';
@@ -25,6 +23,7 @@ import DebugText from './DebugText';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import FadeInWrapper from './FadeInWrapper';
+import MapDebugger from './MapDebugger';
 
 const MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD = 5;
 
@@ -257,55 +256,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
 export default DropyMap;
 
-const MapDebugger = ({ userCoordinates }) => {
-  const [debugPolygons, setDebugPolygons] = useState([]);
-
-  useEffect(() => {
-    if(!userCoordinates) return;
-
-    const polygons = [];
-    for (const chunkInt of userCoordinates.geoHashs) {
-      const [
-        minlat,
-        minlon,
-        maxlat,
-        maxlon
-      ] = Geohash.decode_bbox_int(chunkInt, GEOHASH_SIZE);
-      polygons.push([
-        { latitude: minlat, longitude: minlon },
-        { latitude: maxlat, longitude: minlon },
-        { latitude: maxlat, longitude: maxlon },
-        { latitude: minlat, longitude: maxlon }
-      ]);
-    }
-
-    setDebugPolygons(polygons);
-  }, [userCoordinates]);
-
-  return (
-    <>
-      {debugPolygons.map((polygon, index) => (
-        <React.Fragment key={index}>
-          <Polygon
-            coordinates={polygon}
-            strokeColor='rgba(0,0,255,0.9)'
-            fillColor='rgba(100,0,255,0.2)'
-            strokeWidth={1}
-          />
-        </React.Fragment>
-      ))}
-      <Circle
-        center={{
-          latitude: userCoordinates?.latitude || 0,
-          longitude: userCoordinates?.longitude || 0,
-        }}
-        radius={30}
-      >
-      </Circle>
-    </>
-  );
-};
-
 const styles = StyleSheet.create({
   avatarContainer: {
     ...Styles.safeAreaView,
@@ -324,6 +274,3 @@ const styles = StyleSheet.create({
     ...Styles.softShadows,
   },
 });
-
-
-
