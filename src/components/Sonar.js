@@ -9,7 +9,7 @@ const CENTER_ICON_SIZE = 15;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-const Sonar = ({ visible, cameraData, compassHeading }) => {
+const Sonar = ({ visible, heading, zoom, compassHeading }) => {
 
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
   const sonarWaveAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -59,7 +59,7 @@ const Sonar = ({ visible, cameraData, compassHeading }) => {
 
   const zoomScale = Math.max(
     0.3,
-    (((cameraData?.zoom || 1) - Map.MIN_ZOOM) / (Map.MAX_ZOOM - Map.MIN_ZOOM))
+    (((zoom || 1) - Map.MIN_ZOOM) / (Map.MAX_ZOOM - Map.MIN_ZOOM))
   );
 
   return (
@@ -81,7 +81,7 @@ const Sonar = ({ visible, cameraData, compassHeading }) => {
         style={{
           ...styles.directionPointerContainer,
           transform: [
-            { rotate: `${(-cameraData?.heading || 0) + compassHeading}deg` },
+            { rotate: `${(-heading || 0) + compassHeading}deg` },
             { translateY: -10 }
           ],
         }}>

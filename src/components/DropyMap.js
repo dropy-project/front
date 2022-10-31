@@ -9,8 +9,6 @@ import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
 import useOverlay from '../hooks/useOverlay';
 
-
-
 import Haptics from '../utils/haptics';
 
 import useCurrentUser from '../hooks/useCurrentUser';
@@ -44,11 +42,11 @@ const DropyMap = ({
   } = useInitializedGeolocation();
   const { developerMode } = useCurrentUser();
 
-  const [cameraData, setCameraData] = useState(null);
+  const [currentZoom, setCurrentZoom] = useState(0);
+  const [curentHeading, setCurrentHeading] = useState(0);
   const [headingLocked, setHeadingLocked] = useState(false);
-  const [showZoomButton, setShowZoomButton] = useState(false);
 
-  const mapRef = useRef(null);
+  const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
 
   const handleDropyPressed = async (dropy) => {
@@ -77,15 +75,18 @@ const DropyMap = ({
 
   useEffect(() => {
     if(mapIsReady === false) return;
-    if(mapRef?.current?.getMapRef().getCamera() == null) return;
+    if(osMap?.current?.getMapRef().getCamera() == null) return;
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
   }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies]);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
-    const currentCamera = await mapRef.current?.getMapRef()?.getCamera();
+    const currentCamera = await osMap.current?.getMapRef()?.getCamera();
     if (currentCamera == null) return;
+
+    setCurrentZoom(forceZoom ? Map.MAX_ZOOM : currentCamera.zoom);
+    setCurrentHeading(forceHeading ? compassHeading : currentCamera.heading);
 
     let position = userCoordinates;
     if(retrievedDropies != null && selectedDropyIndex != null && retrievedDropies[selectedDropyIndex] != null) {
@@ -97,7 +98,7 @@ const DropyMap = ({
 
     // eslint-disable-next-line no-undef
     requestAnimationFrame(() => {
-      mapRef.current?.getMapRef()?.animateCamera(
+      osMap.current?.getMapRef()?.animateCamera(
         {
           center: {
             latitude: position.latitude,
@@ -112,23 +113,6 @@ const DropyMap = ({
     });
   };
 
-  const onRegionChange = async () => {
-    return;
-    if(museumVisible) return;
-    const camera = await mapRef.current?.getMapRef()?.getCamera();
-    setShowZoomButton(camera.zoom < Map.MAX_ZOOM - 0.1);
-    setCameraData(camera);
-  };
-
-  const onPanDrag = async () => {
-    return;
-    if(museumVisible) return;
-    const camera = await mapRef.current?.getMapRef()?.getCamera();
-    if(Math.abs(camera.heading - compassHeading) > MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD) {
-      setHeadingLocked(false);
-    }
-  };
-
   const forceCameraToLockHeading = () => setMapCameraPosition(true);
 
   const toggleHeadingLock = () => setHeadingLocked(locked => {
@@ -137,10 +121,19 @@ const DropyMap = ({
     return newLockedValue;
   });
 
+  const onRotation = (heading) => {
+    setCurrentHeading(heading);
+    if(museumVisible) return;
+    if(Math.abs(heading - compassHeading) > MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD)
+      setHeadingLocked(false);
+  };
+
   return (
     <>
       <OSMapView
-        ref={mapRef}
+        ref={osMap}
+        onZoom={setCurrentZoom}
+        onRotate={onRotation}
         provider={PROVIDER_GOOGLE}
         style={StyleSheet.absoluteFillObject}
         zoomEnabled={Platform.OS === 'ios' && !museumVisible}
@@ -149,8 +142,6 @@ const DropyMap = ({
         scrollEnabled={false}
         pitchEnabled={false}
         showsCompass={false}
-        onRegionChange={onRegionChange}
-        onPanDrag={onPanDrag}
         initialCamera={{
           center: {
             latitude:  44.65,
@@ -193,7 +184,7 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.avatarContainer}>
         <FadeInWrapper visible={!museumVisible}>
-          <FadeInWrapper visible={showZoomButton}>
+          <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
             <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
               <MaterialIcons name="my-location" size={20} color={Colors.darkGrey} />
             </TouchableOpacity>
@@ -204,7 +195,7 @@ const DropyMap = ({
         </FadeInWrapper>
       </SafeAreaView>
 
-      <Sonar cameraData={cameraData} visible={!museumVisible} compassHeading={compassHeading} />
+      <Sonar zoom={currentZoom} heading={curentHeading} visible={!museumVisible} compassHeading={compassHeading} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
         pointerEvents='none'

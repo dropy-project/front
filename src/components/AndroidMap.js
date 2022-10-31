@@ -4,6 +4,13 @@ import MapView from 'react-native-maps';
 
 const AndroidMap = (props, ref) => {
 
+  const { onRotate, onZoom } = props;
+
+  const callbacks = {
+    'zoom': onZoom,
+    'heading': onRotate,
+  };
+
   const mapRef = useRef(null);
   const isUpdatingCamera = useRef(false);
 
@@ -14,12 +21,17 @@ const AndroidMap = (props, ref) => {
   const setCameraPropertySync = async (value, property = 'zoom') => {
     if (isUpdatingCamera.current) return;
     isUpdatingCamera.current = true;
+
     const currentCamera = await mapRef.current?.getCamera();
     if (currentCamera == null) return;
+
     await mapRef.current?.setCamera({
       ...currentCamera,
       [property]: currentCamera[property] + value,
     });
+
+    callbacks[property]?.(currentCamera[property] + value);
+
     isUpdatingCamera.current = false;
   };
 
