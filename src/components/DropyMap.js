@@ -144,10 +144,10 @@ const DropyMap = ({
         showsCompass={false}
         initialCamera={{
           center: {
-            latitude:  44.65,
-            longitude:  -0.857,
+            latitude: userCoordinates?.latitude ?? 0,
+            longitude: userCoordinates?.longitude ?? 0,
           },
-          heading:  1,
+          heading: compassHeading || 0,
           pitch: Map.INITIAL_PITCH,
           zoom: Map.INITIAL_ZOOM,
           altitude: 0,
