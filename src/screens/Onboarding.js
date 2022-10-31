@@ -195,8 +195,8 @@ export default function Onboarding({ navigation }) {
       if(error.response.status === 409) {
         const validated = await sendAlert({
           title: 'This email is already registered',
-          description: 'You can register instead',
-          validateText: 'Register',
+          description: 'You can login instead',
+          validateText: 'Login',
           denyText: 'Ok',
         });
         validated && viewSliderRef.current?.goToView(0);

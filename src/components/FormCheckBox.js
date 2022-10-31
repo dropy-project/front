@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet , Linking } from 'react-native';
+import { View, Text, StyleSheet , Linking, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Styles, { Colors } from '../styles/Styles';
 
 export default function FormCheckBox({ text, onChanged = () => {}, textUrl }) {
