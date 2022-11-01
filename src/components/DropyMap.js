@@ -13,11 +13,13 @@ import Haptics from '../utils/haptics';
 
 import useCurrentUser from '../hooks/useCurrentUser';
 import Styles, { Colors, Map } from '../styles/Styles';
+import AnimatedFlask from './AnimatedFlask';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
 import DropyMapMarker from './DropyMapMarker';
 import DebugText from './DebugText';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
+import EnergyModal from './EnergyModal';
 import FadeInWrapper from './FadeInWrapper';
 import MapDebugger from './MapDebugger';
 import OSMapView from './OSMapView';
@@ -34,13 +36,13 @@ const DropyMap = ({
 
   const navigation = useNavigation();
 
-  const { sendBottomAlert } = useOverlay();
+  const { sendBottomAlert, sendAlert } = useOverlay();
   const {
     userCoordinates,
     compassHeading,
     initialized: geolocationInitialized,
   } = useInitializedGeolocation();
-  const { developerMode } = useCurrentUser();
+  const { developerMode, user, setUser } = useCurrentUser();
 
   const [currentZoom, setCurrentZoom] = useState(0);
   const [curentHeading, setCurrentHeading] = useState(0);
@@ -59,10 +61,26 @@ const DropyMap = ({
 
       const result = await retrieveDropy(dropy.id);
       if(result.error != null) {
+        if(result.status === 406) {
+          await sendAlert({
+            title: 'You don\'t have enough energy to retrieve this dropy',
+            description: 'Maybe drop something yourself to get some energy back?',
+            validateText: 'Ok !',
+          });
+          return;
+        }
         throw result.error;
       }
 
-      navigation.navigate('GetDropy', { dropy: result.data });
+      navigation.navigate('GetDropy', { dropy: result.data.dropy });
+
+      setTimeout(() => {
+        setUser(oldUser => ({
+          ...oldUser,
+          energy: result.data.energy,
+          lastEnergyIncrement: result.data.energy - user.energy,
+        }));
+      }, 500);
 
     } catch (error) {
       console.error('Dropy pressed error', error);
@@ -191,8 +209,9 @@ const DropyMap = ({
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </OSMapView>
 
-      <SafeAreaView style={styles.avatarContainer}>
+      <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
+          <AnimatedFlask />
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
             <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
               <MaterialIcons name="my-location" size={20} color={Colors.darkGrey} />
@@ -204,6 +223,7 @@ const DropyMap = ({
         </FadeInWrapper>
       </SafeAreaView>
 
+      <EnergyModal />
       <Sonar zoom={currentZoom} heading={curentHeading} visible={!museumVisible} compassHeading={compassHeading} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
@@ -222,13 +242,12 @@ const DropyMap = ({
 export default DropyMap;
 
 const styles = StyleSheet.create({
-  avatarContainer: {
+  controlsView: {
     ...Styles.safeAreaView,
     position: 'absolute',
     bottom: 130,
     width: '85%',
     flexDirection: 'row-reverse',
-    padding: 30,
   },
   lockButton: {
     marginTop: 15,

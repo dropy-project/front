@@ -15,9 +15,12 @@ const GeolocationProvider = ({ children }) => {
 
   const [userCoordinates, setUserCoordinates] = useState(null);
   const [compassHeading, setCompassHeading] = useState(0);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     if(user == null) return;
+    if (initialized) return;
+    setInitialized(true);
     const geolocationWatchId = registerGeolocationListener();
     registerCompassListener();
     return () => {

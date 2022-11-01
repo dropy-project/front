@@ -97,8 +97,8 @@ const SettingsScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={{ ...styles.linkContainer, ...Styles.center }}
-          onPress={() => {
-            API.logout();
+          onPress={async () => {
+            await API.logout();
             navigation.reset({ index: 0, routes: [{
               name: 'Splash',
               params: { cancelAutoLogin: true } }

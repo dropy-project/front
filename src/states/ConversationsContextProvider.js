@@ -101,15 +101,16 @@ const ConversationsContextProvider = ({ children }) => {
   };
 
   const createConversation = (dropyId) => {
-    if(chatSocket == null) return;
-    chatSocket.emit('create_conversation', { dropyId }, (response) => {
-      if (response.error != null) {
-        console.error('Error while opening conversations', response.error);
-        return;
-      }
-      const conversation = response.data;
-      createOrUpdateConversation(conversation);
-      navigation.navigate('Chat', { conversation });
+    return new Promise((resolve, reject) => {
+      if(chatSocket == null) return resolve();
+      chatSocket.emit('create_conversation', { dropyId }, (response) => {
+        if (response.error != null) {
+          return reject(response.error);
+        }
+        const conversation = response.data;
+        createOrUpdateConversation(conversation);
+        resolve(conversation);
+      });
     });
   };
 

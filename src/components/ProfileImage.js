@@ -19,7 +19,7 @@ const ProfileImage = (props) => {
   const refreshCount = useRef(0);
 
   useEffect(() => {
-    if (avatarUrl === null) {
+    if (avatarUrl == null) {
       setSource(null);
       return;
     }

@@ -5,7 +5,7 @@ import Svg, { Circle, LinearGradient, Path, RadialGradient, Stop } from 'react-n
 import Styles, { Colors, Map } from '../styles/Styles';
 import GlassCircleButton from './GlassCircleButton';
 
-const CENTER_ICON_SIZE = 15;
+export const CENTER_ICON_SIZE = 15;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
