@@ -75,7 +75,7 @@ const DropyMap = ({
 
   useEffect(() => {
     if(mapIsReady === false) return;
-    if(osMap?.current?.getMapRef().getCamera() == null) return;
+    if(osMap?.current?.getMapRef()?.getCamera() == null) return;
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
@@ -128,11 +128,20 @@ const DropyMap = ({
       setHeadingLocked(false);
   };
 
+  const onZoom = (zoom) => {
+    let newZoom = zoom;
+    if (zoom > Map.MAX_ZOOM)
+      newZoom = Map.MAX_ZOOM;
+    if (zoom < Map.MIN_ZOOM)
+      newZoom = Map.MIN_ZOOM;
+    setCurrentZoom(newZoom);
+  };
+
   return (
     <>
       <OSMapView
         ref={osMap}
-        onZoom={setCurrentZoom}
+        onZoom={onZoom}
         onRotate={onRotation}
         provider={PROVIDER_GOOGLE}
         style={StyleSheet.absoluteFillObject}
