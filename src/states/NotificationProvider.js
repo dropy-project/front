@@ -37,13 +37,13 @@ const NotificationProvider = ({ children }) => {
 
   useEffectForegroundOnly(() => {
     if(user == null) return;
+    if(initialized) return;
+    setInitialized(true);
     setupNotifications();
     sendDeviceToken();
   }, [user]);
 
   const setupNotifications = () => {
-    if(initialized) return;
-    setInitialized(true);
 
     Notifications.registerRemoteNotifications();
 

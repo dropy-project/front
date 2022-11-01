@@ -35,9 +35,13 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
     });
   };
 
-  const openConversation = () => {
-    navigation.popToTop();
-    createConversation(dropy.id);
+  const openConversation = async () => {
+    try {
+      const conversation = await createConversation(dropy.id);
+      navigation.navigate('Chat', { conversation, popToTopOnQuit: true });
+    } catch (error) {
+      console.error('error while creating conversation', error);
+    }
   };
 
   return (

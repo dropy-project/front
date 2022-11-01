@@ -21,6 +21,7 @@ import useGeolocation from '../hooks/useGeolocation';
 import Haptics from '../utils/haptics';
 
 import useOverlay from '../hooks/useOverlay';
+import useCurrentUser from '../hooks/useCurrentUser';
 import GlassButton from './GlassButton';
 import ProfileAvatar from './ProfileAvatar';
 import GoBackHeader from './GoBackHeader';
@@ -39,6 +40,8 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
   const bottomContainerScaleAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const { userCoordinates } = useGeolocation();
+
+  const { user, setUser } = useCurrentUser();
 
   const [overlayState, setOverlayState] = useState(OVERLAY_STATE.HIDDEN);
 
@@ -88,7 +91,14 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       }
 
       const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude, dropyCreateParams.mediaType, dropyData);
-      console.log('[Data upload] API response', response.status);
+      if(response.error != null) {
+        throw response.error;
+      }
+      setUser(oldUser => ({
+        ...oldUser,
+        energy: response.data.energy,
+        lastEnergyIncrement: response.data.energy - user.energy,
+      }));
 
       setTimeout(() => {
         Haptics.notificationSuccess();

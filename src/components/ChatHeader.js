@@ -9,7 +9,7 @@ import useOverlay from '../hooks/useOverlay';
 import ProfileAvatar from './ProfileAvatar';
 import DisabledNotificationsPopup from './DisabledNotificationsPopup';
 
-const ChatHeader = ({ conversation, otherUserConnected }) => {
+const ChatHeader = ({ conversation, otherUserConnected, popToTopOnQuit }) => {
 
   const navigation = useNavigation();
   const { sendAlert } = useOverlay();
@@ -34,11 +34,19 @@ const ChatHeader = ({ conversation, otherUserConnected }) => {
     });
   };
 
+  const handleQuit = () => {
+    if (popToTopOnQuit) {
+      navigation.popToTop();
+    } else {
+      navigation.goBack();
+    }
+  };
+
   return (
     <SafeAreaView style={{ ...Styles.safeAreaView, ...styles.safeArea }}>
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={handleQuit}
           style={styles.button}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >

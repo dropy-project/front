@@ -187,9 +187,9 @@ const getUserProfile = async () => {
   return response;
 };
 
-const logout = () => {
+const logout = async () => {
   axios = Axios.create(AXIOS_PARAMS);
-  return Storage.removeItem('@auth_tokens');
+  return await Storage.removeItem('@auth_tokens');
 };
 
 const API = {

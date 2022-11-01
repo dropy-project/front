@@ -109,9 +109,13 @@ const useDropiesAroundSocket = () => {
   };
 
   const retrieveDropy = (dropyId) => {
-    setDropiesAround(olds => olds.filter(dropy => dropy.id !== dropyId));
     return new Promise((resolve) => {
-      dropySocket.emit('dropy_retrieved', { dropyId }, resolve);
+      dropySocket.emit('dropy_retrieved', { dropyId }, (response) => {
+        if(response.error == null) {
+          setDropiesAround(olds => olds.filter(dropy => dropy.id !== dropyId));
+        }
+        resolve(response);
+      });
     });
   };
 
