@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     ...Styles.safeAreaView,
     position: 'absolute',
     bottom: 130,
-    width: '85%',
+    right: 20,
     flexDirection: 'row-reverse',
   },
   lockButton: {
