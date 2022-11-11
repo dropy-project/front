@@ -95,14 +95,11 @@ const DropyMap = ({
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
-  }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies, currentZoom, currentHeading]);
+  }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies]);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
     const currentCamera = await osMap.current?.getMapRef()?.getCamera();
     if (currentCamera == null) return;
-
-    setCurrentZoom(forceZoom ? Map.MAX_ZOOM : currentCamera.zoom);
-    setCurrentHeading(forceHeading ? compassHeading : currentCamera.heading);
 
     let position = userCoordinates;
     if(retrievedDropies != null && selectedDropyIndex != null && retrievedDropies[selectedDropyIndex] != null) {
@@ -111,6 +108,9 @@ const DropyMap = ({
         longitude: retrievedDropies[selectedDropyIndex].longitude,
       };
     }
+
+    setCurrentZoom(forceZoom ? Map.MAX_ZOOM : currentCamera.zoom);
+    setCurrentHeading(forceHeading ? compassHeading : currentCamera.heading);
 
     // eslint-disable-next-line no-undef
     requestAnimationFrame(() => {
