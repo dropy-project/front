@@ -6,7 +6,6 @@ import { compressImage } from '../utils/files';
 import useOverlay from '../hooks/useOverlay';
 
 const CreateDropyTakePicture = ({ navigation }) => {
-
   const { sendAlert } = useOverlay();
 
   useEffect(() => {
@@ -31,16 +30,15 @@ const CreateDropyTakePicture = ({ navigation }) => {
     } catch (error) {
       navigation.goBack();
 
-      if(error.code === 'E_NO_CAMERA_PERMISSION') {
+      if (error.code === 'E_NO_CAMERA_PERMISSION') {
         const alertResult = await sendAlert({
           title: 'Camera not granted...',
           description: 'Enable camera access in your settings',
           validateText: 'Open settings',
           denyText: 'Ok !',
         });
-        if(alertResult) {
+        if (alertResult)
           Linking.openSettings();
-        }
       }
       console.error('Open camera error', error);
     }

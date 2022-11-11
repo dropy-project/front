@@ -10,7 +10,6 @@ import {
 import { Colors, Fonts } from '../styles/Styles';
 
 const Notification = ({ data, onDone }) => {
-
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -46,7 +45,7 @@ const Notification = ({ data, onDone }) => {
     data?.onPress();
   };
 
-  if(data == null)
+  if (data == null)
     return null;
 
   return (

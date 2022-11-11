@@ -29,22 +29,22 @@ export default function Navigation() {
         },
       }}
     >
-      <MainStack.Screen name="Splash" component={Splash} />
-      <MainStack.Screen name="Register" component={RegisterScreen} />
-      <MainStack.Screen name="Home" component={HomeScreen} />
-      <MainStack.Screen name="Conversations" component={ConversationsScreen}/>
-      <MainStack.Screen name="Chat" component={ChatScreen} />
-      <MainStack.Screen name="CreateDropyText" component={CreateDropyTextScreen} />
-      <MainStack.Screen name="CreateDropyFromLibrary" component={CreateDropyFromLibrary} options={{ ...TransitionPresets.ModalSlideFromBottomIOS }} />
-      <MainStack.Screen name="CreateDropyTakePicture" component={CreateDropyTakePicture} options={{ ...TransitionPresets.ModalSlideFromBottomIOS }} />
-      <MainStack.Screen name="GetDropy" component={GetDropyScreen} />
-      <MainStack.Screen name="DisplayDropyMedia" component={DisplayDropyMediaScreen} />
-      <MainStack.Screen name="Profile" component={ProfileScreen} />
-      <MainStack.Screen name="ProfileEdit" component={ProfileEditScreen} />
-      <MainStack.Screen name="Settings" component={SettingsScreen} />
-      <MainStack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
-      <MainStack.Screen name="UserDropies" component={UserDropiesScreen} />
-      <MainStack.Screen name="Onboarding" component={Onboarding} />
+      <MainStack.Screen name='Splash' component={Splash} />
+      <MainStack.Screen name='Register' component={RegisterScreen} />
+      <MainStack.Screen name='Home' component={HomeScreen} />
+      <MainStack.Screen name='Conversations' component={ConversationsScreen}/>
+      <MainStack.Screen name='Chat' component={ChatScreen} />
+      <MainStack.Screen name='CreateDropyText' component={CreateDropyTextScreen} />
+      <MainStack.Screen name='CreateDropyFromLibrary' component={CreateDropyFromLibrary} options={{ ...TransitionPresets.ModalSlideFromBottomIOS }} />
+      <MainStack.Screen name='CreateDropyTakePicture' component={CreateDropyTakePicture} options={{ ...TransitionPresets.ModalSlideFromBottomIOS }} />
+      <MainStack.Screen name='GetDropy' component={GetDropyScreen} />
+      <MainStack.Screen name='DisplayDropyMedia' component={DisplayDropyMediaScreen} />
+      <MainStack.Screen name='Profile' component={ProfileScreen} />
+      <MainStack.Screen name='ProfileEdit' component={ProfileEditScreen} />
+      <MainStack.Screen name='Settings' component={SettingsScreen} />
+      <MainStack.Screen name='BlockedUsers' component={BlockedUsersScreen} />
+      <MainStack.Screen name='UserDropies' component={UserDropiesScreen} />
+      <MainStack.Screen name='Onboarding' component={Onboarding} />
     </MainStack.Navigator>
   );
 }

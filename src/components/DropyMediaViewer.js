@@ -8,7 +8,6 @@ import MEDIA_TYPES from '../utils/mediaTypes';
 import LoadingSpinner from './LoadingSpinner';
 
 const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
-
   const [loading, setLoading] = useState(true);
   const [imageSource, setImageSource] = useState(null);
   const [dropyText, setDropyText] = useState('');
@@ -21,6 +20,8 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
         break;
       case MEDIA_TYPES.TEXT:
         loadDropyText();
+        break;
+      default:
         break;
     }
   }, []);
@@ -38,7 +39,7 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
     setLoading(false);
   };
 
-  if(dropy.mediaType === MEDIA_TYPES.PICTURE) {
+  if (dropy.mediaType === MEDIA_TYPES.PICTURE) {
     return (
       <View style={style}>
         {loading && (

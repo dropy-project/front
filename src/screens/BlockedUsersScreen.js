@@ -19,7 +19,6 @@ import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const BlockedUsersScreen = ({ navigation }) => {
-
   const { sendAlert } = useOverlay();
 
   const [loading, setLoading] = useState(true);
@@ -53,14 +52,14 @@ const BlockedUsersScreen = ({ navigation }) => {
       validateText: 'Unblock',
     });
 
-    if (!confirmed) {
+    if (!confirmed)
       return;
-    }
+
 
     try {
       const response = await API.unblockUser(userId);
       console.log('Unblock API response', response.data);
-      setBlockedUsers(old => old.filter((user) => user.id !== userId));
+      setBlockedUsers((old) => old.filter((user) => user.id !== userId));
     } catch (error) {
       sendAlert({
         title: 'Oh no...',
@@ -74,7 +73,7 @@ const BlockedUsersScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} />
-      <GoBackHeader text="Blocked users" />
+      <GoBackHeader text='Blocked users' />
       {loading ? (
         <View style={{ height: responsiveHeight(80), ...Styles.center }}>
           <LoadingSpinner />
@@ -99,7 +98,7 @@ const BlockedUsersScreen = ({ navigation }) => {
                   <Text style={{ ...Fonts.regular(10, Colors.darkGrey), marginTop: 5 }}>@{user.username}</Text>
                 </View>
                 <TouchableOpacity onPress={() => unblockUser(user.id)}>
-                  <Feather name="unlock" size={24} color={Colors.red} />
+                  <Feather name='unlock' size={24} color={Colors.red} />
                 </TouchableOpacity>
               </View>
             </FadeInWrapper>
@@ -111,7 +110,6 @@ const BlockedUsersScreen = ({ navigation }) => {
 };
 
 export default BlockedUsersScreen;
-
 
 
 const styles = StyleSheet.create({

@@ -28,7 +28,6 @@ import GoBackHeader from './GoBackHeader';
 import AnimatedDropyPreviewBox, { OVERLAY_STATE } from './AnimatedDropyPreviewBox';
 
 const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams, createDropy }) => {
-
   const { sendBottomAlert } = useOverlay();
 
   const navigation = useNavigation();
@@ -59,7 +58,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
     });
 
     anim.start(({ finished }) => {
-      if(finished)
+      if (finished)
         setRender(visible);
     });
 
@@ -79,22 +78,23 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
   }, [overlayState]);
 
   const sendDrop = async () => {
-    if(antiSpamOn) return;
+    if (antiSpamOn)
+      return;
     try {
       Haptics.impactHeavy();
       setAntiSpamOn(true);
       setOverlayState(OVERLAY_STATE.LOADING_POST);
 
       let { dropyData } = dropyCreateParams;
-      if(mediaIsFile(dropyCreateParams.mediaType)) {
-        dropyData = await fetch(dropyCreateParams.dropyFilePath).then(r => r.blob());
-      }
+      if (mediaIsFile(dropyCreateParams.mediaType))
+        dropyData = await fetch(dropyCreateParams.dropyFilePath).then((r) => r.blob());
+
 
       const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude, dropyCreateParams.mediaType, dropyData);
-      if(response.error != null) {
+      if (response.error != null)
         throw response.error;
-      }
-      setUser(oldUser => ({
+
+      setUser((oldUser) => ({
         ...oldUser,
         energy: response.data.energy,
         lastEnergyIncrement: response.data.energy - user.energy,
@@ -115,13 +115,14 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
   };
 
   const goBackToOriginRoute = () => {
-    if(dropyCreateParams.originRoute != null) {
+    if (dropyCreateParams.originRoute != null) {
       closeOverlay();
       navigation.navigate(dropyCreateParams.originRoute, { ...dropyCreateParams });
     }
   };
 
-  if(!render || dropyCreateParams == null) return null;
+  if (!render || dropyCreateParams == null)
+    return null;
 
   return (
     <Animated.View style={{ ...StyleSheet.absoluteFillObject, opacity: fadeAnimatedValue }}>
@@ -144,12 +145,12 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
         </View>
         <Animated.View style={{ ...styles.avatarsContainer, transform: [{ scale: bottomContainerScaleAnimatedValue }] }}>
           <ProfileAvatar size={100} style={{ transform: [{ rotate: '-30deg' }] }} />
-          <Entypo name="plus" size={35} color={Colors.lightGrey} />
+          <Entypo name='plus' size={35} color={Colors.lightGrey} />
           <ProfileAvatar size={100} style={{ transform: [{ rotate: '30deg' }] }} showQuestionMark />
         </Animated.View>
-        <Animated.View style={{ ...styles.bottomContainer, transform: [{ scale : bottomContainerScaleAnimatedValue }] }}>
+        <Animated.View style={{ ...styles.bottomContainer, transform: [{ scale: bottomContainerScaleAnimatedValue }] }}>
           <Text style={styles.dropText}>{'It\'s time to drop this into the unkown'}</Text>
-          <GlassButton buttonText="DROP !" onPress={sendDrop} style={styles.dropButtonStyle} fontSize={18} />
+          <GlassButton buttonText='DROP !' onPress={sendDrop} style={styles.dropButtonStyle} fontSize={18} />
         </Animated.View>
       </SafeAreaView>
     </Animated.View>

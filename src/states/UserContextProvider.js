@@ -3,7 +3,6 @@ import React, { createContext, useEffect, useState } from 'react';
 export const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
-
   const [user, setUser] = useState(null);
   const [developerMode, setDeveloperMode] = useState(false);
 

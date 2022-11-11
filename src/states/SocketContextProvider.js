@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
-import { AppState, View, StyleSheet } from 'react-native';
+import { AppState, StyleSheet, View } from 'react-native';
 
 import { Manager } from 'socket.io-client';
 
@@ -21,7 +21,6 @@ const SOCKET_BASE_URL = AppInfo.customSocket ?? `https://${DOMAIN_PREFIX}socket.
 export const SocketContext = createContext(null);
 
 const SocketContextProvider = ({ children }) => {
-
   const { user } = useCurrentUser();
 
   const manager = useRef(null);
@@ -36,8 +35,10 @@ const SocketContextProvider = ({ children }) => {
   const allSocketsConnected = dropySocketConnected && chatSocketConnected;
 
   useEffectForegroundOnly(() => {
-    if(user == null) return;
-    if(initialized === true) return;
+    if (user == null)
+      return;
+    if (initialized === true)
+      return;
     manager.current = new Manager(SOCKET_BASE_URL, {
       transports: ['websocket'],
       reconnection: true,
@@ -78,12 +79,13 @@ const SocketContextProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    if(allSocketsConnected) return;
-    if(dropySocket.current?.connected === false) {
+    if (allSocketsConnected)
+      return;
+    if (dropySocket.current?.connected === false) {
       log('Reconnecting dropy socket');
       dropySocket.current.connect();
     }
-    if(chatSocket.current?.connected === false) {
+    if (chatSocket.current?.connected === false) {
       log('Reconnecting chat socket');
       chatSocket.current?.connect();
     }
@@ -92,21 +94,20 @@ const SocketContextProvider = ({ children }) => {
   useEffect(() => {
     const appStateListener = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'active') {
-        if(dropySocket.current?.connected === false) {
+        if (dropySocket.current?.connected === false)
           setDropySocketConnected(false);
-        }
-        if(chatSocket.current?.connected === false) {
+
+        if (chatSocket.current?.connected === false)
           setChatSocketConnected(false);
-        }
-        if (dropySocket.current?.connected && chatSocket.current?.connected) {
+
+        if (dropySocket.current?.connected && chatSocket.current?.connected)
           log('Sockets are connected');
-        }
       }
     });
     return appStateListener.remove;
   }, []);
 
-  return(
+  return (
     <View style={StyleSheet.absoluteFillObject}>
       <SocketContext.Provider value={{
         dropySocket: dropySocket.current,

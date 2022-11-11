@@ -7,7 +7,6 @@ import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const ProfileImage = (props) => {
-
   const { user: localUser } = useCurrentUser();
   const {
     avatarUrl = localUser.avatarUrl,
@@ -31,7 +30,7 @@ const ProfileImage = (props) => {
   }, [avatarUrl]);
 
 
-  if(source == null) {
+  if (source == null) {
     return (
       <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.purple3, ...Styles.center }}>
         {displayName && (<Text style={{ ...Fonts.bold(displayNameSize, Colors.white) }}>{displayName.slice(0, 1).toUpperCase()}</Text>)}

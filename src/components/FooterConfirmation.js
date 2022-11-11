@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Animated, Easing } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { createDropTimeString } from '../utils/time';
 import GlassButton from './GlassButton';
@@ -7,7 +7,6 @@ import ProfileImage from './ProfileImage';
 
 
 const FooterConfirmation = ({ dropy, onPress, textButton }) => {
-
   const displayAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -35,7 +34,7 @@ const FooterConfirmation = ({ dropy, onPress, textButton }) => {
           <ProfileImage
             width={65}
             height={65}
-            resizeMode="cover"
+            resizeMode='cover'
             avatarUrl={dropy.emitter.avatarUrl}
             displayName={dropy.emitter.displayName}
           />

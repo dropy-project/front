@@ -3,7 +3,6 @@ import { Gesture, GestureDetector, State } from 'react-native-gesture-handler';
 import MapView from 'react-native-maps';
 
 const AndroidMap = (props, ref) => {
-
   const mapRef = useRef(null);
   const isUpdatingCamera = useRef(false);
 
@@ -14,11 +13,13 @@ const AndroidMap = (props, ref) => {
   }));
 
   const setCameraPropertySync = async (value, property = 'zoom') => {
-    if (isUpdatingCamera.current) return;
+    if (isUpdatingCamera.current)
+      return;
     isUpdatingCamera.current = true;
 
     const currentCamera = await mapRef.current?.getCamera();
-    if (currentCamera == null) return;
+    if (currentCamera == null)
+      return;
 
 
     await mapRef.current?.setCamera({
@@ -28,17 +29,18 @@ const AndroidMap = (props, ref) => {
 
     // Get the old camera value for the zoom and the heading
     const newCamera = await mapRef.current?.getCamera();
-    if (newCamera == null) return;
+    if (newCamera == null)
+      return;
 
     // Set the zoom only if the zoom and heading as changed for at least 0.1
-    if (Math.abs(newCamera.zoom - currentCamera.zoom) > 0.17) {
+    if (Math.abs(newCamera.zoom - currentCamera.zoom) > 0.17)
       setCurrentZoom(newCamera.zoom);
-    }
+
 
     // Set the heading only if the heading as changed for at least 1
-    if (Math.abs(newCamera.heading - currentCamera.heading) > 4) {
+    if (Math.abs(newCamera.heading - currentCamera.heading) > 4)
       setCurrentHeading(newCamera.heading);
-    }
+
     isUpdatingCamera.current = false;
   };
 
@@ -50,9 +52,8 @@ const AndroidMap = (props, ref) => {
 
   const rotateGesture = Gesture.Rotation()
     .onChange((e) => {
-      if (e.state === State.ACTIVE) {
+      if (e.state === State.ACTIVE)
         setCameraPropertySync(-e.rotation * 3, 'heading');
-      }
     });
 
   return (

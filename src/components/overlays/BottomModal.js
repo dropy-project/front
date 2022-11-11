@@ -5,14 +5,13 @@ import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 
 const BottomModal = ({ visible, data }) => {
-
   const [lastData, setLastData] = useState(data);
 
   const [render, setRender] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if(visible)
+    if (visible)
       setLastData(data);
   }, [data]);
 
@@ -25,9 +24,8 @@ const BottomModal = ({ visible, data }) => {
       easing: Easing.ease,
     });
     anim.start(({ finished }) => {
-      if (finished) {
+      if (finished)
         setRender(visible);
-      }
     });
     return anim.stop;
   }, [visible]);
@@ -37,16 +35,17 @@ const BottomModal = ({ visible, data }) => {
     outputRange: ['300%', '0%'],
   });
 
-  if(!render) return null;
+  if (!render)
+    return null;
 
   return (
     <Animated.View style={{ ...styles.container, transform: [{ translateY: translateValue }] }}>
 
       <TouchableOpacity onPress={lastData?.onPressClose} style={styles.cross}>
-        <Ionicons name="ios-close" size={24} color={Colors.white} />
+        <Ionicons name='ios-close' size={24} color={Colors.white} />
       </TouchableOpacity>
 
-      <AntDesign style={styles.warning}name="warning" size={50} color="white" />
+      <AntDesign style={styles.warning}name='warning' size={50} color='white' />
       <Text style={styles.title}>{lastData?.title}</Text>
       <Text style={styles.description}>{lastData?.description}</Text>
     </Animated.View>

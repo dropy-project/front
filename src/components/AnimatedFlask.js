@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View, Animated } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
@@ -20,9 +20,8 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if(isFocused) {
+    if (isFocused)
       return animateFill();
-    }
   }, [isFocused, user.lastEnergyIncrement]);
 
   useEffect(() => {
@@ -62,7 +61,8 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
   }, []);
 
   const animateFill = () => {
-    if (user.lastEnergyIncrement == null) return;
+    if (user.lastEnergyIncrement == null)
+      return;
     const energyClamped = Math.min(Math.max((user.energy * 100 / MAX_ENERGY), 0), 100);
 
     const anim = Animated.sequence([
@@ -112,9 +112,9 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
             }}
           />
           <AnimatedSvg
-            width="240"
-            height="40"
-            viewBox="0 0 824 39"
+            width='240'
+            height='40'
+            viewBox='0 0 824 39'
             style={{
               position: 'absolute',
               bottom: 102,
@@ -123,21 +123,21 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
             }}>
             <Path
               fill={color}
-              d="M 21 28 C 21 28 -18.914803 46.585373 21 26 C 60.914803 5.414623 76.159401 8.829062 113 23 C 145.672577 35.567688 178.94249 -14.561428 241 18 C 277.601013 37.204456 320.646027 4.706551 365 17 C 433.746216 36.054169 484.215912 -0.820065 539 13 C 581.190247 23.643089 609.878418 -14.94294 679 13 C 738.92572 37.225441 786.059143 -10.737301 821 13 L 821 28 L 21 28 Z"
+              d='M 21 28 C 21 28 -18.914803 46.585373 21 26 C 60.914803 5.414623 76.159401 8.829062 113 23 C 145.672577 35.567688 178.94249 -14.561428 241 18 C 277.601013 37.204456 320.646027 4.706551 365 17 C 433.746216 36.054169 484.215912 -0.820065 539 13 C 581.190247 23.643089 609.878418 -14.94294 679 13 C 738.92572 37.225441 786.059143 -10.737301 821 13 L 821 28 L 21 28 Z'
             />
           </AnimatedSvg>
           <AnimatedSvg
-            width="240"
-            height="40"
-            viewBox="0 0 824 39"
+            width='240'
+            height='40'
+            viewBox='0 0 824 39'
             style={{
               position: 'absolute',
               bottom: 101,
-              transform: [{ translateX: path2Translate },{ translateY: pathFlaskTranslate }],
+              transform: [{ translateX: path2Translate }, { translateY: pathFlaskTranslate }],
             }}>
             <Path
               fill={color}
-              d="M 21 28 C 21 28 -18.914803 46.585373 21 26 C 60.914803 5.414623 76.159401 8.829062 113 23 C 145.672577 35.567688 178.94249 -14.561428 241 18 C 277.601013 37.204456 320.646027 4.706551 365 17 C 433.746216 36.054169 484.215912 -0.820065 539 13 C 581.190247 23.643089 609.878418 -14.94294 679 13 C 738.92572 37.225441 786.059143 -10.737301 821 13 L 821 28 L 21 28 Z"
+              d='M 21 28 C 21 28 -18.914803 46.585373 21 26 C 60.914803 5.414623 76.159401 8.829062 113 23 C 145.672577 35.567688 178.94249 -14.561428 241 18 C 277.601013 37.204456 320.646027 4.706551 365 17 C 433.746216 36.054169 484.215912 -0.820065 539 13 C 581.190247 23.643089 609.878418 -14.94294 679 13 C 738.92572 37.225441 786.059143 -10.737301 821 13 L 821 28 L 21 28 Z'
             />
           </AnimatedSvg>
           <View style={styles.lightBounceOverlay} />
@@ -149,7 +149,7 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
           />
         </View>
         <View style={{ backgroundColor: 'white', borderRadius: 50, height: 20, width: 20, position: 'absolute', top: -15, ...Styles.center }}>
-          <MaterialCommunityIcons name="lightning-bolt" size={size * 0.25} color={Colors.purple2} />
+          <MaterialCommunityIcons name='lightning-bolt' size={size * 0.25} color={Colors.purple2} />
         </View>
       </View>
     </View>

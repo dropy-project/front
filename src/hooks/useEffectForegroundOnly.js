@@ -16,10 +16,10 @@ const useEffectForegroundOnly = (effect, deps) => {
 
   useEffect(() => {
     let effectReturn = () => {};
-    const subscription = AppState.addEventListener('change', nextAppState => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
       appState.current = nextAppState;
 
-      if(nextAppState === 'active' && needRefresh.current) {
+      if (nextAppState === 'active' && needRefresh.current) {
         effectReturn = effect() ?? (() => {});
         needRefresh.current = false;
       }
@@ -35,11 +35,9 @@ const useEffectForegroundOnly = (effect, deps) => {
     if (appState.current === 'active') {
       effect();
       needRefresh.current = false;
-    } else {
+    } else
       needRefresh.current = true;
-    }
   }, deps);
-
 };
 
 export default useEffectForegroundOnly;

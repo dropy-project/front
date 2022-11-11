@@ -43,19 +43,19 @@ const FormInput = (props, ref) => {
     isValid: () => {
       const notEmpty = value?.trim() !== '';
       const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
-      if(!emailValid) {
+      if (!emailValid)
         setValidityErrorMessage('This is not a valid email');
-      }
+
       const passwordValid = (!isPassword || PASSWORD_REGEX.test(value.trim()));
-      if(!passwordValid) {
+      if (!passwordValid)
         setValidityErrorMessage('Requires 8 characters, 1 uppercase, 1 number');
-      }
+
       const maxLengthValid = (!maxLength || value?.trim().length <= maxLength);
       const minLengthValid = (!minLength || value?.trim().length >= minLength);
-      if(!minLengthValid) {
+      if (!minLengthValid)
         setValidityErrorMessage(`Must be at least ${minLength} characters`);
-      }
-      const inputValid =  value != null && notEmpty && emailValid && maxLengthValid && minLengthValid && passwordValid;
+
+      const inputValid = value != null && notEmpty && emailValid && maxLengthValid && minLengthValid && passwordValid;
       setValid(inputValid);
       return inputValid;
     },
@@ -80,12 +80,12 @@ const FormInput = (props, ref) => {
           style={{ ...Fonts.regular(12, Colors.darkGrey), ...styles.textInput, textAlignVertical: 'top' }}
           placeholder={placeholder}
           placeholderTextColor={Colors.grey}
-          returnKeyType="done"
+          returnKeyType='done'
           onEndEditing={() => onEdited(value)}
-          textAlignVertical="top"
+          textAlignVertical='top'
           secureTextEntry={isPassword && !showPassword}
           autoCapitalize={isEmail || isPassword ? 'none' : 'sentences'}
-          autoCorrect={isEmail || isPassword ? false : true}
+          autoCorrect={!(isEmail || isPassword)}
           {...props}
         />
         {(!valid && validityErrorMessage !== '') && (
@@ -99,14 +99,14 @@ const FormInput = (props, ref) => {
           </Text>
         )}
         {!selected && !isPassword && (
-          <Feather style={{ marginLeft: 4 }} name="edit-2" size={15} color={Colors.darkGrey} />
+          <Feather style={{ marginLeft: 4 }} name='edit-2' size={15} color={Colors.darkGrey} />
         )}
         {isPassword && (
-          <TouchableOpacity hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }} onPress={() =>  setShowPassword(old => !old)}>
+          <TouchableOpacity hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }} onPress={() => setShowPassword((old) => !old)}>
             {showPassword ? (
-              <Ionicons name="eye-off-sharp" style={{ marginLeft: 4 }} size={15} color={Colors.darkGrey} />
+              <Ionicons name='eye-off-sharp' style={{ marginLeft: 4 }} size={15} color={Colors.darkGrey} />
             ) : (
-              <Ionicons name="eye" style={{ marginLeft: 4 }} size={15} color={Colors.darkGrey} />
+              <Ionicons name='eye' style={{ marginLeft: 4 }} size={15} color={Colors.darkGrey} />
             )}
           </TouchableOpacity>
         )}

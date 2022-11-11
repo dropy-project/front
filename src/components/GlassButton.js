@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const GlassButton = ({ children, onPress, buttonText, style, disabled, fontSize = 19 }) => (
@@ -17,8 +17,7 @@ const GlassButton = ({ children, onPress, buttonText, style, disabled, fontSize 
       }}>
         {buttonText}
       </Text>
-    ) :
-      children
+    ) : children
     }
   </TouchableOpacity>
 );

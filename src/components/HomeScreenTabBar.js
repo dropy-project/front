@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
   Animated,
-  Easing
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons, Entypo } from '@expo/vector-icons';
+import { Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Svg, { Path } from 'react-native-svg';
@@ -133,11 +133,11 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
   };
 
   const onPressGlassButton = async () => {
-    if(canEmitDropy) {
+    if (canEmitDropy) {
       setDropyMenuIsOpen(!dropyMenuIsOpen);
       return;
     }
-    if(!dropyMenuIsOpen) {
+    if (!dropyMenuIsOpen) {
       const validated = await sendAlert({
         title: 'Take it easy!',
         description: 'You can\'t drop at the same location twice in a row.',
@@ -145,15 +145,13 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         denyText: developerMode ? 'DEV_ADD' : undefined,
       });
       setDropyMenuIsOpen(!validated && developerMode);
-    } else {
+    } else
       setDropyMenuIsOpen(!dropyMenuIsOpen);
-    }
   };
 
   useEffect(() => {
-    if(!canEmitDropy) {
+    if (!canEmitDropy)
       setDropyMenuIsOpen(false);
-    }
   }, [canEmitDropy]);
 
   return (
@@ -161,33 +159,33 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
       <Animated.View
         style={{
           ...StyleSheet.absoluteFillObject,
-          transform: [{ translateY :tabBarTranslateY }],
+          transform: [{ translateY: tabBarTranslateY }],
         }}
       >
         <Svg
-          height="100%"
+          height='100%'
           width={responsiveWidth(100)}
-          viewBox="0 0 375 87"
+          viewBox='0 0 375 87'
           style={styles.backgroundSvg}
-          preserveAspectRatio="none"
+          preserveAspectRatio='none'
         >
-          <Path d={d} fill="white" />
+          <Path d={d} fill='white' />
         </Svg>
       </Animated.View>
       <Animated.View style={{
         ...styles.tabsContainer,
-        transform: [{ translateY :tabBarTranslateY }],
+        transform: [{ translateY: tabBarTranslateY }],
       }}>
-        <TabBarItem text="Drops" onPress={onMuseumOpenPressed}>
+        <TabBarItem text='Drops' onPress={onMuseumOpenPressed}>
           <Ionicons
-            name="md-bookmark-outline"
+            name='md-bookmark-outline'
             size={iconsSize}
             color={Colors.darkGrey}
           />
         </TabBarItem>
-        <TabBarItem text="Chat" routeName="Conversations" showStatusDot={hasUnreadConversation}>
+        <TabBarItem text='Chat' routeName='Conversations' showStatusDot={hasUnreadConversation}>
           <Ionicons
-            name="md-chatbubble-outline"
+            name='md-chatbubble-outline'
             size={iconsSize}
             color={Colors.darkGrey}
             style={styles.icons}
@@ -201,16 +199,16 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
           </TouchableOpacity>
           <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={wheelAnimatedValue}>
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
-              <SimpleLineIcons name="picture" size={30} color={Colors.grey} />
+              <SimpleLineIcons name='picture' size={30} color={Colors.grey} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddText}>
-              <MaterialCommunityIcons name="format-text" size={30} color={Colors.grey}/>
+              <MaterialCommunityIcons name='format-text' size={30} color={Colors.grey}/>
             </TouchableOpacity>
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleTakePicture}>
-              <Entypo name="camera" size={30} color={Colors.grey} />
+              <Entypo name='camera' size={30} color={Colors.grey} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleMusic}>
-              <Ionicons name="musical-notes-outline" size={30} color={Colors.grey} />
+              <Ionicons name='musical-notes-outline' size={30} color={Colors.grey} />
             </TouchableOpacity>
           </DropyWheel>
         </>
@@ -228,7 +226,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         >
           {canEmitDropy ? (
             <Animated.View style={{ transform: [{ rotate: plusIconRotation }] }}>
-              <FontAwesome5 name="plus" size={20} color={Colors.white} />
+              <FontAwesome5 name='plus' size={20} color={Colors.white} />
             </Animated.View>
           ) : (
             <View style={{
@@ -237,7 +235,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
               backgroundColor: Colors.lightGrey,
               opacity: 0.5,
             }}>
-              <Entypo name="block" size={24} color={Colors.white} />
+              <Entypo name='block' size={24} color={Colors.white} />
             </View>
           )}
         </GlassCircleButton>
@@ -251,7 +249,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         }}>
           <TouchableOpacity onPress={onMuseumClosePressed} style={styles.closeMuseumButton}>
             <View style={{ transform: [{ rotate: '45deg' }] }}>
-              <FontAwesome5 name="plus" size={20} color={Colors.darkGrey} />
+              <FontAwesome5 name='plus' size={20} color={Colors.darkGrey} />
             </View>
           </TouchableOpacity>
         </Animated.View>
@@ -260,30 +258,27 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
   );
 };
 
-const DropyWheel = ({ menuAnimatedValue, children }) => {
-  return (
-    <Animated.View style={{ ...styles.dropyWheelContainer, transform: [{ scale: menuAnimatedValue }] }}>
-      {children.map((child, index) => (
-        <DropyWheelItem key={index} index={index} childCount={children.length} size={100}>{child}</DropyWheelItem>
-      ))}
-    </Animated.View>
-  );
-};
+const DropyWheel = ({ menuAnimatedValue, children }) => (
+  <Animated.View style={{ ...styles.dropyWheelContainer, transform: [{ scale: menuAnimatedValue }] }}>
+    {children.map((child, index) => (
+      <DropyWheelItem key={index} index={index} childCount={children.length} size={100}>{child}</DropyWheelItem>
+    ))}
+  </Animated.View>
+);
 
 const DropyWheelItem = ({ children, index, childCount, size }) => {
-
   const [coords, setCoords] = useState({ x: 0, y: 0 });
 
   const handleLayout = (event) => {
     const { layout } = event.nativeEvent;
 
-    const angle = index * Math.PI / (childCount - 1) + Math.PI / 2;
+    const angle = index * (Math.PI / ((childCount - 1) + (Math.PI / 2)));
 
     let x = (Math.sin(angle) * size);
     let y = (Math.cos(angle) * size);
 
-    x += responsiveWidth(100) / 2 - layout.width / 2;
-    y += 100 - layout.height / 2;
+    x += (responsiveWidth(100) / 2) - (layout.width / 2);
+    y += 100 - (layout.height / 2);
 
     setCoords({ x, y });
   };
@@ -297,12 +292,11 @@ const DropyWheelItem = ({ children, index, childCount, size }) => {
 };
 
 const TabBarItem = ({ children, text, showStatusDot, routeName, onPress }) => {
-
   const { sendAlert } = useOverlay();
   const navigation = useNavigation();
 
   const goToRoute = () => {
-    if(routeName == null) {
+    if (routeName == null) {
       sendAlert({
         title: 'Oups...',
         description: 'Looks like you can\'t go there yet... \n This page is under construction !',

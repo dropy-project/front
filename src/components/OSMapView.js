@@ -6,19 +6,17 @@ import mapStyleAndroid from '../assets/mapStyleAndroid.json';
 import mapStyleIOS from '../assets/mapStyleIOS.json';
 import AndroidMap from './AndroidMap';
 
-const OSMapView = (props, ref)  => {
-
+const OSMapView = (props, ref) => {
   const mapRef = useRef(null);
   const lastCamera = useRef(null);
 
   useImperativeHandle(ref, () => ({
-    getMapRef: Platform.OS === 'android' ?
-      mapRef.current.getMapRef :
-      () => mapRef.current,
+    getMapRef: Platform.OS === 'android' ? mapRef.current.getMapRef : () => mapRef.current,
   }));
 
   const iosGestureHandler = async (_, { isGesture }) => {
-    if (!isGesture) return;
+    if (!isGesture)
+      return;
     const camera = await mapRef.current?.getCamera();
 
     if (lastCamera.current == null) {

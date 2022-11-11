@@ -1,4 +1,4 @@
-import React, { createContext, useState , useEffect } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import Geolocation from 'react-native-geolocation-service';
 import CompassHeading from 'react-native-compass-heading';
 import Geohash from 'ngeohash';
@@ -10,7 +10,6 @@ export const GeolocationContext = createContext(null);
 export const GEOHASH_SIZE = 32;
 
 const GeolocationProvider = ({ children }) => {
-
   const { user } = useCurrentUser();
 
   const [userCoordinates, setUserCoordinates] = useState(null);
@@ -18,8 +17,10 @@ const GeolocationProvider = ({ children }) => {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if(user == null) return;
-    if (initialized) return;
+    if (user == null)
+      return;
+    if (initialized)
+      return;
     setInitialized(true);
     const geolocationWatchId = registerGeolocationListener();
     registerCompassListener();

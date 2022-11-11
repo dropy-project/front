@@ -15,7 +15,7 @@ export const reportUser = async (userId, sendAlert, dropyId = undefined) => {
       description: 'Your report has been shipped !',
     });
   } catch (error) {
-    if(error.response.status === 401) {
+    if (error.response.status === 401) {
       sendAlert({
         title: 'Take it easy !',
         description: 'You can only report a user once per hour.',

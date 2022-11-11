@@ -6,22 +6,13 @@ const MapDebugger = ({ userCoordinates }) => {
   const [debugPolygons, setDebugPolygons] = useState([]);
 
   useEffect(() => {
-    if(!userCoordinates) return;
+    if (!userCoordinates)
+      return;
 
     const polygons = [];
     for (const chunkInt of userCoordinates.geoHashs) {
-      const [
-        minlat,
-        minlon,
-        maxlat,
-        maxlon
-      ] = GEOHASH_SIZE.decode_bbox_int(chunkInt, GEOHASH_SIZE);
-      polygons.push([
-        { latitude: minlat, longitude: minlon },
-        { latitude: maxlat, longitude: minlon },
-        { latitude: maxlat, longitude: maxlon },
-        { latitude: minlat, longitude: maxlon }
-      ]);
+      const [minlat, minlon, maxlat, maxlon] = GEOHASH_SIZE.decode_bbox_int(chunkInt, GEOHASH_SIZE);
+      polygons.push([{ latitude: minlat, longitude: minlon }, { latitude: maxlat, longitude: minlon }, { latitude: maxlat, longitude: maxlon }, { latitude: minlat, longitude: maxlon }]);
     }
 
     setDebugPolygons(polygons);

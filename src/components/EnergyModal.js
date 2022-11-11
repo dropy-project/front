@@ -1,25 +1,24 @@
 import { Animated, Easing, StyleSheet, Text } from 'react-native';
-import React, { useRef , useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import useCurrentUser from '../hooks/useCurrentUser';
 
 const EnergyModal = () => {
-
   const isFocused = useIsFocused();
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const { user, setUser } = useCurrentUser();
 
   useEffect(() => {
-    if(isFocused) {
+    if (isFocused)
       return animatePopup();
-    }
   }, [isFocused, user.lastEnergyIncrement]);
 
   const animatePopup = () => {
-    if (user.lastEnergyIncrement == null) return;
+    if (user.lastEnergyIncrement == null)
+      return;
     const anim = Animated.sequence([
       Animated.delay(600),
       Animated.timing(visibleAnimatedValue, {
@@ -27,11 +26,11 @@ const EnergyModal = () => {
         duration: 500,
         delay: 1000,
         useNativeDriver: true,
-        easing:Easing.elastic(1.1),
+        easing: Easing.elastic(1.1),
       }),
       Animated.delay(4000),
       Animated.timing(visibleAnimatedValue, {
-        toValue:  0,
+        toValue: 0,
         duration: 200,
         delay: 300,
         useNativeDriver: true,
@@ -39,9 +38,8 @@ const EnergyModal = () => {
       })
     ]);
     anim.start(({ finished }) => {
-      if (finished) {
-        setUser(oldUser => ({ ...oldUser, lastEnergyIncrement: null }));
-      }
+      if (finished)
+        setUser((oldUser) => ({ ...oldUser, lastEnergyIncrement: null }));
     });
     return anim.stop;
   };
@@ -49,7 +47,7 @@ const EnergyModal = () => {
   return (
     <Animated.View style={{ ...styles.conainter, transform: [{ scale: visibleAnimatedValue }] }}>
       <Text style={styles.lastEnergyIncrement}>{user?.lastEnergyIncrement > 0 ? `+ ${user?.lastEnergyIncrement}` : user?.lastEnergyIncrement}</Text>
-      <MaterialCommunityIcons name="lightning-bolt" size={24} color="white" />
+      <MaterialCommunityIcons name='lightning-bolt' size={24} color='white' />
     </Animated.View>
   );
 };

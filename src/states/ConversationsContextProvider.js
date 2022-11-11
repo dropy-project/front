@@ -7,7 +7,6 @@ import { messageTimeString } from '../utils/time';
 export const ConversationsContext = createContext(null);
 
 const ConversationsContextProvider = ({ children }) => {
-
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState([]);
@@ -15,7 +14,8 @@ const ConversationsContextProvider = ({ children }) => {
   const { chatSocket } = useSocket();
 
   useEffect(() => {
-    if(chatSocket == null) return;
+    if (chatSocket == null)
+      return;
 
     listConversations();
     chatSocket.on('connect', listConversations);
@@ -36,7 +36,7 @@ const ConversationsContextProvider = ({ children }) => {
       }
 
       const closedConversationId = response.data.id;
-      setConversations(old => old.filter(conversation => conversation.id !== closedConversationId));
+      setConversations((old) => old.filter((conversation) => conversation.id !== closedConversationId));
     });
 
     return () => {
@@ -47,28 +47,24 @@ const ConversationsContextProvider = ({ children }) => {
   }, [chatSocket]);
 
   const createOrUpdateConversation = (conversation) => {
-    setConversations(old => {
+    setConversations((old) => {
       const updatedConversation = {
         ...conversation,
         lastMessageDate: messageTimeString(conversation.lastMessageDate),
         lastMessagePreview: decryptMessage(conversation.lastMessagePreview),
       };
 
-      const newConversations = [
-        updatedConversation,
-        ...old.filter(c => c.id !== conversation.id)
-      ];
+      const newConversations = [updatedConversation, ...old.filter((c) => c.id !== conversation.id)];
 
-      const sortedConversations = newConversations.sort((a, b) => {
-        return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
-      });
+      const sortedConversations = newConversations.sort((a, b) => new Date(b.lastMessageDate) - new Date(a.lastMessageDate));
 
       return sortedConversations;
     });
   };
 
   const listConversations = () => {
-    if(chatSocket == null) return;
+    if (chatSocket == null)
+      return;
     setLoading(true);
     chatSocket.emit('list_conversations', (response) => {
       if (response.error != null) {
@@ -76,17 +72,13 @@ const ConversationsContextProvider = ({ children }) => {
         return;
       }
 
-      const sortedConversations = response.data.sort((a, b) => {
-        return new Date(b.lastMessageDate) - new Date(a.lastMessageDate);
-      });
+      const sortedConversations = response.data.sort((a, b) => new Date(b.lastMessageDate) - new Date(a.lastMessageDate));
 
-      const datedConversations = sortedConversations.map((c) => {
-        return {
-          ...c,
-          lastMessageDate: messageTimeString(c.lastMessageDate),
-          lastMessagePreview: decryptMessage(c.lastMessagePreview),
-        };
-      });
+      const datedConversations = sortedConversations.map((c) => ({
+        ...c,
+        lastMessageDate: messageTimeString(c.lastMessageDate),
+        lastMessagePreview: decryptMessage(c.lastMessagePreview),
+      }));
 
       setConversations(datedConversations);
       setLoading(false);
@@ -94,29 +86,28 @@ const ConversationsContextProvider = ({ children }) => {
   };
 
   const closeConversation = (conversationId) => {
-    setConversations(old => old.filter(conversation => conversation.id !== conversationId));
+    setConversations((old) => old.filter((conversation) => conversation.id !== conversationId));
     return new Promise((resolve) => {
       chatSocket.emit('close_conversation', conversationId, resolve);
     });
   };
 
-  const createConversation = (dropyId) => {
-    return new Promise((resolve, reject) => {
-      if(chatSocket == null) return resolve();
-      chatSocket.emit('create_conversation', { dropyId }, (response) => {
-        if (response.error != null) {
-          return reject(response.error);
-        }
-        const conversation = response.data;
-        createOrUpdateConversation(conversation);
-        resolve(conversation);
-      });
+  const createConversation = (dropyId) => new Promise((resolve, reject) => {
+    if (chatSocket == null)
+      return resolve();
+    chatSocket.emit('create_conversation', { dropyId }, (response) => {
+      if (response.error != null)
+        return reject(response.error);
+
+      const conversation = response.data;
+      createOrUpdateConversation(conversation);
+      resolve(conversation);
     });
-  };
+  });
 
   const markConversationAsRead = (conversationId) => {
-    setConversations(old => old.map(conversation => {
-      if(conversation.id === conversationId) {
+    setConversations((old) => old.map((conversation) => {
+      if (conversation.id === conversationId) {
         return {
           ...conversation,
           unreadMessagesCount: 0,
@@ -127,8 +118,9 @@ const ConversationsContextProvider = ({ children }) => {
   };
 
   const openChat = (conversationId) => {
-    const conversation = conversations.find(c => c.id === conversationId);
-    if(conversation == null) return;
+    const conversation = conversations.find((c) => c.id === conversationId);
+    if (conversation == null)
+      return;
     navigation.navigate('Chat', { conversation });
   };
 

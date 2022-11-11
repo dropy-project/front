@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  Animated,
+  Easing,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  Animated,
-  Easing
+  View
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
@@ -13,29 +13,27 @@ import Styles, { Colors, Fonts } from '../../styles/Styles';
 import GlassButton from '../GlassButton';
 
 const AlertModal = ({ visible, data }) => {
-
   const [lastData, setLastData] = useState(data);
 
   const [render, setRender] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if(visible)
+    if (visible)
       setLastData(data);
   }, [data]);
 
   useEffect(() => {
     setRender(true);
     const anim = Animated.timing(animatedValue, {
-      toValue: visible ? 1 : 0,
       duration: 200,
-      useNativeDriver: true,
       easing: Easing.elastic(1.1),
+      toValue: visible ? 1 : 0,
+      useNativeDriver: true,
     });
     anim.start(({ finished }) => {
-      if (finished) {
+      if (finished)
         setRender(visible);
-      }
     });
     return anim.stop;
   }, [visible]);
@@ -45,7 +43,8 @@ const AlertModal = ({ visible, data }) => {
     outputRange: [0.5, 1],
   });
 
-  if(!render) return null;
+  if (!render)
+    return null;
 
   return (
     <Animated.View style={{ ...styles.backgroundContainer, opacity: animatedValue }}>
@@ -53,7 +52,7 @@ const AlertModal = ({ visible, data }) => {
         <Text style={styles.title}>{lastData?.title}</Text>
 
         <TouchableOpacity onPress={lastData?.onPressDeny} style={styles.cross}>
-          <Ionicons name="ios-close" size={24} color={Colors.lightGrey} />
+          <Ionicons name='ios-close' size={24} color={Colors.lightGrey} />
         </TouchableOpacity>
 
         <View style={styles.descriptionContainer}>

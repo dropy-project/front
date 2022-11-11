@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  Text,
   Animated,
-  Easing
+  Easing,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
 import GoBackHeader from '../components/GoBackHeader';
 import DropyLogo from '../assets/svgs/dropy_logo.svg';
@@ -14,23 +14,21 @@ import FooterConfirmation from '../components/FooterConfirmation';
 import ParticleEmitter from '../components/ParticleEmitter';
 
 const GetDropyScreen = ({ navigation, route }) => {
-
   const { dropy = null } = route.params || {};
 
   const circleAnimation = useRef(new Animated.Value(0)).current;
   const circleBreathing = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const anim =
-      Animated.sequence([
-        Animated.timing(circleAnimation, {
-          toValue: 1,
-          duration: 3000,
-          useNativeDriver: true,
-          easing: Easing.elastic(1.2),
-        }),
-        Animated.delay(1500)
-      ]);
+    const anim = Animated.sequence([
+      Animated.timing(circleAnimation, {
+        toValue: 1,
+        duration: 3000,
+        useNativeDriver: true,
+        easing: Easing.elastic(1.2),
+      }),
+      Animated.delay(1500)
+    ]);
     anim.start();
     return anim.stop;
   }, []);
@@ -73,10 +71,7 @@ const GetDropyScreen = ({ navigation, route }) => {
   const handleConfirmation = (dropy) => {
     navigation.reset({
       index: 1,
-      routes: [
-        { name: 'Home' },
-        { name: 'DisplayDropyMedia', params: { dropy, showBottoModal: true } }
-      ],
+      routes: [{ name: 'Home' }, { name: 'DisplayDropyMedia', params: { dropy, showBottoModal: true } }],
     });
   };
 
@@ -92,7 +87,7 @@ const GetDropyScreen = ({ navigation, route }) => {
         <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle) }] }} />
         <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle) }] }} />
       </View>
-      <FooterConfirmation dropy={dropy} onPress={() => handleConfirmation(dropy)} textButton="Open !"/>
+      <FooterConfirmation dropy={dropy} onPress={() => handleConfirmation(dropy)} textButton='Open !'/>
     </SafeAreaView>
   );
 };

@@ -1,9 +1,8 @@
-import { View, Text, StyleSheet , Linking, TouchableOpacity } from 'react-native';
+import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Styles, { Colors } from '../styles/Styles';
 
 export default function FormCheckBox({ text, onChanged = () => {}, textUrl }) {
-
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
@@ -15,7 +14,7 @@ export default function FormCheckBox({ text, onChanged = () => {}, textUrl }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.checkBox} onPress={() => setChecked(old => !old)}>
+      <TouchableOpacity style={styles.checkBox} onPress={() => setChecked((old) => !old)}>
         {checked && <View style={styles.checked} />}
       </TouchableOpacity>
       <View style={{ paddingHorizontal: 10 }}>

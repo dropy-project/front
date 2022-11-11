@@ -5,8 +5,6 @@ const MEDIA_TYPES = {
   TEXT: 'TEXT',
 };
 
-export const mediaIsFile = (mediaType) => {
-  return mediaType === MEDIA_TYPES.PICTURE || mediaType === MEDIA_TYPES.VIDEO;
-};
+export const mediaIsFile = (mediaType) => mediaType === MEDIA_TYPES.PICTURE || mediaType === MEDIA_TYPES.VIDEO;
 
 export default MEDIA_TYPES;

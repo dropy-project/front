@@ -4,7 +4,7 @@ import { responsiveFontSize } from 'react-native-responsive-dimensions';
 const FONT_SIZE_SCALE_FACTOR = 7;
 const IS_IOS = Platform.OS === 'ios';
 
-const scaleFromFigma = size => responsiveFontSize(size / FONT_SIZE_SCALE_FACTOR);
+const scaleFromFigma = (size) => responsiveFontSize(size / FONT_SIZE_SCALE_FACTOR);
 
 export const Colors = {
   purple1: '#7B6DCD',

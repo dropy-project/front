@@ -5,20 +5,17 @@ import DropyLogo from '../../assets/svgs/dropy_logo.svg';
 import GlassButton from '../GlassButton';
 
 
-
-const GeolocationModal = () => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.mainContent}>
-        <DropyLogo height={87} width={87} />
-        <Text style={styles.title}>Geolocation is not enabled</Text>
-        <Text style={styles.description}>We will not be able to find anything around you if your position is unknown...</Text>
-      </View>
-      <GlassButton onPress={() => Linking.openSettings()} buttonText={'Open settings'} disabled={false} style={styles.openSettingsButton} fontSize={14}>
-      </GlassButton>
+const GeolocationModal = () => (
+  <View style={styles.container}>
+    <View style={styles.mainContent}>
+      <DropyLogo height={87} width={87} />
+      <Text style={styles.title}>Geolocation is not enabled</Text>
+      <Text style={styles.description}>We will not be able to find anything around you if your position is unknown...</Text>
     </View>
-  );
-};
+    <GlassButton onPress={() => Linking.openSettings()} buttonText={'Open settings'} disabled={false} style={styles.openSettingsButton} fontSize={14}>
+    </GlassButton>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {

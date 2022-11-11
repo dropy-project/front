@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, View, StyleSheet, Animated, Easing } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import LoadingSpinner from '../LoadingSpinner';
 
 const ReconnectingOverlay = ({ visible }) => {
-
   const [initilized, setInitilized] = useState(false);
   const [render, setRender] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -20,13 +19,12 @@ const ReconnectingOverlay = ({ visible }) => {
       easing: Easing.ease,
     });
     anim.start(({ finished }) => {
-      if (finished) {
+      if (finished)
         setRender(visible);
-      }
     });
-    if(visible) {
+    if (visible)
       setInitilized(true);
-    }
+
     return anim.stop;
   }, [visible]);
 
@@ -35,7 +33,8 @@ const ReconnectingOverlay = ({ visible }) => {
     outputRange: [responsiveHeight(10), 0],
   });
 
-  if(!render) return null;
+  if (!render)
+    return null;
 
   return (
     <Animated.View style={{ ...styles.container, opacity: animatedValue }}>
