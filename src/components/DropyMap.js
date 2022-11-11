@@ -24,8 +24,6 @@ import FadeInWrapper from './FadeInWrapper';
 import MapDebugger from './MapDebugger';
 import OSMapView from './OSMapView';
 
-const MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD = 5;
-
 const DropyMap = ({
   dropiesAround,
   retrieveDropy,
@@ -45,7 +43,7 @@ const DropyMap = ({
   const { developerMode, user, setUser } = useCurrentUser();
 
   const [currentZoom, setCurrentZoom] = useState(0);
-  const [curentHeading, setCurrentHeading] = useState(0);
+  const [currentHeading, setCurrentHeading] = useState(0);
   const [headingLocked, setHeadingLocked] = useState(false);
 
   const osMap = useRef(null);
@@ -97,7 +95,7 @@ const DropyMap = ({
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
-  }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies]);
+  }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies, currentZoom, currentHeading]);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
     const currentCamera = await osMap.current?.getMapRef()?.getCamera();
@@ -139,29 +137,13 @@ const DropyMap = ({
     return newLockedValue;
   });
 
-  const onRotation = (heading) => {
-    setCurrentHeading(heading);
-    if(museumVisible) return;
-    if(Math.abs(heading - compassHeading) > MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD)
-      setHeadingLocked(false);
-  };
-
-  const onZoom = (zoom) => {
-    let newZoom = zoom;
-    if (zoom > Map.MAX_ZOOM)
-      newZoom = Map.MAX_ZOOM;
-    if (zoom < Map.MIN_ZOOM)
-      newZoom = Map.MIN_ZOOM;
-    setCurrentZoom(newZoom);
-  };
-
   return (
     <>
       <OSMapView
         ref={osMap}
-        onZoom={onZoom}
-        onRotate={onRotation}
         provider={PROVIDER_GOOGLE}
+        setCurrentZoom={setCurrentZoom}
+        setCurrentHeading={setCurrentHeading}
         style={StyleSheet.absoluteFillObject}
         zoomEnabled={Platform.OS === 'ios' && !museumVisible}
         minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
@@ -224,7 +206,7 @@ const DropyMap = ({
       </SafeAreaView>
 
       <EnergyModal />
-      <Sonar zoom={currentZoom} heading={curentHeading} visible={!museumVisible} compassHeading={compassHeading} />
+      <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
         pointerEvents='none'

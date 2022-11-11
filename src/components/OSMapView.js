@@ -8,8 +8,6 @@ import AndroidMap from './AndroidMap';
 
 const OSMapView = (props, ref)  => {
 
-  const { onRotate, onZoom } = props;
-
   const mapRef = useRef(null);
   const lastCamera = useRef(null);
 
@@ -27,11 +25,6 @@ const OSMapView = (props, ref)  => {
       lastCamera.current = camera;
       return;
     }
-    if (camera.zoom !== lastCamera.current.zoom)
-      onZoom?.(camera.zoom);
-    if (camera.heading !== lastCamera.current.heading)
-      onRotate?.(camera.heading);
-
     lastCamera.current = camera;
   };
 
