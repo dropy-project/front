@@ -3,7 +3,6 @@ import { Keyboard } from 'react-native';
 
 
 const useKeyboardVisible = (keyboardWillShow = () => {}, keyboardWillHide = () => {}) => {
-
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -37,7 +36,6 @@ const useKeyboardVisible = (keyboardWillShow = () => {}, keyboardWillHide = () =
     };
   }, []);
   return isKeyboardVisible;
-
 };
 
 export default useKeyboardVisible;

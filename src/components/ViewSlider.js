@@ -1,13 +1,13 @@
-import React, { useRef , useState , useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import {
-  View,
-  Text,
   Animated,
-  TouchableOpacity,
   BackHandler,
-  StyleSheet,
+  Keyboard,
   Platform,
-  Keyboard
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
@@ -15,7 +15,6 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import { DotIndicator } from './DotIndicator';
 
 const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
-
   const [currentViewIndex, setCurrentViewIndex] = useState(1);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
@@ -26,19 +25,16 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
 
   useImperativeHandle(ref, () => ({
     nextView() {
-      if (currentViewIndex < children.length - 1) {
+      if (currentViewIndex < children.length - 1)
         setCurrentViewIndex(currentViewIndex + 1);
-      }
     },
     previousView() {
-      if (currentViewIndex > 0) {
+      if (currentViewIndex > 0)
         setCurrentViewIndex(currentViewIndex - 1);
-      }
     },
     goToView(index) {
-      if (index >= 0 && index < children.length) {
+      if (index >= 0 && index < children.length)
         setCurrentViewIndex(index);
-      }
     },
   }));
 
@@ -66,8 +62,9 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      setCurrentViewIndex(old => {
-        if(old - 1 < 0) return old;
+      setCurrentViewIndex((old) => {
+        if (old - 1 < 0)
+          return old;
         return old - 1;
       });
       return true;
@@ -117,7 +114,7 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
       {currentViewIndex > 1 && currentViewIndex < children.length - 1 && (
         <DotIndicator
           currentIndex={currentViewIndex - 1}
-          onPressSkip={() => setCurrentViewIndex(old => old + 1)}
+          onPressSkip={() => setCurrentViewIndex((old) => old + 1)}
           isSkippable={currentViewIndex === 3 || currentViewIndex === 7}
         />
       )}

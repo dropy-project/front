@@ -5,7 +5,6 @@ import Styles, { Colors, Fonts } from '../../styles/Styles';
 import DropyLogo from '../../assets/svgs/dropy_logo.svg';
 
 const MapLoadingOverlay = ({ visible = true }) => {
-
   const [render, setRender] = useState(visible);
 
   const opacityAnimatedValue = useRef(new Animated.Value(visible ? 1 : 0)).current;
@@ -18,15 +17,15 @@ const MapLoadingOverlay = ({ visible = true }) => {
       duration: visible ? 0 : 500,
       useNativeDriver: true,
     });
-    anim.start(( { finished } ) => {
-      if(finished) {
+    anim.start(({ finished }) => {
+      if (finished)
         setRender(visible);
-      }
     });
     return anim.stop;
   }, [visible]);
 
-  if(!render) return null;
+  if (!render)
+    return null;
 
   return (
     <Animated.View
@@ -45,7 +44,6 @@ const MapLoadingOverlay = ({ visible = true }) => {
 export default MapLoadingOverlay;
 
 const AnimatedLogo = () => {
-
   const animatedValue = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -67,7 +65,7 @@ const AnimatedLogo = () => {
   }, []);
 
   return (
-    <Animated.View style={{ transform: [{ scale : animatedValue }] }}>
+    <Animated.View style={{ transform: [{ scale: animatedValue }] }}>
       <DropyLogo width={responsiveWidth(10)} />
     </Animated.View>
   );

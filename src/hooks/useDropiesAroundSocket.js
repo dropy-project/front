@@ -8,7 +8,6 @@ const REACH_DISTANCE_METERS = 100;
 const EMIT_LIMIT_DISTANCE_METERS = 60;
 
 const useDropiesAroundSocket = () => {
-
   const { user } = useCurrentUser();
   const { userCoordinates, initialized: geolocationInitialized } = useInitializedGeolocation();
 
@@ -18,8 +17,10 @@ const useDropiesAroundSocket = () => {
   const [canEmitDropy, setCanEmitDropy] = useState(true);
 
   useEffect(() => {
-    if (geolocationInitialized === false) return;
-    if (dropySocket == null) return;
+    if (geolocationInitialized === false)
+      return;
+    if (dropySocket == null)
+      return;
 
     dropySocket.on('dropy_created', (response) => {
       if (response.error != null) {
@@ -29,7 +30,7 @@ const useDropiesAroundSocket = () => {
       const newDropy = response.data;
       console.log('New dropy emitter ', newDropy.emitterId);
 
-      setDropiesAround(olds => {
+      setDropiesAround((olds) => {
         const newDropies = [...olds, processDropy(newDropy, user, userCoordinates)];
         const restrictedRange = newDropies.some((dropy) => dropy.isInEmitRestrictedRange);
         setCanEmitDropy(!restrictedRange);
@@ -44,8 +45,8 @@ const useDropiesAroundSocket = () => {
         return;
       }
 
-      setDropiesAround(olds => {
-        const newDropies = olds.filter(dropy => dropy.id !== response.data);
+      setDropiesAround((olds) => {
+        const newDropies = olds.filter((dropy) => dropy.id !== response.data);
 
         const restrictedRange = newDropies.some((dropy) => dropy.isInEmitRestrictedRange);
         setCanEmitDropy(!restrictedRange);
@@ -62,19 +63,18 @@ const useDropiesAroundSocket = () => {
   }, [geolocationInitialized]);
 
   useEffect(() => {
-    if(userCoordinates?.geoHashs == null) return;
-    if (dropySocket == null) return;
+    if (userCoordinates?.geoHashs == null)
+      return;
+    if (dropySocket == null)
+      return;
 
     dropySocket.emit('zones_update', { zones: userCoordinates.geoHashs }, (response) => {
-
-      if(response.error != null) {
+      if (response.error != null) {
         console.error('Error updating zones', response.error);
         return;
       }
 
-      const newDropies = response.data.map((dropy) =>  {
-        return processDropy(dropy, user, userCoordinates);
-      });
+      const newDropies = response.data.map((dropy) => processDropy(dropy, user, userCoordinates));
 
       const restrictedRange = newDropies.some((dropy) => dropy.isInEmitRestrictedRange);
       setCanEmitDropy(!restrictedRange);
@@ -84,20 +84,19 @@ const useDropiesAroundSocket = () => {
   }, [userCoordinates?.geoHashs[0]]);
 
   useEffect(() => {
-    if (userCoordinates == null) return;
+    if (userCoordinates == null)
+      return;
     checkForDropiesInRange();
   }, [userCoordinates]);
 
   const checkForDropiesInRange = async () => {
-    const updatedDropies = dropiesAround.map((dropy) => {
-      return processDropy(dropy, user, userCoordinates);
-    });
+    const updatedDropies = dropiesAround.map((dropy) => processDropy(dropy, user, userCoordinates));
 
     const restrictedRange = updatedDropies.some((dropy) => dropy.isInEmitRestrictedRange);
     setCanEmitDropy(!restrictedRange);
 
     const requireStateUpdate = updatedDropies.some((dropy) => dropy.reachable !== dropy.reachable);
-    if(requireStateUpdate)
+    if (requireStateUpdate)
       setDropiesAround(updatedDropies);
   };
 
@@ -108,16 +107,14 @@ const useDropiesAroundSocket = () => {
     });
   };
 
-  const retrieveDropy = (dropyId) => {
-    return new Promise((resolve) => {
-      dropySocket.emit('dropy_retrieved', { dropyId }, (response) => {
-        if(response.error == null) {
-          setDropiesAround(olds => olds.filter(dropy => dropy.id !== dropyId));
-        }
-        resolve(response);
-      });
+  const retrieveDropy = (dropyId) => new Promise((resolve) => {
+    dropySocket.emit('dropy_retrieved', { dropyId }, (response) => {
+      if (response.error == null)
+        setDropiesAround((olds) => olds.filter((dropy) => dropy.id !== dropyId));
+
+      resolve(response);
     });
-  };
+  });
 
   const processDropy = (rawDropy, user, userCoordinates) => {
     const dropyCoordinates = {

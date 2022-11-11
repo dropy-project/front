@@ -23,7 +23,6 @@ export const MAX_HEADER_HEIGHT = responsiveHeight(45);
 export const MIN_HEADER_HEIGHT = responsiveHeight(24);
 
 const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conversation }) => {
-
   const { showActionSheetWithOptions } = useActionSheet();
   const { sendAlert } = useOverlay();
   const { openChat } = useConversationsSocket();
@@ -66,11 +65,10 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
       cancelButtonIndex: 2,
       title: `@${user?.username}`,
     }, (buttonIndex) => {
-      if (buttonIndex === 0) {
+      if (buttonIndex === 0)
         reportUser(user.id, sendAlert);
-      } else if (buttonIndex === 1) {
+      else if (buttonIndex === 1)
         blockUser(user.id, sendAlert, navigation);
-      }
     });
   };
 
@@ -104,7 +102,7 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
       <SafeAreaView style={Styles.safeAreaView}>
         <Animated.View style={{ ...styles.headerControlsContainer, transform: [{ translateY: headerCancelTransform }] }}>
           <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-            <Feather name="arrow-left" size={30} color={Colors.white} />
+            <Feather name='arrow-left' size={30} color={Colors.white} />
           </TouchableOpacity>
           {showControls ? (
             <View style={{ alignItems: 'center' }}>
@@ -112,7 +110,7 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
                 onPress={() => navigation.navigate('Settings')}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
-                <Feather name="settings" size={24} color={Colors.white} />
+                <Feather name='settings' size={24} color={Colors.white} />
               </TouchableOpacity>
 
               <Animated.View style={{ opacity: editOpacity }}>
@@ -121,7 +119,7 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
                   style={{ marginTop: 20 }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Feather name="edit" size={24} color={Colors.white} />
+                  <Feather name='edit' size={24} color={Colors.white} />
                 </TouchableOpacity>
               </Animated.View>
 
@@ -131,21 +129,21 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
                   style={{ marginTop: 22 }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <MaterialCommunityIcons name="tooltip-image-outline" size={26}  color={Colors.white} />
+                  <MaterialCommunityIcons name='tooltip-image-outline' size={26} color={Colors.white} />
                 </TouchableOpacity>
               </Animated.View>
             </View>
           ) : (
             <View>
               <TouchableOpacity onPress={handleOptionsButtonPress}>
-                <Feather name="more-horizontal" size={30} color={Colors.white} />
+                <Feather name='more-horizontal' size={30} color={Colors.white} />
               </TouchableOpacity>
               {conversation != null && (
                 <Animated.View style={{ opacity: editOpacity }}>
                   <TouchableOpacity onPress={() => openChat(conversation.id)}
                     style={{ position: 'absolute', top: '100%', paddingTop: 25 }}>
                     <Ionicons
-                      name="md-chatbubble-outline"
+                      name='md-chatbubble-outline'
                       size={30}
                       color={Colors.white}
                     />
@@ -176,28 +174,29 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
 export default ProfileScreenHeader;
 
 const RankIcons = ({ user }) => {
-  if(!user) return null;
+  if (!user)
+    return null;
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       {user.isDeveloper && (
-        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText="Developer">
-          <MaterialCommunityIcons name="code-braces-box" size={25}  color="#c299ff" />
+        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText='Developer'>
+          <MaterialCommunityIcons name='code-braces-box' size={25} color='#c299ff' />
         </TouchableTooltip>
       )}
       {user.isAdmin && (
-        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText="Admin">
-          <FontAwesome5 name="shield-alt" size={19} color="#aeb9fc" />
+        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText='Admin'>
+          <FontAwesome5 name='shield-alt' size={19} color='#aeb9fc' />
         </TouchableTooltip>
       )}
       {user.isAmbassador && (
-        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText="Ambassador">
-          <Octicons name="code-of-conduct" size={20} color="#f571c0" />
+        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText='Ambassador'>
+          <Octicons name='code-of-conduct' size={20} color='#f571c0' />
         </TouchableTooltip>
       )}
       {user.isPremium && (
-        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText="Premium">
-          <FontAwesome5 name="crown" size={18} color="#faec84" />
+        <TouchableTooltip style={{ marginLeft: 7 }} tooltipText='Premium'>
+          <FontAwesome5 name='crown' size={18} color='#faec84' />
         </TouchableTooltip>
       )}
     </View>

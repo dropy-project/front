@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import ProfileImage from './ProfileImage';
@@ -14,40 +14,38 @@ const ProfileAvatar = ({
   avatarUrl,
   displayName,
   displayNameSize,
-}) => {
-  return (
-    <View style={{
-      ...styles.container,
-      borderWidth: size / 25,
-      width: size,
-      height: size,
-      borderRadius: size / 2.7,
-      ...style,
-    }}>
-      <View style={{ ...styles.imageContainer, borderRadius: size / 3.4 }} >
-        {showQuestionMark === true ? (
-          <Text style={Fonts.bold(size / 3, Colors.white)}>?</Text>
-        ) : (
-          <ProfileImage
-            displayNameSize={displayNameSize}
-            avatarUrl={avatarUrl}
-            displayName={displayName}
-          />
-        )}
-      </View>
-      {showStatusDot && (
-        <View style={{
-          ...styles.statusDot,
-          width: size / 4,
-          height: size / 4,
-          backgroundColor: isUserOnline ? Colors.green : Colors.lightGrey,
-          ...statusDotStyle,
-        }}
+}) => (
+  <View style={{
+    ...styles.container,
+    borderRadius: size / 2.7,
+    borderWidth: size / 25,
+    height: size,
+    width: size,
+    ...style,
+  }}>
+    <View style={{ ...styles.imageContainer, borderRadius: size / 3.4 }} >
+      {showQuestionMark === true ? (
+        <Text style={Fonts.bold(size / 3, Colors.white)}>?</Text>
+      ) : (
+        <ProfileImage
+          displayNameSize={displayNameSize}
+          avatarUrl={avatarUrl}
+          displayName={displayName}
         />
       )}
     </View>
-  );
-};
+    {showStatusDot && (
+      <View style={{
+        ...styles.statusDot,
+        backgroundColor: isUserOnline ? Colors.green : Colors.lightGrey,
+        height: size / 4,
+        width: size / 4,
+        ...statusDotStyle,
+      }}
+      />
+    )}
+  </View>
+);
 
 export default ProfileAvatar;
 
@@ -55,8 +53,8 @@ const styles = StyleSheet.create({
   container: {
     ...Styles.center,
     ...Styles.hardShadows,
-    borderWidth: 3.4,
     borderColor: Colors.purple2,
+    borderWidth: 3.4,
     padding: 3,
   },
   imageContainer: {
@@ -68,11 +66,11 @@ const styles = StyleSheet.create({
   },
   statusDot: {
     ...Styles.blueShadow,
-    borderRadius: 16,
     borderColor: 'white',
+    borderRadius: 16,
     borderWidth: 3,
     bottom: -5,
-    right: -5,
     position: 'absolute',
+    right: -5,
   },
 });

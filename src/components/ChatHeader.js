@@ -1,6 +1,6 @@
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -10,7 +10,6 @@ import ProfileAvatar from './ProfileAvatar';
 import DisabledNotificationsPopup from './DisabledNotificationsPopup';
 
 const ChatHeader = ({ conversation, otherUserConnected, popToTopOnQuit }) => {
-
   const navigation = useNavigation();
   const { sendAlert } = useOverlay();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -26,20 +25,18 @@ const ChatHeader = ({ conversation, otherUserConnected, popToTopOnQuit }) => {
       cancelButtonIndex: 2,
       title: conversation?.user?.displayName,
     }, (buttonIndex) => {
-      if (buttonIndex === 0) {
+      if (buttonIndex === 0)
         reportUser(conversation?.user?.id, sendAlert);
-      } else if (buttonIndex === 1) {
+      else if (buttonIndex === 1)
         blockUser(conversation?.user?.id, sendAlert, navigation);
-      }
     });
   };
 
   const handleQuit = () => {
-    if (popToTopOnQuit) {
+    if (popToTopOnQuit)
       navigation.popToTop();
-    } else {
+    else
       navigation.goBack();
-    }
   };
 
   return (
@@ -50,7 +47,7 @@ const ChatHeader = ({ conversation, otherUserConnected, popToTopOnQuit }) => {
           style={styles.button}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Feather name="arrow-left" size={30} color={Colors.grey} />
+          <Feather name='arrow-left' size={30} color={Colors.grey} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.userInfosContainer} onPress={openProfile}>
@@ -73,7 +70,7 @@ const ChatHeader = ({ conversation, otherUserConnected, popToTopOnQuit }) => {
           onPress={handleOptionsButtonPress}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Feather name="more-horizontal" size={30} color={Colors.grey} />
+          <Feather name='more-horizontal' size={30} color={Colors.grey} />
         </TouchableOpacity>
       </View>
 

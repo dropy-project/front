@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -16,7 +16,6 @@ const ConversationItem = ({
   onLongPress,
   unreadMessagesCount = 0,
 }) => {
-
   const navigation = useNavigation();
 
   const openProfile = () => {

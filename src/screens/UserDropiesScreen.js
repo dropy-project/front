@@ -21,7 +21,6 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import { chunckHeaderTimeString } from '../utils/time';
 
 const UserDropiesScreen = ({ navigation }) => {
-
   const { sendAlert } = useOverlay();
 
   const [loading, setLoading] = useState(true);
@@ -55,14 +54,14 @@ const UserDropiesScreen = ({ navigation }) => {
       validateText: 'Delete',
     });
 
-    if (!confirmed) {
+    if (!confirmed)
       return;
-    }
+
 
     try {
       const response = await API.deleteUserDropy(dropyId);
       console.log('Delete API response', response.data);
-      setDropies(old => old.filter((dropy) => dropy.id !== dropyId));
+      setDropies((old) => old.filter((dropy) => dropy.id !== dropyId));
     } catch (error) {
       sendAlert({
         title: 'Oh no...',
@@ -76,7 +75,7 @@ const UserDropiesScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} />
-      <GoBackHeader text="My drops" />
+      <GoBackHeader text='My drops' />
       {loading ? (
         <View style={{ height: responsiveHeight(80), ...Styles.center }}>
           <LoadingSpinner />
@@ -113,7 +112,7 @@ const UserDropiesScreen = ({ navigation }) => {
                     </Text>
                   </View>
                   <TouchableOpacity onPress={() => deleteDropy(dropy.id)}>
-                    <Feather name="trash-2" size={24} color={Colors.red} />
+                    <Feather name='trash-2' size={24} color={Colors.red} />
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>

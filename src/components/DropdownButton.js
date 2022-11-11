@@ -6,20 +6,15 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const DropDownButton = ({
   buttonColor = Colors.grey,
-  options = [
-    { text: 'Option 1', destructive: false },
-    { text: 'Option 2', destructive: false },
-    { text: 'Destructive option', destructive: true }
-  ],
+  options = [{ text: 'Option 1', destructive: false }, { text: 'Option 2', destructive: false }, { text: 'Destructive option', destructive: true }],
   onSelect = () => {},
 }) => {
-
   const animatedVaue = useRef(new Animated.Value(0)).current;
 
   const [isOpen, setIsOpen] = useState(false);
   const [renderMenu, setRenderMenu] = useState(false);
 
-  const _onSelect = (index) => {
+  const handlePress = (index) => {
     onSelect(index);
     setIsOpen(false);
   };
@@ -32,7 +27,8 @@ const DropDownButton = ({
       useNativeDriver: true,
     });
     anim.start(({ finished }) => {
-      if(!finished) return;
+      if (!finished)
+        return;
       setRenderMenu(isOpen);
     });
     return anim.stop;
@@ -55,13 +51,13 @@ const DropDownButton = ({
         </Animated.View>
       )}
       <TouchableOpacity onPress={() => setIsOpen(true)}>
-        <Feather name="more-horizontal" size={30} color={buttonColor} />
+        <Feather name='more-horizontal' size={30} color={buttonColor} />
       </TouchableOpacity>
       {renderMenu && (
         <Animated.View style={{ ...styles.menuContainer, opacity: animatedVaue, transform: [{ scale: animatedScale }] }}>
           {options.map((option, index) => (
             <React.Fragment key={index}>
-              <TouchableOpacity onPress={() => _onSelect(index)} style={styles.menuOptionButton}>
+              <TouchableOpacity onPress={() => handlePress(index)} style={styles.menuOptionButton}>
                 <Text style={{
                   ...Fonts.regular(15, option?.destructive === true ? Colors.red : Colors.darkGrey), marginHorizontal: 15,
                 }}>

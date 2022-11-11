@@ -1,7 +1,7 @@
-/*
-Philosophy of Operation
-https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philosophy-of-Operation
-*/
+//
+// Philosophy of Operation
+// https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philosophy-of-Operation
+//
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -31,14 +31,13 @@ const BackgroundGolocationProvider = ({ children }) => {
     const activityChangeSubscriber = BackgroundGeolocation.onActivityChange(() => {});
 
     const authorizationChangeSubscriber = BackgroundGeolocation.onAuthorization((event) => {
-      if (event.success) {
+      if (event.success)
         console.log('[authorization] SUCCESS: ', event.response);
-      } else {
+      else
         console.error('[authorization] ERROR: ', event.error);
-      }
     });
 
-    initializeBackgroundGeolocation().catch(error => {
+    initializeBackgroundGeolocation().catch((error) => {
       console.error('Background geolocation loading error', error);
     });
 
@@ -51,27 +50,26 @@ const BackgroundGolocationProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    if(!initialized) {
+    if (!initialized)
       return;
-    }
+
 
     log(`Background geolocation ${backgroundGeolocationEnabled ? 'enabled' : 'disabled'}`);
 
-    if (backgroundGeolocationEnabled) {
+    if (backgroundGeolocationEnabled)
       BackgroundGeolocation.start();
-    } else {
+    else
       BackgroundGeolocation.stop();
-    }
   }, [backgroundGeolocationEnabled]);
 
   const initializeBackgroundGeolocation = async () => {
-    if(initialized === true) {
+    if (initialized === true)
       return;
-    }
+
 
     const authTokens = await Storage.getItem('@auth_tokens');
 
-    if(authTokens == null) {
+    if (authTokens == null) {
       log('Could not initialize : no auth tokens');
       return;
     }
@@ -86,7 +84,7 @@ const BackgroundGolocationProvider = ({ children }) => {
   const setupBackgroundGeolocation = async (authTokens) => {
     const { accessToken, refreshToken, expires } = authTokens;
 
-    return await BackgroundGeolocation.ready({
+    const backgroundGeolocationReady = await BackgroundGeolocation.ready({
       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
       distanceFilter: 10,
 
@@ -109,11 +107,12 @@ const BackgroundGolocationProvider = ({ children }) => {
         },
       },
     });
+    return backgroundGeolocationReady;
   };
 
   const setBackgroundGeolocationEnabled = async (enabled = false) => {
     try {
-      if(enabled) {
+      if (enabled) {
         await BackgroundGeolocation.requestPermission();
         await initializeBackgroundGeolocation();
       }

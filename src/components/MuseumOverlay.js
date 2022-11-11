@@ -23,7 +23,6 @@ import LoadingSpinner from './LoadingSpinner';
 import ProfileImage from './ProfileImage';
 
 const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDropies }) => {
-
   const [render, setRender] = useState(false);
   const { sendAlert } = useOverlay();
   const { openChat } = useConversationsSocket();
@@ -44,7 +43,7 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
     });
 
     anim.start(({ finished }) => {
-      if(finished)
+      if (finished)
         setRender(visible);
     });
 
@@ -52,7 +51,8 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
   }, [visible]);
 
   useEffect(() => {
-    if(!visible) return;
+    if (!visible)
+      return;
     loadDropies();
   }, [visible]);
 
@@ -81,7 +81,8 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
     setSelectedDropyIndex(clampedIndex);
   };
 
-  if(!render) return null;
+  if (!render)
+    return null;
 
   return (
     <Animated.View style={{
@@ -93,7 +94,7 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1.5 }}
         style={StyleSheet.absoluteFillObject}
-        pointerEvents="none"
+        pointerEvents='none'
       />
 
       {loading ? (
@@ -105,7 +106,7 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
           {dropies.length === 0 ? (
             <View style={styles.loadingContainer}>
               <Ionicons
-                name="md-bookmark-outline"
+                name='md-bookmark-outline'
                 size={30}
                 color={Colors.white}
               />
@@ -119,7 +120,7 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
               contentContainerStyle={styles.scrollViewContentContainer}
               horizontal={true}
               snapToInterval={responsiveWidth(80) + 20}
-              decelerationRate="fast"
+              decelerationRate='fast'
               showsHorizontalScrollIndicator={false}
               scrollEventThrottle={20}
               onScroll={onScroll}
@@ -139,7 +140,7 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
 
                       <TouchableOpacity onPress={() => openChat(dropy.conversationId)}>
                         <Ionicons
-                          name="md-chatbubble-outline"
+                          name='md-chatbubble-outline'
                           size={30}
                           color={Colors.grey}
                           style={styles.icons}

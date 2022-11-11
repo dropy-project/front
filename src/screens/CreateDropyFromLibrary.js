@@ -7,7 +7,6 @@ import { compressImage } from '../utils/files';
 import MEDIA_TYPES from '../utils/mediaTypes';
 
 const CreateDropyFromLibrary = ({ navigation }) => {
-
   const { sendAlert } = useOverlay();
 
   useEffect(() => {
@@ -31,18 +30,16 @@ const CreateDropyFromLibrary = ({ navigation }) => {
           originRoute: 'CreateDropyFromLibrary',
         },
       });
-
     } catch (error) {
-      if(error.code === 'E_NO_LIBRARY_PERMISSION') {
+      if (error.code === 'E_NO_LIBRARY_PERMISSION') {
         const alertResult = await sendAlert({
           title: 'LIbrary access not granted...',
           description: 'Enable access in your settings',
           validateText: 'Open settings',
           denyText: 'Ok !',
         });
-        if(alertResult) {
+        if (alertResult)
           Linking.openSettings();
-        }
       }
       console.error('Open image library error', error);
       navigation.goBack();

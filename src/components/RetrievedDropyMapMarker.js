@@ -1,27 +1,24 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import Styles, { Colors } from '../styles/Styles';
 import DropyMediaViewer from './DropyMediaViewer';
 
-const RetrievedDropyMapMarker = ({ dropy, onPress }) => {
-
-  return (
-    <Marker
-      coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
-      onPress={onPress}
-      tracksViewChanges={true}
-    >
-      <View style={styles.container}>
-        <View style={styles.visibleContainer}>
-          <View style={styles.mediaContainer}>
-            <DropyMediaViewer dropy={dropy} />
-          </View>
+const RetrievedDropyMapMarker = ({ dropy, onPress }) => (
+  <Marker
+    coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
+    onPress={onPress}
+    tracksViewChanges={true}
+  >
+    <View style={styles.container}>
+      <View style={styles.visibleContainer}>
+        <View style={styles.mediaContainer}>
+          <DropyMediaViewer dropy={dropy} />
         </View>
       </View>
-    </Marker>
-  );
-};
+    </View>
+  </Marker>
+);
 
 // eslint-disable-next-line react/display-name
 export default RetrievedDropyMapMarker;

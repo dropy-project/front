@@ -11,7 +11,6 @@ import { extractNotificationPayload } from '../states/NotificationProvider';
 import Storage from '../utils/storage';
 
 const Splash = ({ navigation, route }) => {
-
   const { cancelAutoLogin = false } = route.params ?? {};
 
   const { setUser, user } = useCurrentUser();
@@ -23,9 +22,8 @@ const Splash = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    if (user != null && !cancelAutoLogin) {
+    if (user != null && !cancelAutoLogin)
       handleLoginSuccess();
-    }
   }, [user]);
 
   const navigateToOnboarding = () => navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
@@ -34,11 +32,11 @@ const Splash = ({ navigation, route }) => {
     const ready = await appIsReady();
     console.log(`Splash launch : app is ready -> ${ready}`);
 
-    if (!ready) {
+    if (!ready)
       return;
-    }
 
-    if(cancelAutoLogin) {
+
+    if (cancelAutoLogin) {
       console.log('Splash launch : auto login cancelled');
       setUser(null);
       navigateToOnboarding();
@@ -47,7 +45,7 @@ const Splash = ({ navigation, route }) => {
 
     try {
       const userInfos = await autoLogin();
-      if(userInfos == null) {
+      if (userInfos == null) {
         console.log('Splash launch : auto login failed');
         navigateToOnboarding();
       } else {
@@ -64,7 +62,7 @@ const Splash = ({ navigation, route }) => {
     try {
       const isCompatibleWithServer = await API.serverVersionIsCompatible();
 
-      if(!isCompatibleWithServer) {
+      if (!isCompatibleWithServer) {
         sendAlert({
           title: 'Server version is not compatible',
           description: 'Please update the app to the latest version',
@@ -82,13 +80,13 @@ const Splash = ({ navigation, route }) => {
 
   const autoLogin = async () => {
     const userTokenData = await Storage.getItem('@auth_tokens');
-    if(userTokenData == null) {
+    if (userTokenData == null)
       return null;
-    }
 
-    if (userTokenData.expires < Date.now()) {
+
+    if (userTokenData.expires < Date.now())
       await API.refreshToken(userTokenData.refreshToken);
-    }
+
 
     const response = await API.getUserProfile();
     return response.data;
@@ -103,15 +101,10 @@ const Splash = ({ navigation, route }) => {
       console.log('Login success with notification payload', payload);
       navigation.reset({
         index: 2,
-        routes: [
-          { name: 'Home' },
-          { name: 'Conversations' },
-          { name: 'Chat', params: { conversation: payload } }
-        ],
+        routes: [{ name: 'Home' }, { name: 'Conversations' }, { name: 'Chat', params: { conversation: payload } }],
       });
-    } else {
+    } else
       navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
-    }
   };
 
   return null;

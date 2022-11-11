@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Animated } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 
 function random(min = 0, max = 100) {
   const difference = max - min;
@@ -26,7 +26,7 @@ const ParticleEmitter = ({
     };
   }, []);
 
-  const onLayout = e => {
+  const onLayout = (e) => {
     const { width, height } = e.nativeEvent.layout;
     const particlesArray = initAnimatedValues(width, height);
     startAllValues(particlesArray);
@@ -35,7 +35,7 @@ const ParticleEmitter = ({
 
   const initAnimatedValues = (width, height) => {
     const particlesArray = [];
-    for (let i = 0; i < particlesCount; i++) {
+    for (let i = 0;i < particlesCount;i++) {
       particlesArray.push({
         id: i,
         animatedValue: new Animated.Value(1),
@@ -47,8 +47,8 @@ const ParticleEmitter = ({
     return particlesArray;
   };
 
-  const startAllValues = particlesArray => {
-    particlesArray.map(particle => {
+  const startAllValues = (particlesArray) => {
+    particlesArray.map((particle) => {
       const loop = Animated.loop(
         Animated.sequence([
           Animated.timing(particle.animatedValue, {
@@ -75,14 +75,14 @@ const ParticleEmitter = ({
   };
 
   const stopAllValues = () => {
-    particles?.forEach(particle => {
+    particles?.forEach((particle) => {
       particle?.animatedValue?.stop();
     });
   };
 
   return (
     <Animated.View onLayout={onLayout} style={{ ...StyleSheet.absoluteFillObject }}>
-      {particles.map(particle => (
+      {particles.map((particle) => (
         <Animated.View
           key={particle.id}
           style={{
@@ -90,11 +90,7 @@ const ParticleEmitter = ({
             top: particle.y,
             left: particle.x,
             backgroundColor: particlesColor,
-            transform: [
-              { scale: particle.animatedValue },
-              { translateX: Animated.multiply(particle.animatedValue, 10) },
-              { translateY: Animated.multiply(particle.animatedValue, -10) }
-            ],
+            transform: [{ scale: particle.animatedValue }, { translateX: Animated.multiply(particle.animatedValue, 10) }, { translateY: Animated.multiply(particle.animatedValue, -10) }],
             opacity: particle.animatedValue,
           }}
         />

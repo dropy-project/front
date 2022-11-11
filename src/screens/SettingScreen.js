@@ -21,14 +21,13 @@ import FormToggle from '../components/FormToggle';
 import API from '../services/API';
 
 const SettingsScreen = ({ navigation }) => {
-
   const { setDeveloperMode } = useCurrentUser();
 
   const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader text="Settings" />
+      <GoBackHeader text='Settings' />
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
 
@@ -51,26 +50,26 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.titleText}>Notifications</Text>
-        <FormToggle disabled title="Remind me to drop something daily" />
-        <FormToggle disabled title="When one of my drop is collected" />
-        <FormToggle disabled title="When a new feature is available" />
+        <FormToggle disabled title='Remind me to drop something daily' />
+        <FormToggle disabled title='When one of my drop is collected' />
+        <FormToggle disabled title='When a new feature is available' />
 
         <Text style={styles.titleText}>Others</Text>
-        <FormToggle disabled title="Vibrations" />
-        <FormToggle disabled title="Show my connection status" />
+        <FormToggle disabled title='Vibrations' />
+        <FormToggle disabled title='Show my connection status' />
 
         <View style={styles.spacer} />
 
         <TouchableOpacity style={{ ...styles.navigateContainer, marginTop: 10 }} onPress={() => navigation.navigate('UserDropies')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>My drops</Text>
           <View style={styles.navigateArrow}>
-            <AntDesign name="arrowright" size={24} color={Colors.white} />
+            <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navigateContainer} onPress={() => navigation.navigate('BlockedUsers')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Blocked users</Text>
           <View style={styles.navigateArrow}>
-            <AntDesign name="arrowright" size={24} color={Colors.white} />
+            <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
 
@@ -78,19 +77,19 @@ const SettingsScreen = ({ navigation }) => {
 
         <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/help')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Help</Text>
-          <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+          <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/about')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>About</Text>
-          <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+          <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/privacy-policy.html')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Privacy Policy</Text>
-          <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+          <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/terms-conditions.html')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Terms & Conditions</Text>
-          <AntDesign name="arrowright" size={24} color={Colors.darkGrey} />
+          <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
 
         <View style={styles.spacer} />
@@ -99,10 +98,12 @@ const SettingsScreen = ({ navigation }) => {
           style={{ ...styles.linkContainer, ...Styles.center }}
           onPress={async () => {
             await API.logout();
-            navigation.reset({ index: 0, routes: [{
-              name: 'Splash',
-              params: { cancelAutoLogin: true } }
-            ] });
+            navigation.reset({ index: 0,
+              routes: [
+                {
+                  name: 'Splash',
+                  params: { cancelAutoLogin: true } }
+              ] });
           }}
         >
           <Text style={{ ...Fonts.bold(12, Colors.red) }}>Logout</Text>
@@ -110,21 +111,21 @@ const SettingsScreen = ({ navigation }) => {
 
         <View style={styles.spacer} />
 
-        <TouchableOpacity onLongPress={() => setDeveloperMode(old => !old)} activeOpacity={1}>
+        <TouchableOpacity onLongPress={() => setDeveloperMode((old) => !old)} activeOpacity={1}>
           <View style={styles.infoTextContainer}>
-            <Ionicons name="git-branch" size={19} color={Colors.darkGrey} />
+            <Ionicons name='git-branch' size={19} color={Colors.darkGrey} />
             <Text style={styles.infoText}>
               {AppInfo.version}
             </Text>
           </View>
           <View style={styles.infoTextContainer}>
-            <Feather name="flag" size={17} color={Colors.darkGrey} />
+            <Feather name='flag' size={17} color={Colors.darkGrey} />
             <Text style={styles.infoText}>
               {AppInfo.versionFlag}
             </Text>
           </View>
           <View style={styles.infoTextContainer}>
-            <Feather name="server" size={17} color={Colors.darkGrey} />
+            <Feather name='server' size={17} color={Colors.darkGrey} />
             <Text style={styles.infoText}>
               {AppInfo.productionMode ? 'prod' : 'preprod'}
             </Text>
@@ -138,7 +139,6 @@ const SettingsScreen = ({ navigation }) => {
 };
 
 export default SettingsScreen;
-
 
 
 const styles = StyleSheet.create({

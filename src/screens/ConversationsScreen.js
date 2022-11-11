@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, SafeAreaView, Text, View, FlatList } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import ConversationItem from '../components/ConversationItem';
 import FadeInWrapper from '../components/FadeInWrapper';
@@ -10,7 +10,6 @@ import useOverlay from '../hooks/useOverlay';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const ConversationsScreen = ({ navigation }) => {
-
   const { sendAlert } = useOverlay();
 
   const {
@@ -32,7 +31,7 @@ const ConversationsScreen = ({ navigation }) => {
       validateText: 'delete',
     });
 
-    if(confirmed === true) {
+    if (confirmed === true) {
       const result = await closeConversation(conversation.id);
       console.log('Conversation closed', result);
     }

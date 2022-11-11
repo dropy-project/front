@@ -5,8 +5,6 @@ import { checkNotifications } from 'react-native-permissions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 const DisabledNotificationsPopup = () => {
-
-
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -15,13 +13,14 @@ const DisabledNotificationsPopup = () => {
     });
   }, []);
 
-  if(!visible) return null;
+  if (!visible)
+    return null;
 
   return (
     <TouchableOpacity onPress={Linking.openSettings} style={{ ...styles.container }}>
       <Text style={{ ...Fonts.regular(12, Colors.white) }}>Notifications are disabled</Text>
       <TouchableOpacity onPress={() => setVisible(false)} hitSlop={{ bottom: 10, left: 20, right: 10, top: 10 }}>
-        <AntDesign name="close" size={17} color={Colors.white} />
+        <AntDesign name='close' size={17} color={Colors.white} />
       </TouchableOpacity>
     </TouchableOpacity>
   );

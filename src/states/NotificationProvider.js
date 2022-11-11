@@ -12,19 +12,19 @@ import Notification from '../components/Notification';
 import useConversationsSocket from '../hooks/useConversationsSocket';
 
 export const extractNotificationPayload = (notification) => {
-  if(Platform.OS === 'android') {
+  if (Platform.OS === 'android') {
     const payload = notification?.payload['gcm.notification.click_action'];
-    if(payload == null) return null;
-    return JSON.parse(payload);
-  } else {
-    const payload = notification?.payload?.aps?.category;
-    if(payload == null) return null;
+    if (payload == null)
+      return null;
     return JSON.parse(payload);
   }
+  const payload = notification?.payload?.aps?.category;
+  if (payload == null)
+    return null;
+  return JSON.parse(payload);
 };
 
 const NotificationProvider = ({ children }) => {
-
   const { user } = useCurrentUser();
   const navigation = useNavigation();
 
@@ -36,15 +36,16 @@ const NotificationProvider = ({ children }) => {
   const { conversations } = useConversationsSocket();
 
   useEffectForegroundOnly(() => {
-    if(user == null) return;
-    if(initialized) return;
+    if (user == null)
+      return;
+    if (initialized)
+      return;
     setInitialized(true);
     setupNotifications();
     sendDeviceToken();
   }, [user]);
 
   const setupNotifications = () => {
-
     Notifications.registerRemoteNotifications();
 
     const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
@@ -56,7 +57,8 @@ const NotificationProvider = ({ children }) => {
       completion({ alert: false, sound: false, badge: false });
 
       const payload = extractNotificationPayload(notification);
-      if(payload == null) return;
+      if (payload == null)
+        return;
 
       setNotificationData({
         title: notification.title,
@@ -70,7 +72,8 @@ const NotificationProvider = ({ children }) => {
       completion();
 
       const payload = extractNotificationPayload(notification);
-      if(payload == null) return;
+      if (payload == null)
+        return;
 
       setPendingConversationToOpen(payload);
     });
@@ -85,22 +88,19 @@ const NotificationProvider = ({ children }) => {
   };
 
   useEffectForegroundOnly(() => {
-    if(conversations == null) return;
-    if(pendingConversationToOpen != null) {
+    if (conversations == null)
+      return;
+    if (pendingConversationToOpen != null) {
       openConversation(pendingConversationToOpen);
       setPendingConversationToOpen(null);
     }
   }, [pendingConversationToOpen, conversations]);
 
   const openConversation = (conversationId) => {
-    const conversation = conversations.find(c => c.id === conversationId);
+    const conversation = conversations.find((c) => c.id === conversationId);
     navigation.reset({
       index: 2,
-      routes: [
-        { name: 'Home' },
-        { name: 'Conversations' },
-        { name: 'Chat', params: { conversation } }
-      ],
+      routes: [{ name: 'Home' }, { name: 'Conversations' }, { name: 'Chat', params: { conversation } }],
     });
   };
 

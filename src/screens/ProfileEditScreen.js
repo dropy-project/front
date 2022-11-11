@@ -28,7 +28,6 @@ import { compressImage } from '../utils/files';
 import { PRONOUNS } from '../utils/profiles';
 
 const ProfileEditScreen = () => {
-
   const navigation = useNavigation();
 
   const { sendAlert } = useOverlay();
@@ -51,13 +50,12 @@ const ProfileEditScreen = () => {
       destructiveButtonIndex: 2,
       title: 'Where do you want to get your picture from?',
     }, (buttonIndex) => {
-      if (buttonIndex === 0) {
+      if (buttonIndex === 0)
         updateProfilePictureFromCamera();
-      } else if (buttonIndex === 1) {
+      else if (buttonIndex === 1)
         updateProfilePictureFromLibrary();
-      } else if (buttonIndex === 2) {
+      else if (buttonIndex === 2)
         deleteProfilePicture();
-      }
     });
   };
 
@@ -72,16 +70,15 @@ const ProfileEditScreen = () => {
 
       processPickerResponseUpload(image);
     } catch (error) {
-      if(error.code === 'E_NO_LIBRARY_PERMISSION') {
+      if (error.code === 'E_NO_LIBRARY_PERMISSION') {
         const alertResult = await sendAlert({
           title: 'LIbrary access not granted...',
           description: 'Enable access in your settings',
           validateText: 'Open settings',
           denyText: 'Ok !',
         });
-        if(alertResult) {
+        if (alertResult)
           Linking.openSettings();
-        }
       }
       console.error('Open camera error', error);
     }
@@ -97,16 +94,15 @@ const ProfileEditScreen = () => {
       });
       processPickerResponseUpload(image);
     } catch (error) {
-      if(error.code === 'E_NO_CAMERA_PERMISSION') {
+      if (error.code === 'E_NO_CAMERA_PERMISSION') {
         const alertResult = await sendAlert({
           title: 'Camera not granted...',
           description: 'Enable camera access in your settings',
           validateText: 'Open settings',
           denyText: 'Ok !',
         });
-        if(alertResult) {
+        if (alertResult)
           Linking.openSettings();
-        }
       }
       console.error('Open camera error', error);
     }
@@ -155,14 +151,15 @@ const ProfileEditScreen = () => {
       Keyboard.dismiss();
 
       let valid = true;
-      if(!displayNameInputRef.current.isValid()) {
+      if (!displayNameInputRef.current.isValid())
         valid = false;
-      }
-      if(!aboutInputRef.current.isValid()) {
-        valid = false;
-      }
 
-      if(!valid) return;
+      if (!aboutInputRef.current.isValid())
+        valid = false;
+
+
+      if (!valid)
+        return;
 
       const displayName = displayNameInputRef.current?.getValue();
       const about = aboutInputRef.current?.getValue();
@@ -198,18 +195,17 @@ const ProfileEditScreen = () => {
       denyText: 'Go back',
     });
 
-    if (result) {
+    if (result)
       await updateProfile();
-    } else {
+    else
       navigation.goBack();
-    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle='dark-content' />
 
-      <GoBackHeader onPressGoBack={handleGoBack} text="Profile">
+      <GoBackHeader onPressGoBack={handleGoBack} text='Profile'>
         <View style={{ width: 40 }}>
           {infosUploading ? (
             <LoadingSpinner color={Colors.mainBlue} size={20} />
@@ -234,14 +230,14 @@ const ProfileEditScreen = () => {
           {pictureUploading ? (
             <LoadingSpinner color={Colors.white} size={30} />
           ) : (
-            <Feather name="edit-2" size={30} color={Colors.white} />
+            <Feather name='edit-2' size={30} color={Colors.white} />
           )}
         </TouchableOpacity>
 
         <FormInput
           ref={displayNameInputRef}
           onEdited={() => setEdited(true)}
-          title="Name"
+          title='Name'
           defaultValue={user.displayName}
           placeholder="What's your name?"
           maxLength={25}
@@ -251,9 +247,9 @@ const ProfileEditScreen = () => {
         <FormInput
           ref={aboutInputRef}
           onEdited={() => setEdited(true)}
-          title="About"
+          title='About'
           defaultValue={user.about}
-          placeholder="What makes you special?"
+          placeholder='What makes you special?'
           multiline
           maxLength={250}
           inputStyle={{ minHeight: 100 }}
@@ -262,7 +258,7 @@ const ProfileEditScreen = () => {
         <FormSelect
           ref={pronounsRef}
           defaultIndex={Object.keys(PRONOUNS).indexOf(user.pronouns)}
-          title="Pronouns"
+          title='Pronouns'
           onEdited={(edited) => edited && setEdited(true)}
           options={Object.values(PRONOUNS)}
         />

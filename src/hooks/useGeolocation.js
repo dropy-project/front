@@ -13,9 +13,8 @@ export const useInitializedGeolocation = () => {
 
   useEffect(() => {
     const isZero = userCoordinates?.latitude === 0 && userCoordinates?.longitude === 0;
-    if(userCoordinates != null && isZero === false) {
+    if (userCoordinates != null && isZero === false)
       setInitialized(true);
-    }
   }, [userCoordinates]);
 
   return { userCoordinates, compassHeading, initialized };

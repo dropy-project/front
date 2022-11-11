@@ -7,9 +7,10 @@ const useUnreadConversation = () => {
   const { conversations } = useConversationsSocket();
 
   useEffect(() => {
-    if (conversations == null) return;
+    if (conversations == null)
+      return;
 
-    const unreadConversation = conversations.some(conversation => conversation.unreadMessagesCount > 0);
+    const unreadConversation = conversations.some((conversation) => conversation.unreadMessagesCount > 0);
     setUnreadConversation(unreadConversation);
   }, [conversations]);
 

@@ -6,16 +6,15 @@ import Haptics from '../utils/haptics';
 export const OverlayContext = createContext(null);
 
 const OverlayContextProvider = ({ children }) => {
-
   const [showAlertModal, setShowAlertModal] = useState(null);
   const [showBottomAlert, setShowBottomAlert] = useState(null);
 
   const sendAlert = ({ title, description, denyText, validateText = 'Ok' }) => {
-    if(title == null) {
+    if (title == null) {
       console.warn('sendAlert: title is required');
       return;
     }
-    if(description == null) {
+    if (description == null) {
       console.warn('sendAlert: description is required');
       return;
     }
@@ -39,11 +38,11 @@ const OverlayContextProvider = ({ children }) => {
   };
 
   const sendBottomAlert = ({ title, description }) => {
-    if(title == null) {
+    if (title == null) {
       console.warn('sendBottomAlert: title is required');
       return;
     }
-    if(description == null) {
+    if (description == null) {
       console.warn('sendBottomAlert: description is required');
       return;
     }

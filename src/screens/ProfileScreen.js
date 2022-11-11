@@ -10,7 +10,6 @@ import { Colors, Fonts } from '../styles/Styles';
 import { sinceDayMonth } from '../utils/time';
 
 const ProfileScreen = ({ route, navigation }) => {
-
   const { userId: externalUserId, conversation = null } = route.params ?? { userId: null, conversation: null };
 
   const { user, setUser } = useCurrentUser();
@@ -23,14 +22,13 @@ const ProfileScreen = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    if(externalUserId == null) {
+    if (externalUserId == null)
       setDisplayedUser(user);
-    }
   }, [user]);
 
   const fetchProfile = async () => {
     try {
-      if(externalUserId != null) {
+      if (externalUserId != null) {
         const response = await API.getProfile(externalUserId);
         setDisplayedUser(response.data);
       } else if (user != null) {
@@ -53,7 +51,7 @@ const ProfileScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle='light-content' />
       <Animated.ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={styles.scrollViewContent}
@@ -62,7 +60,7 @@ const ProfileScreen = ({ route, navigation }) => {
           [{ nativeEvent: { contentOffset: { y: scrollAnimValue } } }],
           { useNativeDriver: true })
         }
-        indicatorStyle="black"
+        indicatorStyle='black'
       >
         <View style={styles.infoContainer}>
           <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>About</Text>

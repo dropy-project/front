@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  StatusBar,
-  TouchableOpacity,
+  Animated,
   SafeAreaView,
+  StatusBar,
+  StyleSheet,
   Text,
-  Animated
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -25,7 +25,6 @@ import Haptics from '../utils/haptics';
 const BACKGROUND_GEOLOC_ICON_OPENED_SIZE = 40;
 
 const HomeScreen = ({ navigation, route }) => {
-
   const { dropyCreateParams = null } = route.params || {};
 
   const backgroundGeolocIconAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -46,22 +45,20 @@ const HomeScreen = ({ navigation, route }) => {
   }, [backgroundGeolocationEnabled]);
 
   useEffect(() => {
-    if(dropyCreateParams != null) {
+    if (dropyCreateParams != null)
       setConfirmDropOverlayVisible(true);
-    }
   }, [dropyCreateParams]);
 
   useEffect(() => {
-    if(!museumOverlayVisible) {
+    if (!museumOverlayVisible) {
       setSelectedDropyIndex(null);
       setRetrievedDropies(null);
     }
   }, [museumOverlayVisible]);
 
   useEffect(() => {
-    if(selectedDropyIndex != null) {
+    if (selectedDropyIndex != null)
       Haptics.impactLight();
-    }
   }, [selectedDropyIndex]);
 
   const closeConfirmDropOverlay = () => {
@@ -70,7 +67,8 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if(shouldAnimateBackgroundGeolocIcon.current === false) return;
+      if (shouldAnimateBackgroundGeolocIcon.current === false)
+        return;
       shouldAnimateBackgroundGeolocIcon.current = false;
 
 
@@ -126,7 +124,7 @@ const HomeScreen = ({ navigation, route }) => {
               width: iconMinWidth,
             }}>
               <View style={styles.backgroundGeolocIconInnerContainer}>
-                <FontAwesome5 name="satellite-dish" size={BACKGROUND_GEOLOC_ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
+                <FontAwesome5 name='satellite-dish' size={BACKGROUND_GEOLOC_ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
                 <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
                 Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
                 </Text>

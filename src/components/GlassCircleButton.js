@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Svg1 from '../assets/svgs/add_drop_1.svg';
 import Svg2 from '../assets/svgs/add_drop_2.svg';
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     shadowColor: Colors.purple1,
   },
   svg: {
-    position:'absolute',
+    position: 'absolute',
     ...Styles.softShadows,
     shadowColor: Colors.purple1,
     shadowOpacity: 0.2,

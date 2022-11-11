@@ -26,14 +26,14 @@ const GoBackHeader = ({
       </TouchableOpacity>
       <Text style={{ ...styles.tipsStyle, ...textStyle, color }}>{text}</Text>
 
-      {onPressOptions != null ? (
-        <TouchableOpacity onPress={onPressOptions}>
-          <Feather name="more-horizontal" size={30} color={Colors.white} />
-        </TouchableOpacity>
-      ) : (
+      {onPressOptions == null ? (
         <>
           {children ? children : <View style={styles.button} />}
         </>
+      ) : (
+        <TouchableOpacity onPress={onPressOptions}>
+          <Feather name='more-horizontal' size={30} color={Colors.white} />
+        </TouchableOpacity>
       )}
     </View>
   );

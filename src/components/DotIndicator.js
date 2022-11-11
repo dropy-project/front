@@ -2,20 +2,18 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors, Fonts } from '../styles/Styles';
 
-export const DotIndicator = ({ currentIndex, isSkippable = false, onPressSkip }) => {
-  return (
-    <View style={styles.indicatorContainer}>
-      {[...new Array(6)].map((_, i) => (
-        <View key={i} style={{ ...styles.dot, backgroundColor: currentIndex  - 1 === i ? Colors.grey : Colors.lightGrey }} />
-      ))}
-      {isSkippable && (
-        <TouchableOpacity style={styles.skipBtn} onPress={onPressSkip}>
-          <Text style={styles.skipText}>skip</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-};
+export const DotIndicator = ({ currentIndex, isSkippable = false, onPressSkip }) => (
+  <View style={styles.indicatorContainer}>
+    {[...new Array(6)].map((_, i) => (
+      <View key={i} style={{ ...styles.dot, backgroundColor: currentIndex - 1 === i ? Colors.grey : Colors.lightGrey }} />
+    ))}
+    {isSkippable && (
+      <TouchableOpacity style={styles.skipBtn} onPress={onPressSkip}>
+        <Text style={styles.skipText}>skip</Text>
+      </TouchableOpacity>
+    )}
+  </View>
+);
 
 const styles = StyleSheet.create({
   indicatorContainer: {
@@ -25,7 +23,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     position: 'absolute',
     bottom: 0,
-    alignSelf: 'center' ,
+    alignSelf: 'center',
     width: '100%',
   },
   dot: {

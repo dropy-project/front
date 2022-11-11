@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Platform, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 
-import  {  PROVIDER_GOOGLE } from 'react-native-maps';
+import { PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
@@ -31,7 +31,6 @@ const DropyMap = ({
   selectedDropyIndex = null,
   retrievedDropies = null,
 }) => {
-
   const navigation = useNavigation();
 
   const { sendBottomAlert, sendAlert } = useOverlay();
@@ -51,15 +50,18 @@ const DropyMap = ({
 
   const handleDropyPressed = async (dropy) => {
     try {
-      if(dropy == null) return;
-      if (userCoordinates == null) return;
-      if (dropy?.isUserDropy) return;
+      if (dropy == null)
+        return;
+      if (userCoordinates == null)
+        return;
+      if (dropy?.isUserDropy)
+        return;
 
       Haptics.impactHeavy();
 
       const result = await retrieveDropy(dropy.id);
-      if(result.error != null) {
-        if(result.status === 406) {
+      if (result.error != null) {
+        if (result.status === 406) {
           await sendAlert({
             title: 'You don\'t have enough energy to retrieve this dropy',
             description: 'Maybe drop something yourself to get some energy back?',
@@ -73,13 +75,12 @@ const DropyMap = ({
       navigation.navigate('GetDropy', { dropy: result.data.dropy });
 
       setTimeout(() => {
-        setUser(oldUser => ({
+        setUser((oldUser) => ({
           ...oldUser,
           energy: result.data.energy,
           lastEnergyIncrement: result.data.energy - user.energy,
         }));
       }, 500);
-
     } catch (error) {
       console.error('Dropy pressed error', error);
       sendBottomAlert({
@@ -90,19 +91,29 @@ const DropyMap = ({
   };
 
   useEffect(() => {
-    if(mapIsReady === false) return;
-    if(osMap?.current?.getMapRef()?.getCamera() == null) return;
-    if (userCoordinates == null) return;
+    if (mapIsReady === false)
+      return;
+    if (osMap?.current?.getMapRef()?.getCamera() == null)
+      return;
+    if (userCoordinates == null)
+      return;
 
     setMapCameraPosition();
-  }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies]);
+  }, [
+    userCoordinates,
+    compassHeading,
+    mapIsReady,
+    selectedDropyIndex,
+    retrievedDropies
+  ]);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
     const currentCamera = await osMap.current?.getMapRef()?.getCamera();
-    if (currentCamera == null) return;
+    if (currentCamera == null)
+      return;
 
     let position = userCoordinates;
-    if(retrievedDropies != null && selectedDropyIndex != null && retrievedDropies[selectedDropyIndex] != null) {
+    if (retrievedDropies != null && selectedDropyIndex != null && retrievedDropies[selectedDropyIndex] != null) {
       position = {
         latitude: retrievedDropies[selectedDropyIndex].latitude,
         longitude: retrievedDropies[selectedDropyIndex].longitude,
@@ -131,9 +142,10 @@ const DropyMap = ({
 
   const forceCameraToLockHeading = () => setMapCameraPosition(true);
 
-  const toggleHeadingLock = () => setHeadingLocked(locked => {
+  const toggleHeadingLock = () => setHeadingLocked((locked) => {
     const newLockedValue = !locked;
-    if(newLockedValue) forceCameraToLockHeading();
+    if (newLockedValue)
+      forceCameraToLockHeading();
     return newLockedValue;
   });
 
@@ -164,7 +176,17 @@ const DropyMap = ({
         showsPointsOfInterest={false}
         onMapLoaded={() => setMapIsReady(true)}
       >
-        {retrievedDropies != null ? (
+        {retrievedDropies == null ? (
+          <>
+            {dropiesAround.map((dropy) => (
+              <DropyMapMarker
+                key={`${dropy.id}_${dropy.reachable}`}
+                dropy={dropy}
+                onPress={() => handleDropyPressed(dropy)}
+              />
+            ))}
+          </>
+        ) : (
           <>
             {retrievedDropies[selectedDropyIndex ?? 0] != null && (
               <RetrievedDropyMapMarker
@@ -177,16 +199,6 @@ const DropyMap = ({
               />
             )}
           </>
-        ) : (
-          <>
-            {dropiesAround.map((dropy) => (
-              <DropyMapMarker
-                key={`${dropy.id}_${dropy.reachable}`}
-                dropy={dropy}
-                onPress={() => handleDropyPressed(dropy)}
-              />
-            ))}
-          </>
         )}
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </OSMapView>
@@ -196,11 +208,11 @@ const DropyMap = ({
           <AnimatedFlask />
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
             <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
-              <MaterialIcons name="my-location" size={20} color={Colors.darkGrey} />
+              <MaterialIcons name='my-location' size={20} color={Colors.darkGrey} />
             </TouchableOpacity>
           </FadeInWrapper>
           <TouchableOpacity onPress={toggleHeadingLock} style={styles.lockButton}>
-            <FontAwesome5 name="compass" size={20} color={headingLocked ? Colors.darkGrey : Colors.lightGrey} />
+            <FontAwesome5 name='compass' size={20} color={headingLocked ? Colors.darkGrey : Colors.lightGrey} />
           </TouchableOpacity>
         </FadeInWrapper>
       </SafeAreaView>

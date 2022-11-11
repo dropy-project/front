@@ -1,19 +1,19 @@
 import {
-  View,
-  Text,
-  StyleSheet,
   Animated,
-  TouchableOpacity,
-  SafeAreaView,
   Easing,
+  Image,
   Keyboard,
   Linking,
-  Image,
-  Platform
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
-import React, { useRef, useState , useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign , MaterialCommunityIcons , FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
@@ -37,7 +37,6 @@ import LoadingSpinner from '../components/LoadingSpinner';
 const DEBUG = __DEV__;
 
 export default function Onboarding({ navigation }) {
-
   const { setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
 
   const translateWavesAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -72,7 +71,7 @@ export default function Onboarding({ navigation }) {
       toValue: currentViewIndex * -responsiveWidth(100),
       duration: 600,
       useNativeDriver: true,
-      easing: Easing.bezier(.44,.23,.06,1.04),
+      easing: Easing.bezier(.44, .23, .06, 1.04),
     });
     anim.start();
     return () => anim.stop();
@@ -83,7 +82,7 @@ export default function Onboarding({ navigation }) {
       toValue: currentViewIndex === 1 ? 1 : 0,
       duration: currentViewIndex === 1 ? 600 : 200,
       useNativeDriver: true,
-      easing: currentViewIndex === 1 ? Easing.elastic(1.5) : Easing.bezier(.43,-0.59,.4,.64),
+      easing: currentViewIndex === 1 ? Easing.elastic(1.5) : Easing.bezier(.43, -0.59, .4, .64),
     });
     anim.start();
     return () => anim.stop();
@@ -95,20 +94,19 @@ export default function Onboarding({ navigation }) {
       cancelButtonIndex: 2,
       title: 'Where do you want to get your picture from?',
     } : {
-      options: ['Take a photo', 'Choose from library','Delete picture', 'Cancel'],
+      options: ['Take a photo', 'Choose from library', 'Delete picture', 'Cancel'],
       destructiveButtonIndex: 2,
       cancelButtonIndex: 3,
       title: 'Where do you want to get your picture from?',
     };
 
     showActionSheetWithOptions(options, (buttonIndex) => {
-      if (buttonIndex === 0) {
+      if (buttonIndex === 0)
         setProfilePictureFromCamera();
-      } else if (buttonIndex === 1) {
+      else if (buttonIndex === 1)
         setProfilePictureFromLibrary();
-      } else if (buttonIndex === 2) {
+      else if (buttonIndex === 2)
         setProfilePicturePath(null);
-      }
     });
   };
 
@@ -124,16 +122,15 @@ export default function Onboarding({ navigation }) {
       const filePath = await compressImage(image.path);
       setProfilePicturePath(filePath);
     } catch (error) {
-      if(error.code === 'E_NO_LIBRARY_PERMISSION') {
+      if (error.code === 'E_NO_LIBRARY_PERMISSION') {
         const alertResult = await sendAlert({
           title: 'Library access not granted...',
           description: 'Enable access in your settings',
           validateText: 'Open settings',
           denyText: 'Ok !',
         });
-        if(alertResult) {
+        if (alertResult)
           Linking.openSettings();
-        }
       }
       console.error('Open camera error', error);
     }
@@ -150,16 +147,15 @@ export default function Onboarding({ navigation }) {
       const filePath = await compressImage(image.path);
       setProfilePicturePath(filePath);
     } catch (error) {
-      if(error.code === 'E_NO_CAMERA_PERMISSION') {
+      if (error.code === 'E_NO_CAMERA_PERMISSION') {
         const alertResult = await sendAlert({
           title: 'Camera not granted...',
           description: 'Enable camera access in your settings',
           validateText: 'Open settings',
           denyText: 'Ok !',
         });
-        if(alertResult) {
+        if (alertResult)
           Linking.openSettings();
-        }
       }
       console.error('Open camera error', error);
     }
@@ -187,12 +183,11 @@ export default function Onboarding({ navigation }) {
           console.error('Error while uploading profile picture', error, userInfos);
           setUser(userInfos);
         }
-      } else {
+      } else
         setUser(userInfos);
-      }
     } catch (error) {
       setLoading(false);
-      if(error.response.status === 409) {
+      if (error.response.status === 409) {
         const validated = await sendAlert({
           title: 'This email is already registered',
           description: 'You can login instead',
@@ -215,7 +210,7 @@ export default function Onboarding({ navigation }) {
     setLoading(true);
     const emailValid = loginEmailInputRef.current?.isValid();
 
-    if(!emailValid) {
+    if (!emailValid) {
       console.log('email not valid');
       return;
     }
@@ -228,25 +223,25 @@ export default function Onboarding({ navigation }) {
       setUser(userInfos);
     } catch (error) {
       setLoading(false);
-      if(error.response.status === 404) {
+      if (error.response.status === 404) {
         sendAlert({
-          title: 'This account does not exists',
           description: 'Check your email',
+          title: 'This account does not exists',
           validateText: 'Ok',
         });
         return;
       }
-      if(error.response.status === 403) {
+      if (error.response.status === 403) {
         sendAlert({
-          title: 'Oups... invalid credentials',
           description: 'Check your email and password',
+          title: 'Oups... invalid credentials',
           validateText: 'Ok',
         });
         return;
       }
       sendAlert({
-        title: 'Oups an error has occured',
         description: 'Check your internet connection',
+        title: 'Oups an error has occured',
         validateText: 'Ok',
       });
       console.error(error.response.data);
@@ -255,7 +250,8 @@ export default function Onboarding({ navigation }) {
   };
 
   useEffect(() => {
-    if(user == null) return;
+    if (user == null)
+      return;
     console.log('Onboarding done sucessfully', user);
     navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
   }, [user]);
@@ -264,17 +260,17 @@ export default function Onboarding({ navigation }) {
     let result = null;
     setLoading(true);
 
-    if(Platform.OS === 'ios') {
+    if (Platform.OS === 'ios')
       result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    } else {
+    else
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-    }
 
-    switch(result) {
+
+    switch (result) {
       case RESULTS.UNAVAILABLE:
         await sendAlert({
-          title: 'Location not supported',
           description: 'You\'re device does not support location services',
+          title: 'Location not supported',
         });
         break;
       case RESULTS.DENIED:
@@ -286,21 +282,25 @@ export default function Onboarding({ navigation }) {
       case RESULTS.GRANTED:
         onSuccess();
         break;
+      default:
+        break;
     }
     setLoading(false);
   };
 
   const requestNotificationsPermissions = async (onSuccess = () => {}, onFailed = () => {}) => {
     setLoading(true);
-    let result = await requestNotifications(['alert', 'sound', 'badge', 'criticalAlert']);
+    const result = await requestNotifications(['alert', 'sound', 'badge', 'criticalAlert']);
 
-    switch(result.status) {
+    switch (result.status) {
       case RESULTS.DENIED:
       case RESULTS.BLOCKED:
         onFailed();
         break;
       case RESULTS.GRANTED:
         onSuccess();
+        break;
+      default:
         break;
     }
 
@@ -353,11 +353,9 @@ export default function Onboarding({ navigation }) {
         left: 0,
         width: (responsiveWidth(100)) * 8.5,
         height: responsiveWidth(55),
-        transform: [
-          { translateX: Animated.add(translateWavesAnimatedValue, -responsiveWidth(20)) }
-        ],
+        transform: [{ translateX: Animated.add(translateWavesAnimatedValue, -responsiveWidth(20)) }],
       }}>
-        <OnboardingLines preserveAspectRatio="xMinXMin slice" width={'120%'} height={'120%'} />
+        <OnboardingLines preserveAspectRatio='xMinXMin slice' width={'120%'} height={'120%'} />
       </Animated.View>
 
       <Animated.View style={{
@@ -377,14 +375,14 @@ export default function Onboarding({ navigation }) {
           <View style={{ width: '80%' }}>
             <FormInput
               ref={loginEmailInputRef}
-              placeholder="Email"
+              placeholder='Email'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               onEdited={setEmail}
               isEmail
               defaultValue={email}
             />
             <FormInput
-              placeholder="Password"
+              placeholder='Password'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               onEdited={setPassword}
@@ -394,7 +392,7 @@ export default function Onboarding({ navigation }) {
           <LoadingGlassButton
             onPress={handleLogin}
             disabled={email.length === 0 || password.length === 0}
-            text="Login"
+            text='Login'
           />
         </View>
 
@@ -442,7 +440,7 @@ export default function Onboarding({ navigation }) {
             {profilePicturePath ? (
               <Image source={{ uri: profilePicturePath }} style={{ ...StyleSheet.absoluteFillObject }}/>
             ) : (
-              <MaterialCommunityIcons name="image-plus" size={40} color="white" />
+              <MaterialCommunityIcons name='image-plus' size={40} color='white' />
             )}
           </TouchableOpacity>
           <LoadingGlassButton
@@ -458,7 +456,7 @@ export default function Onboarding({ navigation }) {
             <FormInput
               ref={emailInputRef}
               onEdited={setEmail}
-              placeholder="Email"
+              placeholder='Email'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isEmail
               defaultValue={email}
@@ -466,7 +464,7 @@ export default function Onboarding({ navigation }) {
             <FormInput
               ref={passwordInputRef}
               onEdited={setPassword}
-              placeholder="Password"
+              placeholder='Password'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={password}
@@ -474,7 +472,7 @@ export default function Onboarding({ navigation }) {
             <FormInput
               ref={passwordConfirmationInputRef}
               onEdited={setPasswordConfirmation}
-              placeholder="Password confirmation"
+              placeholder='Password confirmation'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={passwordConfirmation}
@@ -504,11 +502,11 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.title}>We need you to Turn on geolocation</Text>
             <Text style={styles.subtitle}>{'Or you won\'t be able to use the app'}</Text>
           </View>
-          <MaterialIcons name="location-pin" size={60} color={Colors.grey} />
+          <MaterialIcons name='location-pin' size={60} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestGeolocationPermissions(() => viewSliderRef.current?.goToView(6))}
-            text="Turn on"
+            text='Turn on'
           />
         </View>
 
@@ -517,14 +515,14 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.title}>{'Don\'t miss your personnal messages '}</Text>
             <Text style={styles.subtitle}>Turn on notifications</Text>
           </View>
-          <MaterialCommunityIcons name="bell-ring" size={50} color={Colors.grey} />
+          <MaterialCommunityIcons name='bell-ring' size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestNotificationsPermissions(
               () => viewSliderRef.current?.goToView(7),
               () => viewSliderRef.current?.goToView(8)
             )}
-            text="Turn on"
+            text='Turn on'
           />
         </View>
 
@@ -536,11 +534,11 @@ export default function Onboarding({ navigation }) {
               <Text style={{ ...Fonts.regular(13, '#44a0eb'), marginTop: 5, textDecorationLine: 'underline' }}>learn more</Text>
             </TouchableOpacity>
           </View>
-          <FontAwesome5 name="satellite" size={50} color={Colors.grey} />
+          <FontAwesome5 name='satellite' size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestBackgroundGeolocationPermissions(() => viewSliderRef.current?.goToView(8))}
-            text="Turn on"
+            text='Turn on'
           />
         </View>
 
@@ -555,7 +553,7 @@ export default function Onboarding({ navigation }) {
             loading={loading}
             onPress={handleRegister}
             disabled={!termsChecked}
-            text="Start"
+            text='Start'
           />
         </View>
       </ViewSlider>
@@ -572,7 +570,7 @@ const LoadingGlassButton = ({ loading, onPress, disabled, text }) => (
     {text ? (
       <Text style={{ ...Fonts.bold(15, Colors.white), opacity: loading ? 0 : 1 }}>{text}</Text>
     ) : (
-      <AntDesign name="arrowright" size={32} color="white"/>
+      <AntDesign name='arrowright' size={32} color='white'/>
     )}
 
     {loading && (

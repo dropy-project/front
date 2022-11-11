@@ -1,8 +1,6 @@
 import { useContext } from 'react';
 import { UserContext } from '../states/UserContextProvider';
 
-const useCurrentUser = () => {
-  return useContext(UserContext);
-};
+const useCurrentUser = () => useContext(UserContext);
 
 export default useCurrentUser;

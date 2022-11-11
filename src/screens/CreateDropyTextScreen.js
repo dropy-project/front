@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet,
-  SafeAreaView,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
+  StyleSheet,
   TextInput,
-  TouchableWithoutFeedback,
-  Keyboard
+  TouchableWithoutFeedback
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -16,7 +16,6 @@ import MEDIA_TYPES from '../utils/mediaTypes';
 import useOverlay from '../hooks/useOverlay';
 
 const CreateDropyTextScreen = ({ navigation, route }) => {
-
   const { sendAlert } = useOverlay();
 
   const { dropyData = '' } = route.params || {};
@@ -25,7 +24,7 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
   const handleTextSubmit = async () => {
     Keyboard.dismiss();
 
-    if(text.length < 20) {
+    if (text.length < 20) {
       sendAlert({
         title: 'That\'s it?',
         description: 'Hey this is a bit short !\nBe a hero and add more details to your drop !',
@@ -34,14 +33,15 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
       return;
     }
 
-    if(text.length < 100) {
+    if (text.length < 100) {
       const result = await sendAlert({
         title: 'Short but efficient!',
         description: 'Nothing more to say ?\nThink of who\'s gonna see this drop!',
         denyText: 'Send anyway!',
         validateText: 'I can do longer!',
       });
-      if(result) return;
+      if (result)
+        return;
     }
 
     navigation.navigate('Home', {
@@ -57,12 +57,12 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} text={'Tips: open your heart !'}/>
-      <MaterialCommunityIcons name="draw-pen" size={80} color={Colors.mainBlue} style={{ ...Styles.blueShadow, ...styles.penIcon }}/>
+      <MaterialCommunityIcons name='draw-pen' size={80} color={Colors.mainBlue} style={{ ...Styles.blueShadow, ...styles.penIcon }}/>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.inputContainer}
       ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <TextInput placeholder="What do you want to tell anybody ? "
+          <TextInput placeholder='What do you want to tell anybody ? '
             multiline={true}
             placeholderTextColor={Colors.lightGrey}
             style={styles.textInput}

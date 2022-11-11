@@ -4,7 +4,6 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 
 
 const TouchableTooltip = ({ style, children, tooltipText }) => {
-
   const tooltipAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [isPressed, setIsPressed] = useState(false);

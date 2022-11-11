@@ -27,11 +27,10 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       cancelButtonIndex: 2,
       title: 'Drop',
     }, (buttonIndex) => {
-      if (buttonIndex === 0) {
+      if (buttonIndex === 0)
         reportUser(dropy.emitter.id, sendAlert, dropy.id);
-      } else if (buttonIndex === 1) {
+      else if (buttonIndex === 1)
         blockUser(dropy.emitter.id, sendAlert, navigation);
-      }
     });
   };
 
@@ -52,9 +51,9 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 0.2 }}
         style={StyleSheet.absoluteFillObject}
-        pointerEvents="none"
+        pointerEvents='none'
       />
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle='light-content' />
       <GoBackHeader
         color={Colors.white}
         onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}

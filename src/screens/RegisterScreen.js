@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
   StyleSheet,
-  View,
   Text,
   TextInput,
-  SafeAreaView,
-  Platform,
-  KeyboardAvoidingView
+  View
 } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -22,7 +22,7 @@ const RegisterScreen = ({ navigation }) => {
   const { setUser } = useCurrentUser();
 
   const register = async () => {
-    if(name.length === 0)
+    if (name.length === 0)
       return;
     try {
       const userInfos = await API.register(name);
@@ -41,7 +41,7 @@ const RegisterScreen = ({ navigation }) => {
         <Svg1 height={400} width={'60%'} style={{ ...styles.svg }} />
         <Svg3 height={400} width={'110%'} style={{ ...styles.svg }} />
       </View>
-      <SafeAreaView style={styles.content}  >
+      <SafeAreaView style={styles.content} >
         <Text style={{ ...Fonts.bold(50, Colors.white) }}>Dropy</Text>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -53,7 +53,7 @@ const RegisterScreen = ({ navigation }) => {
             style={{ ...Fonts.bold(15, Colors.grey), ...styles.textInput }}
             placeholder="What's your name ?"
             placeholderTextColor={Colors.lightGrey}
-            returnKeyType="go"
+            returnKeyType='go'
             onEndEditing={register}
           />
         </KeyboardAvoidingView>

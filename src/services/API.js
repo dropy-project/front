@@ -12,9 +12,7 @@ const AXIOS_PARAMS = {
 
 let axios = Axios.create(AXIOS_PARAMS);
 
-const getHeaders = () => {
-  return axios.defaults.headers.common;
-};
+const getHeaders = () => axios.defaults.headers.common;
 
 const register = async (displayName, email, password, newsLetter) => {
   const response = await axios.post('/register', {
@@ -24,10 +22,10 @@ const register = async (displayName, email, password, newsLetter) => {
     newsLetter,
   });
 
-  const  { accessToken, refreshToken, expires, profile: user } = response.data;
+  const { accessToken, refreshToken, expires, profile: user } = response.data;
 
   axios = Axios.create(AXIOS_PARAMS);
-  axios.defaults.headers.common['Authorization'] = accessToken;
+  axios.defaults.headers.common.Authorization = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
 
@@ -40,19 +38,17 @@ const login = async (email, password) => {
     password,
   });
 
-  const  { accessToken, refreshToken, expires, profile: user } = response.data;
+  const { accessToken, refreshToken, expires, profile: user } = response.data;
 
   axios = Axios.create(AXIOS_PARAMS);
-  axios.defaults.headers.common['Authorization'] = accessToken;
+  axios.defaults.headers.common.Authorization = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
 
   return user;
 };
 
-const refreshTokenUrl = () => {
-  return `${API_BASE_URL}/refresh`;
-};
+const refreshTokenUrl = () => `${API_BASE_URL}/refresh`;
 
 const postUserDeviceToken = (deviceToken) => {
   const result = axios.post('/user/updateDeviceToken', {
@@ -61,9 +57,7 @@ const postUserDeviceToken = (deviceToken) => {
   return result;
 };
 
-const userBackgroundGeolocationPingUrl = () => {
-  return `${API_BASE_URL}/user/backgroundGeolocationPing`;
-};
+const userBackgroundGeolocationPingUrl = () => `${API_BASE_URL}/user/backgroundGeolocationPing`;
 
 const getDropyMedia = async (dropyId) => {
   const result = await axios.get(`/dropy/${dropyId}/media`);
@@ -85,9 +79,9 @@ const serverVersionIsCompatible = async () => {
     const result = await axios.get(`/version/${AppInfo.requiredServerVersion}`);
     return result.status === 200;
   } catch (error) {
-    if(error?.response?.status === 418) {
+    if (error?.response?.status === 418)
       return false;
-    }
+
     throw error;
   }
 };
@@ -108,19 +102,18 @@ const postProfileInfos = async (about, pronouns, displayName) => {
 
 const postProfilePicture = async (filePath) => {
   // eslint-disable-next-line no-undef
-  var data = new FormData();
+  const data = new FormData();
   data.append('profile', {
     uri: filePath,
     name: `${filePath}`,
     type: 'image/jpeg',
   });
 
-  const response = await axios.post('/user/profile/picture', data,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
+  const response = await axios.post('/user/profile/picture', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }
   );
   return response;
 };
@@ -172,10 +165,10 @@ const refreshToken = async (token) => {
     refreshToken: token,
   });
 
-  const  { accessToken, refreshToken, expires } = response.data;
+  const { accessToken, refreshToken, expires } = response.data;
 
   axios = Axios.create(AXIOS_PARAMS);
-  axios.defaults.headers.common['Authorization'] = accessToken;
+  axios.defaults.headers.common.Authorization = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
 
@@ -189,7 +182,8 @@ const getUserProfile = async () => {
 
 const logout = async () => {
   axios = Axios.create(AXIOS_PARAMS);
-  return await Storage.removeItem('@auth_tokens');
+  const removedItem = await Storage.removeItem('@auth_tokens');
+  return removedItem;
 };
 
 const API = {

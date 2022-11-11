@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { chunckHeaderTimeString, messageTimeString } from '../utils/time';
@@ -22,7 +22,7 @@ export default ChatBubble;
 
 const Bubble = ({ isLeft, content, date, read, showDate, hourDifference }) => {
   const navigation = useNavigation();
-  if(typeof content !== 'string') {
+  if (typeof content !== 'string') {
     return (
       <View style={{ ...styles.dropyContainer, maxHeight: 500 }}>
         <TouchableOpacity onPress={() => navigation.navigate('DisplayDropyMedia', { dropy: content, showBottomModal: false })}>

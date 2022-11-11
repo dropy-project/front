@@ -8,8 +8,8 @@ import {
   View
 } from 'react-native';
 
-import {  responsiveWidth } from 'react-native-responsive-dimensions';
-import { MaterialCommunityIcons, Ionicons, Entypo } from '@expo/vector-icons';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Styles, { Colors } from '../styles/Styles';
 
@@ -23,7 +23,6 @@ export const OVERLAY_STATE = {
 };
 
 const AnimatedDropyPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIRMATION_PENDING, onPress }) => {
-
   const previewScaleAnimatedValue = useRef(new Animated.Value(0.5)).current;
   const previewOpacityAnimatedValue = useRef(new Animated.Value(0)).current;
   const previewTranslateYAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -36,7 +35,7 @@ const AnimatedDropyPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIR
   useEffect(() => {
     animRef.current?.stop();
 
-    if(overlayState === OVERLAY_STATE.CONFIRMATION_PENDING)
+    if (overlayState === OVERLAY_STATE.CONFIRMATION_PENDING)
       animRef.current = openAnimation();
     else if (overlayState === OVERLAY_STATE.LOADING_POST)
       animRef.current = loadingAnimationLoop();
@@ -123,7 +122,7 @@ const AnimatedDropyPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIR
   });
 
   const dropyPopupScaleY = dropyPopupRotationAnimatedValue.interpolate({
-    inputRange: [0, 0.5 ,1],
+    inputRange: [0, 0.5, 1],
     outputRange: [1, 1.2, 1],
   });
 
@@ -137,16 +136,16 @@ const AnimatedDropyPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIR
       <Animated.View style={{
         ...previewStyles.dropyPreviewContainer,
         opacity: previewOpacityAnimatedValue,
-        transform: [{ translateY: previewTranslateY }, { scale : previewScaleAnimatedValue }] }}
+        transform: [{ translateY: previewTranslateY }, { scale: previewScaleAnimatedValue }] }}
       >
-        {filePath != null ? (
+        {filePath == null ? (
+          <MaterialCommunityIcons name='draw-pen' size={80} color={Colors.mainBlue} style={Styles.blueShadow}/>
+        ) : (
           <>
             <Image source={{ uri: filePath }} style={previewStyles.previewImage}/>
             <View style={previewStyles.previewImageOverlay} />
-            <Ionicons name="ios-camera-outline" size={80} color={Colors.white} style={previewStyles.cameraIcon}/>
+            <Ionicons name='ios-camera-outline' size={80} color={Colors.white} style={previewStyles.cameraIcon}/>
           </>
-        ) : (
-          <MaterialCommunityIcons name="draw-pen" size={80} color={Colors.mainBlue} style={Styles.blueShadow}/>
         )}
       </Animated.View>
       <Animated.View style={{
@@ -155,7 +154,7 @@ const AnimatedDropyPreviewBox = ({ filePath, overlayState = OVERLAY_STATE.CONFIR
         transform: [{ scaleX: dropyPopupScaleX }, { scaleY: dropyPopupScaleY }],
       }}>
         <DropyPopup style={previewStyles.dropySvg}></DropyPopup>
-        <Entypo style={{ position: 'absolute', bottom: '47%' }} name="dots-three-horizontal" size={24} color={Colors.darkGrey} />
+        <Entypo style={{ position: 'absolute', bottom: '47%' }} name='dots-three-horizontal' size={24} color={Colors.darkGrey} />
       </Animated.View>
     </TouchableOpacity>
   );
