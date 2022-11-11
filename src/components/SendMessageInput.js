@@ -1,7 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Keyboard, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import {
+  Keyboard,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  TextInput
+} from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 

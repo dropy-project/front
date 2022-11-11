@@ -1,22 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Platform, TouchableOpacity, SafeAreaView } from 'react-native';
 
-import MapView, {  Circle, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import  {  PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
-import Geohash from 'ngeohash';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { useInitializedGeolocation } from '../hooks/useGeolocation';
 import useOverlay from '../hooks/useOverlay';
 
-import mapStyleAndroid from '../assets/mapStyleAndroid.json';
-import mapStyleIOS from '../assets/mapStyleIOS.json';
-
 import Haptics from '../utils/haptics';
 
 import useCurrentUser from '../hooks/useCurrentUser';
-import { GEOHASH_SIZE } from '../states/GeolocationContextProvider';
 import Styles, { Colors, Map } from '../styles/Styles';
 import AnimatedFlask from './AnimatedFlask';
 import MapLoadingOverlay from './overlays/MapLoadingOverlay';
@@ -26,10 +21,16 @@ import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import EnergyModal from './EnergyModal';
 import FadeInWrapper from './FadeInWrapper';
+import MapDebugger from './MapDebugger';
+import OSMapView from './OSMapView';
 
-const MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD = 5;
-
-const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIndex = null, retrievedDropies = null }) => {
+const DropyMap = ({
+  dropiesAround,
+  retrieveDropy,
+  museumVisible,
+  selectedDropyIndex = null,
+  retrievedDropies = null,
+}) => {
 
   const navigation = useNavigation();
 
@@ -41,11 +42,11 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
   } = useInitializedGeolocation();
   const { developerMode, user, setUser } = useCurrentUser();
 
-  const [cameraData, setCameraData] = useState(null);
+  const [currentZoom, setCurrentZoom] = useState(0);
+  const [currentHeading, setCurrentHeading] = useState(0);
   const [headingLocked, setHeadingLocked] = useState(false);
-  const [showZoomButton, setShowZoomButton] = useState(false);
 
-  const mapRef = useRef(null);
+  const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
 
   const handleDropyPressed = async (dropy) => {
@@ -90,14 +91,14 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
   useEffect(() => {
     if(mapIsReady === false) return;
-    if(mapRef?.current == null) return;
+    if(osMap?.current?.getMapRef()?.getCamera() == null) return;
     if (userCoordinates == null) return;
 
     setMapCameraPosition();
   }, [userCoordinates, compassHeading, mapIsReady, selectedDropyIndex, retrievedDropies]);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
-    const currentCamera = await mapRef.current?.getCamera();
+    const currentCamera = await osMap.current?.getMapRef()?.getCamera();
     if (currentCamera == null) return;
 
     let position = userCoordinates;
@@ -108,9 +109,12 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
       };
     }
 
+    setCurrentZoom(forceZoom ? Map.MAX_ZOOM : currentCamera.zoom);
+    setCurrentHeading(forceHeading ? compassHeading : currentCamera.heading);
+
     // eslint-disable-next-line no-undef
     requestAnimationFrame(() => {
-      mapRef.current?.animateCamera(
+      osMap.current?.getMapRef()?.animateCamera(
         {
           center: {
             latitude: position.latitude,
@@ -125,21 +129,6 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
     });
   };
 
-  const onRegionChange = async () => {
-    if(museumVisible) return;
-    const camera = await mapRef.current.getCamera();
-    setShowZoomButton(camera.zoom < Map.MAX_ZOOM - 0.1);
-    setCameraData(camera);
-  };
-
-  const onPanDrag = async () => {
-    if(museumVisible) return;
-    const camera = await mapRef.current.getCamera();
-    if(Math.abs(camera.heading - compassHeading) > MAP_ROTATION_UNLOCK_HEADING_DEGREE_THRESHOLD) {
-      setHeadingLocked(false);
-    }
-  };
-
   const forceCameraToLockHeading = () => setMapCameraPosition(true);
 
   const toggleHeadingLock = () => setHeadingLocked(locked => {
@@ -150,32 +139,30 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
   return (
     <>
-      <MapView
-        ref={mapRef}
+      <OSMapView
+        ref={osMap}
         provider={PROVIDER_GOOGLE}
-        customMapStyle={Platform.OS === 'android' ? mapStyleAndroid : mapStyleIOS}
+        setCurrentZoom={setCurrentZoom}
+        setCurrentHeading={setCurrentHeading}
         style={StyleSheet.absoluteFillObject}
-        pitchEnabled={false}
-        rotateEnabled={true}
-        scrollEnabled={false}
-        zoomEnabled={!museumVisible}
+        zoomEnabled={Platform.OS === 'ios' && !museumVisible}
         minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
         maxZoomLevel={Map.MAX_ZOOM}
+        scrollEnabled={false}
+        pitchEnabled={false}
         showsCompass={false}
-        onPanDrag={onPanDrag}
         initialCamera={{
           center: {
-            latitude: userCoordinates?.latitude || 0,
-            longitude: userCoordinates?.longitude || 0,
+            latitude: userCoordinates?.latitude ?? 0,
+            longitude: userCoordinates?.longitude ?? 0,
           },
           heading: compassHeading || 0,
           pitch: Map.INITIAL_PITCH,
           zoom: Map.INITIAL_ZOOM,
           altitude: 0,
         }}
-        onMapLoaded={() => setMapIsReady(true)}
         showsPointsOfInterest={false}
-        onRegionChange={onRegionChange}
+        onMapLoaded={() => setMapIsReady(true)}
       >
         {retrievedDropies != null ? (
           <>
@@ -202,12 +189,12 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
           </>
         )}
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
-      </MapView>
+      </OSMapView>
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
           <AnimatedFlask />
-          <FadeInWrapper visible={showZoomButton}>
+          <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
             <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
               <MaterialIcons name="my-location" size={20} color={Colors.darkGrey} />
             </TouchableOpacity>
@@ -219,7 +206,7 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
       </SafeAreaView>
 
       <EnergyModal />
-      <Sonar cameraData={cameraData} visible={!museumVisible} compassHeading={compassHeading} />
+      <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient
         pointerEvents='none'
@@ -236,61 +223,12 @@ const DropyMap = ({ dropiesAround, retrieveDropy, museumVisible, selectedDropyIn
 
 export default DropyMap;
 
-const MapDebugger = ({ userCoordinates }) => {
-  const [debugPolygons, setDebugPolygons] = useState([]);
-
-  useEffect(() => {
-    if(!userCoordinates) return;
-
-    const polygons = [];
-    for (const chunkInt of userCoordinates.geoHashs) {
-      const [
-        minlat,
-        minlon,
-        maxlat,
-        maxlon
-      ] = Geohash.decode_bbox_int(chunkInt, GEOHASH_SIZE);
-      polygons.push([
-        { latitude: minlat, longitude: minlon },
-        { latitude: maxlat, longitude: minlon },
-        { latitude: maxlat, longitude: maxlon },
-        { latitude: minlat, longitude: maxlon }
-      ]);
-    }
-
-    setDebugPolygons(polygons);
-  }, [userCoordinates]);
-
-  return (
-    <>
-      {debugPolygons.map((polygon, index) => (
-        <React.Fragment key={index}>
-          <Polygon
-            coordinates={polygon}
-            strokeColor='rgba(0,0,255,0.9)'
-            fillColor='rgba(100,0,255,0.2)'
-            strokeWidth={1}
-          />
-        </React.Fragment>
-      ))}
-      <Circle
-        center={{
-          latitude: userCoordinates?.latitude || 0,
-          longitude: userCoordinates?.longitude || 0,
-        }}
-        radius={30}
-      >
-      </Circle>
-    </>
-  );
-};
-
 const styles = StyleSheet.create({
   controlsView: {
     ...Styles.safeAreaView,
     position: 'absolute',
     bottom: 130,
-    width: '85%',
+    right: 20,
     flexDirection: 'row-reverse',
   },
   lockButton: {
@@ -302,6 +240,3 @@ const styles = StyleSheet.create({
     ...Styles.softShadows,
   },
 });
-
-
-
