@@ -272,7 +272,7 @@ const DropyWheelItem = ({ children, index, childCount, size }) => {
   const handleLayout = (event) => {
     const { layout } = event.nativeEvent;
 
-    const angle = index * (Math.PI / ((childCount - 1) + (Math.PI / 2)));
+    const angle = ((index * Math.PI) / (childCount - 1)) + (Math.PI / 2);
 
     let x = (Math.sin(angle) * size);
     let y = (Math.cos(angle) * size);
