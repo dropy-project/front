@@ -11,7 +11,6 @@ import {
 import { Colors, Fonts } from '../../styles/Styles';
 
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
 
 const FormInput = (props, ref) => {
   const {
@@ -32,33 +31,53 @@ const FormInput = (props, ref) => {
 
   const [valid, setValid] = useState(true);
   const [validityErrorMessage, setValidityErrorMessage] = useState('');
+  const [partialValidity, setPartialValidity] = useState('');
 
   useEffect(() => {
     onEdited(value?.trim());
     setValid(true);
+    if (isPassword || isEmail)
+      checkValidity(true, true);
   }, [value]);
+
+  const checkValidity = (partialValidation = false, ignoreEmpty = false) => {
+    if (ignoreEmpty && value?.trim() === '')
+      return true;
+    setPartialValidity(partialValidation);
+
+    const notEmpty = value?.trim() !== '';
+    const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
+    if (!emailValid)
+      setValidityErrorMessage('This is not a valid email');
+
+    const maxLengthValid = (!maxLength || value?.trim().length <= maxLength);
+    if (!maxLengthValid)
+      setValidityErrorMessage(`Maximum length is ${maxLength}`);
+
+    const minLengthValid = (!minLength || value?.trim().length >= minLength);
+    if (!minLengthValid)
+      setValidityErrorMessage(`Must be at least ${minLength} characters`);
+
+    const passwordLengthValid = !isPassword || value?.trim().length >= 6;
+    if (!passwordLengthValid)
+      setValidityErrorMessage('Must be at least 6 characters');
+
+    const passwordContainsNumber = !isPassword || /\d/.test(value);
+    if (!passwordContainsNumber)
+      setValidityErrorMessage('Must contain at least one number');
+
+    const passwordContainsUppercase = !isPassword || /[A-Z]/.test(value);
+    if (!passwordContainsUppercase)
+      setValidityErrorMessage('Must contain at least one uppercase letter');
+
+    const inputValid = value != null && notEmpty && emailValid && maxLengthValid && minLengthValid && passwordLengthValid && passwordContainsNumber && passwordContainsUppercase;
+    setValid(inputValid);
+    return inputValid;
+  };
 
   useImperativeHandle(ref, () => ({
     getValue: () => value?.trim(),
-    isValid: () => {
-      const notEmpty = value?.trim() !== '';
-      const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
-      if (!emailValid)
-        setValidityErrorMessage('This is not a valid email');
-
-      const passwordValid = (!isPassword || PASSWORD_REGEX.test(value.trim()));
-      if (!passwordValid)
-        setValidityErrorMessage('Requires 8 characters, 1 uppercase, 1 number');
-
-      const maxLengthValid = (!maxLength || value?.trim().length <= maxLength);
-      const minLengthValid = (!minLength || value?.trim().length >= minLength);
-      if (!minLengthValid)
-        setValidityErrorMessage(`Must be at least ${minLength} characters`);
-
-      const inputValid = value != null && notEmpty && emailValid && maxLengthValid && minLengthValid && passwordValid;
-      setValid(inputValid);
-      return inputValid;
-    },
+    isValid: checkValidity,
     setInvalid: (reason = null) => {
       setValid(false);
       reason && setValidityErrorMessage(reason);
@@ -71,7 +90,7 @@ const FormInput = (props, ref) => {
       <View style={{
         ...styles.textInputContainer,
         ...inputStyle,
-        borderColor: valid ? 'transparent' : Colors.red,
+        borderColor: valid ? 'transparent' : (partialValidity ? Colors.mainBlue : Colors.red),
       }}>
         <TextInput
           onFocus={() => setSelected(true)}
@@ -89,7 +108,7 @@ const FormInput = (props, ref) => {
           {...props}
         />
         {(!valid && validityErrorMessage !== '') && (
-          <Text style={{ ...Fonts.regular(10, Colors.red), ...styles.errorMessage }}>
+          <Text style={{ ...Fonts.regular(10, (partialValidity ? Colors.darkGrey : Colors.red)), ...styles.errorMessage }}>
             {validityErrorMessage}
           </Text>
         )}
