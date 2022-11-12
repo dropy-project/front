@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Circle, Polygon } from 'react-native-maps';
+import Geohash from 'ngeohash';
 import { GEOHASH_SIZE } from '../states/GeolocationContextProvider';
 
 const MapDebugger = ({ userCoordinates }) => {
@@ -11,7 +12,7 @@ const MapDebugger = ({ userCoordinates }) => {
 
     const polygons = [];
     for (const chunkInt of userCoordinates.geoHashs) {
-      const [minlat, minlon, maxlat, maxlon] = GEOHASH_SIZE.decode_bbox_int(chunkInt, GEOHASH_SIZE);
+      const [minlat, minlon, maxlat, maxlon] = Geohash.decode_bbox_int(chunkInt, GEOHASH_SIZE);
       polygons.push([{ latitude: minlat, longitude: minlon }, { latitude: maxlat, longitude: minlon }, { latitude: maxlat, longitude: maxlon }, { latitude: minlat, longitude: maxlon }]);
     }
 
