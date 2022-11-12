@@ -19,7 +19,7 @@ import Styles, { Colors, Fonts } from '../../styles/Styles';
 import useOverlay from '../../hooks/useOverlay';
 import useUnreadConversation from '../../hooks/useUnreadConversation';
 import useCurrentUser from '../../hooks/useCurrentUser';
-import GlassCircleButton from './GlassCircleButton';
+import GlassCircleButton from '../input/GlassCircleButton';
 
 const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;

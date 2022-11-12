@@ -15,11 +15,12 @@ import {
 } from 'react-native';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 
-import FormInput from '../components/FormInput';
-import FormSelect from '../components/FormSelect';
-import GoBackHeader from '../components/GoBackHeader';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ProfileImage from '../components/ProfileImage';
+import LoadingSpinner from '../components/effect/LoadingSpinner';
+import FormInput from '../components/input/FormInput';
+import FormSelect from '../components/input/FormSelect';
+import GoBackHeader from '../components/other/GoBackHeader';
+import ProfileImage from '../components/profile/ProfileImage';
+
 import useCurrentUser from '../hooks/useCurrentUser';
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';

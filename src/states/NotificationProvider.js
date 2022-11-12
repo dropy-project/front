@@ -8,8 +8,9 @@ import API from '../services/API';
 import useCurrentUser from '../hooks/useCurrentUser';
 import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 
-import Notification from '../components/Notification';
 import useConversationsSocket from '../hooks/useConversationsSocket';
+
+import Notification from '../components/overlays/Notification';
 
 export const extractNotificationPayload = (notification) => {
   if (Platform.OS === 'android') {

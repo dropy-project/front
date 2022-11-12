@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import DropyMediaViewer from '../components/DropyMediaViewer';
-import FadeInWrapper from '../components/FadeInWrapper';
-import GoBackHeader from '../components/GoBackHeader';
-import LoadingSpinner from '../components/LoadingSpinner';
+
+import FadeInWrapper from '../components/effect/FadeInWrapper';
+import LoadingSpinner from '../components/effect/LoadingSpinner';
+import DropyMediaViewer from '../components/other/DropyMediaViewer';
+import GoBackHeader from '../components/other/GoBackHeader';
+
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';

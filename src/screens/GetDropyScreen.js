@@ -7,11 +7,13 @@ import {
   Text,
   View
 } from 'react-native';
-import GoBackHeader from '../components/GoBackHeader';
-import DropyLogo from '../assets/svgs/dropy_logo.svg';
+
 import { Colors, Fonts } from '../styles/Styles';
-import FooterConfirmation from '../components/FooterConfirmation';
-import ParticleEmitter from '../components/ParticleEmitter';
+
+import DropyLogo from '../assets/svgs/dropy_logo.svg';
+import ParticleEmitter from '../components/effect/ParticleEmitter';
+import FooterConfirmation from '../components/other/FooterConfirmation';
+import GoBackHeader from '../components/other/GoBackHeader';
 
 const GetDropyScreen = ({ navigation, route }) => {
   const { dropy = null } = route.params || {};

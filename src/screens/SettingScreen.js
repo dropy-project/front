@@ -11,14 +11,15 @@ import {
 } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
-import GoBackHeader from '../components/GoBackHeader';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import useCurrentUser from '../hooks/useCurrentUser';
-import DebugText from '../components/DebugText';
-import FormToggle from '../components/FormToggle';
 import API from '../services/API';
+
+import FormToggle from '../components/input/FormToggle';
+import DebugText from '../components/other/DebugText';
+import GoBackHeader from '../components/other/GoBackHeader';
 
 const SettingsScreen = ({ navigation }) => {
   const { setDeveloperMode } = useCurrentUser();

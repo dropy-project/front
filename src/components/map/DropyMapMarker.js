@@ -3,9 +3,9 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 
-import DropyPopup from '../assets/svgs/dropyPopup.svg';
-
+import DropyPopup from '../../assets/svgs/dropyPopup.svg';
 import { createDropTimeString } from '../../utils/time';
+
 
 const DropyMapMarker = ({ dropy, onPress }) => {
   const [dropTimeString, setDropTimeString] = useState('0s');

@@ -22,10 +22,11 @@ import Haptics from '../../utils/haptics';
 
 import useOverlay from '../../hooks/useOverlay';
 import useCurrentUser from '../../hooks/useCurrentUser';
+
 import GoBackHeader from '../other/GoBackHeader';
 import AnimatedDropyPreviewBox, { OVERLAY_STATE } from '../effect/AnimatedDropyPreviewBox';
-import GlassButton from './GlassButton';
-import ProfileAvatar from './ProfileAvatar';
+import ProfileAvatar from '../profile/ProfileAvatar';
+import GlassButton from '../input/GlassButton';
 
 const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams, createDropy }) => {
   const { sendBottomAlert } = useOverlay();

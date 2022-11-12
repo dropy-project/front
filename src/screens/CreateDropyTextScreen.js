@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import GoBackHeader from '../components/GoBackHeader';
-import GlassButton from '../components/GlassButton';
-import MEDIA_TYPES from '../utils/mediaTypes';
 import useOverlay from '../hooks/useOverlay';
+import MEDIA_TYPES from '../utils/mediaTypes';
+import GoBackHeader from '../components/other/GoBackHeader';
+import GlassButton from '../components/input/GlassButton';
 
 const CreateDropyTextScreen = ({ navigation, route }) => {
   const { sendAlert } = useOverlay();

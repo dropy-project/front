@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
-import useCurrentUser from '../hooks/useCurrentUser';
-import API from '../services/API';
-import Styles, { Colors, Fonts } from '../styles/Styles';
+import useCurrentUser from '../../hooks/useCurrentUser';
+import API from '../../services/API';
+
+import Styles, { Colors, Fonts } from '../../styles/Styles';
+
 
 const ProfileImage = (props) => {
   const { user: localUser } = useCurrentUser();

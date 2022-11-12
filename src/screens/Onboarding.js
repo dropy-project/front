@@ -20,18 +20,20 @@ import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-nativ
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
-import GoBackHeader from '../components/GoBackHeader';
 import OnboardingLines from '../assets/svgs/onboarding_lines.svg';
-import GlassButton from '../components/GlassButton';
-import FormInput from '../components/FormInput';
-import FormCheckBox from '../components/FormCheckBox';
-import ViewSlider from '../components/ViewSlider';
 import { compressImage } from '../utils/files';
 import API from '../services/API';
 import useOverlay from '../hooks/useOverlay';
 import useCurrentUser from '../hooks/useCurrentUser';
+
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
-import LoadingSpinner from '../components/LoadingSpinner';
+
+import GoBackHeader from '../components/other/GoBackHeader';
+import FormInput from '../components/input/FormInput';
+import ViewSlider from '../components/viewSlider/ViewSlider';
+import FormCheckBox from '../components/input/FormCheckBox';
+import GlassButton from '../components/input/GlassButton';
+import LoadingSpinner from '../components/effect/LoadingSpinner';
 
 // eslint-disable-next-line no-undef
 const DEBUG = __DEV__;

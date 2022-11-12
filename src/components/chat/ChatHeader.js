@@ -5,9 +5,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import { blockUser, reportUser } from '../../utils/profiles';
+
 import useOverlay from '../../hooks/useOverlay';
+
 import ProfileAvatar from '../profile/ProfileAvatar';
-import DisabledNotificationsPopup from './DisabledNotificationsPopup';
+import DisabledNotificationsPopup from '../overlays/DisabledNotificationsPopup';
 
 const ChatHeader = ({ conversation, otherUserConnected, popToTopOnQuit }) => {
   const navigation = useNavigation();

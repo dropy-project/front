@@ -12,15 +12,15 @@ import {
 import { FontAwesome5 } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-import HomeScreenTabBar from '../components/HomeScreenTabBar';
-import ConfirmDropyOverlay from '../components/ConfirmDropyOverlay';
-import ProfileAvatar from '../components/ProfileAvatar';
-import DropyMap from '../components/DropyMap';
 
 import useDropiesAroundSocket from '../hooks/useDropiesAroundSocket';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
-import MuseumOverlay from '../components/MuseumOverlay';
 import Haptics from '../utils/haptics';
+import DropyMap from '../components/map/DropyMap';
+import ProfileAvatar from '../components/profile/ProfileAvatar';
+import MuseumOverlay from '../components/overlays/MuseumOverlay';
+import HomeScreenTabBar from '../components/other/HomeScreenTabBar';
+import ConfirmDropyOverlay from '../components/overlays/ConfirmDropyOverlay';
 
 const BACKGROUND_GEOLOC_ICON_OPENED_SIZE = 40;
 

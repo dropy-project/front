@@ -3,8 +3,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
+
 import DebugText from '../other/DebugText';
-import ProfileAvatar from './ProfileAvatar';
+import ProfileAvatar from '../profile/ProfileAvatar';
 
 const ConversationItem = ({
   conversation,

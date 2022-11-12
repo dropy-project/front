@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import Svg1 from '../assets/svgs/add_drop_1.svg';
-import Svg2 from '../assets/svgs/add_drop_2.svg';
-import Svg3 from '../assets/svgs/add_drop_3.svg';
+import Svg1 from '../../assets/svgs/add_drop_1.svg';
+import Svg2 from '../../assets/svgs/add_drop_2.svg';
+import Svg3 from '../../assets/svgs/add_drop_3.svg';
 import Styles, { Colors } from '../../styles/Styles';
 
 const GlassCircleButton = ({ style, children, onPress, size = 70, activeOpacity }) => (

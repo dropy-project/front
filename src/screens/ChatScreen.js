@@ -2,15 +2,15 @@ import React, { useRef } from 'react';
 import { FlatList, Platform, StyleSheet, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
-import LoadingSpinner from '../components/LoadingSpinner';
 import useChatSocket from '../hooks/useChatSocket';
 import useCurrentUser from '../hooks/useCurrentUser';
 import useOverlay from '../hooks/useOverlay';
 import useKeyboardVisible from '../hooks/useKeyboardVisible';
+import ChatBubble from '../components/chat/ChatBubble';
+import SendMessageInput from '../components/input/SendMessageInput';
+import LoadingSpinner from '../components/effect/LoadingSpinner';
+import ChatHeader from '../components/chat/ChatHeader';
 
-import SendMessageInput from '../components/SendMessageInput';
-import ChatBubble from '../components/ChatBubble';
-import ChatHeader from '../components/ChatHeader';
 
 const ONE_HOUR = 60 * 60 * 1000;
 

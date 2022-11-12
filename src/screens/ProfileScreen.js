@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import DebugText from '../components/DebugText';
-import ProfileScreenHeader, { MAX_HEADER_HEIGHT } from '../components/ProfileScreenHeader';
+import DebugText from '../components/other/DebugText';
+import ProfileScreenHeader, { MAX_HEADER_HEIGHT } from '../components/profile/ProfileScreenHeader';
 import useCurrentUser from '../hooks/useCurrentUser';
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';

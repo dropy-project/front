@@ -4,13 +4,15 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import LinearGradient from 'react-native-linear-gradient';
 import { Colors } from '../styles/Styles';
 
-import FooterConfirmation from '../components/FooterConfirmation';
-import GoBackHeader from '../components/GoBackHeader';
-import DropyMediaViewer from '../components/DropyMediaViewer';
-import useOverlay from '../hooks/useOverlay';
 import { blockUser, reportUser } from '../utils/profiles';
+
+import useOverlay from '../hooks/useOverlay';
 import useCurrentUser from '../hooks/useCurrentUser';
 import useConversationsSocket from '../hooks/useConversationsSocket';
+
+import DropyMediaViewer from '../components/other/DropyMediaViewer';
+import GoBackHeader from '../components/other/GoBackHeader';
+import FooterConfirmation from '../components/other/FooterConfirmation';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const { dropy, showBottoModal } = route.params || {};

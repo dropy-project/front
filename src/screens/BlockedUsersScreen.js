@@ -10,10 +10,12 @@ import {
   View
 } from 'react-native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import FadeInWrapper from '../components/FadeInWrapper';
-import GoBackHeader from '../components/GoBackHeader';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ProfileAvatar from '../components/ProfileAvatar';
+
+import FadeInWrapper from '../components/effect/FadeInWrapper';
+import LoadingSpinner from '../components/effect/LoadingSpinner';
+import GoBackHeader from '../components/other/GoBackHeader';
+import ProfileAvatar from '../components/profile/ProfileAvatar';
+
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
