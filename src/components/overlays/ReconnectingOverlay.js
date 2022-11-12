@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
-import LoadingSpinner from '../LoadingSpinner';
+import LoadingSpinner from '../effect/LoadingSpinner';
 
 const ReconnectingOverlay = ({ visible }) => {
   const [initilized, setInitilized] = useState(false);

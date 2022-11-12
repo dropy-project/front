@@ -10,7 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
-import GlassButton from '../GlassButton';
+import GlassButton from '../input/GlassButton';
 
 const AlertModal = ({ visible, data }) => {
   const [lastData, setLastData] = useState(data);
