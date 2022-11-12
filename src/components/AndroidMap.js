@@ -6,7 +6,7 @@ const AndroidMap = (props, ref) => {
   const mapRef = useRef(null);
   const isUpdatingCamera = useRef(false);
 
-  const { setCurrentZoom, setCurrentHeading } = props;
+  const { setCurrentZoom, setCurrentHeading, setHeadingLocked } = props;
 
   useImperativeHandle(ref, () => ({
     getMapRef: () => mapRef.current,
@@ -36,10 +36,11 @@ const AndroidMap = (props, ref) => {
     if (Math.abs(newCamera.zoom - currentCamera.zoom) > 0.17)
       setCurrentZoom(newCamera.zoom);
 
-
     // Set the heading only if the heading as changed for at least 1
-    if (Math.abs(newCamera.heading - currentCamera.heading) > 4)
+    if (Math.abs(newCamera.heading - currentCamera.heading) > 4) {
       setCurrentHeading(newCamera.heading);
+      setHeadingLocked(false);
+    }
 
     isUpdatingCamera.current = false;
   };

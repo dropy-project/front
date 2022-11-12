@@ -156,6 +156,7 @@ const DropyMap = ({
         provider={PROVIDER_GOOGLE}
         setCurrentZoom={setCurrentZoom}
         setCurrentHeading={setCurrentHeading}
+        setHeadingLocked={setHeadingLocked}
         style={StyleSheet.absoluteFillObject}
         zoomEnabled={Platform.OS === 'ios' && !museumVisible}
         minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}

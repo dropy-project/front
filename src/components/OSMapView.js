@@ -8,7 +8,9 @@ import AndroidMap from './AndroidMap';
 
 const OSMapView = (props, ref) => {
   const mapRef = useRef(null);
+
   const lastCamera = useRef(null);
+  const { setCurrentZoom, setCurrentHeading, setHeadingLocked } = props;
 
   useImperativeHandle(ref, () => ({
     getMapRef: Platform.OS === 'android' ? mapRef.current.getMapRef : () => mapRef.current,
@@ -18,11 +20,18 @@ const OSMapView = (props, ref) => {
     if (!isGesture)
       return;
     const camera = await mapRef.current?.getCamera();
+    if (camera == null)
+      return;
 
     if (lastCamera.current == null) {
       lastCamera.current = camera;
       return;
     }
+
+    setCurrentZoom(camera.zoom);
+    setCurrentHeading(camera.heading);
+    setHeadingLocked(false);
+
     lastCamera.current = camera;
   };
 
