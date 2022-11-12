@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
-import Styles, { Colors, Fonts } from '../styles/Styles';
-import { createDropTimeString } from '../utils/time';
+import Styles, { Colors, Fonts } from '../../styles/Styles';
+import { createDropTimeString } from '../../utils/time';
 import GlassButton from './GlassButton';
 import ProfileImage from './ProfileImage';
 

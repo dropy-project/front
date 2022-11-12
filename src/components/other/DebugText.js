@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import useCurrentUser from '../hooks/useCurrentUser';
+import useCurrentUser from '../../hooks/useCurrentUser';
 
 const DebugText = ({ children, date, marginBottom = 0, showBoundingBox = false }) => {
   const { developerMode } = useCurrentUser();

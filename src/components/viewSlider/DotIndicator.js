@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Colors, Fonts } from '../styles/Styles';
+import { Colors, Fonts } from '../../styles/Styles';
 
 export const DotIndicator = ({ currentIndex, isSkippable = false, onPressSkip }) => (
   <View style={styles.indicatorContainer}>

@@ -13,12 +13,12 @@ import { useNavigation } from '@react-navigation/native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Svg, { Path } from 'react-native-svg';
 
-import Haptics from '../utils/haptics';
+import Haptics from '../../utils/haptics';
 
-import Styles, { Colors, Fonts } from '../styles/Styles';
-import useOverlay from '../hooks/useOverlay';
-import useUnreadConversation from '../hooks/useUnreadConversation';
-import useCurrentUser from '../hooks/useCurrentUser';
+import Styles, { Colors, Fonts } from '../../styles/Styles';
+import useOverlay from '../../hooks/useOverlay';
+import useUnreadConversation from '../../hooks/useUnreadConversation';
+import useCurrentUser from '../../hooks/useCurrentUser';
 import GlassCircleButton from './GlassCircleButton';
 
 const mainButtonSize = responsiveHeight(7.5);

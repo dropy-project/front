@@ -11,7 +11,7 @@ import {
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import Styles, { Colors } from '../styles/Styles';
+import Styles, { Colors } from '../../styles/Styles';
 
 
 import DropyPopup from '../assets/svgs/dropyPopup.svg';

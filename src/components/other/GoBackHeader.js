@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import Styles, { Colors, Fonts } from '../styles/Styles';
+import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 const GoBackHeader = ({
   inverted,

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import FastImage from 'react-native-fast-image';
-import API from '../services/API';
-import Styles, { Colors, Fonts } from '../styles/Styles';
-import MEDIA_TYPES from '../utils/mediaTypes';
-import LoadingSpinner from './effect/LoadingSpinner';
+import API from '../../services/API';
+import Styles, { Colors, Fonts } from '../../styles/Styles';
+import MEDIA_TYPES from '../../utils/mediaTypes';
+import LoadingSpinner from '../effect/LoadingSpinner';
 
 const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
   const [loading, setLoading] = useState(true);
