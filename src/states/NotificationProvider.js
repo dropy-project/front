@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { Notifications } from 'react-native-notifications';
 import { Platform } from 'react-native';
 
@@ -27,14 +26,13 @@ export const extractNotificationPayload = (notification) => {
 
 const NotificationProvider = ({ children }) => {
   const { user } = useCurrentUser();
-  const navigation = useNavigation();
 
   const [initialized, setInitialized] = useState(false);
   const [pendingConversationToOpen, setPendingConversationToOpen] = useState(null);
 
-  const [notificationData, setNotificationData] = useState(null);
+  const [notificationsStack, setNotificationsStack] = useState(null);
 
-  const { conversations } = useConversationsSocket();
+  const { openChat } = useConversationsSocket();
 
   useEffectForegroundOnly(() => {
     if (user == null)
@@ -54,22 +52,27 @@ const NotificationProvider = ({ children }) => {
     });
 
     const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
-      console.log(`Notification received in foreground: ${notification.title} : ${notification.body}`);
+      console.log('Notification received in foreground', notification);
       completion({ alert: false, sound: false, badge: false });
 
       const payload = extractNotificationPayload(notification);
       if (payload == null)
         return;
 
-      setNotificationData({
+      const notifData = {
         title: notification.title,
         body: notification.body ?? notification?.payload?.message,
-        onPress: () => openConversation(payload),
+        id: new Date().getTime(),
+        onPress: () => openChat(payload),
+      };
+
+      setNotificationsStack((old) => {
+        const newStack = [...(old ?? []), notifData];
+        return newStack;
       });
     });
 
     const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
-      console.log('App openened from notification');
       completion();
 
       const payload = extractNotificationPayload(notification);
@@ -89,21 +92,11 @@ const NotificationProvider = ({ children }) => {
   };
 
   useEffectForegroundOnly(() => {
-    if (conversations == null)
-      return;
     if (pendingConversationToOpen != null) {
-      openConversation(pendingConversationToOpen);
+      openChat(pendingConversationToOpen);
       setPendingConversationToOpen(null);
     }
-  }, [pendingConversationToOpen, conversations]);
-
-  const openConversation = (conversationId) => {
-    const conversation = conversations.find((c) => c.id === conversationId);
-    navigation.reset({
-      index: 2,
-      routes: [{ name: 'Home' }, { name: 'Conversations' }, { name: 'Chat', params: { conversation } }],
-    });
-  };
+  }, [pendingConversationToOpen]);
 
   const sendDeviceToken = async () => {
     Notifications.events().registerRemoteNotificationsRegistered((event) => {
@@ -116,10 +109,23 @@ const NotificationProvider = ({ children }) => {
     });
   };
 
+  const handleNotificationDone = () => {
+    setNotificationsStack((old) => {
+      const newStack = [...old];
+      newStack.shift();
+      return newStack;
+    });
+  };
+
   return (
     <>
       {children}
-      <Notification data={notificationData} onDone={() => setNotificationData(null)} />
+      {notificationsStack?.map((notifData) => (
+        <Notification
+          key={notifData.id}
+          data={notifData}
+          onDone={handleNotificationDone} />
+      ))}
     </>
   );
 };

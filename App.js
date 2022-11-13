@@ -1,13 +1,14 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
 import {
-  useFonts,
   SpaceGrotesk_300Light,
   SpaceGrotesk_400Regular,
   SpaceGrotesk_500Medium,
   SpaceGrotesk_600SemiBold,
-  SpaceGrotesk_700Bold
+  SpaceGrotesk_700Bold,
+  useFonts
 } from '@expo-google-fonts/space-grotesk';
 
 import * as Sentry from '@sentry/react-native';
@@ -33,33 +34,30 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-const NavigationApp = () => {
-  return (
-    <NavigationContainer>
-      <OverlayContextProvider>
-        <UserProvider>
-          <BackgroundGolocationContextProvider>
-            <GeolocationProvider>
-              <SocketContextProvider>
-                <ConversationsContextProvider>
-                  <NotificationProvider>
-                    <Navigation />
-                  </NotificationProvider>
-                </ConversationsContextProvider>
-              </SocketContextProvider>
-            </GeolocationProvider>
-          </BackgroundGolocationContextProvider>
-        </UserProvider>
-      </OverlayContextProvider>
-    </NavigationContainer>
-  );
-};
+const NavigationApp = () => (
+  <NavigationContainer>
+    <OverlayContextProvider>
+      <UserProvider>
+        <BackgroundGolocationContextProvider>
+          <GeolocationProvider>
+            <SocketContextProvider>
+              <ConversationsContextProvider>
+                <NotificationProvider>
+                  <Navigation />
+                </NotificationProvider>
+              </ConversationsContextProvider>
+            </SocketContextProvider>
+          </GeolocationProvider>
+        </BackgroundGolocationContextProvider>
+      </UserProvider>
+    </OverlayContextProvider>
+  </NavigationContainer>
+);
 
 const ConnectedNavigationApp = connectActionSheet(NavigationApp);
 
 export default function App() {
-
-  let [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     SpaceGrotesk_300Light,
     SpaceGrotesk_400Regular,
     SpaceGrotesk_500Medium,
@@ -67,7 +65,7 @@ export default function App() {
     SpaceGrotesk_700Bold,
   });
 
-  if(!fontsLoaded)
+  if (!fontsLoaded)
     return null;
 
   return (
