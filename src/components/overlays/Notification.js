@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity
 } from 'react-native';
-import { Colors, Fonts } from '../../styles/Styles';
+import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 const Notification = ({ data, onDone }) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -18,7 +18,7 @@ const Notification = ({ data, onDone }) => {
         toValue: 1,
         duration: 300,
         useNativeDriver: true,
-        easing: Easing.elastic(1.1),
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       }),
       Animated.delay(2000),
       Animated.timing(animatedValue, {
@@ -33,7 +33,7 @@ const Notification = ({ data, onDone }) => {
 
   const translateValue = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['-150%', '0%'],
+    outputRange: [-300, 0],
   });
 
   const handlePress = () => {
@@ -68,6 +68,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '80%',
     alignItems: 'center',
+    ...Styles.hardShadows,
+    shadowColor: Colors.purple1,
   },
   safeAreaView: {
     width: '100%',

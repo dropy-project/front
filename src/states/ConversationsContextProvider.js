@@ -122,6 +122,7 @@ const ConversationsContextProvider = ({ children }) => {
     if (conversation == null)
       return;
     navigation.navigate('Chat', { conversation });
+    markConversationAsRead(conversationId);
   };
 
   return (
