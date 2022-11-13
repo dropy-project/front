@@ -59,7 +59,7 @@ export default function Onboarding({ navigation }) {
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
   const [displayName, setDisplayName] = useState(DEBUG ? 'Michel Debug' : '');
   const [profilePicturePath, setProfilePicturePath] = useState(null);
-  const [email, setEmail] = useState(DEBUG ? 'Michel.debug@dropy-app.com' : '');
+  const [email, setEmail] = useState(DEBUG ? 'michel.debug@dropy-app.com' : '');
   const [password, setPassword] = useState(DEBUG ? 'Michel1234supersecu!@#$' : '');
   const [passwordConfirmation, setPasswordConfirmation] = useState(DEBUG ? 'Michel1234supersecu!@#$' : '');
 
