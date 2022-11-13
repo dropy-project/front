@@ -26,6 +26,16 @@ const SettingsScreen = ({ navigation }) => {
 
   const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
 
+  const logout = async () => {
+    await API.logout();
+    navigation.reset({ index: 0,
+      routes: [
+        {
+          name: 'Splash',
+          params: { cancelAutoLogin: true } }
+      ] });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader text='Settings' />
@@ -97,15 +107,7 @@ const SettingsScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={{ ...styles.linkContainer, ...Styles.center }}
-          onPress={async () => {
-            await API.logout();
-            navigation.reset({ index: 0,
-              routes: [
-                {
-                  name: 'Splash',
-                  params: { cancelAutoLogin: true } }
-              ] });
-          }}
+          onPress={logout}
         >
           <Text style={{ ...Fonts.bold(12, Colors.red) }}>Logout</Text>
         </TouchableOpacity>

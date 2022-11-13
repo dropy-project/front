@@ -35,8 +35,10 @@ const SocketContextProvider = ({ children }) => {
   const allSocketsConnected = dropySocketConnected && chatSocketConnected;
 
   useEffectForegroundOnly(() => {
-    if (user == null)
+    if (user == null) {
+      destroyAllSocket();
       return;
+    }
     if (initialized === true)
       return;
     manager.current = new Manager(SOCKET_BASE_URL, {
@@ -78,7 +80,21 @@ const SocketContextProvider = ({ children }) => {
     };
   }, [user]);
 
+  const destroyAllSocket = () => {
+    if (!initialized)
+      return;
+    dropySocket.current?.disconnect();
+    chatSocket.current?.disconnect();
+    manager.current = null;
+    setInitialized(false);
+    setChatSocketConnected(false);
+    setDropySocketConnected(false);
+    log('Sockets destroyed');
+  };
+
   useEffect(() => {
+    if (!initialized)
+      return;
     if (allSocketsConnected)
       return;
     if (dropySocket.current?.connected === false) {
