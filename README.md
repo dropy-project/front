@@ -6,6 +6,7 @@
 > - node >= 16
 > - unix
 > - xcode (IOS) ou android studio
+> - Ne pas avoir nvm d'installé
 
 Intaller dépendances : `npm i`
 
