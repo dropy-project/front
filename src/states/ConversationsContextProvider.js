@@ -125,6 +125,8 @@ const ConversationsContextProvider = ({ children }) => {
     markConversationAsRead(conversationId);
   };
 
+  const conversationIsOpen = (conversationId) => conversations.find((c) => c.id === conversationId) != null;
+
   return (
     <ConversationsContext.Provider value={{
       loading,
@@ -134,6 +136,7 @@ const ConversationsContextProvider = ({ children }) => {
       listConversations,
       createConversation,
       openChat,
+      conversationIsOpen,
     }}>
       {children}
     </ConversationsContext.Provider>
