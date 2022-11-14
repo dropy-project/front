@@ -45,9 +45,25 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
     }
   };
 
+
+  // Ask confirmation before go back (leave drop)
+  const handleGoBack = async () => {
+
+    const result = await sendAlert({
+      title: 'Are you sure?',
+      description: 'If you go back, you will no longer\n be able to open the drop!\nAre you sure you want to go back?',
+      validateText: 'Stay',
+      denyText: 'Go back',
+    });
+
+    !result && navigation.goBack();
+
+  };
+
+
   return (
     <SafeAreaView style={styles.container}>
-      <DropyMediaViewer dropy={dropy} style={{ ...StyleSheet.absoluteFillObject }}/>
+      <DropyMediaViewer dropy={dropy} style={{ ...StyleSheet.absoluteFillObject }} />
       <LinearGradient
         colors={['rgba(10,0,10,0.7)', 'rgba(0,0,0,0)']}
         start={{ x: 0.5, y: 0 }}
@@ -59,8 +75,9 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       <GoBackHeader
         color={Colors.white}
         onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}
+        onPressGoBack={handleGoBack}
       />
-      {showBottoModal && (
+      {showBottoModal && ( //showBottomModal maybe ?
         <FooterConfirmation onPress={openConversation} dropy={dropy} textButton="Let's chat !" />
       )}
     </SafeAreaView>
