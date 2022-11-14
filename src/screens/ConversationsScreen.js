@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import ConversationItem from '../components/chat/ConversationItem';
 import FadeInWrapper from '../components/effect/FadeInWrapper';
 import LoadingSpinner from '../components/effect/LoadingSpinner';
 import GoBackHeader from '../components/other/GoBackHeader';
+import GlassButton from '../components/input/GlassButton';
 
 import useConversationsSocket from '../hooks/useConversationsSocket';
 import useOverlay from '../hooks/useOverlay';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-import { MaterialIcons } from '@expo/vector-icons';
-import GlassButton from '../components/input/GlassButton';
 
 const ConversationsScreen = ({ navigation }) => {
   const { sendAlert } = useOverlay();
