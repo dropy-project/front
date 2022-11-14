@@ -51,7 +51,7 @@ const ConversationsScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <GoBackHeader
         onPressGoBack={() => navigation.navigate('Home')}
-        text={'My conversations'}
+        text={'Mes conversations'}
       />
       {loading ? (
         <LoadingSpinner selfCenter />
