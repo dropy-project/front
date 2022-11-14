@@ -75,7 +75,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       <GoBackHeader
         color={Colors.white}
         onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}
-        onPressGoBack={handleGoBack}
+        onPressGoBack={user.id === dropy.emitter.id ? undefined : handleGoBack}
       />
       {showBottoModal && ( //showBottomModal maybe ?
         <FooterConfirmation onPress={openConversation} dropy={dropy} textButton="Let's chat !" />
