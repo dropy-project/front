@@ -62,9 +62,9 @@ const ConversationsScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollViewContent}
           ListEmptyComponent={() => (
             <View style={{ flex: 1, height: responsiveHeight(80), ...Styles.center }}>
-              <MaterialIcons name='location-on' size={58} color='grey' />
-              <Text style={{ ...Fonts.ligth(15, Colors.grey), textAlign: 'center', marginTop: 30 }}>Find drops, begin new conversations!</Text>
-              <GlassButton buttonText='Back' style={styles.backButton} onPress={() => navigation.navigate('Home')} fontSize={17} />
+              <MaterialIcons name='location-on' size={58} color={Colors.darkGrey} />
+              <Text style={styles.text}>Trouve un drop pour commencer une nouvelle conversation.</Text>
+              <GlassButton buttonText='Retour' style={styles.backButton} onPress={() => navigation.navigate('Home')} fontSize={17} />
             </View>
           )}
           renderItem={({ item: conversation, index }) => (
@@ -100,12 +100,18 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 20,
   },
+  text: {
+    ...Fonts.ligth(15, Colors.darkGrey),
+    textAlign: 'center',
+    marginTop: 30,
+    width: '80%',
+  },
   backButton: {
     bottom: -230,
     paddingTop: 15,
     paddingBottom: 15,
     paddingLeft: 60,
     paddingRight: 60,
-    borderRadius: 24,
+    borderRadius: 20,
   },
 });
