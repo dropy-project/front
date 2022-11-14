@@ -15,7 +15,7 @@ import GoBackHeader from '../components/other/GoBackHeader';
 import FooterConfirmation from '../components/other/FooterConfirmation';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
-  const { dropy, showBottoModal: showBottomModal } = route.params || {};
+  const { dropy, showBottomModal } = route.params || {};
 
   const { user } = useCurrentUser();
   const { sendAlert } = useOverlay();
