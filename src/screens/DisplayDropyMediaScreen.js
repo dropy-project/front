@@ -15,7 +15,7 @@ import GoBackHeader from '../components/other/GoBackHeader';
 import FooterConfirmation from '../components/other/FooterConfirmation';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
-  const { dropy, showBottoModal } = route.params || {};
+  const { dropy, showBottomModal } = route.params || {};
 
   const { user } = useCurrentUser();
   const { sendAlert } = useOverlay();
@@ -70,9 +70,9 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       <GoBackHeader
         color={Colors.white}
         onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}
-        onPressGoBack={showBottoModal ? confirmGoBack : undefined}
+        onPressGoBack={showBottomModal ? confirmGoBack : undefined}
       />
-      {showBottoModal && (
+      {showBottomModal && (
         <FooterConfirmation onPress={openConversation} dropy={dropy} textButton="Let's chat !" />
       )}
     </SafeAreaView>

@@ -73,7 +73,7 @@ const GetDropyScreen = ({ navigation, route }) => {
   const handleConfirmation = (dropy) => {
     navigation.reset({
       index: 1,
-      routes: [{ name: 'Home' }, { name: 'DisplayDropyMedia', params: { dropy, showBottoModal: true } }],
+      routes: [{ name: 'Home' }, { name: 'DisplayDropyMedia', params: { dropy, showBottomModal: true } }],
     });
   };
 
