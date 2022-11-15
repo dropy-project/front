@@ -10,6 +10,8 @@ import GoBackHeader from '../components/other/GoBackHeader';
 import useConversationsSocket from '../hooks/useConversationsSocket';
 import useOverlay from '../hooks/useOverlay';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import GlassButton from '../components/input/GlassButton';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const ConversationsScreen = ({ navigation }) => {
   const { sendAlert } = useOverlay();
@@ -59,7 +61,14 @@ const ConversationsScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollViewContent}
           ListEmptyComponent={() => (
             <View style={{ flex: 1, height: responsiveHeight(80), ...Styles.center }}>
-              <Text style={{ ...Fonts.ligth(15, Colors.grey), textAlign: 'center' }}>Find drops, begin new conversations!</Text>
+              <FontAwesome5 name='map-marker-alt' size={40} color={Colors.darkGrey} style={{marginBottom: 20}} />
+              <Text style={{ ...Fonts.bold(15, Colors.grey), textAlign: 'center' }}>Find drops, begin new conversations!</Text>
+              <GlassButton
+                onPress={ () => navigation.goBack()}
+                buttonText={"Go Back"}
+                style={styles.listEmptyButton}
+                fontSize={14}
+              />
             </View>
           )}
           renderItem={({ item: conversation, index }) => (
@@ -95,4 +104,11 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 20,
   },
+  listEmptyButton: {
+    minHeight: 45,
+    ...Styles.softShadows,
+    paddingHorizontal: 50,
+    position: 'absolute',
+    bottom: 0,
+  }
 });
