@@ -122,7 +122,10 @@ const ConversationsContextProvider = ({ children }) => {
     if (conversation == null)
       return;
     navigation.navigate('Chat', { conversation });
+    markConversationAsRead(conversationId);
   };
+
+  const conversationIsOpen = (conversationId) => conversations.find((c) => c.id === conversationId) != null;
 
   return (
     <ConversationsContext.Provider value={{
@@ -133,6 +136,7 @@ const ConversationsContextProvider = ({ children }) => {
       listConversations,
       createConversation,
       openChat,
+      conversationIsOpen,
     }}>
       {children}
     </ConversationsContext.Provider>

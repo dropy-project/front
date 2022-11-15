@@ -60,8 +60,8 @@ export default function Onboarding({ navigation }) {
   const [displayName, setDisplayName] = useState(DEBUG ? 'Michel Debug' : '');
   const [profilePicturePath, setProfilePicturePath] = useState(null);
   const [email, setEmail] = useState(DEBUG ? 'michel.debug@dropy-app.com' : '');
-  const [password, setPassword] = useState(DEBUG ? 'michel1234supersecu!@#$' : '');
-  const [passwordConfirmation, setPasswordConfirmation] = useState(DEBUG ? 'michel1234supersecu!@#$' : '');
+  const [password, setPassword] = useState(DEBUG ? 'Michel1234supersecu!@#$' : '');
+  const [passwordConfirmation, setPasswordConfirmation] = useState(DEBUG ? 'Michel1234supersecu!@#$' : '');
 
   const [termsChecked, setTermsChecked] = useState(false);
   const [newsletterChecked, setNewsletterChecked] = useState(false);
@@ -486,14 +486,15 @@ export default function Onboarding({ navigation }) {
               const emailValid = emailInputRef.current?.isValid();
               const passwordValid = passwordInputRef.current?.isValid();
               const passwordConfirmationValid = passwordConfirmationInputRef.current?.isValid();
+              const inputsValid = emailValid && passwordValid && passwordConfirmationValid;
               const samePasswords = passwordInputRef.current?.getValue() === passwordConfirmationInputRef.current?.getValue();
-              if (!samePasswords) {
+              if (inputsValid && !samePasswords) {
                 passwordInputRef.current?.setInvalid('Passwords does not match');
                 passwordConfirmationInputRef.current?.setInvalid('Passwords does not match');
               }
-              const isValid = emailValid && passwordValid && passwordConfirmationValid && samePasswords;
-              isValid && viewSliderRef.current?.goToView(5);
-              isValid && Keyboard.dismiss();
+              const everythingValid = inputsValid && samePasswords;
+              everythingValid && viewSliderRef.current?.goToView(5);
+              everythingValid && Keyboard.dismiss();
             }}
             disabled={email === '' || password === '' || passwordConfirmation === ''}
           />

@@ -1,4 +1,3 @@
-
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -25,7 +24,7 @@ import ProfileImage from '../profile/ProfileImage';
 const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDropies }) => {
   const [render, setRender] = useState(false);
   const { sendAlert } = useOverlay();
-  const { openChat } = useConversationsSocket();
+  const { openChat, conversationIsOpen } = useConversationsSocket();
 
   const menuAnimatedValue = useRef(new Animated.Value(0)).current;
 
@@ -138,14 +137,16 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
                         <Text style={{ ...Fonts.regular(10, Colors.grey), marginTop: 3 }}>@{dropy.emitter.username}</Text>
                       </View>
 
-                      <TouchableOpacity onPress={() => openChat(dropy.conversationId)}>
-                        <Ionicons
-                          name='md-chatbubble-outline'
-                          size={30}
-                          color={Colors.grey}
-                          style={styles.icons}
-                        />
-                      </TouchableOpacity>
+                      {conversationIsOpen(dropy.conversationId) && (
+                        <TouchableOpacity onPress={() => openChat(dropy.conversationId)}>
+                          <Ionicons
+                            name='md-chatbubble-outline'
+                            size={30}
+                            color={Colors.grey}
+                            style={styles.icons}
+                          />
+                        </TouchableOpacity>
+                      )}
                     </View>
 
                     <View style={styles.dropInfosContainer}>
