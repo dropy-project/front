@@ -64,7 +64,7 @@ const ConversationsScreen = ({ navigation }) => {
             <View style={{ flex: 1, height: responsiveHeight(80), ...Styles.center }}>
               <MaterialIcons name='location-on' size={58} color={Colors.darkGrey} />
               <Text style={styles.text}>Trouve un drop pour commencer une nouvelle conversation.</Text>
-              <GlassButton buttonText='Retour' style={styles.backButton} onPress={() => navigation.navigate('Home')} fontSize={17} />
+              <GlassButton buttonText='Retour' style={styles.backButton} onPress={() => navigation.goBack()} fontSize={17} />
             </View>
           )}
           renderItem={({ item: conversation, index }) => (
