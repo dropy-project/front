@@ -13,7 +13,6 @@ const ConversationsContextProvider = ({ children }) => {
 
   const { chatSocket } = useSocket();
 
-  /*
   useEffect(() => {
     if (chatSocket == null)
       return;
@@ -46,8 +45,6 @@ const ConversationsContextProvider = ({ children }) => {
       chatSocket.off('close_conversation');
     };
   }, [chatSocket]);
-
-  */
 
   const createOrUpdateConversation = (conversation) => {
     setConversations((old) => {
