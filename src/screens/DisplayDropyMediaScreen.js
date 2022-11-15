@@ -37,12 +37,14 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
   };
 
   const confirmGoBack = async () => {
-    const result = await sendAlert({
-      title: 'Confirm Go Back',
-      description: 'Are you sure you want to go back ? You will not be able to contact this user again.',
-      validateText: 'Yes, I take the risk',
-      denyText: 'Cancel'
-    });
+    let result = true
+    if(showBottoModal)
+      result = await sendAlert({
+        title: 'Confirm Go Back',
+        description: 'Are you sure you want to go back ? You will not be able to contact this user again.',
+        validateText: 'Yes, I take the risk',
+        denyText: 'Cancel'
+      });
     if (result) 
       navigation.goBack();
   }
