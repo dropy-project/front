@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import ConversationItem from '../components/chat/ConversationItem';
 import FadeInWrapper from '../components/effect/FadeInWrapper';
 import LoadingSpinner from '../components/effect/LoadingSpinner';
 import GoBackHeader from '../components/other/GoBackHeader';
+import GlassButton from '../components/input/GlassButton';
 
 import useConversationsSocket from '../hooks/useConversationsSocket';
 import useOverlay from '../hooks/useOverlay';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+
 
 const ConversationsScreen = ({ navigation }) => {
   const { sendAlert } = useOverlay();
@@ -48,7 +51,7 @@ const ConversationsScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <GoBackHeader
         onPressGoBack={() => navigation.navigate('Home')}
-        text={'My conversations'}
+        text={'Mes conversations'}
       />
       {loading ? (
         <LoadingSpinner selfCenter />
@@ -59,7 +62,9 @@ const ConversationsScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollViewContent}
           ListEmptyComponent={() => (
             <View style={{ flex: 1, height: responsiveHeight(80), ...Styles.center }}>
-              <Text style={{ ...Fonts.ligth(15, Colors.grey), textAlign: 'center' }}>Find drops, begin new conversations!</Text>
+              <MaterialIcons name='location-on' size={58} color={Colors.darkGrey} />
+              <Text style={styles.text}>Trouve un drop pour commencer une nouvelle conversation.</Text>
+              <GlassButton buttonText='Retour' style={styles.backButton} onPress={() => navigation.goBack()} fontSize={17} />
             </View>
           )}
           renderItem={({ item: conversation, index }) => (
@@ -94,5 +99,19 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     width: '100%',
     paddingVertical: 20,
+  },
+  text: {
+    ...Fonts.ligth(15, Colors.darkGrey),
+    textAlign: 'center',
+    marginTop: 30,
+    width: '80%',
+  },
+  backButton: {
+    bottom: -230,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 60,
+    paddingRight: 60,
+    borderRadius: 20,
   },
 });
