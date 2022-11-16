@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useContext, useEffect } from 'react';
 import {
   Linking,
@@ -114,7 +115,7 @@ const SettingsScreen = ({ navigation }) => {
 
         <View style={styles.spacer} />
 
-        <TouchableOpacity onLongPress={() => user.isDeveloper && setDeveloperMode((old) => !old)} activeOpacity={1}>
+        <TouchableOpacity onLongPress={() => user.isDeveloper && __DEV__ && setDeveloperMode((old) => !old)} activeOpacity={1}>
           <View style={styles.infoTextContainer}>
             <Ionicons name='git-branch' size={19} color={Colors.darkGrey} />
             <Text style={styles.infoText}>
