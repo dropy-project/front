@@ -11,6 +11,7 @@
 Intaller dépendances : `npm i`
 
 IOS :
+- `sudo xcode-select --switch /Applications/Xcode.app`
 - `cd ios && pos install`
 - `npm run ios`
 
