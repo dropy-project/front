@@ -164,6 +164,7 @@ const DropyMap = ({
         scrollEnabled={false}
         pitchEnabled={false}
         showsCompass={false}
+        moveOnMarkerPress={false}
         initialCamera={{
           center: {
             latitude: userCoordinates?.latitude ?? 0,
