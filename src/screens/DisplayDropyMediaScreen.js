@@ -15,7 +15,7 @@ import GoBackHeader from '../components/other/GoBackHeader';
 import FooterConfirmation from '../components/other/FooterConfirmation';
 
 const DisplayDropyMediaScreen = ({ navigation, route }) => {
-  const { dropy, showBottoModal } = route.params || {};
+  const { dropy, showBottomModal } = route.params || {};
 
   const { user } = useCurrentUser();
   const { sendAlert } = useOverlay();
@@ -35,6 +35,17 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
         blockUser(dropy.emitter.id, sendAlert, navigation);
     });
   };
+
+  const confirmGoBack = async () => {
+    const result = await sendAlert({
+      title: 'Confirm Go Back',
+      description: 'Are you sure you want to go back ? You will not be able to contact this user again.',
+      validateText: 'Yes, I take the risk',
+      denyText: 'Cancel'
+    });
+    if (result) 
+      navigation.goBack();
+  }
 
   const openConversation = async () => {
     try {
@@ -59,8 +70,9 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       <GoBackHeader
         color={Colors.white}
         onPressOptions={user.id === dropy.emitter.id ? undefined : handleOptionsButtonPress}
+        onPressGoBack={showBottomModal ? confirmGoBack : undefined}
       />
-      {showBottoModal && (
+      {showBottomModal && (
         <FooterConfirmation onPress={openConversation} dropy={dropy} textButton="Let's chat !" />
       )}
     </SafeAreaView>
