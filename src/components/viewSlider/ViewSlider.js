@@ -26,11 +26,11 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
   useImperativeHandle(ref, () => ({
     nextView() {
       if (currentViewIndex < children.length - 1)
-        setCurrentViewIndex(currentViewIndex + 1);
+        setCurrentViewIndex((old) => old + 1);
     },
     previousView() {
       if (currentViewIndex > 0)
-        setCurrentViewIndex(currentViewIndex - 1);
+        setCurrentViewIndex((old) => old - 1);
     },
     goToView(index) {
       if (index >= 0 && index < children.length)
