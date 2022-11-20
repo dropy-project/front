@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useContext } from 'react';
 import {
   Linking,
@@ -22,7 +23,7 @@ import DebugText from '../components/other/DebugText';
 import GoBackHeader from '../components/other/GoBackHeader';
 
 const SettingsScreen = ({ navigation }) => {
-  const { setDeveloperMode } = useCurrentUser();
+  const { setDeveloperMode, user } = useCurrentUser();
 
   const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
 
@@ -114,7 +115,7 @@ const SettingsScreen = ({ navigation }) => {
 
         <View style={styles.spacer} />
 
-        <TouchableOpacity onLongPress={() => setDeveloperMode((old) => !old)} activeOpacity={1}>
+        <TouchableOpacity onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)} activeOpacity={1}>
           <View style={styles.infoTextContainer}>
             <Ionicons name='git-branch' size={19} color={Colors.darkGrey} />
             <Text style={styles.infoText}>
