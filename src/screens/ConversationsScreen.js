@@ -107,11 +107,9 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   backButton: {
-    bottom: -230,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 60,
-    paddingRight: 60,
-    borderRadius: 20,
+    top: 90,
+    ...Styles.hardShadows,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
   },
 });
