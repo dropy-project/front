@@ -6,8 +6,5 @@
   "versionFlag": "private-alpha",
   "requiredServerVersion": "0.0.9",
 
-  "customAPI": null,
-  "customSocket": null,
-
   "productionMode": true
 }

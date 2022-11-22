@@ -3,7 +3,7 @@ import Storage from '../utils/storage';
 import AppInfo from '../../app.json';
 
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
-const API_BASE_URL = AppInfo.customAPI ?? `https://${DOMAIN_PREFIX}api.dropy-app.com`;
+const API_BASE_URL = `https://${DOMAIN_PREFIX}api.dropy-app.com`;
 
 const AXIOS_PARAMS = {
   baseURL: API_BASE_URL,
@@ -13,6 +13,12 @@ const AXIOS_PARAMS = {
 let axios = Axios.create(AXIOS_PARAMS);
 
 const getHeaders = () => axios.defaults.headers.common;
+
+const loadCustomUrl = async () => {
+  const customUrls = await Storage.getItem('@custom_urls');
+  if (customUrls != null)
+    axios.defaults.baseURL = customUrls.api ?? API_BASE_URL;
+};
 
 const register = async (displayName, email, password, newsLetter) => {
   const response = await axios.post('/register', {
@@ -41,6 +47,7 @@ const login = async (email, password) => {
   const { accessToken, refreshToken, expires, profile: user } = response.data;
 
   axios = Axios.create(AXIOS_PARAMS);
+  loadCustomUrl();
   axios.defaults.headers.common.Authorization = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
@@ -182,6 +189,7 @@ const getUserProfile = async () => {
 
 const logout = async () => {
   axios = Axios.create(AXIOS_PARAMS);
+  loadCustomUrl();
   const removedItem = await Storage.removeItem('@auth_tokens');
   return removedItem;
 };
