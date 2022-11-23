@@ -31,7 +31,7 @@ const SettingsScreen = ({ navigation }) => {
 
   const { sendAlert } = useOverlay();
 
-  const [notificationsSettings, setNotificationsSettings] = useState(0);
+  const [notificationsSettings, setNotificationsSettings] = useState(null);
 
   useEffect(() => {
     fetchNotificationsSettings();
@@ -47,7 +47,7 @@ const SettingsScreen = ({ navigation }) => {
       const response = await API.getNotificationsSettings(user);
       setNotificationsSettings(response.data);
     } catch (error) {
-      await sendAlert({
+      sendAlert({
         title: 'Notifications settings unrecheable',
         description: 'We were unable to retrieve your notification settings',
         validateText: 'Ok',
@@ -61,7 +61,7 @@ const SettingsScreen = ({ navigation }) => {
     try {
       await API.postNotificationsSettings(notificationsSettings);
     } catch (error) {
-      await sendAlert({
+      sendAlert({
         title: 'Notifications settings not updated',
         description: 'We were unable to update your notification settings',
         validateText: 'Ok',
@@ -109,17 +109,17 @@ const SettingsScreen = ({ navigation }) => {
 
         <Text style={styles.titleText}>Notifications</Text>
         <FormToggle
-          value={notificationsSettings.dailyDropyReminder}
+          value={notificationsSettings?.dailyDropyReminder}
           title='Remind me to drop something daily'
           onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dailyDropyReminder: value }))}
         />
         <FormToggle
-          value={notificationsSettings.dropyCollected}
+          value={notificationsSettings?.dropyCollected}
           title='When one of my drop is collected'
           onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dropyCollected: value }))}
         />
         <FormToggle
-          value={notificationsSettings.newFeature}
+          value={notificationsSettings?.newFeature}
           title='When a new feature is available'
           onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, newFeature: value }))}
         />
