@@ -52,7 +52,7 @@ const SettingsScreen = ({ navigation }) => {
         description: 'We were unable to retrieve your notification settings',
         validateText: 'Ok',
       });
-      console.error('Error while fetch notifications settings', error?.response?.data || error);
+      console.error('Error while fetch notifications settings', error.response?.data || error);
       navigation.goBack();
     }
   };
@@ -66,7 +66,7 @@ const SettingsScreen = ({ navigation }) => {
         description: 'We were unable to update your notification settings',
         validateText: 'Ok',
       });
-      console.error('Error while update notifications settings', error?.response?.data || error);
+      console.error('Error while update notifications settings', error.response?.data || error);
     }
   };
 
