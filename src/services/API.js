@@ -187,6 +187,16 @@ const getUserProfile = async () => {
   return response;
 };
 
+const getNotificationsSettings = async () => {
+  const response = await axios.get('/user/notificationsSettings');
+  return response;
+};
+
+const postNotificationsSettings = async (notificationsState) => {
+  const response = await axios.post('/user/notificationsSettings', notificationsState);
+  return response;
+};
+
 const logout = async () => {
   axios = Axios.create(AXIOS_PARAMS);
   loadCustomUrl();
@@ -218,6 +228,8 @@ const API = {
   getUserRetrievedDropies,
   refreshToken,
   getUserProfile,
+  getNotificationsSettings,
+  postNotificationsSettings,
   logout,
 };
 

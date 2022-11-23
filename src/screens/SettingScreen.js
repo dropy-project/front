@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Linking,
   SafeAreaView,
@@ -16,6 +16,7 @@ import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import useCurrentUser from '../hooks/useCurrentUser';
+import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 
 import FormToggle from '../components/input/FormToggle';
@@ -24,9 +25,13 @@ import GoBackHeader from '../components/other/GoBackHeader';
 import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
 const SettingsScreen = ({ navigation }) => {
+  const { sendAlert } = useOverlay();
+
   const { setDeveloperMode, user, developerMode, customUrls } = useCurrentUser();
 
   const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
+
+  const [notificationsState, setNotificationsState] = useState(null);
 
   const logout = async () => {
     await API.logout();
@@ -40,6 +45,43 @@ const SettingsScreen = ({ navigation }) => {
       ],
     });
   };
+
+  const getNotificationsState = async () => {
+    try {
+      const response = await API.getNotificationsSettings();
+      setNotificationsState(response.data);
+    } catch (error) {
+      console.error('Error while getting notifications state', error.response?.data ?? error);
+      sendAlert({
+        title: 'Error',
+        description: 'Somethings wrong i can feel it',
+        validateText: 'OK',
+      });
+      navigation.goBack();
+    }
+  };
+
+  const postNotificationsState = async () => {
+    try {
+      await API.postNotificationsSettings(notificationsState);
+    } catch (error) {
+      console.error('Error while posting notifications state', error.response?.data ?? error);
+      sendAlert({
+        title: 'Error',
+        description: 'Somethings wrong i can feel it',
+        validateText: 'OK',
+      });
+    }
+  };
+
+  useEffect(() => {
+    getNotificationsState();
+  }, []);
+
+  useEffect(() => {
+    if (notificationsState)
+      postNotificationsState();
+  }, [notificationsState]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,9 +108,27 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.titleText}>Notifications</Text>
-        <FormToggle disabled title='Remind me to drop something daily' />
-        <FormToggle disabled title='When one of my drop is collected' />
-        <FormToggle disabled title='When a new feature is available' />
+        <FormToggle
+          value={notificationsState?.dailyDropyReminder ?? false}
+          onValueChange={(value) => setNotificationsState((old) => ({
+            ...old,
+            dailyDropyReminder: value,
+          }))}
+          title='Remind me to drop something daily' />
+        <FormToggle
+          value={notificationsState?.dropyCollected ?? false}
+          onValueChange={(value) => setNotificationsState((old) => ({
+            ...old,
+            dropyCollected: value,
+          }))}
+          title='When one of my drop is collected' />
+        <FormToggle
+          value={notificationsState?.newFeature ?? false}
+          onValueChange={(value) => setNotificationsState((old) => ({
+            ...old,
+            newFeature: value,
+          }))}
+          title='When a new feature is available' />
 
         <Text style={styles.titleText}>Others</Text>
         <FormToggle disabled title='Vibrations' />
@@ -141,7 +201,7 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <DebugText marginBottom={20}>DEV MODE</DebugText>
-        {(developerMode || customUrls) && <DebugUrlsMenu /> }
+        {(developerMode || customUrls) && <DebugUrlsMenu />}
       </ScrollView>
     </SafeAreaView>
   );
