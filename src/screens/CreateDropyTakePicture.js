@@ -15,8 +15,11 @@ const CreateDropyTakePicture = ({ navigation }) => {
   const handleCamera = async () => {
     try {
       const image = await openCamera({
-        mediaType: 'photo',
+        forceJpg: false,
+        maxFiles: 1,
+        compressImageQuality: 1,
         cropping: true,
+        mediaType: 'photo',
       });
 
       navigation.navigate('Home', {

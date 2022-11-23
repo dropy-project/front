@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Linking } from 'react-native';
 import { openPicker } from 'react-native-image-crop-picker';
-import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import useOverlay from '../hooks/useOverlay';
 import { compressImage } from '../utils/files';
 import MEDIA_TYPES from '../utils/mediaTypes';
@@ -16,9 +15,10 @@ const CreateDropyFromLibrary = ({ navigation }) => {
   const openImageLibraryAndValidate = async () => {
     try {
       const image = await openPicker({
-        width: responsiveWidth(100),
-        height: responsiveHeight(100),
-        cropping: true,
+        cropping: false,
+        forceJpg: true,
+        maxFiles: 1,
+        compressImageQuality: 1,
         mediaType: 'photo',
       });
 

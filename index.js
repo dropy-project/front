@@ -8,7 +8,7 @@ import { name as appName, productionMode } from './app.json';
 
 // eslint-disable-next-line no-undef
 if (__DEV__ && productionMode)
-  console.warn('You using production mode in development, this may impact production servers');
+  console.error('WATCH OUT YOU PROBABLY DONT WANT THAT : You are using production mode in development, this may impact production servers');
 
 
 AppRegistry.registerComponent(appName, () => App);

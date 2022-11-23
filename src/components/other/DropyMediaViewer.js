@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import FastImage from 'react-native-fast-image';
+import { BlurView } from '@react-native-community/blur';
 import API from '../../services/API';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import MEDIA_TYPES from '../../utils/mediaTypes';
@@ -42,6 +43,18 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
   if (dropy.mediaType === MEDIA_TYPES.PICTURE) {
     return (
       <View style={style}>
+        <FastImage
+          style={{ ...styles.displayImage }}
+          source={imageSource}
+          resizeMode='cover'
+        />
+        <BlurView
+          style={StyleSheet.absoluteFillObject}
+          blurType='light'
+          blurAmount={10}
+          reducedTransparencyFallbackColor='black'
+        />
+        <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0, 0, 0, 0.2)' }}/>
         {loading && (
           <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
             <LoadingSpinner />
@@ -51,6 +64,7 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
           onLoadEnd={() => setLoading(false)}
           style={{ ...styles.displayImage }}
           source={imageSource}
+          resizeMode='contain'
         />
       </View>
     );
@@ -86,6 +100,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   displayImage: {
+    position: 'absolute',
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
