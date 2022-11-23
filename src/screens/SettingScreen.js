@@ -21,20 +21,24 @@ import API from '../services/API';
 import FormToggle from '../components/input/FormToggle';
 import DebugText from '../components/other/DebugText';
 import GoBackHeader from '../components/other/GoBackHeader';
+import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
 const SettingsScreen = ({ navigation }) => {
-  const { setDeveloperMode, user } = useCurrentUser();
+  const { setDeveloperMode, user, developerMode, customUrls } = useCurrentUser();
 
   const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
 
   const logout = async () => {
     await API.logout();
-    navigation.reset({ index: 0,
+    navigation.reset({
+      index: 0,
       routes: [
         {
           name: 'Splash',
-          params: { cancelAutoLogin: true } }
-      ] });
+          params: { cancelAutoLogin: true },
+        }
+      ],
+    });
   };
 
   return (
@@ -137,6 +141,7 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <DebugText marginBottom={20}>DEV MODE</DebugText>
+        {(developerMode || customUrls) && <DebugUrlsMenu /> }
       </ScrollView>
     </SafeAreaView>
   );

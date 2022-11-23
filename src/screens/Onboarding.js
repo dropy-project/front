@@ -34,6 +34,7 @@ import ViewSlider from '../components/viewSlider/ViewSlider';
 import FormCheckBox from '../components/input/FormCheckBox';
 import GlassButton from '../components/input/GlassButton';
 import LoadingSpinner from '../components/effect/LoadingSpinner';
+import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
 // eslint-disable-next-line no-undef
 const DEBUG = __DEV__;
@@ -52,7 +53,7 @@ export default function Onboarding({ navigation }) {
   const passwordConfirmationInputRef = useRef(null);
 
   const { sendAlert } = useOverlay();
-  const { user, setUser } = useCurrentUser();
+  const { user, setUser, customUrls } = useCurrentUser();
 
   const [loading, setLoading] = useState(false);
 
@@ -333,6 +334,7 @@ export default function Onboarding({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+
       {currentViewIndex === 0 && (
         <GoBackHeader inverted onPressGoBack={() => {
           viewSliderRef.current?.nextView();
@@ -560,6 +562,7 @@ export default function Onboarding({ navigation }) {
           />
         </View>
       </ViewSlider>
+      {customUrls && <DebugUrlsMenu />}
     </SafeAreaView>
   );
 }

@@ -41,11 +41,11 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
       title: 'Confirm Go Back',
       description: 'Are you sure you want to go back ? You will not be able to contact this user again.',
       validateText: 'Yes, I take the risk',
-      denyText: 'Cancel'
+      denyText: 'Cancel',
     });
-    if (result) 
+    if (result)
       navigation.goBack();
-  }
+  };
 
   const openConversation = async () => {
     try {

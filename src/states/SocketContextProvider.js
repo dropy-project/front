@@ -14,9 +14,10 @@ const log = (...params) => {
 
 import AppInfo from '../../app.json';
 import API from '../services/API';
+import Storage from '../utils/storage';
 
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
-const SOCKET_BASE_URL = AppInfo.customSocket ?? `https://${DOMAIN_PREFIX}socket.dropy-app.com`;
+const SOCKET_BASE_URL = `https://${DOMAIN_PREFIX}socket.dropy-app.com`;
 
 export const SocketContext = createContext(null);
 
@@ -35,13 +36,19 @@ const SocketContextProvider = ({ children }) => {
   const allSocketsConnected = dropySocketConnected && chatSocketConnected;
 
   useEffectForegroundOnly(() => {
+    initilizeSockets();
+  }, [user]);
+
+  const initilizeSockets = async () => {
     if (user == null) {
       destroyAllSocket();
       return;
     }
     if (initialized === true)
       return;
-    manager.current = new Manager(SOCKET_BASE_URL, {
+
+    const customUrls = await Storage.getItem('@custom_urls');
+    manager.current = new Manager(customUrls?.socket ?? SOCKET_BASE_URL, {
       transports: ['websocket'],
       reconnection: true,
       reconnectionDelay: 1000,
@@ -78,7 +85,7 @@ const SocketContextProvider = ({ children }) => {
       chatSocket.current?.disconnect();
       log('Sockets destroyed');
     };
-  }, [user]);
+  };
 
   const destroyAllSocket = () => {
     if (!initialized)
