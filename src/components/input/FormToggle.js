@@ -1,12 +1,10 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { StyleSheet, Switch, Text, View } from 'react-native';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 
 const FormSelect = (props, ref) => {
-  const { title = '', disabled } = props;
-
-  const [enabled, setEnabled] = useState(false);
+  const { title = '', disabled, value, onValueChange } = props;
 
   useImperativeHandle(ref, () => ({
     getValue: () => true,
@@ -17,8 +15,8 @@ const FormSelect = (props, ref) => {
       <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>{title}</Text>
       <Switch
         disabled={disabled}
-        value={enabled}
-        onValueChange={(val) => setEnabled(val)}
+        value={value}
+        onValueChange={onValueChange}
         thumbColor={Colors.white}
         trackColor={{
           false: Colors.darkGrey,

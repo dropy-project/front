@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Linking,
   SafeAreaView,
@@ -16,6 +16,7 @@ import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import useCurrentUser from '../hooks/useCurrentUser';
+import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 
 import FormToggle from '../components/input/FormToggle';
@@ -27,6 +28,47 @@ const SettingsScreen = ({ navigation }) => {
   const { setDeveloperMode, user, developerMode, customUrls } = useCurrentUser();
 
   const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
+
+  const { sendAlert } = useOverlay();
+
+  const [notificationsSettings, setNotificationsSettings] = useState(0);
+
+  useEffect(() => {
+    fetchNotificationsSettings();
+  }, []);
+
+  useEffect(() => {
+    if (notificationsSettings)
+      postNotificationsSettings();
+  }, [notificationsSettings]);
+
+  const fetchNotificationsSettings = async () => {
+    try {
+      const response = await API.getNotificationsSettings(user);
+      setNotificationsSettings(response.data);
+    } catch (error) {
+      await sendAlert({
+        title: 'Notifications settings unrecheable',
+        description: 'We were unable to retrieve your notification settings',
+        validateText: 'Ok',
+      });
+      console.error('Error while fetch notifications settings', error?.response?.data || error);
+      navigation.goBack();
+    }
+  };
+
+  const postNotificationsSettings = async () => {
+    try {
+      await API.postNotificationsSettings(notificationsSettings);
+    } catch (error) {
+      await sendAlert({
+        title: 'Notifications settings not updated',
+        description: 'We were unable to update your notification settings',
+        validateText: 'Ok',
+      });
+      console.error('Error while update notifications settings', error?.response?.data || error);
+    }
+  };
 
   const logout = async () => {
     await API.logout();
@@ -66,9 +108,21 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.titleText}>Notifications</Text>
-        <FormToggle disabled title='Remind me to drop something daily' />
-        <FormToggle disabled title='When one of my drop is collected' />
-        <FormToggle disabled title='When a new feature is available' />
+        <FormToggle
+          value={notificationsSettings.dailyDropyReminder}
+          title='Remind me to drop something daily'
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dailyDropyReminder: value }))}
+        />
+        <FormToggle
+          value={notificationsSettings.dropyCollected}
+          title='When one of my drop is collected'
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dropyCollected: value }))}
+        />
+        <FormToggle
+          value={notificationsSettings.newFeature}
+          title='When a new feature is available'
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, newFeature: value }))}
+        />
 
         <Text style={styles.titleText}>Others</Text>
         <FormToggle disabled title='Vibrations' />

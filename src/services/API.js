@@ -194,6 +194,16 @@ const logout = async () => {
   return removedItem;
 };
 
+const getNotificationsSettings = async () => {
+  const response = await axios.get('/user/notificationsSettings');
+  return response;
+};
+
+const postNotificationsSettings = async (notificationsSettings) => {
+  const response = await axios.post('/user/notificationsSettings', notificationsSettings);
+  return response;
+};
+
 const API = {
   getHeaders,
   register,
@@ -219,6 +229,8 @@ const API = {
   refreshToken,
   getUserProfile,
   logout,
+  getNotificationsSettings,
+  postNotificationsSettings,
 };
 
 export default API;
