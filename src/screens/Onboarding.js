@@ -34,7 +34,7 @@ import ViewSlider from '../components/viewSlider/ViewSlider';
 import FormCheckBox from '../components/input/FormCheckBox';
 import GlassButton from '../components/input/GlassButton';
 import LoadingSpinner from '../components/effect/LoadingSpinner';
-import DebugIPMenu from '../components/other/DebugIPMenu';
+import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
 // eslint-disable-next-line no-undef
 const DEBUG = __DEV__;
@@ -562,7 +562,7 @@ export default function Onboarding({ navigation }) {
           />
         </View>
       </ViewSlider>
-      {customUrls && <DebugIPMenu />}
+      {customUrls && <DebugUrlsMenu />}
     </SafeAreaView>
   );
 }

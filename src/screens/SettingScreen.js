@@ -21,7 +21,7 @@ import API from '../services/API';
 import FormToggle from '../components/input/FormToggle';
 import DebugText from '../components/other/DebugText';
 import GoBackHeader from '../components/other/GoBackHeader';
-import DebugIPMenu from '../components/other/DebugIPMenu';
+import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
 const SettingsScreen = ({ navigation }) => {
   const { setDeveloperMode, user, developerMode, customUrls } = useCurrentUser();
@@ -141,7 +141,7 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <DebugText marginBottom={20}>DEV MODE</DebugText>
-        {(developerMode || customUrls) && <DebugIPMenu /> }
+        {(developerMode || customUrls) && <DebugUrlsMenu /> }
       </ScrollView>
     </SafeAreaView>
   );

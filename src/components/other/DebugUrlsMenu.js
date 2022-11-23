@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useRef } from 'react';
-import { Keyboard, Text, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import useOverlay from '../../hooks/useOverlay';
 import API from '../../services/API';
@@ -9,7 +9,7 @@ import Storage from '../../utils/storage';
 import FormInput from '../input/FormInput';
 import GlassButton from '../input/GlassButton';
 
-const DebugIPMenu = () => {
+const DebugUrlsMenu = () => {
   const navigation = useNavigation();
   const { sendAlert } = useOverlay();
   const { customUrls, setCustomUrls } = useCurrentUser();
@@ -17,14 +17,17 @@ const DebugIPMenu = () => {
   const apiInputRef = useRef();
   const socketInputRef = useRef();
 
-  const resetConn = async () => {
+  const resetConnection = async () => {
     await API.logout();
-    navigation.reset({ index: 0,
+    navigation.reset({
+      index: 0,
       routes: [
         {
           name: 'Splash',
-          params: { cancelAutoLogin: true } }
-      ] });
+          params: { cancelAutoLogin: true },
+        }
+      ],
+    });
   };
 
   const saveIp = async () => {
@@ -52,7 +55,7 @@ const DebugIPMenu = () => {
 
     await Storage.setItem('@custom_urls', { api: apiUrl, socket: socketUrl });
     setCustomUrls({ api: apiUrl, socket: socketUrl });
-    resetConn();
+    resetConnection();
   };
 
   const clearIp = async () => {
@@ -66,25 +69,18 @@ const DebugIPMenu = () => {
       return;
     await Storage.removeItem('@custom_urls');
     setCustomUrls(null);
-    resetConn();
+    resetConnection();
   };
 
   return (
-    <View style={{
-      width: '80%',
-      alignItems: 'center',
-      borderColor: Colors.red,
-      borderWidth: 1,
-      paddingBottom: 20,
-      marginTop: 10,
-    }}>
+    <View style={styles.container}>
       {customUrls ? (
         <>
           <Text>API : {customUrls.api}</Text>
           <Text>Socket : {customUrls.socket}</Text>
           <GlassButton
             onPress={clearIp}
-            style={{ padding: 10, marginTop: 15, width: '80%' }}
+            style={styles.button}
             fontSize={10}
             buttonText='Clear' />
         </>
@@ -104,7 +100,7 @@ const DebugIPMenu = () => {
           />
           <GlassButton
             onPress={saveIp}
-            style={{ padding: 10, marginTop: 15, width: '80%' }}
+            style={styles.button}
             fontSize={10}
             buttonText='Apply' />
         </>
@@ -114,4 +110,20 @@ const DebugIPMenu = () => {
   );
 };
 
-export default DebugIPMenu;
+export default DebugUrlsMenu;
+
+const styles = StyleSheet.create({
+  container: {
+    width: '80%',
+    alignItems: 'center',
+    borderColor: Colors.red,
+    borderWidth: 1,
+    paddingBottom: 20,
+    marginTop: 10,
+  },
+  button: {
+    padding: 10,
+    marginTop: 15,
+    width: '80%',
+  },
+});

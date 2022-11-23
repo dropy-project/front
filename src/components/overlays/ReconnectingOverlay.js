@@ -4,7 +4,7 @@ import { responsiveHeight } from 'react-native-responsive-dimensions';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import LoadingSpinner from '../effect/LoadingSpinner';
-import DebugIPMenu from '../other/DebugIPMenu';
+import DebugUrlsMenu from '../other/DebugUrlsMenu';
 
 const ReconnectingOverlay = ({ visible }) => {
   const [initilized, setInitilized] = useState(false);
@@ -43,7 +43,7 @@ const ReconnectingOverlay = ({ visible }) => {
     <Animated.View style={{ ...styles.container, opacity: animatedValue }}>
       <Animated.View style={{ ...styles.animatedContainer, transform: [{ translateY: translateValue }] }}>
         <View style={styles.alertContainer}>
-          {customUrls && <DebugIPMenu />}
+          {customUrls && <DebugUrlsMenu />}
           <View style={Styles.center}>
             <Text style={{ ...Fonts.bold(15, Colors.white) }}>{'Oups, we lost you...'}</Text>
             <Text style={{ ...Fonts.regular(13, Colors.white), marginTop: 7 }}>{'Stay still, we\'re reconnecting!'}</Text>
