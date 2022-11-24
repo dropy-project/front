@@ -32,9 +32,10 @@ const Splash = ({ navigation, route }) => {
     const ready = await appIsReady();
     console.log(`Splash launch : app is ready -> ${ready}`);
 
-    if (!ready)
+    if (!ready) {
+      navigateToOnboarding();
       return;
-
+    }
 
     if (cancelAutoLogin) {
       console.log('Splash launch : auto login cancelled');
