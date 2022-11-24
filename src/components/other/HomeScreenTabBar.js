@@ -146,7 +146,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         denyText: developerMode || __DEV__ ? 'DEV_ADD' : undefined,
       });
       // eslint-disable-next-line no-undef
-      setDropyMenuIsOpen(!validated && (developerMode || __DEV__));
+      setDropyMenuIsOpen(!validated);
     } else
       setDropyMenuIsOpen(!dropyMenuIsOpen);
   };
