@@ -164,7 +164,7 @@ const ProfileEditScreen = () => {
 
       const displayName = displayNameInputRef.current?.getValue();
       const about = aboutInputRef.current?.getValue();
-      const pronouns = Object.keys(PRONOUNS)[pronounsRef.current?.getValue()];
+      const pronouns = Object.keys(PRONOUNS)[pronounsRef.current?.getValue() - 1];
       const response = await API.postProfileInfos(about, pronouns, displayName);
 
       const profile = response.data;
@@ -176,7 +176,7 @@ const ProfileEditScreen = () => {
         title: 'Oh no...',
         description: 'We could\'nt update your profile\nCheck your internet connection!',
       });
-      console.error('Error while updatng profile', error?.response?.data || error);
+      console.error('Error while updating profile', error?.response?.data || error);
     } finally {
       setInfosUploading(false);
       setEdited(false);
@@ -258,10 +258,10 @@ const ProfileEditScreen = () => {
 
         <FormSelect
           ref={pronounsRef}
-          defaultIndex={Object.keys(PRONOUNS).indexOf(user.pronouns)}
+          defaultIndex={Math.max(Object.keys(PRONOUNS).indexOf(user.pronouns) + 1, 0)}
           title='Pronouns'
           onEdited={(edited) => edited && setEdited(true)}
-          options={Object.values(PRONOUNS)}
+          options={['I prefer not to tell', ...Object.values(PRONOUNS)]}
         />
       </ScrollView>
     </SafeAreaView>
