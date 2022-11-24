@@ -313,7 +313,6 @@ export default function Onboarding({ navigation }) {
   const requestBackgroundGeolocationPermissions = async (onSuccess = () => {}) => {
     setLoading(true);
     try {
-      await BackgroundGeolocation.requestPermission();
       setBackgroundGeolocationEnabled(true);
     } catch (error) {
       console.error(error);
