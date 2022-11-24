@@ -142,9 +142,11 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         title: 'Take it easy!',
         description: 'You can\'t drop at the same location twice in a row.',
         validateText: 'OK !',
-        denyText: developerMode ? 'DEV_ADD' : undefined,
+        // eslint-disable-next-line no-undef
+        denyText: developerMode || __DEV__ ? 'DEV_ADD' : undefined,
       });
-      setDropyMenuIsOpen(!validated && developerMode);
+      // eslint-disable-next-line no-undef
+      setDropyMenuIsOpen(!validated && (developerMode || __DEV__));
     } else
       setDropyMenuIsOpen(!dropyMenuIsOpen);
   };
