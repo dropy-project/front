@@ -44,7 +44,7 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
     return (
       <View style={style}>
         <FastImage
-          style={{ ...styles.displayImage }}
+          style={styles.displayImage}
           source={imageSource}
           resizeMode='cover'
         />
