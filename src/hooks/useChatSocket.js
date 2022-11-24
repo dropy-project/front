@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { decryptMessage, encryptMessage } from '../utils/encrypt';
-import { messageTimeString } from '../utils/time';
 import useCurrentUser from './useCurrentUser';
 import useSocket from './useSocket';
 
@@ -185,7 +184,6 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
       const newMessages = response.data.map((message) => ({
         ...message,
         content: typeof message.content === 'string' ? decryptMessage(message.content) : message.content,
-        date: messageTimeString(message.date),
       }));
 
       setMessagesBuffer((oldBuffer) => {
