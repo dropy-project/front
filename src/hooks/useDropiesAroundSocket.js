@@ -81,7 +81,7 @@ const useDropiesAroundSocket = () => {
 
       setDropiesAround(newDropies ?? []);
     });
-  }, [userCoordinates?.geoHashs[0]]);
+  }, [userCoordinates?.geoHashs[0], user, dropySocket]);
 
   useEffect(() => {
     if (userCoordinates == null)
