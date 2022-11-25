@@ -44,9 +44,7 @@ ANDROID :
     - Incrémenter versionCode
     - Changer versionName
 
-4. Vérifier les urls custom de serveur dans app.json (Doit être sur `null`)
-
-5. Mettre productionMode sur **true** dans app.json :
+4. Mettre productionMode sur **true** dans app.json :
     - `true` : serveur de production
     - `false` : serveur de pré-production / développement
 
