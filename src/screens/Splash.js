@@ -65,7 +65,7 @@ const Splash = ({ navigation, route }) => {
 
   const appIsReady = async () => {
     try {
-      await API.loadCustomUrl();
+      await API.init();
       const isCompatibleWithServer = await API.serverVersionIsCompatible();
 
       if (!isCompatibleWithServer) {

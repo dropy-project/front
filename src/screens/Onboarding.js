@@ -209,7 +209,6 @@ export default function Onboarding({ navigation }) {
   };
 
   const handleLogin = async () => {
-    setLoading(true);
     const emailValid = loginEmailInputRef.current?.isValid();
 
     if (!emailValid) {
@@ -221,6 +220,7 @@ export default function Onboarding({ navigation }) {
     await requestNotificationsPermissions();
 
     try {
+      setLoading(true);
       const userInfos = await API.login(email, password);
       // Fix #322 permissions granting messing with states -> sockets not initializing
       setTimeout(() => {
@@ -400,6 +400,7 @@ export default function Onboarding({ navigation }) {
             onPress={handleLogin}
             disabled={email.length === 0 || password.length === 0}
             text='Login'
+            loading={loading}
           />
         </View>
 

@@ -5,22 +5,24 @@ import AppInfo from '../../app.json';
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
 const API_BASE_URL = `https://${DOMAIN_PREFIX}api.dropy-app.com`;
 
-const AXIOS_PARAMS = {
-  baseURL: API_BASE_URL,
-  timeout: 5000,
-};
+let axios = null;
 
-let axios = Axios.create(AXIOS_PARAMS);
+const init = async () => {
+  let baseURL = API_BASE_URL;
+
+  const customUrls = await Storage.getItem('@custom_urls');
+  if (customUrls?.api != null) {
+    console.log('Using custom urls', customUrls);
+    baseURL = customUrls.api;
+  }
+
+  axios = Axios.create({
+    baseURL,
+    timeout: 5000,
+  });
+};
 
 const getHeaders = () => axios.defaults.headers.common;
-
-const loadCustomUrl = async () => {
-  const customUrls = await Storage.getItem('@custom_urls');
-  if (customUrls != null) {
-    console.log('Using custom urls', customUrls);
-    axios.defaults.baseURL = customUrls.api ?? API_BASE_URL;
-  }
-};
 
 const register = async (displayName, email, password, newsLetter) => {
   const response = await axios.post('/register', {
@@ -32,7 +34,7 @@ const register = async (displayName, email, password, newsLetter) => {
 
   const { accessToken, refreshToken, expires, profile: user } = response.data;
 
-  axios = Axios.create(AXIOS_PARAMS);
+  await init();
   axios.defaults.headers.common.Authorization = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
@@ -48,8 +50,7 @@ const login = async (email, password) => {
 
   const { accessToken, refreshToken, expires, profile: user } = response.data;
 
-  axios = Axios.create(AXIOS_PARAMS);
-  loadCustomUrl();
+  await init();
   axios.defaults.headers.common.Authorization = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
@@ -57,7 +58,7 @@ const login = async (email, password) => {
   return user;
 };
 
-const refreshTokenUrl = () => `${API_BASE_URL}/refresh`;
+const refreshTokenUrl = () => `${axios.defaults.baseURL}/refresh`;
 
 const postUserDeviceToken = (deviceToken) => {
   const result = axios.post('/user/updateDeviceToken', {
@@ -66,7 +67,7 @@ const postUserDeviceToken = (deviceToken) => {
   return result;
 };
 
-const userBackgroundGeolocationPingUrl = () => `${API_BASE_URL}/user/backgroundGeolocationPing`;
+const userBackgroundGeolocationPingUrl = () => `${axios.defaults.baseURL}/user/backgroundGeolocationPing`;
 
 const getDropyMedia = async (dropyId) => {
   const result = await axios.get(`/dropy/${dropyId}/media`);
@@ -176,7 +177,7 @@ const refreshToken = async (token) => {
 
   const { accessToken, refreshToken, expires } = response.data;
 
-  axios = Axios.create(AXIOS_PARAMS);
+  await init();
   axios.defaults.headers.common.Authorization = accessToken;
 
   await Storage.setItem('@auth_tokens', { accessToken, refreshToken, expires });
@@ -190,8 +191,7 @@ const getUserProfile = async () => {
 };
 
 const logout = async () => {
-  axios = Axios.create(AXIOS_PARAMS);
-  loadCustomUrl();
+  await init();
   const removedItem = await Storage.removeItem('@auth_tokens');
   return removedItem;
 };
@@ -233,7 +233,7 @@ const API = {
   logout,
   getNotificationsSettings,
   postNotificationsSettings,
-  loadCustomUrl,
+  init,
 };
 
 export default API;

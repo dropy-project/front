@@ -78,6 +78,7 @@ const SettingsScreen = ({ navigation }) => {
 
   const logout = async () => {
     await postNotificationsSettings(notificatinsSettingsRef.current);
+    notificatinsSettingsRef.current = null;
     await API.logout();
     navigation.reset({
       index: 0,
