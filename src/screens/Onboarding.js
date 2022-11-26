@@ -222,7 +222,10 @@ export default function Onboarding({ navigation }) {
 
     try {
       const userInfos = await API.login(email, password);
-      setUser(userInfos);
+      // Fix #322 permissions granting messing with states -> sockets not initializing
+      setTimeout(() => {
+        setUser(userInfos);
+      }, 1000);
     } catch (error) {
       setLoading(false);
       if (error.response.status === 404) {
