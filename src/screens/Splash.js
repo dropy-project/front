@@ -27,7 +27,6 @@ const Splash = ({ navigation, route }) => {
   }, [user]);
 
   const navigateToOnboarding = () => {
-    Storage.removeItem('@auth_tokens');
     navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
   };
 
