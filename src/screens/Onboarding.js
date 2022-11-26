@@ -422,7 +422,6 @@ export default function Onboarding({ navigation }) {
               ref={displayNameInputRef}
               minLength={3}
               defaultValue={displayName}
-              autoComplete='username'
             />
           </View>
           <LoadingGlassButton
