@@ -6,5 +6,5 @@
   "versionFlag": "private-beta-rc",
   "requiredServerVersion": "0.0.10",
 
-  "productionMode": true
+  "productionMode": false
 }

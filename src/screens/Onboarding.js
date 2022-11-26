@@ -17,7 +17,6 @@ import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
-import BackgroundGeolocation from 'react-native-background-geolocation';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import OnboardingLines from '../assets/svgs/onboarding_lines.svg';
@@ -210,7 +209,6 @@ export default function Onboarding({ navigation }) {
   };
 
   const handleLogin = async () => {
-    setLoading(true);
     const emailValid = loginEmailInputRef.current?.isValid();
 
     if (!emailValid) {
@@ -222,8 +220,12 @@ export default function Onboarding({ navigation }) {
     await requestNotificationsPermissions();
 
     try {
+      setLoading(true);
       const userInfos = await API.login(email, password);
-      setUser(userInfos);
+      // Fix #322 permissions granting messing with states -> sockets not initializing
+      setTimeout(() => {
+        setUser(userInfos);
+      }, 1000);
     } catch (error) {
       setLoading(false);
       if (error.response.status === 404) {
@@ -383,6 +385,7 @@ export default function Onboarding({ navigation }) {
               onEdited={setEmail}
               isEmail
               defaultValue={email}
+              autoComplete='email'
             />
             <FormInput
               placeholder='Password'
@@ -390,12 +393,14 @@ export default function Onboarding({ navigation }) {
               isPassword
               onEdited={setPassword}
               defaultValue={password}
+              autoComplete='password'
             />
           </View>
           <LoadingGlassButton
             onPress={handleLogin}
             disabled={email.length === 0 || password.length === 0}
             text='Login'
+            loading={loading}
           />
         </View>
 
@@ -463,6 +468,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isEmail
               defaultValue={email}
+              autoComplete='email'
             />
             <FormInput
               ref={passwordInputRef}
@@ -471,6 +477,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={password}
+              autoComplete='password-new'
             />
             <FormInput
               ref={passwordConfirmationInputRef}
@@ -479,6 +486,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={passwordConfirmation}
+              autoComplete='password-new'
             />
           </View>
           <LoadingGlassButton

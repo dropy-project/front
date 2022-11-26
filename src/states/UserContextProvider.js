@@ -15,10 +15,10 @@ const UserProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    loadStoredIPs();
+    loadCustomUrls();
   }, []);
 
-  const loadStoredIPs = async () => {
+  const loadCustomUrls = async () => {
     const customUrls = await Storage.getItem('@custom_urls');
     if (!customUrls)
       return;
