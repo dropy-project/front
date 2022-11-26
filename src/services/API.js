@@ -16,8 +16,10 @@ const getHeaders = () => axios.defaults.headers.common;
 
 const loadCustomUrl = async () => {
   const customUrls = await Storage.getItem('@custom_urls');
-  if (customUrls != null)
+  if (customUrls != null) {
+    console.log('Using custom urls', customUrls);
     axios.defaults.baseURL = customUrls.api ?? API_BASE_URL;
+  }
 };
 
 const register = async (displayName, email, password, newsLetter) => {
@@ -231,6 +233,7 @@ const API = {
   logout,
   getNotificationsSettings,
   postNotificationsSettings,
+  loadCustomUrl,
 };
 
 export default API;

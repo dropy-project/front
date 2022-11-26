@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   Linking,
   SafeAreaView,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
@@ -32,14 +32,19 @@ const SettingsScreen = ({ navigation }) => {
   const { sendAlert } = useOverlay();
 
   const [notificationsSettings, setNotificationsSettings] = useState(null);
+  const notificatinsSettingsRef = useRef(null);
 
   useEffect(() => {
     fetchNotificationsSettings();
+    return () => {
+      if (notificatinsSettingsRef.current != null)
+        postNotificationsSettings(notificatinsSettingsRef.current);
+    };
   }, []);
 
   useEffect(() => {
-    if (notificationsSettings)
-      postNotificationsSettings();
+    if (notificationsSettings != null)
+      notificatinsSettingsRef.current = notificationsSettings;
   }, [notificationsSettings]);
 
   const fetchNotificationsSettings = async () => {
@@ -57,9 +62,10 @@ const SettingsScreen = ({ navigation }) => {
     }
   };
 
-  const postNotificationsSettings = async () => {
+  const postNotificationsSettings = async (settings) => {
+    console.log('postNotificationsSettings', settings);
     try {
-      await API.postNotificationsSettings(notificationsSettings);
+      await API.postNotificationsSettings(settings);
     } catch (error) {
       sendAlert({
         title: 'Notifications settings not updated',
@@ -173,6 +179,7 @@ const SettingsScreen = ({ navigation }) => {
 
         <View style={styles.spacer} />
 
+        {/* eslint-disable-next-line no-undef */}
         <TouchableOpacity onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)} activeOpacity={1}>
           <View style={styles.infoTextContainer}>
             <Ionicons name='git-branch' size={19} color={Colors.darkGrey} />
@@ -195,7 +202,12 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <DebugText marginBottom={20}>DEV MODE</DebugText>
-        {(developerMode || customUrls) && <DebugUrlsMenu /> }
+        {(developerMode || customUrls) && (
+          <>
+            <DebugUrlsMenu />
+            <KeyboardSpacer />
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

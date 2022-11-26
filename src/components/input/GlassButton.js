@@ -3,11 +3,15 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 const GlassButton = ({ children, onPress, buttonText, style, disabled, fontSize = 19 }) => (
-  <TouchableOpacity onPress={onPress} disabled={disabled} style={{
-    ...styles.container,
-    ...style,
-    backgroundColor: disabled ? Colors.purple2 : Colors.purple1,
-  }}>
+  <TouchableOpacity
+    onPress={onPress}
+    disabled={disabled}
+    style={{
+      ...styles.container,
+      ...style,
+      backgroundColor: disabled ? `${Colors.lightGrey}60` : Colors.purple1,
+      shadowOpacity: disabled ? 0 : 0.5,
+    }}>
     {children == null ? (
       <Text style={{
         ...Fonts.bold(fontSize, Colors.white),

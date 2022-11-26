@@ -13,7 +13,7 @@ import Storage from '../utils/storage';
 const Splash = ({ navigation, route }) => {
   const { cancelAutoLogin = false } = route.params ?? {};
 
-  const { setUser, user } = useCurrentUser();
+  const { setUser, user, customUrls } = useCurrentUser();
 
   const { sendAlert } = useOverlay();
 
@@ -26,14 +26,18 @@ const Splash = ({ navigation, route }) => {
       handleLoginSuccess();
   }, [user]);
 
-  const navigateToOnboarding = () => navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
+  const navigateToOnboarding = () => {
+    Storage.removeItem('@auth_tokens');
+    navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
+  };
 
   const launch = async () => {
     const ready = await appIsReady();
     console.log(`Splash launch : app is ready -> ${ready}`);
 
     if (!ready) {
-      navigateToOnboarding();
+      if (customUrls != null)
+        navigateToOnboarding();
       return;
     }
 
@@ -61,6 +65,7 @@ const Splash = ({ navigation, route }) => {
 
   const appIsReady = async () => {
     try {
+      await API.loadCustomUrl();
       const isCompatibleWithServer = await API.serverVersionIsCompatible();
 
       if (!isCompatibleWithServer) {

@@ -17,7 +17,6 @@ import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
-import BackgroundGeolocation from 'react-native-background-geolocation';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import OnboardingLines from '../assets/svgs/onboarding_lines.svg';
