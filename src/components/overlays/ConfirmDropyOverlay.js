@@ -41,7 +41,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
 
   const { userCoordinates } = useGeolocation();
 
-  const { user, setUser } = useCurrentUser();
+  const { setUser } = useCurrentUser();
 
   const [overlayState, setOverlayState] = useState(OVERLAY_STATE.HIDDEN);
 
@@ -90,15 +90,14 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       if (mediaIsFile(dropyCreateParams.mediaType))
         dropyData = await fetch(dropyCreateParams.dropyFilePath).then((r) => r.blob());
 
-
       const response = await createDropy(userCoordinates.latitude, userCoordinates.longitude, dropyCreateParams.mediaType, dropyData);
       if (response.error != null)
         throw response.error;
 
       setUser((oldUser) => ({
         ...oldUser,
-        energy: response.data.energy,
-        lastEnergyIncrement: response.data.energy - user.energy,
+        energy: response.data.newEnergy,
+        lastEnergyIncrement: response.data.newEnergy - response.data.oldEnergy,
       }));
 
       setTimeout(() => {
