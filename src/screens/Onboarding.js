@@ -382,6 +382,7 @@ export default function Onboarding({ navigation }) {
               onEdited={setEmail}
               isEmail
               defaultValue={email}
+              autoComplete='email'
             />
             <FormInput
               placeholder='Password'
@@ -389,6 +390,7 @@ export default function Onboarding({ navigation }) {
               isPassword
               onEdited={setPassword}
               defaultValue={password}
+              autoComplete='password'
             />
           </View>
           <LoadingGlassButton
@@ -420,6 +422,7 @@ export default function Onboarding({ navigation }) {
               ref={displayNameInputRef}
               minLength={3}
               defaultValue={displayName}
+              autoComplete='username'
             />
           </View>
           <LoadingGlassButton
@@ -462,6 +465,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isEmail
               defaultValue={email}
+              autoComplete='email'
             />
             <FormInput
               ref={passwordInputRef}
@@ -470,6 +474,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={password}
+              autoComplete='password-new'
             />
             <FormInput
               ref={passwordConfirmationInputRef}
@@ -478,6 +483,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={passwordConfirmation}
+              autoComplete='password-new'
             />
           </View>
           <LoadingGlassButton
