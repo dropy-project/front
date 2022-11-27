@@ -164,7 +164,7 @@ const ProfileEditScreen = () => {
 
       const displayName = displayNameInputRef.current?.getValue();
       const about = aboutInputRef.current?.getValue();
-      const pronouns = Object.keys(PRONOUNS)[pronounsRef.current?.getValue() - 1];
+      const pronouns = Object.keys(PRONOUNS)[pronounsRef.current?.getValue()];
       const response = await API.postProfileInfos(about, pronouns, displayName);
 
       const profile = response.data;
@@ -258,10 +258,10 @@ const ProfileEditScreen = () => {
 
         <FormSelect
           ref={pronounsRef}
-          defaultIndex={Math.max(Object.keys(PRONOUNS).indexOf(user.pronouns) + 1, 0)}
+          defaultIndex={Math.max(Object.keys(PRONOUNS).indexOf(user.pronouns), 0)}
           title='Pronouns'
           onEdited={(edited) => edited && setEdited(true)}
-          options={['I prefer not to tell', ...Object.values(PRONOUNS)]}
+          options={Object.values(PRONOUNS)}
         />
       </ScrollView>
     </SafeAreaView>

@@ -13,7 +13,7 @@ import Storage from '../utils/storage';
 const Splash = ({ navigation, route }) => {
   const { cancelAutoLogin = false } = route.params ?? {};
 
-  const { setUser, user, customUrls } = useCurrentUser();
+  const { setUser, user } = useCurrentUser();
 
   const { sendAlert } = useOverlay();
 
@@ -35,6 +35,7 @@ const Splash = ({ navigation, route }) => {
     console.log(`Splash launch : app is ready -> ${ready}`);
 
     if (!ready) {
+      const customUrls = await Storage.getItem('@custom_urls');
       if (customUrls != null)
         navigateToOnboarding();
       return;
