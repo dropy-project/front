@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Platform, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,6 +18,7 @@ import MapLoadingOverlay from '../overlays/MapLoadingOverlay';
 import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
+import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
@@ -47,6 +48,8 @@ const DropyMap = ({
 
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
+
+  const [showEnergyTooltip, setShowEnergyTooltip] = useState(false);
 
   const handleDropyPressed = async (dropy) => {
     try {
@@ -149,6 +152,8 @@ const DropyMap = ({
     return newLockedValue;
   });
 
+  const displayEnergyTooltip = () => setShowEnergyTooltip(!showEnergyTooltip);
+
   return (
     <>
       <OSMapView
@@ -207,7 +212,10 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <AnimatedFlask />
+          <View style={styles.energyIndicatorView}>
+            <AnimatedFlask />
+            {showEnergyTooltip && (<EnergyTooltip />)}
+          </View>
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
             <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
               <MaterialIcons name='my-location' size={20} color={Colors.darkGrey} />
@@ -252,5 +260,9 @@ const styles = StyleSheet.create({
     padding: 11,
     ...Styles.center,
     ...Styles.softShadows,
+  },
+  energyIndicatorView: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
   },
 });

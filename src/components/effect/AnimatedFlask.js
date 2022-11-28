@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
@@ -103,8 +103,9 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
       <View style={{
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
-        ...Styles.center }}>
-        <View
+        ...Styles.center,
+      }}>
+        <TouchableOpacity
           style={{
             ...styles.flaskContainer,
             height: size * 1.8,
@@ -154,7 +155,7 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
               borderWidth: size * 0.06,
             }}
           />
-        </View>
+        </TouchableOpacity>
         <View style={{ backgroundColor: 'white', borderRadius: 50, height: 20, width: 20, position: 'absolute', top: -15, ...Styles.center }}>
           <MaterialCommunityIcons name='lightning-bolt' size={size * 0.25} color={Colors.purple2} />
         </View>
