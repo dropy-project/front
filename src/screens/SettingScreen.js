@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   Linking,
   SafeAreaView,
@@ -12,29 +11,84 @@ import {
 } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import useCurrentUser from '../hooks/useCurrentUser';
+import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 
 import FormToggle from '../components/input/FormToggle';
 import DebugText from '../components/other/DebugText';
 import GoBackHeader from '../components/other/GoBackHeader';
+import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
 const SettingsScreen = ({ navigation }) => {
-  const { setDeveloperMode, user } = useCurrentUser();
+  const { setDeveloperMode, user, developerMode, customUrls } = useCurrentUser();
 
   const { backgroundGeolocationEnabled, setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
 
+  const { sendAlert } = useOverlay();
+
+  const [notificationsSettings, setNotificationsSettings] = useState(null);
+  const notificatinsSettingsRef = useRef(null);
+
+  useEffect(() => {
+    fetchNotificationsSettings();
+    return () => {
+      if (notificatinsSettingsRef.current != null)
+        postNotificationsSettings(notificatinsSettingsRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (notificationsSettings != null)
+      notificatinsSettingsRef.current = notificationsSettings;
+  }, [notificationsSettings]);
+
+  const fetchNotificationsSettings = async () => {
+    try {
+      const response = await API.getNotificationsSettings(user);
+      setNotificationsSettings(response.data);
+    } catch (error) {
+      sendAlert({
+        title: 'Notifications settings unrecheable',
+        description: 'We were unable to retrieve your notification settings',
+        validateText: 'Ok',
+      });
+      console.error('Error while fetch notifications settings', error.response?.data || error);
+      navigation.goBack();
+    }
+  };
+
+  const postNotificationsSettings = async (settings) => {
+    console.log('postNotificationsSettings', settings);
+    try {
+      await API.postNotificationsSettings(settings);
+    } catch (error) {
+      sendAlert({
+        title: 'Notifications settings not updated',
+        description: 'We were unable to update your notification settings',
+        validateText: 'Ok',
+      });
+      console.error('Error while update notifications settings', error.response?.data || error);
+    }
+  };
+
   const logout = async () => {
+    await postNotificationsSettings(notificatinsSettingsRef.current);
+    notificatinsSettingsRef.current = null;
     await API.logout();
-    navigation.reset({ index: 0,
+    navigation.reset({
+      index: 0,
       routes: [
         {
           name: 'Splash',
-          params: { cancelAutoLogin: true } }
-      ] });
+          params: { cancelAutoLogin: true },
+        }
+      ],
+    });
   };
 
   return (
@@ -62,9 +116,21 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.titleText}>Notifications</Text>
-        <FormToggle disabled title='Remind me to drop something daily' />
-        <FormToggle disabled title='When one of my drop is collected' />
-        <FormToggle disabled title='When a new feature is available' />
+        <FormToggle
+          value={notificationsSettings?.dailyDropyReminder}
+          title='Remind me to drop something daily'
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dailyDropyReminder: value }))}
+        />
+        <FormToggle
+          value={notificationsSettings?.dropyCollected}
+          title='When one of my drop is collected'
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dropyCollected: value }))}
+        />
+        <FormToggle
+          value={notificationsSettings?.newFeature}
+          title='When a new feature is available'
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, newFeature: value }))}
+        />
 
         <Text style={styles.titleText}>Others</Text>
         <FormToggle disabled title='Vibrations' />
@@ -115,6 +181,7 @@ const SettingsScreen = ({ navigation }) => {
 
         <View style={styles.spacer} />
 
+        {/* eslint-disable-next-line no-undef */}
         <TouchableOpacity onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)} activeOpacity={1}>
           <View style={styles.infoTextContainer}>
             <Ionicons name='git-branch' size={19} color={Colors.darkGrey} />
@@ -137,6 +204,12 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <DebugText marginBottom={20}>DEV MODE</DebugText>
+        {(developerMode || customUrls) && (
+          <>
+            <DebugUrlsMenu />
+            <KeyboardSpacer />
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

@@ -21,9 +21,13 @@ const BackgroundGolocationProvider = ({ children }) => {
 
   const [backgroundGeolocationEnabled, _setBackgroundGeolocationEnabled] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [enableAfterInit, setEnableAfterInit] = useState(false);
   const [logs, setLogs] = useState(null);
 
   useEffect(() => {
+    if (user == null)
+      return;
+
     const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, () => {});
 
     const motionChangeSubscriber = BackgroundGeolocation.onMotionChange(() => {});
@@ -53,19 +57,17 @@ const BackgroundGolocationProvider = ({ children }) => {
     if (!initialized)
       return;
 
-
     log(`Background geolocation ${backgroundGeolocationEnabled ? 'enabled' : 'disabled'}`);
 
     if (backgroundGeolocationEnabled)
       BackgroundGeolocation.start();
     else
       BackgroundGeolocation.stop();
-  }, [backgroundGeolocationEnabled]);
+  }, [backgroundGeolocationEnabled, initialized]);
 
   const initializeBackgroundGeolocation = async () => {
     if (initialized === true)
       return;
-
 
     const authTokens = await Storage.getItem('@auth_tokens');
 
@@ -75,9 +77,10 @@ const BackgroundGolocationProvider = ({ children }) => {
     }
 
     const state = await setupBackgroundGeolocation(authTokens);
-    _setBackgroundGeolocationEnabled(state.enabled);
+    const enable = enableAfterInit || state.enabled;
+    _setBackgroundGeolocationEnabled(enable);
 
-    log(`Initialized successfully (started : ${state.enabled})`);
+    log(`Initialized successfully (started : ${enable})`);
     setInitialized(true);
   };
 
@@ -86,7 +89,7 @@ const BackgroundGolocationProvider = ({ children }) => {
 
     const backgroundGeolocationReady = await BackgroundGeolocation.ready({
       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
-      distanceFilter: 10,
+      useSignificantChangesOnly: true,
 
       logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
 
@@ -114,7 +117,10 @@ const BackgroundGolocationProvider = ({ children }) => {
     try {
       if (enabled) {
         await BackgroundGeolocation.requestPermission();
-        await initializeBackgroundGeolocation();
+        if (user != null)
+          await initializeBackgroundGeolocation();
+        else
+          setEnableAfterInit(true);
       }
       _setBackgroundGeolocationEnabled(enabled);
     } catch (error) {

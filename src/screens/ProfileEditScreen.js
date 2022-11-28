@@ -176,7 +176,7 @@ const ProfileEditScreen = () => {
         title: 'Oh no...',
         description: 'We could\'nt update your profile\nCheck your internet connection!',
       });
-      console.error('Error while updatng profile', error?.response?.data || error);
+      console.error('Error while updating profile', error?.response?.data || error);
     } finally {
       setInfosUploading(false);
       setEdited(false);
@@ -258,7 +258,7 @@ const ProfileEditScreen = () => {
 
         <FormSelect
           ref={pronounsRef}
-          defaultIndex={Object.keys(PRONOUNS).indexOf(user.pronouns)}
+          defaultIndex={Math.max(Object.keys(PRONOUNS).indexOf(user.pronouns), 0)}
           title='Pronouns'
           onEdited={(edited) => edited && setEdited(true)}
           options={Object.values(PRONOUNS)}

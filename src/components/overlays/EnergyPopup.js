@@ -5,7 +5,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import useCurrentUser from '../../hooks/useCurrentUser';
 
-const EnergyModal = () => {
+const EnergyPopup = () => {
   const isFocused = useIsFocused();
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
 
@@ -46,13 +46,13 @@ const EnergyModal = () => {
 
   return (
     <Animated.View style={{ ...styles.conainter, transform: [{ scale: visibleAnimatedValue }] }}>
-      <Text style={styles.lastEnergyIncrement}>{user?.lastEnergyIncrement > 0 ? `+ ${user?.lastEnergyIncrement}` : user?.lastEnergyIncrement}</Text>
+      <Text style={styles.lastEnergyIncrement}>{user?.lastEnergyIncrement >= 0 ? `+ ${user?.lastEnergyIncrement}` : user?.lastEnergyIncrement}</Text>
       <MaterialCommunityIcons name='lightning-bolt' size={24} color='white' />
     </Animated.View>
   );
 };
 
-export default EnergyModal;
+export default EnergyPopup;
 
 const styles = StyleSheet.create({
   conainter: {

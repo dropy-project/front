@@ -19,6 +19,13 @@ ANDROID :
 - `cd android && ./gradlew clean`
 - `npm run android`
 
+## Utiliser l'application avec un serveur custom (Custom Urls)
+- Lancer l'app et se rendre dans les reglages
+- Activer le mode developpeur en restant appuyer sur le numero de version en bas des reglages
+- Rentrer les url d'API et de Socket
+    - api : `http://<ip-locale-ordi>:<port-api>`
+    - socket: `http://<ip-locale-socket>:<port-socket>`
+
 ## Release Checklist
 
 0. `npm i` & `pod install` (IOS)
@@ -37,9 +44,7 @@ ANDROID :
     - Incrémenter versionCode
     - Changer versionName
 
-4. Vérifier les urls custom de serveur dans app.json (Doit être sur `null`)
-
-5. Mettre productionMode sur **true** dans app.json :
+4. Mettre productionMode sur **true** dans app.json :
     - `true` : serveur de production
     - `false` : serveur de pré-production / développement
 

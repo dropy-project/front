@@ -34,7 +34,6 @@ const FormInput = (props, ref) => {
   const [partialValidity, setPartialValidity] = useState('');
 
   useEffect(() => {
-    onEdited(value?.trim());
     setValid(true);
     if (isPassword || isEmail)
       checkValidity(true, true);
@@ -95,7 +94,10 @@ const FormInput = (props, ref) => {
         <TextInput
           onFocus={() => setSelected(true)}
           onBlur={() => setSelected(false)}
-          onChangeText={(text) => setValue(text)}
+          onChangeText={(text) => {
+            setValue(text);
+            onEdited(text);
+          }}
           style={{ ...Fonts.regular(12, Colors.darkGrey), ...styles.textInput, textAlignVertical: 'top' }}
           placeholder={placeholder}
           placeholderTextColor={Colors.grey}

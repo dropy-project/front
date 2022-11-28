@@ -123,14 +123,14 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
     setDropyMenuIsOpen(false);
   };
 
-  const handleMusic = () => {
-    setDropyMenuIsOpen(false);
-    sendAlert({
-      title: 'Not available yet',
-      description: 'Creating musical drops will soon be possible.',
-      validateText: 'OK !',
-    });
-  };
+  // const handleMusic = () => {
+  //   setDropyMenuIsOpen(false);
+  //   sendAlert({
+  //     title: 'Not available yet',
+  //     description: 'Creating musical drops will soon be possible.',
+  //     validateText: 'OK !',
+  //   });
+  // };
 
   const onPressGlassButton = async () => {
     if (canEmitDropy) {
@@ -142,9 +142,10 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         title: 'Take it easy!',
         description: 'You can\'t drop at the same location twice in a row.',
         validateText: 'OK !',
-        denyText: developerMode ? 'DEV_ADD' : undefined,
+        // eslint-disable-next-line no-undef
+        denyText: developerMode || __DEV__ ? 'DEV_ADD' : undefined,
       });
-      setDropyMenuIsOpen(!validated && developerMode);
+      setDropyMenuIsOpen(!validated);
     } else
       setDropyMenuIsOpen(!dropyMenuIsOpen);
   };
@@ -207,9 +208,9 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleTakePicture}>
               <Entypo name='camera' size={30} color={Colors.grey} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.dropySelectionButton} onPress={handleMusic}>
+            {/* <TouchableOpacity style={styles.dropySelectionButton} onPress={handleMusic}>
               <Ionicons name='musical-notes-outline' size={30} color={Colors.grey} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </DropyWheel>
         </>
       )}
@@ -261,7 +262,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
 const DropyWheel = ({ menuAnimatedValue, children }) => (
   <Animated.View style={{ ...styles.dropyWheelContainer, transform: [{ scale: menuAnimatedValue }] }}>
     {children.map((child, index) => (
-      <DropyWheelItem key={index} index={index} childCount={children.length} size={100}>{child}</DropyWheelItem>
+      <DropyWheelItem key={index} index={index} childCount={children.length} size={110}>{child}</DropyWheelItem>
     ))}
   </Animated.View>
 );
@@ -272,7 +273,8 @@ const DropyWheelItem = ({ children, index, childCount, size }) => {
   const handleLayout = (event) => {
     const { layout } = event.nativeEvent;
 
-    const angle = ((index * Math.PI) / (childCount - 1)) + (Math.PI / 2);
+    const itemAngleDiff = (index * Math.PI / 2);
+    const angle = (itemAngleDiff / (childCount - 1)) + (3 * Math.PI / 4);
 
     let x = (Math.sin(angle) * size);
     let y = (Math.cos(angle) * size);

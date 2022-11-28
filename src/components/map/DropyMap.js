@@ -16,8 +16,8 @@ import Styles, { Colors, Map } from '../../styles/Styles';
 import AnimatedFlask from '../effect/AnimatedFlask';
 import MapLoadingOverlay from '../overlays/MapLoadingOverlay';
 import DebugText from '../other/DebugText';
-import EnergyModal from '../overlays/EnergyModal';
 import FadeInWrapper from '../effect/FadeInWrapper';
+import EnergyPopup from '../overlays/EnergyPopup';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
@@ -39,7 +39,7 @@ const DropyMap = ({
     compassHeading,
     initialized: geolocationInitialized,
   } = useInitializedGeolocation();
-  const { developerMode, user, setUser } = useCurrentUser();
+  const { developerMode, setUser } = useCurrentUser();
 
   const [currentZoom, setCurrentZoom] = useState(0);
   const [currentHeading, setCurrentHeading] = useState(0);
@@ -77,8 +77,8 @@ const DropyMap = ({
       setTimeout(() => {
         setUser((oldUser) => ({
           ...oldUser,
-          energy: result.data.energy,
-          lastEnergyIncrement: result.data.energy - user.energy,
+          energy: result.data.newEnergy,
+          lastEnergyIncrement: result.data.newEnergy - result.data.oldEnergy,
         }));
       }, 500);
     } catch (error) {
@@ -219,7 +219,7 @@ const DropyMap = ({
         </FadeInWrapper>
       </SafeAreaView>
 
-      <EnergyModal />
+      <EnergyPopup />
       <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
       <MapLoadingOverlay visible={geolocationInitialized === false} />
       <LinearGradient

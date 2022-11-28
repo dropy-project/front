@@ -111,6 +111,17 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
           </Text>
         </TouchableOpacity>
       )}
+      {currentViewIndex === 0 && (
+        <TouchableOpacity
+          style={{ ...Styles.center, position: 'absolute', bottom: 0, width: '100%' }}
+          onPress={() => setCurrentViewIndex(1)}
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+        >
+          <Text style={{ marginBottom: 10, ...Fonts.bold(13, Colors.lightGrey) }}>
+            I dont have an account
+          </Text>
+        </TouchableOpacity>
+      )}
       {currentViewIndex > 1 && currentViewIndex < children.length - 1 && (
         <DotIndicator
           currentIndex={currentViewIndex - 1}

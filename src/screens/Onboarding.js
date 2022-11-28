@@ -17,7 +17,6 @@ import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
-import BackgroundGeolocation from 'react-native-background-geolocation';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import OnboardingLines from '../assets/svgs/onboarding_lines.svg';
@@ -34,6 +33,7 @@ import ViewSlider from '../components/viewSlider/ViewSlider';
 import FormCheckBox from '../components/input/FormCheckBox';
 import GlassButton from '../components/input/GlassButton';
 import LoadingSpinner from '../components/effect/LoadingSpinner';
+import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
 // eslint-disable-next-line no-undef
 const DEBUG = __DEV__;
@@ -52,7 +52,7 @@ export default function Onboarding({ navigation }) {
   const passwordConfirmationInputRef = useRef(null);
 
   const { sendAlert } = useOverlay();
-  const { user, setUser } = useCurrentUser();
+  const { user, setUser, customUrls } = useCurrentUser();
 
   const [loading, setLoading] = useState(false);
 
@@ -209,7 +209,6 @@ export default function Onboarding({ navigation }) {
   };
 
   const handleLogin = async () => {
-    setLoading(true);
     const emailValid = loginEmailInputRef.current?.isValid();
 
     if (!emailValid) {
@@ -221,8 +220,12 @@ export default function Onboarding({ navigation }) {
     await requestNotificationsPermissions();
 
     try {
+      setLoading(true);
       const userInfos = await API.login(email, password);
-      setUser(userInfos);
+      // Fix #322 permissions granting messing with states -> sockets not initializing
+      setTimeout(() => {
+        setUser(userInfos);
+      }, 1000);
     } catch (error) {
       setLoading(false);
       if (error.response.status === 404) {
@@ -312,7 +315,6 @@ export default function Onboarding({ navigation }) {
   const requestBackgroundGeolocationPermissions = async (onSuccess = () => {}) => {
     setLoading(true);
     try {
-      await BackgroundGeolocation.requestPermission();
       setBackgroundGeolocationEnabled(true);
     } catch (error) {
       console.error(error);
@@ -333,6 +335,7 @@ export default function Onboarding({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+
       {currentViewIndex === 0 && (
         <GoBackHeader inverted onPressGoBack={() => {
           Keyboard?.dismiss();
@@ -383,6 +386,7 @@ export default function Onboarding({ navigation }) {
               onEdited={setEmail}
               isEmail
               defaultValue={email}
+              autoComplete='email'
             />
             <FormInput
               placeholder='Password'
@@ -390,12 +394,14 @@ export default function Onboarding({ navigation }) {
               isPassword
               onEdited={setPassword}
               defaultValue={password}
+              autoComplete='password'
             />
           </View>
           <LoadingGlassButton
             onPress={handleLogin}
             disabled={email.length === 0 || password.length === 0}
             text='Login'
+            loading={loading}
           />
         </View>
 
@@ -463,6 +469,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isEmail
               defaultValue={email}
+              autoComplete='email'
             />
             <FormInput
               ref={passwordInputRef}
@@ -471,6 +478,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={password}
+              autoComplete='password-new'
             />
             <FormInput
               ref={passwordConfirmationInputRef}
@@ -479,6 +487,7 @@ export default function Onboarding({ navigation }) {
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={passwordConfirmation}
+              autoComplete='password-new'
             />
           </View>
           <LoadingGlassButton
@@ -564,6 +573,7 @@ export default function Onboarding({ navigation }) {
           />
         </View>
       </ViewSlider>
+      {customUrls && <DebugUrlsMenu />}
     </SafeAreaView>
   );
 }

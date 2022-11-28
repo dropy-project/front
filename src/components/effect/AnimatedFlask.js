@@ -25,6 +25,13 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
   }, [isFocused, user.lastEnergyIncrement]);
 
   useEffect(() => {
+    if (user == null)
+      return;
+    const energyClamped = Math.min(Math.max((user.energy / MAX_ENERGY), 0), 1);
+    flaskFillAnimatedValue.setValue(energyClamped);
+  }, []);
+
+  useEffect(() => {
     pathAnimatedValue.setValue(Math.random());
     path2AnimatedValue.setValue(Math.random());
     const offset = Math.random() * 500;
