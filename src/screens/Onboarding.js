@@ -551,8 +551,7 @@ export default function Onboarding({ navigation }) {
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestBackgroundGeolocationPermissions(
-              () => viewSliderRef.current?.goToView(8),
-              () => viewSliderRef.current?.goToView(7)
+              () => viewSliderRef.current?.goToView(8)
             )}
             text='Turn on'
           />
