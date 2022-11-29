@@ -9,7 +9,7 @@ const GlassButton = ({ children, onPress, buttonText, style, disabled, fontSize 
     style={{
       ...styles.container,
       ...style,
-      backgroundColor: disabled ? `${Colors.lightGrey}60` : Colors.purple1,
+      backgroundColor: disabled ? `${Colors.lighterGrey}` : Colors.purple1,
       shadowOpacity: disabled ? 0 : 0.5,
     }}>
     {children == null ? (

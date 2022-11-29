@@ -2,6 +2,9 @@
 #
 .DS_Store
 
+# Vim
+.swp
+
 # Xcode
 #
 build/
@@ -29,6 +32,7 @@ build/
 local.properties
 *.iml
 *.hprof
+.vscode
 
 # node.js
 #

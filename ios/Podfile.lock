@@ -14,11 +14,11 @@ PODS:
     - ExpoModulesCore
   - EXFileSystem (14.0.0):
     - ExpoModulesCore
-  - EXFont (10.1.0):
+  - EXFont (10.2.1):
     - ExpoModulesCore
   - Expo (45.0.8):
     - ExpoModulesCore
-  - ExpoHaptics (11.2.0):
+  - ExpoHaptics (11.3.0):
     - ExpoModulesCore
   - ExpoKeepAwake (10.1.1):
     - ExpoModulesCore
@@ -68,21 +68,21 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
-  - Permission-Camera (3.3.1):
+  - Permission-Camera (3.6.1):
     - RNPermissions
-  - Permission-LocationAccuracy (3.3.1):
+  - Permission-LocationAccuracy (3.6.1):
     - RNPermissions
-  - Permission-LocationAlways (3.3.1):
+  - Permission-LocationAlways (3.6.1):
     - RNPermissions
-  - Permission-LocationWhenInUse (3.3.1):
+  - Permission-LocationWhenInUse (3.6.1):
     - RNPermissions
-  - Permission-Microphone (3.3.1):
+  - Permission-Microphone (3.6.1):
     - RNPermissions
-  - Permission-Motion (3.3.1):
+  - Permission-Motion (3.6.1):
     - RNPermissions
-  - Permission-Notifications (3.3.1):
+  - Permission-Notifications (3.6.1):
     - RNPermissions
-  - Permission-PhotoLibrary (3.3.1):
+  - Permission-PhotoLibrary (3.6.1):
     - RNPermissions
   - RCT-Folly (2021.06.28.00-v2):
     - boost
@@ -295,9 +295,9 @@ PODS:
     - React-Core
   - react-native-compass-heading (1.4.1):
     - React
-  - react-native-config (1.4.6):
-    - react-native-config/App (= 1.4.6)
-  - react-native-config/App (1.4.6):
+  - react-native-config (1.4.11):
+    - react-native-config/App (= 1.4.11)
+  - react-native-config/App (1.4.11):
     - React-Core
   - react-native-geolocation (2.1.0):
     - React-Core
@@ -311,13 +311,13 @@ PODS:
     - React-Core
   - react-native-maps (1.3.2):
     - React-Core
-  - react-native-notifications (4.3.1):
+  - react-native-notifications (4.3.3):
     - React-Core
-  - react-native-safe-area-context (4.3.1):
+  - react-native-safe-area-context (4.4.1):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
-    - React
+    - React-Core
     - ReactCommon/turbomodule/core
   - React-perflogger (0.68.5)
   - React-RCTActionSheet (0.68.5):
@@ -386,14 +386,14 @@ PODS:
     - React-perflogger (= 0.68.5)
   - RNBackgroundFetch (4.1.5):
     - React-Core
-  - RNBackgroundGeolocation (4.7.1):
+  - RNBackgroundGeolocation (4.9.3):
     - CocoaLumberjack (~> 3.7.2)
     - React-Core
   - RNCAsyncStorage (1.17.11):
     - React-Core
-  - RNDeviceInfo (10.1.1):
+  - RNDeviceInfo (10.3.0):
     - React-Core
-  - RNFastImage (8.5.11):
+  - RNFastImage (8.6.3):
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
@@ -408,15 +408,15 @@ PODS:
     - React-Core
     - React-RCTImage
     - TOCropViewController
-  - RNPermissions (3.3.1):
+  - RNPermissions (3.6.1):
     - React-Core
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNSentry (4.8.0):
+  - RNSentry (4.9.0):
     - React-Core
-    - Sentry (= 7.29.0)
-  - RNSVG (12.3.0):
+    - Sentry/HybridSDK (= 7.31.2)
+  - RNSVG (12.4.4):
     - React-Core
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
@@ -424,9 +424,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - Sentry (7.29.0):
-    - Sentry/Core (= 7.29.0)
-  - Sentry/Core (7.29.0)
+  - Sentry/HybridSDK (7.31.2)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
 
@@ -667,9 +665,9 @@ SPEC CHECKSUMS:
   EXConstants: fdbe52259365b6a6faaa5e99a3b82cfa6bc2eb61
   EXErrorRecovery: 3ce46e5d42e53c0371ff048a7f0cbc959968ef4a
   EXFileSystem: 2aa2d9289f84bca9532b9ccbd81504fa31eb1ded
-  EXFont: 04235cc22e6fef86028feb67db452978dc6f240f
+  EXFont: 06df627203afcb8a3b3152ec06eb2f11f46f0cff
   Expo: 1133eaf0e12dc265ac82a256f3815401b7570f96
-  ExpoHaptics: ad58ec96a25e57579c14a47c7d71f0de0de8656a
+  ExpoHaptics: efe9e68e9dfe0d15c183c0c70a25f3874124ab9e
   ExpoKeepAwake: c0c494b442ecd8122974c13b93ccfb57bd408e88
   ExpoModulesCore: e4278a668e8c13c0269ed8b8a4200989deea2973
   FBLazyVector: 2b47ff52037bd9ae07cc9b051c9975797814b736
@@ -679,14 +677,14 @@ SPEC CHECKSUMS:
   Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
   GoogleMaps: 6e9c923ca035989709fcb5771544fda4cc5fa2a4
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
-  Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
-  Permission-LocationAccuracy: 43d7a6b3d736a90168e9fc7117a721ca44722f83
-  Permission-LocationAlways: fbf36cbdcabc3101f1168ad1ec45cfc5a6448cc4
-  Permission-LocationWhenInUse: 006c85c8de0c05b5d8be8e8029e4f6b813270293
-  Permission-Microphone: 13922195a81b9d46d2df8050c225006eae126d49
-  Permission-Motion: db2cffebd72064294639959653f81175b1c1d354
-  Permission-Notifications: 4b21cfdd5e8aab2cbb1f117aaa17b44e1f5736c4
-  Permission-PhotoLibrary: ddb5a158725b29cb12e9e477e8a5f5151c66cc3c
+  Permission-Camera: bf6791b17c7f614b6826019fcfdcc286d3a107f6
+  Permission-LocationAccuracy: 76df17de5c6b8bc2eee34e61ee92cdd7a864c73d
+  Permission-LocationAlways: 8d99b025c9f73c696e0cdb367e42525f2e9a26f2
+  Permission-LocationWhenInUse: 3ba99e45c852763f730eabecec2870c2382b7bd4
+  Permission-Microphone: 48212dd4d28025d9930d583e3c7a56da7268665c
+  Permission-Motion: d3e5ac6c989b2594a3c5c5ab19ffe9453fa3eb5c
+  Permission-Notifications: 150484ae586eb9be4e32217582a78350a9bb31c3
+  Permission-PhotoLibrary: 5b34ca67279f7201ae109cef36f9806a6596002d
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: 0f06b6068f530932d10e1a01a5352fad4eaacb74
   RCTTypeSafety: b0ee81f10ef1b7d977605a2b266823dabd565e65
@@ -702,14 +700,14 @@ SPEC CHECKSUMS:
   React-logger: 98f663b292a60967ebbc6d803ae96c1381183b6d
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
   react-native-compass-heading: ff2c7a7fc1064abca69dd14c44c778e4a202f092
-  react-native-config: 7cd105e71d903104e8919261480858940a6b9c0e
+  react-native-config: bcafda5b4c51491ee1b0e1d0c4e3905bc7b56c1b
   react-native-geolocation: 69f4fd37650b8e7fee91816d395e62dd16f5ab8d
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-google-maps: 035ad2f9b4974f22af3d4d4c6993960a181b0aaf
   react-native-image-resizer: d9fb629a867335bdc13230ac2a58702bb8c8828f
   react-native-maps: 085f614cf14d3637b2048bb9752da5b1c27c2886
-  react-native-notifications: 33ec77006f7987bb22de8f1665889abc633b9196
-  react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
+  react-native-notifications: 83b4fd4a127a6c918fc846cae90da60f84819e44
+  react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   React-perflogger: 0458a87ea9a7342079e7a31b0d32b3734fb8415f
   React-RCTActionSheet: 22538001ea2926dea001111dd2846c13a0730bc9
   React-RCTAnimation: 732ce66878d4aa151d56a0d142b1105aa12fd313
@@ -723,19 +721,19 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b1f1995089b90696dbc2a7ffe0059a80db5c8eb1
   ReactCommon: 149e2c0acab9bac61378da0db5b2880a1b5ff59b
   RNBackgroundFetch: 0d378f04faa1244f6eb3787f51f7d99520c1fe5e
-  RNBackgroundGeolocation: 7dde1b7d63266d91efd5a5aea60f3879a38d4335
+  RNBackgroundGeolocation: 6257657303021fb42a023af00426579bf996f7a4
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
-  RNDeviceInfo: 89bc4fe36cf4c8955965609b140d29a335d5350d
-  RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
+  RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
+  RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
-  RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
+  RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSentry: db7fd7b66efda28885e4e904a8b5e7349aec61c1
-  RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
+  RNSentry: 6503a8ec616947dbe98be828307c8f49e7686674
+  RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  Sentry: 4272663eb0eda312024d795ca3f5a562a8ce5e18
+  Sentry: b15765d11769852fe78c9add942f7df60ed5dbf5
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: c4d61225a466f250c35c1ee78d2d0b3d41fe661c
 
