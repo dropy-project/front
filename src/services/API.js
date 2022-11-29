@@ -190,6 +190,11 @@ const getUserProfile = async () => {
   return response;
 };
 
+const deleteAccount = async () => {
+  const response = await axios.delete('/user/delete');
+  return response;
+};
+
 const logout = async () => {
   await init();
   const removedItem = await Storage.removeItem('@auth_tokens');
@@ -234,6 +239,7 @@ const API = {
   getNotificationsSettings,
   postNotificationsSettings,
   init,
+  deleteAccount,
 };
 
 export default API;

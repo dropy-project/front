@@ -150,6 +150,12 @@ const SettingsScreen = ({ navigation }) => {
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.navigateContainer} onPress={() => navigation.navigate('Account')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>My account</Text>
+          <View style={styles.navigateArrow}>
+            <AntDesign name='arrowright' size={24} color={Colors.white} />
+          </View>
+        </TouchableOpacity>
 
         <View style={styles.spacer} />
 
