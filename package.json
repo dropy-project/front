@@ -9,7 +9,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint \"**/*.{js,jsx}\"",
+    "lint:fix": "eslint \"**/*.{js,jsx}\" --fix"
   },
   "dependencies": {
     "@expo-google-fonts/space-grotesk": "^0.2.2",
@@ -26,6 +27,8 @@
     "expo": "^45.0.5",
     "expo-font": "^10.1.0",
     "expo-haptics": "^11.2.0",
+    "husky": "^8.0.2",
+    "metro-config": "^0.73.3",
     "ngeohash": "^0.6.3",
     "react": "17.0.2",
     "react-native": "0.68.5",

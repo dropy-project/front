@@ -338,6 +338,7 @@ export default function Onboarding({ navigation }) {
 
       {currentViewIndex === 0 && (
         <GoBackHeader inverted onPressGoBack={() => {
+          Keyboard?.dismiss();
           viewSliderRef.current?.nextView();
         }}/>
       )}
@@ -549,7 +550,9 @@ export default function Onboarding({ navigation }) {
           <FontAwesome5 name='satellite' size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
-            onPress={() => requestBackgroundGeolocationPermissions(() => viewSliderRef.current?.goToView(8))}
+            onPress={() => requestBackgroundGeolocationPermissions(
+              () => viewSliderRef.current?.goToView(8)
+            )}
             text='Turn on'
           />
         </View>
@@ -596,7 +599,6 @@ const LoadingGlassButton = ({ loading, onPress, disabled, text }) => (
 
 const styles = StyleSheet.create({
   container: {
-    // transform: [{ scale: 0.05 }],
     backgroundColor: Colors.white,
     flex: 1,
     ...Styles.center,
