@@ -12,6 +12,7 @@ import {
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { useIsFocused } from '@react-navigation/native';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
@@ -34,10 +35,12 @@ const SettingsScreen = ({ navigation }) => {
   const [notificationsSettings, setNotificationsSettings] = useState(null);
   const notificatinsSettingsRef = useRef(null);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     fetchNotificationsSettings();
     return () => {
-      if (notificatinsSettingsRef.current != null)
+      if (notificatinsSettingsRef.current != null && isFocused)
         postNotificationsSettings(notificatinsSettingsRef.current);
     };
   }, []);
