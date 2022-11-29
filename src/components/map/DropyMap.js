@@ -49,7 +49,7 @@ const DropyMap = ({
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
 
-  const [showEnergyTooltip, setShowEnergyTooltip] = useState(true);
+  const [showEnergyTooltip, setShowEnergyTooltip] = useState(false);
 
   const handleDropyPressed = async (dropy) => {
     try {

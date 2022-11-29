@@ -1,18 +1,27 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
+import useCurrentUser from '../../hooks/useCurrentUser';
 
+const MAX_ENERGY = 90;
 
-const EnergyTooltip = () => (
-    <View style={styles.container}>
-        <View style={styles.titleView}>
-            <Text style={styles.energyValue}>Valeur</Text>
+const EnergyTooltip = () => {
+    const { user } = useCurrentUser();
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.titleView}>
+                <MaterialCommunityIcons name='lightning-bolt' size={16} color={Colors.white} />
+                <Text style={styles.energyValue}>{Math.floor((user.energy * 100) / MAX_ENERGY)} / 100</Text>
+            </View>
+            <View>
+                <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
+            </View>
         </View>
-        <View>
-            <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
-        </View>
-    </View>
-);
+
+    );
+};
 
 export default EnergyTooltip;
 
@@ -32,11 +41,12 @@ const styles = StyleSheet.create({
     },
     titleView: {
         alignItems: 'flex-start',
-        width: '85%',
+        flexDirection: 'row',
+        width: '90%',
+        marginTop: 5,
     },
     energyValue: {
         ...Fonts.bold(11, Colors.white),
-        marginTop: 5,
     },
     description: {
         ...Fonts.bold(9, Colors.white),
