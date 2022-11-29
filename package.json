@@ -21,7 +21,7 @@
     "@react-native-community/geolocation": "^2.1.0",
     "@react-navigation/native": "^6.0.16",
     "@react-navigation/stack": "^6.3.5",
-    "@sentry/react-native": "^4.8.0",
+    "@sentry/react-native": "^4.10.0",
     "axios": "^0.27.2",
     "crypto-js": "v3.1.9-1",
     "expo": "^45.0.5",
