@@ -105,7 +105,7 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
         borderBottomRightRadius: 20,
         ...Styles.center,
       }}>
-        <TouchableOpacity
+        <View
           style={{
             ...styles.flaskContainer,
             height: size * 1.8,
@@ -155,7 +155,7 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
               borderWidth: size * 0.06,
             }}
           />
-        </TouchableOpacity>
+        </View>
         <View style={{ backgroundColor: 'white', borderRadius: 50, height: 20, width: 20, position: 'absolute', top: -15, ...Styles.center }}>
           <MaterialCommunityIcons name='lightning-bolt' size={size * 0.25} color={Colors.purple2} />
         </View>

@@ -49,7 +49,7 @@ const DropyMap = ({
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
 
-  const [showEnergyTooltip, setShowEnergyTooltip] = useState(false);
+  const [showEnergyTooltip, setShowEnergyTooltip] = useState(true);
 
   const handleDropyPressed = async (dropy) => {
     try {
@@ -212,12 +212,15 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <View style={styles.energyIndicatorView}>
+          <TouchableOpacity style={styles.energyIndicatorView} onPress={() => displayEnergyTooltip()}>
             <AnimatedFlask />
             {showEnergyTooltip && (<EnergyTooltip />)}
-          </View>
+          </TouchableOpacity>
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
-            <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
+            <TouchableOpacity
+              onPress={() => setMapCameraPosition(headingLocked, true)}
+              style={styles.lockButton}
+            >
               <MaterialIcons name='my-location' size={20} color={Colors.darkGrey} />
             </TouchableOpacity>
           </FadeInWrapper>
@@ -263,6 +266,6 @@ const styles = StyleSheet.create({
   },
   energyIndicatorView: {
     flexDirection: 'row-reverse',
-    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

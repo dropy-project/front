@@ -1,14 +1,15 @@
 import React from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import Styles, { Colors } from '../../styles/Styles';
+import { StyleSheet, Text, View } from 'react-native';
+import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 
 const EnergyTooltip = () => (
     <View style={styles.container}>
-        <View></View>
+        <View style={styles.titleView}>
+            <Text style={styles.energyValue}>Valeur</Text>
+        </View>
         <View>
-            <Text style={styles.text}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
+            <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
         </View>
     </View>
 );
@@ -19,20 +20,26 @@ const styles = StyleSheet.create({
     container: {
         ...Styles.center,
         position: 'absolute',
-        bottom: 0,
-        left: 20,
+        bottom: 20,
+        left: 40,
         right: 0,
-        height: 100,
+        height: 90,
         width: 200,
         borderRadius: 10,
         backgroundColor: Colors.purple2,
         ...Styles.softShadows,
         shadowOpacity: 0.2,
     },
-    text: {
-        ...Styles.center,
-        color: Colors.white,
-        fontSize: 12,
-        textAlign: 'center',
+    titleView: {
+        alignItems: 'flex-start',
+        width: '85%',
+    },
+    energyValue: {
+        ...Fonts.bold(11, Colors.white),
+        marginTop: 5,
+    },
+    description: {
+        ...Fonts.bold(9, Colors.white),
+        margin: 10,
     },
 });
