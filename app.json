@@ -4,7 +4,7 @@
   
   "version": "0.0.10",
   "versionFlag": "private-beta-rc",
-  "requiredServerVersion": "0.0.10",
+  "requiredServerVersion": "0.0.11",
 
   "productionMode": false
 }
