@@ -35,11 +35,12 @@ const SettingsScreen = ({ navigation }) => {
   const notificatinsSettingsRef = useRef(null);
 
   useEffect(() => {
-    fetchNotificationsSettings();
-    return () => {
+    const unsubscribe = navigation.addListener('unfocus', () => {
+      fetchNotificationsSettings();
       if (notificatinsSettingsRef.current != null)
         postNotificationsSettings(notificatinsSettingsRef.current);
-    };
+    });
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -57,7 +58,10 @@ const SettingsScreen = ({ navigation }) => {
         description: 'We were unable to retrieve your notification settings',
         validateText: 'Ok',
       });
-      console.error('Error while fetch notifications settings', error.response?.data || error);
+      console.error(
+        'Error while fetch notifications settings',
+        error.response?.data || error
+      );
       navigation.goBack();
     }
   };
@@ -72,7 +76,10 @@ const SettingsScreen = ({ navigation }) => {
         description: 'We were unable to update your notification settings',
         validateText: 'Ok',
       });
-      console.error('Error while update notifications settings', error.response?.data || error);
+      console.error(
+        'Error while update notifications settings',
+        error.response?.data || error
+      );
     }
   };
 
@@ -96,12 +103,15 @@ const SettingsScreen = ({ navigation }) => {
       <GoBackHeader text='Settings' />
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-
         <Text style={styles.titleText}>Background location</Text>
         <View style={styles.linkContainer}>
           <View style={{ flex: 0.9 }}>
-            <Text style={{ ...Fonts.regular(11, Colors.grey) }}>Get alerted when you walk onto a drop with the app closed.</Text>
-            <Text style={{ ...Fonts.bold(12, Colors.purple2), marginTop: 2 }}>Highly recommended</Text>
+            <Text style={{ ...Fonts.regular(11, Colors.grey) }}>
+              Get alerted when you walk onto a drop with the app closed.
+            </Text>
+            <Text style={{ ...Fonts.bold(12, Colors.purple2), marginTop: 2 }}>
+              Highly recommended
+            </Text>
           </View>
           <Switch
             value={backgroundGeolocationEnabled}
@@ -119,33 +129,53 @@ const SettingsScreen = ({ navigation }) => {
         <FormToggle
           value={notificationsSettings?.dailyDropyReminder}
           title='Remind me to drop something daily'
-          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dailyDropyReminder: value }))}
+          onValueChange={(value) => setNotificationsSettings((old) => ({
+            ...old,
+            dailyDropyReminder: value,
+          }))
+          }
         />
         <FormToggle
           value={notificationsSettings?.dropyCollected}
           title='When one of my drop is collected'
-          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dropyCollected: value }))}
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dropyCollected: value }))
+          }
         />
         <FormToggle
           value={notificationsSettings?.newFeature}
           title='When a new feature is available'
-          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, newFeature: value }))}
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, newFeature: value }))
+          }
         />
 
-        <Text style={styles.titleText}>Others</Text>
+        {/* <Text style={styles.titleText}>Others</Text>
         <FormToggle disabled title='Vibrations' />
-        <FormToggle disabled title='Show my connection status' />
+        <FormToggle disabled title='Show my connection status' /> */}
 
         <View style={styles.spacer} />
 
-        <TouchableOpacity style={{ ...styles.navigateContainer, marginTop: 10 }} onPress={() => navigation.navigate('UserDropies')}>
+        <TouchableOpacity
+          style={{ ...styles.navigateContainer, marginTop: 10 }}
+          onPress={() => navigation.navigate('UserDropies')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>My drops</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navigateContainer} onPress={() => navigation.navigate('BlockedUsers')}>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Blocked users</Text>
+        <TouchableOpacity
+          style={styles.navigateContainer}
+          onPress={() => navigation.navigate('BlockedUsers')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
+            Blocked users
+          </Text>
+          <View style={styles.navigateArrow}>
+            <AntDesign name='arrowright' size={24} color={Colors.white} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.navigateContainer}
+          onPress={() => navigation.navigate('Account')}>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>My account</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
@@ -153,20 +183,34 @@ const SettingsScreen = ({ navigation }) => {
 
         <View style={styles.spacer} />
 
-        <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/help')}>
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={() => Linking.openURL('https://dropy-app.com/help')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Help</Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/about')}>
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={() => Linking.openURL('https://dropy-app.com/about')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>About</Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/privacy-policy.html')}>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Privacy Policy</Text>
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={() => Linking.openURL('https://dropy-app.com/privacy-policy.html')
+          }>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
+            Privacy Policy
+          </Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.linkContainer} onPress={() => Linking.openURL('https://dropy-app.com/terms-conditions.html')}>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Terms & Conditions</Text>
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={() => Linking.openURL('https://dropy-app.com/terms-conditions.html')
+          }>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
+            Terms & Conditions
+          </Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
 
@@ -174,26 +218,24 @@ const SettingsScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={{ ...styles.linkContainer, ...Styles.center }}
-          onPress={logout}
-        >
+          onPress={logout}>
           <Text style={{ ...Fonts.bold(12, Colors.red) }}>Logout</Text>
         </TouchableOpacity>
 
         <View style={styles.spacer} />
 
-        {/* eslint-disable-next-line no-undef */}
-        <TouchableOpacity onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)} activeOpacity={1}>
+        <TouchableOpacity
+          // eslint-disable-next-line no-undef
+          onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)
+          }
+          activeOpacity={1}>
           <View style={styles.infoTextContainer}>
             <Ionicons name='git-branch' size={19} color={Colors.darkGrey} />
-            <Text style={styles.infoText}>
-              {AppInfo.version}
-            </Text>
+            <Text style={styles.infoText}>{AppInfo.version}</Text>
           </View>
           <View style={styles.infoTextContainer}>
             <Feather name='flag' size={17} color={Colors.darkGrey} />
-            <Text style={styles.infoText}>
-              {AppInfo.versionFlag}
-            </Text>
+            <Text style={styles.infoText}>{AppInfo.versionFlag}</Text>
           </View>
           <View style={styles.infoTextContainer}>
             <Feather name='server' size={17} color={Colors.darkGrey} />
@@ -216,7 +258,6 @@ const SettingsScreen = ({ navigation }) => {
 };
 
 export default SettingsScreen;
-
 
 const styles = StyleSheet.create({
   container: {

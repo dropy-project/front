@@ -14,6 +14,7 @@ import {
 import * as Sentry from '@sentry/react-native';
 import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet';
 
+import { LogBox } from 'react-native';
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
 import GeolocationProvider from './src/states/GeolocationContextProvider';
@@ -22,7 +23,6 @@ import NotificationProvider from './src/states/NotificationProvider';
 import OverlayContextProvider from './src/states/OverlayContextProvider';
 import SocketContextProvider from './src/states/SocketContextProvider';
 import ConversationsContextProvider from './src/states/ConversationsContextProvider';
-
 
 Sentry.init({
   dsn: 'https://19407e7c32a2487689649a399a55c564@o1315355.ingest.sentry.io/6567185',
@@ -33,6 +33,8 @@ Sentry.init({
   // We recommend adjusting this value in production.
   tracesSampleRate: 1.0,
 });
+
+LogBox.ignoreLogs(['rgb']);
 
 const NavigationApp = () => (
   <NavigationContainer>
@@ -74,5 +76,3 @@ export default function App() {
     </ActionSheetProvider>
   );
 }
-
-
