@@ -3,8 +3,7 @@ import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import useCurrentUser from '../../hooks/useCurrentUser';
-
-const MAX_ENERGY = 90;
+import Storage from '../../utils/storage';
 
 const EnergyTooltip = ({ style, children }) => {
   const { user } = useCurrentUser();
@@ -27,7 +26,7 @@ const EnergyTooltip = ({ style, children }) => {
       <Animated.View style={{ ...styles.tooltipContainer, opacity: tooltipAnimatedValue }}>
         <View style={styles.titleView}>
           <MaterialCommunityIcons name='lightning-bolt' size={16} color={Colors.white} />
-          <Text style={styles.energyValue}>{Math.floor((user.energy * 100) / MAX_ENERGY)} / 100</Text>
+          <Text style={styles.energyValue}>{user.energy} / 90</Text>
         </View>
         <View>
           <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
@@ -42,7 +41,6 @@ const EnergyTooltip = ({ style, children }) => {
         {children}
       </TouchableOpacity>
     </View>
-
   );
 };
 
