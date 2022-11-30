@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Platform, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
@@ -48,8 +48,6 @@ const DropyMap = ({
 
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
-
-  const [showEnergyTooltip, setShowEnergyTooltip] = useState(false);
 
   const handleDropyPressed = async (dropy) => {
     try {
@@ -152,8 +150,6 @@ const DropyMap = ({
     return newLockedValue;
   });
 
-  const displayEnergyTooltip = () => setShowEnergyTooltip(!showEnergyTooltip);
-
   return (
     <>
       <OSMapView
@@ -212,10 +208,9 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <TouchableOpacity style={styles.energyIndicatorView} onPress={() => displayEnergyTooltip()}>
+          <EnergyTooltip style={{ marginLeft: 7 }}>
             <AnimatedFlask />
-            {showEnergyTooltip && (<EnergyTooltip />)}
-          </TouchableOpacity>
+          </EnergyTooltip>
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
             <TouchableOpacity
               onPress={() => setMapCameraPosition(headingLocked, true)}
@@ -263,9 +258,5 @@ const styles = StyleSheet.create({
     padding: 11,
     ...Styles.center,
     ...Styles.softShadows,
-  },
-  energyIndicatorView: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'center',
   },
 });
