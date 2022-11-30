@@ -11,6 +11,13 @@ const EnergyTooltip = ({ style, children }) => {
 
   const [isPressed, setIsPressed] = useState(false);
 
+  Storage.getItem('alreadyLaunched').then((value) => {
+    if (value === null) {
+      Storage.setItem('alreadyLaunched', true);
+      setIsPressed(true);
+    }
+  });
+
   useEffect(() => {
     const anim = Animated.timing(tooltipAnimatedValue, {
       toValue: isPressed ? 1 : 0,
