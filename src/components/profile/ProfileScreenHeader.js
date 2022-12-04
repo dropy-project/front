@@ -26,6 +26,7 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
   const { showActionSheetWithOptions } = useActionSheet();
   const { sendAlert } = useOverlay();
   const { openChat } = useConversationsSocket();
+  console.log(user.pronouns);
 
   const navigation = useNavigation();
 

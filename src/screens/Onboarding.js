@@ -208,6 +208,14 @@ export default function Onboarding({ navigation }) {
     }
   };
 
+  const checkEmailAvailable = async (email) => {
+    try {
+      const test = await API.checkEmailAvailable(email);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleLogin = async () => {
     const emailValid = loginEmailInputRef.current?.isValid();
 
@@ -492,7 +500,8 @@ export default function Onboarding({ navigation }) {
           </View>
           <LoadingGlassButton
             loading={loading}
-            onPress={() => {
+            onPress={async () => {
+              const test = await checkEmailAvailable(email);
               const emailValid = emailInputRef.current?.isValid();
               const passwordValid = passwordInputRef.current?.isValid();
               const passwordConfirmationValid = passwordConfirmationInputRef.current?.isValid();
