@@ -101,7 +101,7 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
 
       <View style={styles.headerUserInfosContainer}>
         <View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+          <View style={styles.usernameAndBadges}>
             <Text style={{ ...Fonts.bold(25, Colors.white) }}>{user?.displayName}</Text>
             <RankIcons user={user} />
           </View>
@@ -232,5 +232,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'space-between',
     padding: 20,
+  },
+  usernameAndBadges: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
 });
