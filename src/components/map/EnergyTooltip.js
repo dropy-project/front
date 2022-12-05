@@ -31,18 +31,22 @@ const EnergyTooltip = ({ style, children }) => {
   return (
     <View style={{ ...Styles.center, ...style }}>
       <Animated.View style={{ ...styles.tooltipContainer, opacity: tooltipAnimatedValue }}>
-        <View style={styles.titleView}>
-          <MaterialCommunityIcons name='lightning-bolt' size={16} color={Colors.white} />
-          <Text style={styles.energyValue}>{user.energy} / 90</Text>
-        </View>
-        <View>
-          <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
-        </View>
+        <TouchableOpacity
+          onPressIn={() => setIsPressed(false)}
+        >
+          <View style={styles.titleView}>
+            <MaterialCommunityIcons name='lightning-bolt' size={16} color={Colors.white} />
+            <Text style={styles.energyValue}>{user.energy} / 90</Text>
+          </View>
+          <View>
+            <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
+          </View>
+        </TouchableOpacity>
       </Animated.View>
       <TouchableOpacity
-        delayPressOut={2000}
+        delayPressOut={isPressed ? 2000 : 0}
         style={{ ...Styles.center, ...style }}
-        onPressIn={() => setIsPressed(true)}
+        onPressIn={isPressed ? () => setIsPressed(false) : () => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
       >
         {children}
@@ -64,8 +68,7 @@ const styles = StyleSheet.create({
     width: 210,
     borderRadius: 10,
     backgroundColor: Colors.purple2,
-    ...Styles.shadow,
-    shadowOpacity: 0.2,
+    ...Styles.hardShadows,
   },
   titleView: {
     alignItems: 'flex-start',
