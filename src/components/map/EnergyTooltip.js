@@ -58,13 +58,13 @@ const styles = StyleSheet.create({
     ...Styles.center,
     position: 'absolute',
     bottom: 20,
-    left: -200,
+    left: -210,
     right: 0,
-    height: 90,
-    width: 200,
+    height: 100,
+    width: 210,
     borderRadius: 10,
     backgroundColor: Colors.purple2,
-    ...Styles.softShadows,
+    ...Styles.shadow,
     shadowOpacity: 0.2,
   },
   titleView: {
@@ -72,12 +72,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '90%',
     marginTop: 5,
+    marginLeft: 5,
   },
   energyValue: {
     ...Fonts.bold(11, Colors.white),
   },
   description: {
-    ...Fonts.bold(9, Colors.white),
-    margin: 10,
+    ...Fonts.bold(11, Colors.white),
+    margin: 8,
   },
 });
