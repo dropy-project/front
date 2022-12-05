@@ -44,6 +44,7 @@ const EnergyTooltip = ({ style, children }) => {
         </TouchableOpacity>
       </Animated.View>
       <TouchableOpacity
+        activeOpacity={1}
         delayPressOut={isPressed ? 2000 : 0}
         style={{ ...Styles.center, ...style }}
         onPressIn={isPressed ? () => setIsPressed(false) : () => setIsPressed(true)}
