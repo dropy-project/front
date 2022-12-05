@@ -208,7 +208,7 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <EnergyTooltip style={{ marginLeft: 7 }}>
+          <EnergyTooltip>
             <AnimatedFlask />
           </EnergyTooltip>
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
