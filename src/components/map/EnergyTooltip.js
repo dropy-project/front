@@ -3,22 +3,15 @@ import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import useCurrentUser from '../../hooks/useCurrentUser';
-import Storage from '../../utils/storage';
 
-const EnergyTooltip = ({ style, children }) => {
+const EnergyTooltip = ({ style, isFirstLaunch, children }) => {
   const { user } = useCurrentUser();
   const tooltipAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [isPressed, setIsPressed] = useState(false);
 
-  Storage.getItem('alreadyLaunched').then((value) => {
-    if (value === null) {
-      Storage.setItem('alreadyLaunched', true);
-      setIsPressed(true);
-    }
-  });
-
   useEffect(() => {
+    isFirstLaunch && setIsPressed(true);
     const anim = Animated.timing(tooltipAnimatedValue, {
       toValue: isPressed ? 1 : 0,
       duration: 200,
@@ -32,6 +25,7 @@ const EnergyTooltip = ({ style, children }) => {
     <View style={{ ...Styles.center, ...style }}>
       <Animated.View style={{ ...styles.tooltipContainer, opacity: tooltipAnimatedValue }}>
         <TouchableOpacity
+          activeOpacity={1}
           onPressIn={() => setIsPressed(false)}
         >
           <View style={styles.titleView}>

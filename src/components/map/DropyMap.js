@@ -18,6 +18,7 @@ import MapLoadingOverlay from '../overlays/MapLoadingOverlay';
 import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
+import Storage from '../../utils/storage';
 import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
@@ -48,6 +49,8 @@ const DropyMap = ({
 
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
+
+  const [isFirstLaunch, setIsFirstLaunch] = useState(false);
 
   const handleDropyPressed = async (dropy) => {
     try {
@@ -107,6 +110,15 @@ const DropyMap = ({
     selectedDropyIndex,
     retrievedDropies
   ]);
+
+  useEffect(() => {
+    Storage.getItem('alreadyLaunched').then((value) => {
+      if (value === null) {
+        Storage.setItem('alreadyLaunched', true);
+        setIsFirstLaunch(true);
+      }
+    });
+  }, []);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
     const currentCamera = await osMap.current?.getMapRef()?.getCamera();
@@ -208,7 +220,7 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <EnergyTooltip>
+          <EnergyTooltip isFirstLaunch={isFirstLaunch}>
             <AnimatedFlask />
           </EnergyTooltip>
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
