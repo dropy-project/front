@@ -1,35 +1,63 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import useCurrentUser from '../../hooks/useCurrentUser';
+import Haptics from '../../utils/haptics';
 
 const EnergyTooltip = ({ style, isFirstLaunch, children }) => {
   const { user } = useCurrentUser();
   const tooltipAnimatedValue = useRef(new Animated.Value(0)).current;
 
-  const [isPressed, setIsPressed] = useState(false);
+  const [isPressed, _setIsPressed] = useState(false);
 
   useEffect(() => {
     isFirstLaunch && setIsPressed(true);
     const anim = Animated.timing(tooltipAnimatedValue, {
       toValue: isPressed ? 1 : 0,
       duration: 200,
+      easing: Easing.bezier(.89, .17, .57, 1.23),
       useNativeDriver: true,
     });
     anim.start();
     return anim.stop;
   }, [isPressed]);
 
+  const setIsPressed = (value) => {
+    Haptics.impactLight();
+    _setIsPressed(value);
+  };
+
+  const scaleAnimatedValue = tooltipAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.5, 1],
+  });
+
+  const translateAnimatedValue = tooltipAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [100, 0],
+  });
+
   return (
     <View style={{ ...Styles.center, ...style }}>
-      <Animated.View style={{ ...styles.tooltipContainer, opacity: tooltipAnimatedValue }}>
+      <Animated.View style={{
+        ...styles.tooltipContainer,
+        opacity: tooltipAnimatedValue,
+        transform: [{ scale: scaleAnimatedValue }, { translateX: translateAnimatedValue }],
+      }}>
         <TouchableOpacity
           activeOpacity={1}
           onPressIn={() => setIsPressed(false)}
         >
           <View style={styles.titleView}>
-            <MaterialCommunityIcons name='lightning-bolt' size={16} color={Colors.white} />
+            <MaterialCommunityIcons name='lightning-bolt' size={20} color={Colors.white} />
             <Text style={styles.energyValue}>{user.energy} / 90</Text>
           </View>
           <View>
@@ -38,10 +66,10 @@ const EnergyTooltip = ({ style, isFirstLaunch, children }) => {
         </TouchableOpacity>
       </Animated.View>
       <TouchableOpacity
-        activeOpacity={1}
+        activeOpacity={0.8}
         delayPressOut={isPressed ? 2000 : 0}
         style={{ ...Styles.center, ...style }}
-        onPressIn={isPressed ? () => setIsPressed(false) : () => setIsPressed(true)}
+        onPressIn={() => setIsPressed(!isPressed)}
         onPressOut={() => setIsPressed(false)}
       >
         {children}
@@ -66,14 +94,15 @@ const styles = StyleSheet.create({
     ...Styles.hardShadows,
   },
   titleView: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     flexDirection: 'row',
     width: '90%',
     marginTop: 5,
     marginLeft: 5,
   },
   energyValue: {
-    ...Fonts.bold(11, Colors.white),
+    ...Fonts.bold(12, Colors.white),
+    marginLeft: 5,
   },
   description: {
     ...Fonts.bold(11, Colors.white),
