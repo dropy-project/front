@@ -23,6 +23,7 @@ import NotificationProvider from './src/states/NotificationProvider';
 import OverlayContextProvider from './src/states/OverlayContextProvider';
 import SocketContextProvider from './src/states/SocketContextProvider';
 import ConversationsContextProvider from './src/states/ConversationsContextProvider';
+import DropiesAroundContextProvider from './src/states/DropiesAroundContextProvider';
 
 Sentry.init({
   dsn: 'https://19407e7c32a2487689649a399a55c564@o1315355.ingest.sentry.io/6567185',
@@ -43,11 +44,13 @@ const NavigationApp = () => (
         <BackgroundGolocationContextProvider>
           <GeolocationProvider>
             <SocketContextProvider>
-              <ConversationsContextProvider>
-                <NotificationProvider>
-                  <Navigation />
-                </NotificationProvider>
-              </ConversationsContextProvider>
+              <DropiesAroundContextProvider>
+                <ConversationsContextProvider>
+                  <NotificationProvider>
+                    <Navigation />
+                  </NotificationProvider>
+                </ConversationsContextProvider>
+              </DropiesAroundContextProvider>
             </SocketContextProvider>
           </GeolocationProvider>
         </BackgroundGolocationContextProvider>
