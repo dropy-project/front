@@ -18,7 +18,6 @@ import MapLoadingOverlay from '../overlays/MapLoadingOverlay';
 import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
-import Storage from '../../utils/storage';
 import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
@@ -110,15 +109,6 @@ const DropyMap = ({
     selectedDropyIndex,
     retrievedDropies
   ]);
-
-  useEffect(() => {
-    Storage.getItem('alreadyLaunched').then((value) => {
-      if (value === null) {
-        Storage.setItem('alreadyLaunched', true);
-        setIsFirstLaunch(true);
-      }
-    });
-  }, []);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
     const currentCamera = await osMap.current?.getMapRef()?.getCamera();

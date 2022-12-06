@@ -11,15 +11,32 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import Haptics from '../../utils/haptics';
+import Storage from '../../utils/storage';
 
-const EnergyTooltip = ({ style, isFirstLaunch, children }) => {
+const EnergyTooltip = ({ style, children }) => {
   const { user } = useCurrentUser();
   const tooltipAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [isPressed, _setIsPressed] = useState(false);
 
   useEffect(() => {
-    isFirstLaunch && setIsPressed(true);
+    handleInitialDisplay();
+  }, []);
+
+  const handleInitialDisplay = async () => {
+    const requireInitialDisplay = await Storage.getItem('@energy_tooltip_initial_display') == null;
+    if (!requireInitialDisplay)
+      return;
+
+    Storage.setItem('@energy_tooltip_initial_display', true);
+
+    _setIsPressed(true);
+    setTimeout(() => {
+      setIsPressed(false);
+    }, 5000);
+  };
+
+  useEffect(() => {
     const anim = Animated.timing(tooltipAnimatedValue, {
       toValue: isPressed ? 1 : 0,
       duration: 200,
