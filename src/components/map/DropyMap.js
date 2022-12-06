@@ -49,8 +49,6 @@ const DropyMap = ({
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
 
-  const [isFirstLaunch, setIsFirstLaunch] = useState(false);
-
   const handleDropyPressed = async (dropy) => {
     try {
       if (dropy == null)
@@ -210,7 +208,7 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <EnergyTooltip isFirstLaunch={isFirstLaunch}>
+          <EnergyTooltip>
             <AnimatedFlask />
           </EnergyTooltip>
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
