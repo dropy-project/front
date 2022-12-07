@@ -101,10 +101,10 @@ const styles = StyleSheet.create({
   tooltipContainer: {
     ...Styles.center,
     position: 'absolute',
-    bottom: 20,
+    bottom: 15,
     left: -210,
     right: 0,
-    height: 100,
+    height: 110,
     width: 210,
     borderRadius: 10,
     backgroundColor: Colors.purple2,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     width: '90%',
-    marginTop: 5,
+    marginTop: 7,
     marginLeft: 5,
   },
   energyValue: {
