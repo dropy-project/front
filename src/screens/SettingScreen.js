@@ -35,8 +35,8 @@ const SettingsScreen = ({ navigation }) => {
   const notificatinsSettingsRef = useRef(null);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('unfocus', () => {
-      fetchNotificationsSettings();
+    fetchNotificationsSettings();
+    const unsubscribe = navigation.addListener('blur', () => {
       if (notificatinsSettingsRef.current != null)
         postNotificationsSettings(notificatinsSettingsRef.current);
     });
