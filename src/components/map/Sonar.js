@@ -84,7 +84,7 @@ const Sonar = ({ visible, heading, zoom, compassHeading }) => {
             <LinearGradient id='grad' x1='0%' y1='10%' x2='0%' y2='100%'>
               <Stop
                 offset='0%'
-                stopColor='rgb(100,25,255, 0.1)'
+                stopColor='rgba(100,25,255, 0.1)'
                 stopOpacity='0'
               />
               <Stop
