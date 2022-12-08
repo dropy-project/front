@@ -12,8 +12,7 @@ const GeolocationModal = () => (
       <Text style={styles.title}>Geolocation is not enabled</Text>
       <Text style={styles.description}>We will not be able to find anything around you if your position is unknown...</Text>
     </View>
-    <GlassButton onPress={() => Linking.openSettings()} buttonText={'Open settings'} disabled={false} style={styles.openSettingsButton} fontSize={14}>
-    </GlassButton>
+    <GlassButton onPress={() => Linking.openSettings()} buttonText={'Open settings'} disabled={false} style={styles.openSettingsButton} fontSize={14} />
   </View>
 );
 
