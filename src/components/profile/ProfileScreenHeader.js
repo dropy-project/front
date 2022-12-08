@@ -100,6 +100,19 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
         style={StyleSheet.absoluteFillObject}
       />
 
+      <View style={styles.headerUserInfosContainer}>
+        <View>
+          <View style={styles.usernameAndBadges}>
+            <Text style={{ ...Fonts.bold(25, Colors.white) }}>{user?.displayName}</Text>
+            <RankIcons user={user} />
+          </View>
+          <Text style={{ ...Fonts.regular(13, Colors.white) }}>@{user?.username}</Text>
+        </View>
+        {user?.pronouns !== Object.keys(PRONOUNS)[0] && (
+          <Text style={{ ...Fonts.regular(13, Colors.white) }}>{PRONOUNS[user?.pronouns]}</Text>
+        )}
+      </View>
+
       <SafeAreaView style={Styles.safeAreaView}>
         <Animated.View style={{ ...styles.headerControlsContainer, transform: [{ translateY: headerCancelTransform }] }}>
           <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
@@ -156,18 +169,6 @@ const ProfileScreenHeader = ({ user, scrollAnimValue, showControls = false, conv
         </Animated.View>
       </SafeAreaView>
 
-      <View style={styles.headerUserInfosContainer}>
-        <View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-            <Text style={{ ...Fonts.bold(25, Colors.white) }}>{user?.displayName}</Text>
-            <RankIcons user={user} />
-          </View>
-          <Text style={{ ...Fonts.regular(13, Colors.white) }}>@{user?.username}</Text>
-        </View>
-        {user?.pronouns !== 'UNKOWN' && (
-          <Text style={{ ...Fonts.regular(13, Colors.white) }}>{PRONOUNS[user?.pronouns]}</Text>
-        )}
-      </View>
     </Animated.View>
   );
 };
@@ -232,5 +233,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'space-between',
     padding: 20,
+  },
+  usernameAndBadges: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
 });
