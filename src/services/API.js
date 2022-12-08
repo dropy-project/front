@@ -212,11 +212,7 @@ const postNotificationsSettings = async (notificationsSettings) => {
 };
 
 const checkEmailAvailable = async (email) => {
-  const response = await axios.get('/emailAvailable', {
-    params: {
-      email,
-    },
-  });
+  const response = await axios.get(`/emailAvailable/${email}`);
   return response;
 };
 

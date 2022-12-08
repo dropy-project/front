@@ -210,7 +210,10 @@ export default function Onboarding({ navigation }) {
 
   const checkEmailAvailable = async (email) => {
     try {
-      const test = await API.checkEmailAvailable(email);
+      const response = await API.checkEmailAvailable(email);
+      if (!response.data)
+        emailInputRef.current?.setInvalid('An account already exists with this email');
+      return response.data;
     } catch (error) {
       console.log(error);
     }
@@ -501,8 +504,7 @@ export default function Onboarding({ navigation }) {
           <LoadingGlassButton
             loading={loading}
             onPress={async () => {
-              const test = await checkEmailAvailable(email);
-              const emailValid = emailInputRef.current?.isValid();
+              const emailValid = emailInputRef.current?.isValid() && await checkEmailAvailable(email) ;
               const passwordValid = passwordInputRef.current?.isValid();
               const passwordConfirmationValid = passwordConfirmationInputRef.current?.isValid();
               const inputsValid = emailValid && passwordValid && passwordConfirmationValid;
