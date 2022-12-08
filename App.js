@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AnimatedSplash from 'react-native-animated-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -59,7 +59,15 @@ const NavigationApp = () => (
 
 const ConnectedNavigationApp = connectActionSheet(NavigationApp);
 
-export default function App() {
+const App = () => {
+  // const [isLoaded, setIsLoaded] = useState(false);
+
+  // useEffect(() => {
+  //   console.log(`Avant : isLoaded ${isLoaded}`);
+  //   setIsLoaded(true);
+  //   console.log(`Après : isLoaded ${isLoaded}`);
+  // });
+
   const [fontsLoaded] = useFonts({
     SpaceGrotesk_300Light,
     SpaceGrotesk_400Regular,
@@ -72,8 +80,19 @@ export default function App() {
     return null;
 
   return (
+    // <AnimatedSplash
+    //   translucent={true}
+    //   isLoaded={isLoaded}
+    //   logoImage={require('./src/assets/svgs/dropy_logo.svg')}
+    //   backgroundColor={'#a89fe0'}
+    //   logoHeight={150}
+    //   logoWidth={150}
+    // >
     <ActionSheetProvider>
       <ConnectedNavigationApp />
     </ActionSheetProvider>
+    // </AnimatedSplash>
   );
-}
+};
+
+export default App;
