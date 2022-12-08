@@ -243,7 +243,7 @@ const DropyMap = ({
 
       <EnergyPopup />
       <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
-      <MapLoadingOverlay visible={geolocationInitialized === true} isGeolocationPermissionGranted={!locationEnabled}/>
+      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationEnabled}/>
       <LinearGradient
         pointerEvents='none'
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.1)']}
