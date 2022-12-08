@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { decryptMessage, encryptMessage } from '../utils/encrypt';
-import Haptics from '../utils/haptics';
 import useCurrentUser from './useCurrentUser';
 import useSocket from './useSocket';
 
@@ -143,8 +142,6 @@ const useChatSocket = (conversationId, onError = () => {}, onAllMessageLoadEnd =
         console.error('Error getting messages', response.error);
         return;
       }
-
-      Haptics.impactLight();
 
       const { messageRead, messageId } = response.data;
 
