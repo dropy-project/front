@@ -54,8 +54,8 @@ const SettingsScreen = ({ navigation }) => {
       setNotificationsSettings(response.data);
     } catch (error) {
       sendAlert({
-        title: 'Notifications settings unrecheable',
-        description: 'We were unable to retrieve your notification settings',
+        title: 'Flûte !',
+        description: 'Tous les paramètres n\'ont pas pu être récupérés',
         validateText: 'Ok',
       });
       console.error(
@@ -72,8 +72,8 @@ const SettingsScreen = ({ navigation }) => {
       await API.postNotificationsSettings(settings);
     } catch (error) {
       sendAlert({
-        title: 'Notifications settings not updated',
-        description: 'We were unable to update your notification settings',
+        title: 'Patachon !',
+        description: 'Les paramètres n\'ont pas pu être mis à jour',
         validateText: 'Ok',
       });
       console.error(
@@ -100,17 +100,17 @@ const SettingsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader text='Settings' />
+      <GoBackHeader text='Paramètres' />
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text style={styles.titleText}>Background location</Text>
+        <Text style={styles.titleText}>{'Géolocalisation en arrière plan'}</Text>
         <View style={styles.linkContainer}>
           <View style={{ flex: 0.9 }}>
             <Text style={{ ...Fonts.regular(11, Colors.grey) }}>
-              Get alerted when you walk onto a drop with the app closed.
+              {'Sois prévenu quand tu marche près d\'un drop sans avoir à ouvrir l\'appli.'}
             </Text>
             <Text style={{ ...Fonts.bold(12, Colors.purple2), marginTop: 2 }}>
-              Highly recommended
+              {'(Fortement recommandé)'}
             </Text>
           </View>
           <Switch
@@ -128,7 +128,7 @@ const SettingsScreen = ({ navigation }) => {
         <Text style={styles.titleText}>Notifications</Text>
         <FormToggle
           value={notificationsSettings?.dailyDropyReminder}
-          title='Remind me to drop something daily'
+          title='Rappel quotidien pour poser un drop'
           onValueChange={(value) => setNotificationsSettings((old) => ({
             ...old,
             dailyDropyReminder: value,
@@ -137,15 +137,13 @@ const SettingsScreen = ({ navigation }) => {
         />
         <FormToggle
           value={notificationsSettings?.dropyCollected}
-          title='When one of my drop is collected'
-          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dropyCollected: value }))
-          }
+          title='Un de mes drops est collecté'
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, dropyCollected: value }))}
         />
         <FormToggle
           value={notificationsSettings?.newFeature}
-          title='When a new feature is available'
-          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, newFeature: value }))
-          }
+          title='Une nouvelle fonctionnalité est disponible'
+          onValueChange={(value) => setNotificationsSettings((old) => ({ ...old, newFeature: value }))}
         />
 
         {/* <Text style={styles.titleText}>Others</Text>
@@ -157,7 +155,7 @@ const SettingsScreen = ({ navigation }) => {
         <TouchableOpacity
           style={{ ...styles.navigateContainer, marginTop: 10 }}
           onPress={() => navigation.navigate('UserDropies')}>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>My drops</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Mes drops</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
@@ -166,7 +164,7 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.navigateContainer}
           onPress={() => navigation.navigate('BlockedUsers')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
-            Blocked users
+            Utilisateurs bloqués
           </Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
@@ -175,7 +173,7 @@ const SettingsScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.navigateContainer}
           onPress={() => navigation.navigate('Account')}>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>My account</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Mon compte</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
@@ -186,13 +184,13 @@ const SettingsScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.linkContainer}
           onPress={() => Linking.openURL('https://dropy-app.com/help')}>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Help</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Aide</Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.linkContainer}
           onPress={() => Linking.openURL('https://dropy-app.com/about')}>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>About</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>{'À propos'}</Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -200,7 +198,7 @@ const SettingsScreen = ({ navigation }) => {
           onPress={() => Linking.openURL('https://dropy-app.com/privacy-policy.html')
           }>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
-            Privacy Policy
+            {'Politique de confidentialité'}
           </Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
@@ -209,7 +207,7 @@ const SettingsScreen = ({ navigation }) => {
           onPress={() => Linking.openURL('https://dropy-app.com/terms-conditions.html')
           }>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
-            Terms & Conditions
+            {'Termes et conditions'}
           </Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
@@ -219,15 +217,14 @@ const SettingsScreen = ({ navigation }) => {
         <TouchableOpacity
           style={{ ...styles.linkContainer, ...Styles.center }}
           onPress={logout}>
-          <Text style={{ ...Fonts.bold(12, Colors.red) }}>Logout</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.red) }}>{'Se déconnecter'}</Text>
         </TouchableOpacity>
 
         <View style={styles.spacer} />
 
         <TouchableOpacity
           // eslint-disable-next-line no-undef
-          onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)
-          }
+          onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)}
           activeOpacity={1}>
           <View style={styles.infoTextContainer}>
             <Ionicons name='git-branch' size={19} color={Colors.darkGrey} />

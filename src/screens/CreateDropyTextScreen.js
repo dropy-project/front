@@ -26,19 +26,19 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
 
     if (text.length < 20) {
       sendAlert({
-        title: 'That\'s it?',
-        description: 'Hey this is a bit short !\nBe a hero and add more details to your drop !',
-        validateText: 'OK',
+        title: 'Tu n\'a que ça à dire ?',
+        description: 'Soit courageux et donne nous plus d\'infos !',
+        validateText: 'Je peux faire mieux !',
       });
       return;
     }
 
     if (text.length < 100) {
       const result = await sendAlert({
-        title: 'Short but efficient!',
-        description: 'Nothing more to say ?\nThink of who\'s gonna see this drop!',
-        denyText: 'Send anyway!',
-        validateText: 'I can do longer!',
+        title: 'Court mais efficace ?',
+        description: 'Penses-tu que ton message est assez long pour être compris ?',
+        denyText: 'Envoyer quand même',
+        validateText: 'Je peux faire mieux !',
       });
       if (result)
         return;
@@ -62,7 +62,7 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.inputContainer}
       ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <TextInput placeholder='What do you want to tell anybody ? '
+          <TextInput placeholder='Que voudrais-tu dire au monde ?'
             multiline={true}
             placeholderTextColor={Colors.lightGrey}
             style={styles.textInput}

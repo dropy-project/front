@@ -24,7 +24,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
 
   const handleOptionsButtonPress = () => {
     showActionSheetWithOptions({
-      options: ['Report Drop', 'Block user', 'Cancel'],
+      options: ['Signaler', 'Bloquer', 'Annuler'],
       destructiveButtonIndex: 1,
       cancelButtonIndex: 2,
       title: 'Drop',
@@ -38,10 +38,10 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
 
   const confirmGoBack = async () => {
     const result = await sendAlert({
-      title: 'Confirm Go Back',
-      description: 'Are you sure you want to go back ? You will not be able to contact this user again.',
-      validateText: 'Yes, I take the risk',
-      denyText: 'Cancel',
+      title: 'Ne pas répondre ?',
+      description: 'Tu ne pourras plus revoir et répondre à ce drop, tu es sûr·e ?',
+      validateText: 'Je suis sûr·e',
+      denyText: 'Non, je veux répondre',
     });
     if (result)
       navigation.goBack();

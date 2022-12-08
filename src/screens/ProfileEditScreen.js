@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
 import {
   Keyboard,
-  Linking,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -26,6 +25,7 @@ import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { compressImage } from '../utils/files';
+import { missingCameraPersmissionAlert, missingLibraryPermissionAlert } from '../utils/mediaPermissionsAlerts';
 import { PRONOUNS } from '../utils/profiles';
 
 const ProfileEditScreen = () => {
@@ -46,10 +46,10 @@ const ProfileEditScreen = () => {
 
   const onPressEditPicture = () => {
     showActionSheetWithOptions({
-      options: ['Take a photo', 'Choose from library', 'Delete picture', 'Cancel'],
+      options: ['Prendre une photo', 'Choisir depuis la gallerie', 'Supprimer', 'Annuler'],
       cancelButtonIndex: 3,
       destructiveButtonIndex: 2,
-      title: 'Where do you want to get your picture from?',
+      title: 'Définir une nouvelle photo de profil',
     }, (buttonIndex) => {
       if (buttonIndex === 0)
         updateProfilePictureFromCamera();
@@ -71,16 +71,8 @@ const ProfileEditScreen = () => {
 
       processPickerResponseUpload(image);
     } catch (error) {
-      if (error.code === 'E_NO_LIBRARY_PERMISSION') {
-        const alertResult = await sendAlert({
-          title: 'LIbrary access not granted...',
-          description: 'Enable access in your settings',
-          validateText: 'Open settings',
-          denyText: 'Ok !',
-        });
-        if (alertResult)
-          Linking.openSettings();
-      }
+      if (error.code === 'E_NO_LIBRARY_PERMISSION')
+        missingLibraryPermissionAlert(sendAlert);
       console.error('Open camera error', error);
     }
   };
@@ -95,16 +87,8 @@ const ProfileEditScreen = () => {
       });
       processPickerResponseUpload(image);
     } catch (error) {
-      if (error.code === 'E_NO_CAMERA_PERMISSION') {
-        const alertResult = await sendAlert({
-          title: 'Camera not granted...',
-          description: 'Enable camera access in your settings',
-          validateText: 'Open settings',
-          denyText: 'Ok !',
-        });
-        if (alertResult)
-          Linking.openSettings();
-      }
+      if (error.code === 'E_NO_CAMERA_PERMISSION')
+        missingCameraPersmissionAlert(sendAlert);
       console.error('Open camera error', error);
     }
   };
@@ -121,8 +105,8 @@ const ProfileEditScreen = () => {
       });
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'Your profile picture has been lost somewhere...\nCheck your internet connection!',
+        title: 'Sapristi !',
+        description: 'Ta photo de profil n\'a pas pu être mise à jour...\nVérifie ta connexion internet',
       });
       console.error('Error while uploading profile picture', error?.response?.data || error);
     } finally {
@@ -137,8 +121,8 @@ const ProfileEditScreen = () => {
       setUser({ ...user, avatarUrl: null });
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'Your profile picture vould not be deleted...\nCheck your internet connection!',
+        title: 'Flûte !',
+        description: 'La suppression a échoué...\nVérifie ta connexion internet',
       });
       console.error('Error while deleting profile picture', error?.response?.data || error);
     } finally {
@@ -173,8 +157,8 @@ const ProfileEditScreen = () => {
       navigation.goBack();
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We could\'nt update your profile\nCheck your internet connection!',
+        title: 'Patatras !',
+        description: 'Impossible de mettre à jour ton profil...\nVérifie ta connexion internet',
       });
       console.error('Error while updating profile', error?.response?.data || error);
     } finally {
@@ -190,10 +174,10 @@ const ProfileEditScreen = () => {
     }
 
     const result = await sendAlert({
-      title: 'Are you sure?',
-      description: 'You haven\'t saved your changes yet!\nAre you sure you want to go back?',
-      validateText: 'Save and go back',
-      denyText: 'Go back',
+      title: 'Es-tu sûr·e ?',
+      description: 'Tes modifications ne seront pas sauvegardées si tu quittes la page',
+      validateText: 'Sauvegarder et quitter',
+      denyText: 'Annuler',
     });
 
     if (result)
@@ -206,7 +190,7 @@ const ProfileEditScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='dark-content' />
 
-      <GoBackHeader onPressGoBack={handleGoBack} text='Profile'>
+      <GoBackHeader onPressGoBack={handleGoBack} text='Profil'>
         <View style={{ width: 40 }}>
           {infosUploading ? (
             <LoadingSpinner color={Colors.mainBlue} size={20} />
@@ -238,9 +222,9 @@ const ProfileEditScreen = () => {
         <FormInput
           ref={displayNameInputRef}
           onEdited={() => setEdited(true)}
-          title='Name'
+          title='Nom'
           defaultValue={user.displayName}
-          placeholder="What's your name?"
+          placeholder='Ton magnifique nom'
           maxLength={25}
           minLength={3}
         />
@@ -248,9 +232,9 @@ const ProfileEditScreen = () => {
         <FormInput
           ref={aboutInputRef}
           onEdited={() => setEdited(true)}
-          title='About'
+          title='Description'
           defaultValue={user.about}
-          placeholder='What makes you special?'
+          placeholder="Qu'est-ce qui te rend unique ?"
           multiline
           maxLength={250}
           inputStyle={{ minHeight: 100 }}
@@ -259,7 +243,7 @@ const ProfileEditScreen = () => {
         <FormSelect
           ref={pronounsRef}
           defaultIndex={Math.max(Object.keys(PRONOUNS).indexOf(user.pronouns), 0)}
-          title='Pronouns'
+          title='Pronoms'
           onEdited={(edited) => edited && setEdited(true)}
           options={Object.values(PRONOUNS)}
         />

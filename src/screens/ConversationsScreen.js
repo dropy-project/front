@@ -31,9 +31,9 @@ const ConversationsScreen = ({ navigation }) => {
 
   const handleLongPress = async (conversation) => {
     const confirmed = await sendAlert({
-      title: 'Close conversation',
-      description: `Are you sure you want to close the conversation with ${conversation.user.displayName}?`,
-      validateText: 'delete',
+      title: 'Fermer la conversation',
+      description: `Es-tu sûr·e de fermer ta conversation avec ${conversation.user.displayName} ?`,
+      validateText: 'Fermer',
     });
 
     if (confirmed === true) {

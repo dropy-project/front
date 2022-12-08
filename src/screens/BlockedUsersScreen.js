@@ -38,8 +38,8 @@ const BlockedUsersScreen = ({ navigation }) => {
       setLoading(false);
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We couldn\'t load this...\nCheck your internet connection!',
+        title: 'Mince...',
+        description: 'Les utilisateur bloques n\'ont pas pu être chargés...\nVerifie ta connexion internet',
       });
       console.error('Error while fetching blocked users', error?.response?.data || error);
       navigation.goBack();
@@ -48,10 +48,10 @@ const BlockedUsersScreen = ({ navigation }) => {
 
   const unblockUser = async (userId) => {
     const confirmed = await sendAlert({
-      title: 'Are you sure?',
-      description: 'This user will be unblocked!',
-      denyText: 'Cancel',
-      validateText: 'Unblock',
+      title: 'Es-tu sûr·e ?',
+      description: 'Cet utilisateur ne sera plus bloqué et pourra te contacter à nouveau.',
+      denyText: 'Annuler',
+      validateText: 'Débloquer',
     });
 
     if (!confirmed)
@@ -64,8 +64,8 @@ const BlockedUsersScreen = ({ navigation }) => {
       setBlockedUsers((old) => old.filter((user) => user.id !== userId));
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We couldn\'t unblock this user...\nCheck your internet connection!',
+        title: 'Zut...',
+        description: 'L\'utilisateur n\'a pas pu être débloqué...\nVerifie ta connexion internet',
       });
       console.error('Error while unblocking user', error?.response?.data || error);
       navigation.goBack();
@@ -75,7 +75,7 @@ const BlockedUsersScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} />
-      <GoBackHeader text='Blocked users' />
+      <GoBackHeader text='Personnes bloquées' />
       {loading ? (
         <View style={{ height: responsiveHeight(80), ...Styles.center }}>
           <LoadingSpinner />
@@ -88,7 +88,7 @@ const BlockedUsersScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollViewContent}
           ListEmptyComponent={() => (
             <View style={{ height: responsiveHeight(80), ...Styles.center }}>
-              <Text style={{ ...Fonts.regular(13, Colors.darkGrey) }}>{'You don\'t have blocked anyone yet'}</Text>
+              <Text style={{ ...Fonts.regular(13, Colors.darkGrey) }}>{'Tout va pour le mieux dans le meilleur des mondes !'}</Text>
             </View>
           )}
           renderItem={({ item: user, index }) => (

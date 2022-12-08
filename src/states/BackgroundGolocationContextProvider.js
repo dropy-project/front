@@ -4,7 +4,7 @@
 //
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
@@ -109,6 +109,11 @@ const BackgroundGolocationProvider = ({ children }) => {
           refreshToken: '{refreshToken}',
         },
       },
+      backgroundPermissionRationale: {
+        title: 'Autorise la géolocalisation en arrière-plan',
+        message: 'Il est nécessaire d\'autoriser la géolocalisation en arrière-plan pour que l\'application puisse fonctionner correctement.',
+        positiveAction: 'Autoriser',
+      },
     });
     return backgroundGeolocationReady;
   };
@@ -126,7 +131,6 @@ const BackgroundGolocationProvider = ({ children }) => {
     } catch (error) {
       log('Permission granting failed', error);
       _setBackgroundGeolocationEnabled(false);
-      Alert.alert('dropy needs permissions', 'Please enable location services as \'Always\' for this app in settings.');
     }
   };
 

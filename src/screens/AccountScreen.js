@@ -13,10 +13,10 @@ const AccountScreen = ({ navigation }) => {
 
   const handleDeleteAccount = async () => {
     const confirmed = await sendAlert({
-      title: 'Are you sure?',
-      description: 'Your account and all your data will be deleted!',
-      denyText: 'Cancel',
-      validateText: 'Delete',
+      title: 'Es-tu sûr·e ?',
+      description: 'Ton compte et toutes tes données seront supprimés définitivement.',
+      denyText: 'Annuler',
+      validateText: 'Supprimer définitivement',
     });
 
     if (!confirmed)
@@ -37,8 +37,8 @@ const AccountScreen = ({ navigation }) => {
       });
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We couldn\'t delete your account..\nCheck your internet connection!',
+        title: 'Erreur',
+        description: 'Le serveur est injoignable...\nVérifie ta connexion internet',
       });
       console.error('Error while deleting user', error?.response?.data || error);
     }

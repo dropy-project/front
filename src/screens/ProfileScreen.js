@@ -39,8 +39,8 @@ const ProfileScreen = ({ route, navigation }) => {
       }
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We couldn\'t find your profile...\nCheck your internet connection!',
+        title: 'Patatra !',
+        description: 'Impossible de récupérer les informations du profil.\nVerifie ta connexion internet',
       });
       console.error('Error while fetching profile informations', error?.response?.data || error);
       navigation.goBack();
@@ -63,11 +63,11 @@ const ProfileScreen = ({ route, navigation }) => {
         indicatorStyle='black'
       >
         <View style={styles.infoContainer}>
-          <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>About</Text>
-          <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>{displayedUser?.about ?? `Hello i'm ${displayedUser?.displayName}`}</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>À propos</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>{displayedUser?.about ?? `Salut, moi c'est ${displayedUser?.displayName}`}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>Records</Text>
+          <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>Stats</Text>
           <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>
             Member since
             <Text style={{ ...Fonts.bold(13, Colors.darkGrey), marginTop: 5 }}>

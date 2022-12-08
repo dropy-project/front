@@ -9,10 +9,10 @@ const GeolocationModal = () => (
   <View style={styles.container}>
     <View style={styles.mainContent}>
       <DropyLogo height={87} width={87} />
-      <Text style={styles.title}>Geolocation is not enabled</Text>
-      <Text style={styles.description}>We will not be able to find anything around you if your position is unknown...</Text>
+      <Text style={styles.title}>{'La géolocalisation est désactivée !'}</Text>
+      <Text style={styles.description}>{'Où es tu ? Je ne peux pas te montrer les drops si je ne sais pas où tu es !'}</Text>
     </View>
-    <GlassButton onPress={() => Linking.openSettings()} buttonText={'Open settings'} disabled={false} style={styles.openSettingsButton} fontSize={14}>
+    <GlassButton onPress={() => Linking.openSettings()} buttonText={'Ouvrir les paramètres'} disabled={false} style={styles.openSettingsButton} fontSize={14}>
     </GlassButton>
   </View>
 );

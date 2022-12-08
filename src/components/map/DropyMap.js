@@ -69,8 +69,8 @@ const DropyMap = ({
       if (result.error != null) {
         if (result.status === 406) {
           await sendAlert({
-            title: 'You don\'t have enough energy to retrieve this dropy',
-            description: 'Maybe drop something yourself to get some energy back?',
+            title: 'Tu n\'as plus d\'énergie !',
+            description: 'Tu peux la recharger en posant un drop !',
             validateText: 'Ok !',
           });
           return;
@@ -90,8 +90,8 @@ const DropyMap = ({
     } catch (error) {
       console.error('Dropy pressed error', error);
       sendBottomAlert({
-        title: 'Oh no!',
-        description: 'Looks like there has been an issue while collecting this drop...\nCheck your internet connection',
+        title: 'Oups...',
+        description: 'Le drop a été perdu en chemin\nVérifie ta connexion internet',
       });
     }
   };

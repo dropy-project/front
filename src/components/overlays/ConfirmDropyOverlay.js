@@ -108,8 +108,8 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
       }, 1300);
     } catch (error) {
       sendBottomAlert({
-        title: 'Oh no...',
-        description: 'This drop has been lost somewhere...\nCheck your internet connection!',
+        title: 'Oh non...',
+        description: 'Ton drop a été perdu en cours de route\nVerifie ta connexion internet',
       });
       console.error('Error while creating dropy', error?.response?.data || error);
       closeOverlay();
@@ -152,7 +152,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
         </Animated.View>
         <Animated.View style={{ ...styles.bottomContainer, transform: [{ scale: bottomContainerScaleAnimatedValue }] }}>
           <Text style={styles.dropText}>{'It\'s time to drop this into the unkown'}</Text>
-          <GlassButton buttonText='DROP !' onPress={sendDrop} style={styles.dropButtonStyle} fontSize={18} />
+          <GlassButton buttonText='Poser ce drop' onPress={sendDrop} style={styles.dropButtonStyle} fontSize={18} />
         </Animated.View>
       </SafeAreaView>
     </Animated.View>

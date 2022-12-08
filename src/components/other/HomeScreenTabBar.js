@@ -142,9 +142,9 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
     }
     if (!dropyMenuIsOpen) {
       const validated = await sendAlert({
-        title: 'Take it easy!',
-        description: 'You can\'t drop at the same location twice in a row.',
-        validateText: 'OK !',
+        title: 'Mollo !',
+        description: 'Tu ne peux pas poser deux drops au même endroit !',
+        validateText: 'Ok !',
         // eslint-disable-next-line no-undef
         denyText: developerMode || __DEV__ ? 'DEV_ADD' : undefined,
       });
@@ -303,9 +303,9 @@ const TabBarItem = ({ children, text, showStatusDot, routeName, onPress }) => {
   const goToRoute = () => {
     if (routeName == null) {
       sendAlert({
-        title: 'Oups...',
-        description: 'Looks like you can\'t go there yet... \n This page is under construction !',
-        validateText: 'OK !',
+        title: 'Aïe...',
+        description: 'Cette page est encore en construction !',
+        validateText: 'Ok !',
       });
       return;
     }
