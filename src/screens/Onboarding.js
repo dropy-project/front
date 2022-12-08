@@ -209,13 +209,16 @@ export default function Onboarding({ navigation }) {
   };
 
   const checkEmailAvailable = async (email) => {
+    setLoading(true);
     try {
       const response = await API.checkEmailAvailable(email);
+      setLoading(false);
       if (!response.data)
         emailInputRef.current?.setInvalid('An account already exists with this email');
       return response.data;
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      console.error('Error while checking if an email is available', email, error);
     }
   };
 
