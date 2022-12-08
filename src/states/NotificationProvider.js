@@ -50,7 +50,7 @@ const NotificationProvider = ({ children }) => {
     Notifications.registerRemoteNotifications();
 
     const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
-      console.error('Notification registation error', event);
+      console.error('Notification registration error', event);
     });
 
     const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
@@ -70,10 +70,11 @@ const NotificationProvider = ({ children }) => {
 
       setNotificationsStack((old) => {
         const newStack = [...(old ?? []), notifData];
-        Haptics.impactLight();
         return newStack;
       });
     });
+
+    Haptics.impactLight();
 
     const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
       completion();
