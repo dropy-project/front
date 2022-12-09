@@ -19,6 +19,7 @@ env:
 
 jobs:
   megalinter:
+    permissions: write-all
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +40,7 @@ jobs:
           # All available variables are described in documentation
           # https://oxsecurity.github.io/megalinter/configuration/
           # Apply linter fixes configuration
-          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_ALL_CODEBASE: true # to change
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Upload MegaLinter artifacts create dir
