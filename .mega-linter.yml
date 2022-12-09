@@ -10,7 +10,7 @@ ENABLE_LINTERS:
   - JSCPD
   - gitleaks
   - git_diff
-  - eslint-npm
+  - eslint
 
 PRINT_ALL_FILES: false
 FILTER_REGEX_EXCLUDE: '(\.automation/test|\.automation/generated|\.github/workflows|docs/javascripts|docs/overrides|docs/json-schemas|flavors|clj-kondo|TEMPLATES)'
