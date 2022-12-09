@@ -19,6 +19,7 @@ import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
 import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
+import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
@@ -213,9 +214,14 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <AnimatedFlask />
+          <EnergyTooltip>
+            <AnimatedFlask />
+          </EnergyTooltip>
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
-            <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
+            <TouchableOpacity
+              onPress={() => setMapCameraPosition(headingLocked, true)}
+              style={styles.lockButton}
+            >
               <MaterialIcons name='my-location' size={20} color={Colors.darkGrey} />
             </TouchableOpacity>
           </FadeInWrapper>
