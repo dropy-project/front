@@ -8,7 +8,7 @@ ENABLE:
   - REPOSITORY
 
 ENABLE_LINTERS: 
-  - standard
+  - JAVASCRIPT_STANDARD
 
 PRINT_ALL_FILES: false
 FILTER_REGEX_EXCLUDE: '(\.automation/test|\.automation/generated|\.github/workflows|docs/javascripts|docs/overrides|docs/json-schemas|flavors|clj-kondo|TEMPLATES)'
