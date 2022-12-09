@@ -2,25 +2,15 @@
 # See all available variables at https://megalinter.io/configuration/ and in linters documentation
 
 APPLY_FIXES: all
-# ENABLE: # If you use ENABLE variable, all other languages/formats/tooling formats will be disabled by default
-# ENABLE_LINTERS: # If you use ENABLE_LINTERS variable, all other linters will be disabled by default
-DISABLE:
-  - CLOUDFORMATION
-  # - COPYPASTE # Uncomment to disable checks of excessive copy-pastes
-  - CSS
-  - EDITORCONFIG
-  # - SPELL # Uncomment to disable checks of spelling mistakes
+ENABLE:
+  - COPYPASTE
   - JAVASCRIPT
-  - TEKTON
-DISABLE_LINTERS:
-  - JSON_PRETTIER
-  - REPOSITORY_GITLEAKS
-  - SPELL_PROSELINT
-DISABLE_ERRORS_LINTERS:
-  - PYTHON_BANDIT
-  - PYTHON_PYRIGHT
-  - REPOSITORY_DEVSKIM
-  - REPOSITORY_SEMGREP
+  - JSON
+ENABLE_LINTERS: 
+  - JSCPD
+  - gitleaks
+  - git_diff
+
 PRINT_ALL_FILES: false
 FILTER_REGEX_EXCLUDE: '(\.automation/test|\.automation/generated|\.github/workflows|docs/javascripts|docs/overrides|docs/json-schemas|flavors|clj-kondo|TEMPLATES)'
 JSON_JSONLINT_FILTER_REGEX_EXCLUDE: '(\.vscode/)'
