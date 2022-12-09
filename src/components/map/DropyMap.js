@@ -18,6 +18,7 @@ import MapLoadingOverlay from '../overlays/MapLoadingOverlay';
 import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
+import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
 import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
@@ -26,8 +27,6 @@ import MapDebugger from './MapDebugger';
 import OSMapView from './OSMapView';
 
 const DropyMap = ({
-  dropiesAround,
-  retrieveDropy,
   museumVisible,
   selectedDropyIndex = null,
   retrievedDropies = null,
@@ -35,11 +34,18 @@ const DropyMap = ({
   const navigation = useNavigation();
 
   const { sendBottomAlert, sendAlert } = useOverlay();
+
+  const {
+    dropiesAround,
+    retrieveDropy,
+  } = useDropiesAroundSocket();
+
   const {
     userCoordinates,
     compassHeading,
     initialized: geolocationInitialized,
   } = useInitializedGeolocation();
+
   const { developerMode, setUser } = useCurrentUser();
 
   const [currentZoom, setCurrentZoom] = useState(0);
