@@ -4,7 +4,8 @@
 {
     "env": {
         "es2022": true,
-        "node": true
+        "node": true,
+        "react-native/react-native": true
     },
     "extends": [
         "eslint:recommended",
@@ -19,8 +20,8 @@
     },
     "plugins": [
         "react",
-        "react-native",
         "react-hooks",
+        "react-native",
         "import",
         "import-newlines"
     ],
