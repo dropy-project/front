@@ -225,7 +225,6 @@ const SettingsScreen = ({ navigation }) => {
         <View style={styles.spacer} />
 
         <TouchableOpacity
-          // eslint-disable-next-line no-undef
           onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)
           }
           activeOpacity={1}>
