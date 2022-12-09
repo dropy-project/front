@@ -2,6 +2,7 @@ import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import GoBackHeader from '../components/other/GoBackHeader';
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
@@ -45,7 +46,7 @@ const AccountScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <GoBackHeader text='Account' />
       <View style={styles.content}>
         <TouchableOpacity style={{ ...styles.navigateContainer, marginTop: 10 }} disabled>
@@ -71,7 +72,7 @@ const AccountScreen = ({ navigation }) => {
       <TouchableOpacity onPress={handleDeleteAccount}>
         <Text style={{ ...Fonts.regular(12, Colors.lightGrey) }}> Delete my account </Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

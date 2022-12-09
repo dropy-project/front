@@ -20,12 +20,15 @@ import useOverlay from '../../hooks/useOverlay';
 import useUnreadConversation from '../../hooks/useUnreadConversation';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import GlassCircleButton from '../input/GlassCircleButton';
+import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
 
 const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;
 
-const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVisible, canEmitDropy }) => {
+const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVisible }) => {
   const navigation = useNavigation();
+
+  const { canEmitDropy } = useDropiesAroundSocket();
   const { developerMode } = useCurrentUser();
 
   const tabBarAnimatedValue = useRef(new Animated.Value(0)).current;

@@ -27,8 +27,9 @@ import GoBackHeader from '../other/GoBackHeader';
 import AnimatedDropyPreviewBox, { OVERLAY_STATE } from '../effect/AnimatedDropyPreviewBox';
 import ProfileAvatar from '../profile/ProfileAvatar';
 import GlassButton from '../input/GlassButton';
+import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
 
-const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams, createDropy }) => {
+const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = () => {}, dropyCreateParams }) => {
   const { sendBottomAlert } = useOverlay();
 
   const navigation = useNavigation();
@@ -39,6 +40,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
   const fadeAnimatedValue = useRef(new Animated.Value(0)).current;
   const bottomContainerScaleAnimatedValue = useRef(new Animated.Value(0)).current;
 
+  const { createDropy } = useDropiesAroundSocket();
   const { userCoordinates } = useGeolocation();
 
   const { setUser } = useCurrentUser();

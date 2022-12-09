@@ -104,7 +104,7 @@ const BackgroundGolocationProvider = ({ children }) => {
         accessToken,
         refreshToken,
         expires,
-        refreshUrl: API.refreshTokenUrl(),
+        refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1`,
         refreshPayload: {
           refreshToken: '{refreshToken}',
         },
