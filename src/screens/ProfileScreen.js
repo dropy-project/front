@@ -69,19 +69,19 @@ const ProfileScreen = ({ route, navigation }) => {
         <View style={styles.infoContainer}>
           <Text style={{ ...Fonts.regular(13, Colors.lightGrey) }}>Stats</Text>
           <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>
-            Member since
+            Membre depuis
             <Text style={{ ...Fonts.bold(13, Colors.darkGrey), marginTop: 5 }}>
               {` ${sinceDayMonth(displayedUser?.registerDate)}`}
             </Text>
           </Text>
           <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>
-            Drops:
+            Drops posés :
             <Text style={{ ...Fonts.bold(13, Colors.darkGrey), marginTop: 5 }}>
               {` ${displayedUser?.emittedDropiesCount}`}
             </Text>
           </Text>
           <Text style={{ ...Fonts.regular(13, Colors.darkGrey), marginTop: 5 }}>
-            Found:
+            Drops trouvés :
             <Text style={{ ...Fonts.bold(13, Colors.darkGrey), marginTop: 5 }}>
               {` ${displayedUser?.retrievedDropiesCount}`}
             </Text>
