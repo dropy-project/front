@@ -39,7 +39,7 @@ const BlockedUsersScreen = ({ navigation }) => {
     } catch (error) {
       sendAlert({
         title: 'Mince...',
-        description: 'Les utilisateur bloques n\'ont pas pu être chargés...\nVerifie ta connexion internet',
+        description: 'Les utilisateur bloques n\'ont pas pu être chargés...\nVérifie ta connexion internet',
       });
       console.error('Error while fetching blocked users', error?.response?.data || error);
       navigation.goBack();
@@ -65,7 +65,7 @@ const BlockedUsersScreen = ({ navigation }) => {
     } catch (error) {
       sendAlert({
         title: 'Zut...',
-        description: 'L\'utilisateur n\'a pas pu être débloqué...\nVerifie ta connexion internet',
+        description: 'L\'utilisateur n\'a pas pu être débloqué...\nVérifie ta connexion internet',
       });
       console.error('Error while unblocking user', error?.response?.data || error);
       navigation.goBack();

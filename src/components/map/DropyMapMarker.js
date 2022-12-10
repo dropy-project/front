@@ -55,7 +55,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
               ellipsizeMode='clip'
               allowFontScaling={false}
               style={{ ...Fonts.bold(11, Colors.grey), fontSize: 12 }}>
-              {dropTimeString} ago
+              Il y a {dropTimeString}
             </Text>
           </View>
         ) : (
@@ -65,7 +65,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
               ellipsizeMode='clip'
               allowFontScaling={false}
               style={{ ...Fonts.bold(10, Colors.white), fontSize: 12 }}>
-                PICK UP
+                OUVRIR
             </Text>
           </View>
         )}

@@ -41,7 +41,7 @@ const UserDropiesScreen = ({ navigation }) => {
     } catch (error) {
       sendAlert({
         title: 'Patatra !',
-        description: 'Impossible de récupérer tes drops.\nVerifie ta connexion internet',
+        description: 'Impossible de récupérer tes drops.\nVérifie ta connexion internet',
       });
       console.error('Error while fetching user dropies', error?.response?.data || error);
       navigation.goBack();
@@ -67,7 +67,7 @@ const UserDropiesScreen = ({ navigation }) => {
     } catch (error) {
       sendAlert({
         title: 'Pas de bol !',
-        description: 'Ton drop n\'a pas pu être supprimé.\nVerifie ta connexion internet',
+        description: 'Ton drop n\'a pas pu être supprimé.\nVérifie ta connexion internet',
       });
       console.error('Error while fetching user dropies', error?.response?.data || error);
       navigation.goBack();

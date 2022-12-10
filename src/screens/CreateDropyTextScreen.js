@@ -56,7 +56,7 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} text={'Tips: open your heart !'}/>
+      <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} text={'Ouvre ton coeur !'}/>
       <MaterialCommunityIcons name='draw-pen' size={80} color={Colors.mainBlue} style={{ ...Styles.blueShadow, ...styles.penIcon }}/>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -72,8 +72,9 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
             value={text}/>
         </TouchableWithoutFeedback>
         <GlassButton
+          fontSize={13}
           style={styles.largeButton}
-          buttonText={'start'}
+          buttonText={'Confirmer'}
           onPress={handleTextSubmit}
         />
       </KeyboardAvoidingView>
@@ -105,8 +106,8 @@ const styles = StyleSheet.create({
     height: 150,
   },
   largeButton: {
-    width: 228,
-    height: 57,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     marginBottom: 20,
   },
   penIcon: {

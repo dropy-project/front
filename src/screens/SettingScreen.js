@@ -3,6 +3,7 @@ import {
   Linking,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Switch,
   Text,
@@ -100,16 +101,17 @@ const SettingsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle='dark-content' />
       <GoBackHeader text='Paramètres' />
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text style={styles.titleText}>{'Géolocalisation en arrière plan'}</Text>
-        <View style={styles.linkContainer}>
+        <Text style={styles.titleText}>{'Mode furtif'}</Text>
+        <View style={{ ...styles.linkContainer, paddingTop: 0 }}>
           <View style={{ flex: 0.9 }}>
-            <Text style={{ ...Fonts.regular(11, Colors.grey) }}>
+            <Text style={{ ...Fonts.regular(12, Colors.grey) }}>
               {'Sois prévenu quand tu marche près d\'un drop sans avoir à ouvrir l\'appli.'}
             </Text>
-            <Text style={{ ...Fonts.bold(12, Colors.purple2), marginTop: 2 }}>
+            <Text style={{ ...Fonts.bold(11, Colors.purple2), marginTop: 2 }}>
               {'(Fortement recommandé)'}
             </Text>
           </View>

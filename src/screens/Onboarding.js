@@ -17,6 +17,7 @@ import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
+import Config from 'react-native-config';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import OnboardingLines from '../assets/svgs/onboarding_lines.svg';
@@ -38,6 +39,10 @@ import { missingCameraPersmissionAlert, missingLibraryPermissionAlert } from '..
 
 // eslint-disable-next-line no-undef
 const DEBUG = __DEV__;
+const devUsername = Config.DEV_ACCOUNT_USERNAME ?? '';
+const devEmail = Config.DEV_ACCOUNT_EMAIL ?? '';
+const devPassword = Config.DEV_ACCOUNT_PASSWORD ?? '';
+
 
 export default function Onboarding({ navigation }) {
   const { setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
@@ -58,11 +63,11 @@ export default function Onboarding({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
-  const [displayName, setDisplayName] = useState(DEBUG ? 'Michel Debug' : '');
+  const [displayName, setDisplayName] = useState(DEBUG ? devUsername : '');
   const [profilePicturePath, setProfilePicturePath] = useState(null);
-  const [email, setEmail] = useState(DEBUG ? 'michel.debug@dropy-app.com' : '');
-  const [password, setPassword] = useState(DEBUG ? 'Michel1234supersecu!@#$' : '');
-  const [passwordConfirmation, setPasswordConfirmation] = useState(DEBUG ? 'Michel1234supersecu!@#$' : '');
+  const [email, setEmail] = useState(DEBUG ? devEmail : '');
+  const [password, setPassword] = useState(DEBUG ? devPassword : '');
+  const [passwordConfirmation, setPasswordConfirmation] = useState(DEBUG ? devPassword : '');
 
   const [termsChecked, setTermsChecked] = useState(false);
   const [newsletterChecked, setNewsletterChecked] = useState(false);
@@ -186,7 +191,7 @@ export default function Onboarding({ navigation }) {
       }
       sendAlert({
         title: 'Oups, une erreur est survenue...',
-        description: 'Verifie ta connexion internet et réessaye.',
+        description: 'Vérifie ta connexion internet et réessaye.',
         validateText: 'Ok',
       });
       console.error(error.response.data);
@@ -216,7 +221,7 @@ export default function Onboarding({ navigation }) {
       if (error.response.status === 404) {
         sendAlert({
           title: 'Ce compte n\'existe pas',
-          description: 'Verifie ton email',
+          description: 'Vérifie ton email',
           validateText: 'Ok',
         });
         return;
@@ -224,14 +229,14 @@ export default function Onboarding({ navigation }) {
       if (error.response.status === 403) {
         sendAlert({
           title: 'Flute, mauvais mot de passe',
-          description: 'Verifie ton mot de passe',
+          description: 'Vérifie ton mot de passe',
           validateText: 'Ok',
         });
         return;
       }
       sendAlert({
         title: 'Sacrebleu, une erreur est survenue...',
-        description: 'Verifie ta connexion internet et réessaye.',
+        description: 'Vérifie ta connexion internet et réessaye.',
         validateText: 'Ok',
       });
       console.error(error.response.data);
@@ -312,7 +317,7 @@ export default function Onboarding({ navigation }) {
   const geolocationNotGrantedAlert = async () => {
     const alertResult = await sendAlert({
       title: `Fichtre, tu dois autoriser la géolocalisation !`,
-      description: 'Pour que l\'application fonctionne correctement, tu dois autoriser la géolocalisation',
+      description: 'Sinon l\'application ne fonctionnera pas correctement...',
       validateText: 'Ouvrir les paramètres',
     });
     alertResult && Linking.openSettings();
@@ -374,7 +379,7 @@ export default function Onboarding({ navigation }) {
               autoComplete='email'
             />
             <FormInput
-              placeholder='Ton meilleur mot de passe'
+              placeholder='Ton mot de passe ultra secret'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               onEdited={setPassword}
@@ -459,7 +464,7 @@ export default function Onboarding({ navigation }) {
             <FormInput
               ref={passwordInputRef}
               onEdited={setPassword}
-              placeholder='Ton meilleur mot de passe'
+              placeholder='Ton mot de passe ultra sécurisé'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={password}
@@ -510,7 +515,7 @@ export default function Onboarding({ navigation }) {
 
         <View style={styles.view}>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>{'Rate aucun message'}</Text>
+            <Text style={styles.title}>{'Ne rate aucun message'}</Text>
             <Text style={styles.subtitle}>Active les notifications</Text>
           </View>
           <MaterialCommunityIcons name='bell-ring' size={50} color={Colors.grey} />
@@ -526,15 +531,18 @@ export default function Onboarding({ navigation }) {
 
         <View style={styles.view}>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>{'Manque aucun drop !'}</Text>
+            <Text style={styles.title}>{'Reste à l\'affut !'}</Text>
             <Text style={styles.subtitle}>
-              {'Active la géolocalisation en arrière plan pour être prévenue quand tu marches sur un drop'}
+              {'Active le mode furtif pour être prévenu·e quand tu marches sur un drop !'}
+            </Text>
+            <Text style={{ ...styles.subtitle, ...Fonts.regular(10.5, Colors.grey), marginVertical: 3 }}>
+              {'Ce mode utilise la géolocalisation en arrière plan,\nmais tkt on n\'est pas la pour t\'espionner.'}
             </Text>
             <TouchableOpacity>
               <Text style={{ ...Fonts.regular(13, '#44a0eb'), marginTop: 5, textDecorationLine: 'underline' }}>en savoir plus</Text>
             </TouchableOpacity>
           </View>
-          <FontAwesome5 name='satellite' size={50} color={Colors.grey} />
+          <MaterialCommunityIcons name='radar' size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestBackgroundGeolocationPermissions(
@@ -617,8 +625,8 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...Fonts.bold(13, Colors.darkGrey),
-    marginTop: 5,
+    marginTop: 10,
     textAlign: 'center',
-    maxWidth: responsiveWidth(80),
+    maxWidth: responsiveWidth(85),
   },
 });

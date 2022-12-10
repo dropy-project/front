@@ -1,6 +1,6 @@
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import GoBackHeader from '../components/other/GoBackHeader';
 import useOverlay from '../hooks/useOverlay';
@@ -45,23 +45,23 @@ const AccountScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <GoBackHeader text='Account' />
+    <SafeAreaView style={styles.container}>
+      <GoBackHeader text='Mon compte' />
       <View style={styles.content}>
         <TouchableOpacity style={{ ...styles.navigateContainer, marginTop: 10 }} disabled>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Subscription</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Abonnement</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navigateContainer} disabled>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Restore purchase</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Restaurer les achâts</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navigateContainer} disabled>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Reset password</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}></Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
@@ -69,9 +69,9 @@ const AccountScreen = ({ navigation }) => {
       </View>
       <View style={styles.spacer} />
       <TouchableOpacity onPress={handleDeleteAccount}>
-        <Text style={{ ...Fonts.regular(12, Colors.lightGrey) }}> Delete my account </Text>
+        <Text style={{ ...Fonts.regular(12, Colors.lightGrey) }}>Supprimer mon compte</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -109,7 +109,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
     } catch (error) {
       sendBottomAlert({
         title: 'Oh non...',
-        description: 'Ton drop a été perdu en cours de route\nVerifie ta connexion internet',
+        description: 'Ton drop a été perdu en cours de route\nVérifie ta connexion internet',
       });
       console.error('Error while creating dropy', error?.response?.data || error);
       closeOverlay();

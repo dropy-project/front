@@ -40,7 +40,7 @@ const ProfileScreen = ({ route, navigation }) => {
     } catch (error) {
       sendAlert({
         title: 'Patatra !',
-        description: 'Impossible de récupérer les informations du profil.\nVerifie ta connexion internet',
+        description: 'Impossible de récupérer les informations du profil.\nVérifie ta connexion internet',
       });
       console.error('Error while fetching profile informations', error?.response?.data || error);
       navigation.goBack();

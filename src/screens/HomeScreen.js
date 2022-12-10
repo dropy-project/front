@@ -9,7 +9,7 @@ import {
   View
 } from 'react-native';
 
-import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
@@ -95,7 +95,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   const iconMinWidth = backgroundGeolocIconAnimatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [BACKGROUND_GEOLOC_ICON_OPENED_SIZE, 270],
+    outputRange: [BACKGROUND_GEOLOC_ICON_OPENED_SIZE, 210],
   });
 
   return (
@@ -118,9 +118,12 @@ const HomeScreen = ({ navigation, route }) => {
               width: iconMinWidth,
             }}>
               <View style={styles.backgroundGeolocIconInnerContainer}>
-                <FontAwesome5 name='satellite-dish' size={BACKGROUND_GEOLOC_ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
+                <MaterialCommunityIcons
+                  name='radar' size={BACKGROUND_GEOLOC_ICON_OPENED_SIZE - 10}
+                  color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey}
+                />
                 <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
-                Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
+                Mode furtif {backgroundGeolocationEnabled ? 'activée' : 'desactivée'}
                 </Text>
               </View>
             </Animated.View>
@@ -183,8 +186,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     overflow: 'hidden',
     borderRadius: 100,
-    padding: 10,
     backgroundColor: Colors.white,
+    paddingLeft: 5,
     flexDirection: 'row',
     alignItems: 'center',
   },

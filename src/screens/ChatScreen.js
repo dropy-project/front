@@ -32,7 +32,7 @@ const ChatScreen = ({ route, navigation }) => {
   async function handleSocketError() {
     await sendAlert({
       title: 'Il y a eu un problème...',
-      description: 'Verifie ta connexion internet et réessaye.',
+      description: 'Vérifie ta connexion internet et réessaye.',
     });
     navigation.goBack();
   }

@@ -180,14 +180,14 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         ...styles.tabsContainer,
         transform: [{ translateY: tabBarTranslateY }],
       }}>
-        <TabBarItem text='Drops' onPress={onMuseumOpenPressed}>
+        <TabBarItem text='Gallerie' onPress={onMuseumOpenPressed}>
           <Ionicons
             name='md-bookmark-outline'
             size={iconsSize}
             color={Colors.darkGrey}
           />
         </TabBarItem>
-        <TabBarItem text='Chat' routeName='Conversations' showStatusDot={hasUnreadConversation}>
+        <TabBarItem text='Messages' routeName='Conversations' showStatusDot={hasUnreadConversation}>
           <Ionicons
             name='md-chatbubble-outline'
             size={iconsSize}

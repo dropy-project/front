@@ -36,7 +36,7 @@ const MapLoadingOverlay = ({ visible = true }) => {
         opacity: opacityAnimatedValue,
       }}>
       <AnimatedLogo />
-      <Text style={{ ...Fonts.bold(12, Colors.purple2) }}>Seeking for your location...</Text>
+      <Text style={{ ...Fonts.bold(12, Colors.purple2) }}>Recherche de ta position...</Text>
     </Animated.View>
   );
 };
