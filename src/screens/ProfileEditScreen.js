@@ -222,7 +222,7 @@ const ProfileEditScreen = () => {
         <FormInput
           ref={displayNameInputRef}
           onEdited={() => setEdited(true)}
-          title='Nom'
+          title='Prénom'
           defaultValue={user.displayName}
           placeholder='Ton magnifique prénom'
           maxLength={25}
