@@ -6,7 +6,7 @@ export const handleOpenURL = async (url) => {
     await InAppBrowser.open(url, {
       // iOS Properties
       dismissButtonStyle: 'cancel',
-      preferredBarTintColor: '#B7C1F7',
+      preferredBarTintColor: '#453AA4',
       preferredControlTintColor: 'white',
       readerMode: false,
       animated: true,
