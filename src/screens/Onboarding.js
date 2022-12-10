@@ -533,7 +533,7 @@ export default function Onboarding({ navigation }) {
           <View style={{ marginBottom: 30, ...Styles.center }}>
             <Text style={styles.title}>{'Reste à l\'affut !'}</Text>
             <Text style={styles.subtitle}>
-              {'Active le mode furtif pour être prévenu·e quand tu marches sur un drop !'}
+              {'Active le mode radar pour être prévenu·e quand tu marches sur un drop !'}
             </Text>
             <Text style={{ ...styles.subtitle, ...Fonts.regular(10.5, Colors.grey), marginVertical: 3 }}>
               {'Ce mode utilise la géolocalisation en arrière plan,\nmais tkt on n\'est pas la pour t\'espionner.'}

@@ -105,7 +105,7 @@ const SettingsScreen = ({ navigation }) => {
       <GoBackHeader text='Paramètres' />
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text style={styles.titleText}>{'Mode furtif'}</Text>
+        <Text style={styles.titleText}>{'Mode radar'}</Text>
         <View style={{ ...styles.linkContainer, paddingTop: 0 }}>
           <View style={{ flex: 0.9 }}>
             <Text style={{ ...Fonts.regular(12, Colors.grey) }}>
