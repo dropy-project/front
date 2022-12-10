@@ -224,7 +224,7 @@ const ProfileEditScreen = () => {
           onEdited={() => setEdited(true)}
           title='Nom'
           defaultValue={user.displayName}
-          placeholder='Ton magnifique nom'
+          placeholder='Ton magnifique prénom'
           maxLength={25}
           minLength={3}
         />
