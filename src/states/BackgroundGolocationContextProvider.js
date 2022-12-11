@@ -111,7 +111,7 @@ const BackgroundGolocationProvider = ({ children }) => {
       },
       backgroundPermissionRationale: {
         title: 'Autorise la géolocalisation en arrière-plan',
-        message: 'Il est nécessaire d\'autoriser la géolocalisation en arrière-plan pour que l\'application puisse fonctionner correctement.',
+        message: 'Il est conseillé d\'activer la géolocalisation en arrière-plan pour que tu puisses profiter pleinement de ton application. ',
         positiveAction: 'Autoriser',
       },
     });
