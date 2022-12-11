@@ -12,7 +12,7 @@ import GlassButton from '../input/GlassButton';
 const DebugUrlsMenu = () => {
   const navigation = useNavigation();
   const { sendAlert } = useOverlay();
-  const { customUrls, setCustomUrls } = useCurrentUser();
+  const { setDeveloperMode, customUrls, setCustomUrls } = useCurrentUser();
 
   const apiInputRef = useRef();
   const socketInputRef = useRef();
@@ -56,6 +56,8 @@ const DebugUrlsMenu = () => {
     await Storage.setItem('@custom_urls', { api: apiUrl, socket: socketUrl });
     setCustomUrls({ api: apiUrl, socket: socketUrl });
     resetConnection();
+
+    setDeveloperMode((old) => !old);
   };
 
   const clearIp = async () => {
