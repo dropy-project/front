@@ -6,38 +6,21 @@ import DropyMediaViewer from '../other/DropyMediaViewer';
 import MEDIA_TYPES from '../../utils/mediaTypes';
 
 
-const RetrievedDropyMapMarker = ({ dropy, onPress }) => {
-  const [boxSize, setBoxSize] = useState(null);
-
-  useEffect(() => {
-    switch (dropy.mediaType) {
-      case MEDIA_TYPES.PICTURE:
-        setBoxSize(100);
-        break;
-      case MEDIA_TYPES.TEXT:
-        setBoxSize(200);
-        break;
-      default:
-        break;
-    }
-  }, []);
-
-  return (
-    <Marker
-      coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
-      onPress={onPress}
-      tracksViewChanges={true}
-    >
-      <View style={{ ...styles.container, width: boxSize + 50, height: boxSize + 50 }}>
-        <View style={{ ...styles.visibleContainer, width: boxSize, height: boxSize }}>
-          <View style={styles.mediaContainer}>
-            <DropyMediaViewer dropy={dropy} />
-          </View>
+const RetrievedDropyMapMarker = ({ dropy, onPress }) => (
+  <Marker
+    coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
+    onPress={onPress}
+    tracksViewChanges={true}
+  >
+    <View style={{ ...styles.container, width: (dropy.mediaType === MEDIA_TYPES.TEXT ? 250 : 150), height: (dropy.mediaType === MEDIA_TYPES.TEXT ? 250 : 150) }}>
+      <View style={{ ...styles.visibleContainer, width: (dropy.mediaType === MEDIA_TYPES.TEXT ? 200 : 100), height: (dropy.mediaType === MEDIA_TYPES.TEXT ? 200 : 100) }}>
+        <View style={styles.mediaContainer}>
+          <DropyMediaViewer dropy={dropy} />
         </View>
       </View>
-    </Marker>
-  );
-};
+    </View>
+  </Marker>
+);
 
 export default RetrievedDropyMapMarker;
 
