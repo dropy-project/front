@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import Styles, { Colors } from '../../styles/Styles';
 import DropyMediaViewer from '../other/DropyMediaViewer';
+import MEDIA_TYPES from '../../utils/mediaTypes';
+
 
 const RetrievedDropyMapMarker = ({ dropy, onPress }) => (
   <Marker
@@ -10,28 +12,23 @@ const RetrievedDropyMapMarker = ({ dropy, onPress }) => (
     onPress={onPress}
     tracksViewChanges={true}
   >
-    <View style={styles.container}>
-      <View style={styles.visibleContainer}>
+    <View style={{ ...styles.container, width: (dropy.mediaType === MEDIA_TYPES.TEXT ? 250 : 150), height: (dropy.mediaType === MEDIA_TYPES.TEXT ? 250 : 150) }}>
+      <View style={{ ...styles.visibleContainer, width: (dropy.mediaType === MEDIA_TYPES.TEXT ? 200 : 100), height: (dropy.mediaType === MEDIA_TYPES.TEXT ? 200 : 100) }}>
         <View style={styles.mediaContainer}>
-          <DropyMediaViewer dropy={dropy} />
+          <DropyMediaViewer dropy={dropy} isIntoDropyMapMarker={true} />
         </View>
       </View>
     </View>
   </Marker>
 );
 
-// eslint-disable-next-line react/display-name
 export default RetrievedDropyMapMarker;
 
 const styles = StyleSheet.create({
   container: {
-    height: 150,
-    width: 150,
     ...Styles.center,
   },
   visibleContainer: {
-    height: 100,
-    width: 100,
     borderRadius: 24,
     backgroundColor: Colors.white,
     ...Styles.center,
