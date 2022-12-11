@@ -152,7 +152,7 @@ const ConfirmDropyOverlay = ({ visible = false, onCloseOverlay: closeOverlay = (
         </Animated.View>
         <Animated.View style={{ ...styles.bottomContainer, transform: [{ scale: bottomContainerScaleAnimatedValue }] }}>
           <Text style={styles.dropText}>{'It\'s time to drop this into the unkown'}</Text>
-          <GlassButton buttonText='Poser ce drop' onPress={sendDrop} style={styles.dropButtonStyle} fontSize={18} />
+          <GlassButton buttonText='C\'est parti !' onPress={sendDrop} style={styles.dropButtonStyle} fontSize={18} />
         </Animated.View>
       </SafeAreaView>
     </Animated.View>
