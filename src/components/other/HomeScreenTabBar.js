@@ -20,12 +20,15 @@ import useOverlay from '../../hooks/useOverlay';
 import useUnreadConversation from '../../hooks/useUnreadConversation';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import GlassCircleButton from '../input/GlassCircleButton';
+import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
 
 const mainButtonSize = responsiveHeight(7.5);
 const iconsSize = 30;
 
-const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVisible, canEmitDropy }) => {
+const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVisible }) => {
   const navigation = useNavigation();
+
+  const { canEmitDropy } = useDropiesAroundSocket();
   const { developerMode } = useCurrentUser();
 
   const tabBarAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -142,7 +145,6 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         title: 'Take it easy!',
         description: 'You can\'t drop at the same location twice in a row.',
         validateText: 'OK !',
-        // eslint-disable-next-line no-undef
         denyText: developerMode || __DEV__ ? 'DEV_ADD' : undefined,
       });
       setDropyMenuIsOpen(!validated);
@@ -286,7 +288,6 @@ const DropyWheelItem = ({ children, index, childCount, size }) => {
   };
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <View onLayout={handleLayout} key={index} style={{ position: 'absolute', top: coords.y, left: coords.x }}>
       {children}
     </View>

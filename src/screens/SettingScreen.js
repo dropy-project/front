@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
-  Linking,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -24,6 +23,8 @@ import DebugText from '../components/other/DebugText';
 import GoBackHeader from '../components/other/GoBackHeader';
 import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
+import { handleOpenURL } from '../utils/links';
+
 const SettingsScreen = ({ navigation }) => {
   const { setDeveloperMode, user, developerMode, customUrls } = useCurrentUser();
 
@@ -35,8 +36,8 @@ const SettingsScreen = ({ navigation }) => {
   const notificatinsSettingsRef = useRef(null);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('unfocus', () => {
-      fetchNotificationsSettings();
+    fetchNotificationsSettings();
+    const unsubscribe = navigation.addListener('blur', () => {
       if (notificatinsSettingsRef.current != null)
         postNotificationsSettings(notificatinsSettingsRef.current);
     });
@@ -185,19 +186,19 @@ const SettingsScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={styles.linkContainer}
-          onPress={() => Linking.openURL('https://dropy-app.com/help')}>
+          onPress={() => handleOpenURL('https://dropy-app.com/help')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Help</Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.linkContainer}
-          onPress={() => Linking.openURL('https://dropy-app.com/about')}>
+          onPress={() => handleOpenURL('https://dropy-app.com/about')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>About</Text>
           <AntDesign name='arrowright' size={24} color={Colors.darkGrey} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.linkContainer}
-          onPress={() => Linking.openURL('https://dropy-app.com/privacy-policy.html')
+          onPress={() => handleOpenURL('https://dropy-app.com/privacy-policy.html')
           }>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
             Privacy Policy
@@ -206,7 +207,7 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.linkContainer}
-          onPress={() => Linking.openURL('https://dropy-app.com/terms-conditions.html')
+          onPress={() => handleOpenURL('https://dropy-app.com/terms-conditions.html')
           }>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
             Terms & Conditions
@@ -225,7 +226,6 @@ const SettingsScreen = ({ navigation }) => {
         <View style={styles.spacer} />
 
         <TouchableOpacity
-          // eslint-disable-next-line no-undef
           onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)
           }
           activeOpacity={1}>

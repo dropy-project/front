@@ -12,8 +12,6 @@ import {
 import { FontAwesome5 } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
-
-import useDropiesAroundSocket from '../hooks/useDropiesAroundSocket';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
 import Haptics from '../utils/haptics';
 import DropyMap from '../components/map/DropyMap';
@@ -28,8 +26,6 @@ const HomeScreen = ({ navigation, route }) => {
   const { dropyCreateParams = null } = route.params || {};
 
   const backgroundGeolocIconAnimatedValue = useRef(new Animated.Value(0)).current;
-
-  const { dropiesAround, createDropy, retrieveDropy, canEmitDropy } = useDropiesAroundSocket();
 
   const { backgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
   const shouldAnimateBackgroundGeolocIcon = useRef(true);
@@ -108,8 +104,6 @@ const HomeScreen = ({ navigation, route }) => {
 
       <DropyMap
         retrievedDropies={retrievedDropies}
-        dropiesAround={dropiesAround}
-        retrieveDropy={retrieveDropy}
         museumVisible={museumOverlayVisible}
         selectedDropyIndex={selectedDropyIndex}
       />
@@ -126,7 +120,7 @@ const HomeScreen = ({ navigation, route }) => {
               <View style={styles.backgroundGeolocIconInnerContainer}>
                 <FontAwesome5 name='satellite-dish' size={BACKGROUND_GEOLOC_ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
                 <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
-                Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
+                  Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
                 </Text>
               </View>
             </Animated.View>
@@ -144,11 +138,9 @@ const HomeScreen = ({ navigation, route }) => {
         onMuseumOpenPressed={() => setMuseumOverlayVisible(true)}
         onMuseumClosePressed={() => setMuseumOverlayVisible(false)}
         museumVisible={museumOverlayVisible}
-        canEmitDropy={canEmitDropy}
       />
 
       <ConfirmDropyOverlay
-        createDropy={createDropy}
         dropyCreateParams={dropyCreateParams}
         visible={confirmDropOverlayVisible}
         onCloseOverlay={closeConfirmDropOverlay}
