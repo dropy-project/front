@@ -115,7 +115,7 @@ const DropiesAroundContextProvider = ({ children }) => {
     const restrictedRange = updatedDropies.some((dropy) => dropy.isInEmitRestrictedRange);
     setCanEmitDropy(!restrictedRange);
 
-    const requireStateUpdate = updatedDropies.some((dropy) => dropy.reachable !== dropy.reachable);
+    const requireStateUpdate = updatedDropies.some((dropy, index) => dropy.reachable !== dropiesAround[index].reachable);
     if (requireStateUpdate)
       setDropiesAround(updatedDropies);
   };

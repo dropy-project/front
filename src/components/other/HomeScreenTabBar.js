@@ -145,7 +145,6 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         title: 'Take it easy!',
         description: 'You can\'t drop at the same location twice in a row.',
         validateText: 'OK !',
-        // eslint-disable-next-line no-undef
         denyText: developerMode || __DEV__ ? 'DEV_ADD' : undefined,
       });
       setDropyMenuIsOpen(!validated);
@@ -289,7 +288,6 @@ const DropyWheelItem = ({ children, index, childCount, size }) => {
   };
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <View onLayout={handleLayout} key={index} style={{ position: 'absolute', top: coords.y, left: coords.x }}>
       {children}
     </View>

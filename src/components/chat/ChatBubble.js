@@ -26,7 +26,7 @@ const Bubble = ({ isLeft, content, date, read, showDate, hourDifference }) => {
     return (
       <View style={{ ...styles.dropyContainer, maxHeight: 500 }}>
         <TouchableOpacity onPress={() => navigation.navigate('DisplayDropyMedia', { dropy: content, showBottomModal: false })}>
-          <DropyMediaViewer dropy={content} style={styles.dropyMediaContainer} />
+          <DropyMediaViewer dropy={content} style={styles.dropyMediaContainer} isIntoDropyMapMarker={true} />
         </TouchableOpacity>
         <Text style={{ ...Fonts.bold(12, Colors.darkGrey), marginTop: 5 }}>{messageTimeString(content.retrieveDate)}</Text>
         <DebugText showBoundingBox date={date}>Dropy msg</DebugText>

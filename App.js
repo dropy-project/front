@@ -14,7 +14,6 @@ import {
 import * as Sentry from '@sentry/react-native';
 import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet';
 
-import { LogBox } from 'react-native';
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
 import GeolocationProvider from './src/states/GeolocationContextProvider';
@@ -27,15 +26,14 @@ import DropiesAroundContextProvider from './src/states/DropiesAroundContextProvi
 
 Sentry.init({
   dsn: 'https://19407e7c32a2487689649a399a55c564@o1315355.ingest.sentry.io/6567185',
-  // eslint-disable-next-line no-undef
+
   environment: __DEV__ ? 'dev' : 'production',
 
   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
   // We recommend adjusting this value in production.
-  tracesSampleRate: 1.0,
+  tracesSampleRate: __DEV__ ? 1.0 : 0.5,
+  debug: __DEV__,
 });
-
-LogBox.ignoreLogs(['rgb']);
 
 const NavigationApp = () => (
   <NavigationContainer>

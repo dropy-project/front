@@ -1,10 +1,8 @@
-// 0 = off
-// 1 = warn
-// 2 = error
 {
     "env": {
         "es2022": true,
-        "node": true
+        "node": true,
+        "react-native/react-native": true
     },
     "extends": [
         "eslint:recommended",
@@ -19,9 +17,9 @@
     },
     "plugins": [
         "react",
-        "react-native",
         "react-hooks",
         "import",
+        "react-native",
         "import-newlines"
     ],
     "rules": {
@@ -85,6 +83,10 @@
         ],
         "react/no-array-index-key": 0,
         "react/jsx-one-expression-per-line": 0,
+        "react/jsx-indent": [
+            2,
+            2
+        ],
         "react-native/no-unused-styles": 1,
         "key-spacing": [
             "error",

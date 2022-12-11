@@ -215,6 +215,11 @@ const postNotificationsSettings = async (notificationsSettings) => {
   return response;
 };
 
+const checkEmailAvailable = async (email) => {
+  const response = await axios.get(`/emailAvailable/${email}`);
+  return response;
+};
+
 const API = {
   getHeaders,
   register,
@@ -244,6 +249,7 @@ const API = {
   postNotificationsSettings,
   init,
   deleteAccount,
+  checkEmailAvailable,
 };
 
 export default API;

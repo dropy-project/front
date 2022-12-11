@@ -9,6 +9,8 @@ import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 
 import useConversationsSocket from '../hooks/useConversationsSocket';
 
+import Haptics from '../utils/haptics';
+
 import Notification from '../components/overlays/Notification';
 
 export const extractNotificationPayload = (notification) => {
@@ -48,7 +50,7 @@ const NotificationProvider = ({ children }) => {
     Notifications.registerRemoteNotifications();
 
     const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
-      console.error('Notification registation error', event);
+      console.error('Notification registration error', event);
     });
 
     const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
@@ -65,6 +67,8 @@ const NotificationProvider = ({ children }) => {
         id: new Date().getTime(),
         onPress: () => openChat(payload),
       };
+
+      Haptics.impactLight();
 
       setNotificationsStack((old) => {
         const newStack = [...(old ?? []), notifData];

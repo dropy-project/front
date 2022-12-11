@@ -17,7 +17,7 @@ const DisabledNotificationsPopup = () => {
     return null;
 
   return (
-    <TouchableOpacity onPress={Linking.openSettings} style={{ ...styles.container }}>
+    <TouchableOpacity onPress={() => Linking.openSettings()} style={{ ...styles.container }}>
       <Text style={{ ...Fonts.regular(12, Colors.white) }}>Notifications are disabled</Text>
       <TouchableOpacity onPress={() => setVisible(false)} hitSlop={{ bottom: 10, left: 20, right: 10, top: 10 }}>
         <AntDesign name='close' size={17} color={Colors.white} />

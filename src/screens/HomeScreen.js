@@ -120,7 +120,7 @@ const HomeScreen = ({ navigation, route }) => {
               <View style={styles.backgroundGeolocIconInnerContainer}>
                 <FontAwesome5 name='satellite-dish' size={BACKGROUND_GEOLOC_ICON_OPENED_SIZE - 20} color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey} />
                 <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
-                Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
+                  Background location {backgroundGeolocationEnabled ? 'enabled' : 'disabled'}
                 </Text>
               </View>
             </Animated.View>

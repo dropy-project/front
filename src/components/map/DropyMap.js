@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { PERMISSIONS, request } from 'react-native-permissions';
 import { useInitializedGeolocation } from '../../hooks/useGeolocation';
 import useOverlay from '../../hooks/useOverlay';
 
@@ -19,6 +20,7 @@ import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
 import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
+import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
@@ -50,6 +52,7 @@ const DropyMap = ({
   const [currentZoom, setCurrentZoom] = useState(0);
   const [currentHeading, setCurrentHeading] = useState(0);
   const [headingLocked, setHeadingLocked] = useState(false);
+  const [locationGranted, setLocationGranted] = useState(true);
 
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
@@ -104,6 +107,7 @@ const DropyMap = ({
     if (userCoordinates == null)
       return;
 
+    checkLocationPermission();
     setMapCameraPosition();
   }, [
     userCoordinates,
@@ -154,6 +158,18 @@ const DropyMap = ({
       forceCameraToLockHeading();
     return newLockedValue;
   });
+
+  const checkLocationPermission = async () => {
+    let result;
+    if (Platform.OS === 'ios')
+      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    else
+      result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    if (result === 'granted')
+      setLocationGranted(true);
+    else
+      setLocationGranted(false);
+  };
 
   return (
     <>
@@ -213,9 +229,14 @@ const DropyMap = ({
 
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
-          <AnimatedFlask />
+          <EnergyTooltip>
+            <AnimatedFlask />
+          </EnergyTooltip>
           <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
-            <TouchableOpacity onPress={() => setMapCameraPosition(headingLocked, true)} style={styles.lockButton}>
+            <TouchableOpacity
+              onPress={() => setMapCameraPosition(headingLocked, true)}
+              style={styles.lockButton}
+            >
               <MaterialIcons name='my-location' size={20} color={Colors.darkGrey} />
             </TouchableOpacity>
           </FadeInWrapper>
@@ -227,7 +248,7 @@ const DropyMap = ({
 
       <EnergyPopup />
       <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
-      <MapLoadingOverlay visible={geolocationInitialized === false} />
+      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationGranted}/>
       <LinearGradient
         pointerEvents='none'
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.1)']}

@@ -8,7 +8,7 @@ import Styles, { Colors, Fonts } from '../../styles/Styles';
 import MEDIA_TYPES from '../../utils/mediaTypes';
 import LoadingSpinner from '../effect/LoadingSpinner';
 
-const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
+const DropyMediaViewer = ({ dropy, isIntoDropyMapMarker, style = StyleSheet.absoluteFillObject }) => {
   const [loading, setLoading] = useState(true);
   const [imageSource, setImageSource] = useState(null);
   const [dropyText, setDropyText] = useState('');
@@ -72,13 +72,13 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
 
   if (dropy.mediaType === MEDIA_TYPES.TEXT) {
     return (
-      <ScrollView style={{ ...style, maxHeight: 300 }} contentContainerStyle={styles.textContentContainer}>
+      <ScrollView style={{ ...style, maxHeight: (isIntoDropyMapMarker ? 300 : null) }} contentContainerStyle={styles.textContentContainer}>
         {loading && (
           <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
             <LoadingSpinner />
           </View>
         )}
-        <Text style={styles.dropyText}>{dropyText}</Text>
+        <Text style={{ ...styles.dropyText, textAlign: (isIntoDropyMapMarker ? 'center' : 'justify') }} numberOfLines={isIntoDropyMapMarker ? 7 : null}>{dropyText}</Text>
       </ScrollView>
     );
   }
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   dropyText: {
     ...Fonts.bold(17, Colors.darkerGrey),
     marginHorizontal: responsiveWidth(7),
-    textAlign: 'justify',
+    width: '85%',
   },
   displayImage: {
     position: 'absolute',
