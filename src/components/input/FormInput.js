@@ -47,7 +47,7 @@ const FormInput = (props, ref) => {
     const notEmpty = value?.trim() !== '';
     const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
     if (!emailValid)
-      setValidityErrorMessage('Ce n\'est pas une adresse email valide');
+      setValidityErrorMessage('Cet email n\'est pas valide');
 
     const maxLengthValid = (!maxLength || value?.trim().length <= maxLength);
     if (!maxLengthValid)
