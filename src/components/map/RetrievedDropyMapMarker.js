@@ -5,16 +5,17 @@ import Styles, { Colors } from '../../styles/Styles';
 import DropyMediaViewer from '../other/DropyMediaViewer';
 import MEDIA_TYPES from '../../utils/mediaTypes';
 
+
 const RetrievedDropyMapMarker = ({ dropy, onPress }) => {
-  const [boxWidth, setBoxWidth] = useState(null);
+  const [boxSize, setBoxSize] = useState(null);
 
   useEffect(() => {
     switch (dropy.mediaType) {
       case MEDIA_TYPES.PICTURE:
-        setBoxWidth(100);
+        setBoxSize(100);
         break;
       case MEDIA_TYPES.TEXT:
-        setBoxWidth(200);
+        setBoxSize(200);
         break;
       default:
         break;
@@ -22,14 +23,13 @@ const RetrievedDropyMapMarker = ({ dropy, onPress }) => {
   }, []);
 
   return (
-
     <Marker
       coordinate={{ latitude: dropy.latitude, longitude: dropy.longitude }}
       onPress={onPress}
       tracksViewChanges={true}
     >
-      <View style={styles.container}>
-        <View style={styles.visibleContainer}>
+      <View style={{ ...styles.container, width: boxSize + 50, height: boxSize + 50 }}>
+        <View style={{ ...styles.visibleContainer, width: boxSize, height: boxSize }}>
           <View style={styles.mediaContainer}>
             <DropyMediaViewer dropy={dropy} />
           </View>
@@ -39,18 +39,13 @@ const RetrievedDropyMapMarker = ({ dropy, onPress }) => {
   );
 };
 
-// eslint-disable-next-line react/display-name
 export default RetrievedDropyMapMarker;
 
 const styles = StyleSheet.create({
   container: {
-    height: 150,
-    width: 150,
     ...Styles.center,
   },
   visibleContainer: {
-    height: 100,
-    width: 100,
     borderRadius: 24,
     backgroundColor: Colors.white,
     ...Styles.center,

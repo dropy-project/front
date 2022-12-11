@@ -78,7 +78,7 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
             <LoadingSpinner />
           </View>
         )}
-        <Text style={styles.dropyText}>{dropyText}</Text>
+        <Text style={styles.dropyText} numberOfLines={7}>{dropyText}</Text>
       </ScrollView>
     );
   }
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     ...Fonts.bold(17, Colors.darkerGrey),
     marginHorizontal: responsiveWidth(7),
     textAlign: 'justify',
+    width: '85%',
   },
   displayImage: {
     position: 'absolute',
