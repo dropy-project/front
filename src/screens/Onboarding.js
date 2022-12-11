@@ -37,7 +37,6 @@ import LoadingSpinner from '../components/effect/LoadingSpinner';
 import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 import { missingCameraPersmissionAlert, missingLibraryPermissionAlert } from '../utils/mediaPermissionsAlerts';
 
-// eslint-disable-next-line no-undef
 const DEBUG = __DEV__;
 const devUsername = Config.DEV_ACCOUNT_USERNAME ?? '';
 const devEmail = Config.DEV_ACCOUNT_EMAIL ?? '';

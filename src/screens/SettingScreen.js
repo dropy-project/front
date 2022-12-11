@@ -25,6 +25,8 @@ import DebugText from '../components/other/DebugText';
 import GoBackHeader from '../components/other/GoBackHeader';
 import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
+import { handleOpenURL } from '../utils/links';
+
 const SettingsScreen = ({ navigation }) => {
   const { setDeveloperMode, user, developerMode, customUrls } = useCurrentUser();
 
@@ -197,7 +199,7 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.linkContainer}
-          onPress={() => Linking.openURL('https://dropy-app.com/privacy-policy.html')
+          onPress={() => handleOpenURL('https://dropy-app.com/privacy-policy.html')
           }>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
             {'Politique de confidentialité'}
@@ -206,7 +208,7 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.linkContainer}
-          onPress={() => Linking.openURL('https://dropy-app.com/terms-conditions.html')
+          onPress={() => handleOpenURL('https://dropy-app.com/terms-conditions.html')
           }>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>
             {'Termes et conditions'}
@@ -225,7 +227,6 @@ const SettingsScreen = ({ navigation }) => {
         <View style={styles.spacer} />
 
         <TouchableOpacity
-          // eslint-disable-next-line no-undef
           onLongPress={() => (user.isDeveloper || __DEV__) && setDeveloperMode((old) => !old)}
           activeOpacity={1}>
           <View style={styles.infoTextContainer}>
