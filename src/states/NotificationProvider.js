@@ -68,13 +68,13 @@ const NotificationProvider = ({ children }) => {
         onPress: () => openChat(payload),
       };
 
+      Haptics.impactLight();
+
       setNotificationsStack((old) => {
         const newStack = [...(old ?? []), notifData];
         return newStack;
       });
     });
-
-    Haptics.impactLight();
 
     const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
       completion();
