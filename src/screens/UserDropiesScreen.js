@@ -90,7 +90,7 @@ const UserDropiesScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollViewContent}
           ListEmptyComponent={() => (
             <View style={{ height: responsiveHeight(80), ...Styles.center }}>
-              <Text style={{ ...Fonts.regular(13, Colors.darkGrey), textAlign: 'center' }}>{'C\'est plutôt vide par ici !\nTu n\'a pas encore trouvé de drop...'}</Text>
+              <Text style={{ ...Fonts.regular(13, Colors.darkGrey), textAlign: 'center' }}>{'C\'est plutôt vide par ici !\nTu n\'as pas encore trouvé de drop...'}</Text>
             </View>
           )}
           renderItem={({ item: dropy, index }) => (
