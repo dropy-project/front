@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import Styles, { Colors } from '../../styles/Styles';
