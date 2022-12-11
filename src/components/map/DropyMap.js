@@ -70,8 +70,8 @@ const DropyMap = ({
       if (result.error != null) {
         if (result.status === 406) {
           await sendAlert({
-            title: 'Tu n\'as plus d\'énergie !',
-            description: 'Tu peux la recharger en posant un drop !',
+            title: 'Oh non, tu es à cours d'énergie !',
+            description: 'N\'attends pas, recharge la en posant un drop !',
             validateText: 'Ok !',
           });
           return;
