@@ -35,7 +35,6 @@ import GlassButton from '../components/input/GlassButton';
 import LoadingSpinner from '../components/effect/LoadingSpinner';
 import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
 
-// eslint-disable-next-line no-undef
 const DEBUG = __DEV__;
 
 export default function Onboarding({ navigation }) {
