@@ -1,5 +1,5 @@
 {
-  "threshold": 0,
+  "threshold": 20,
   "reporters": ["html", "markdown"],
   "ignore": [
     "**/node_modules/**",
@@ -13,6 +13,8 @@
     "**/*.svg",
     "**/*.yml",
     "**/*.yaml",
-    "**/*.md"
+    "**/*.md",
+    "**/android/**",
+    "**/ios/**"
   ]
 }
