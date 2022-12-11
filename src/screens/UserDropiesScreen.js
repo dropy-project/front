@@ -50,8 +50,8 @@ const UserDropiesScreen = ({ navigation }) => {
 
   const deleteDropy = async (dropyId) => {
     const confirmed = await sendAlert({
-      title: 'Es-tu sûr·e ?',
-      description: 'Plus perssonne ne pourra voir ton drop',
+      title: 'Attention !',
+      description: 'Plus personne ne pourra voir ton drop',
       denyText: 'Annuler',
       validateText: 'Supprimer',
     });
