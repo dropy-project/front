@@ -288,7 +288,6 @@ const DropyWheelItem = ({ children, index, childCount, size }) => {
   };
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <View onLayout={handleLayout} key={index} style={{ position: 'absolute', top: coords.y, left: coords.x }}>
       {children}
     </View>
