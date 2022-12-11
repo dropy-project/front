@@ -71,7 +71,7 @@ const Splash = ({ navigation, route }) => {
       if (!isCompatibleWithServer) {
         sendAlert({
           title: 'Version incompatible',
-          description: 'Met à jour l\'application.',
+          description: 'Mets à jour ton application.',
         });
       }
       return isCompatibleWithServer;
