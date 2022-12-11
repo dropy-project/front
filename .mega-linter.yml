@@ -4,11 +4,13 @@
 APPLY_FIXES: all
 ENABLE:
   - COPYPASTE
-  - JSON
   - REPOSITORY
 
 ENABLE_LINTERS: 
   - JAVASCRIPT_STANDARD
+
+DISABLE_LINTERS:
+  - REPOSITORY_GITLEAKS
 
 PRINT_ALL_FILES: false
 FILTER_REGEX_EXCLUDE: '(\.automation/test|\.automation/generated|\.github/workflows|docs/javascripts|docs/overrides|docs/json-schemas|flavors|clj-kondo|TEMPLATES)'
@@ -19,6 +21,7 @@ YAML_V8R_FILTER_REGEX_EXCLUDE: '(descriptors|templates/\.mega-linter\.yml|\.code
 BASH_FILTER_REGEX_EXCLUDE: "(lib)"
 MARKDOWN_FILTER_REGEX_EXCLUDE: '(license\.md)'
 MARKDOWN_MARKDOWN_LINK_CHECK_DISABLE_ERRORS: true
+REPOSITORY_TRIVY_DISABLE_ERRORS: true
 SPELL_MISSPELL_FILTER_REGEX_EXCLUDE: '(\.automation/generated|docs/descriptors|used-by-stats)'
 DOCKERFILE_HADOLINT_ARGUMENTS: "--ignore DL3003 --ignore DL3007 --ignore DL3013 --ignore DL3016 --ignore DL3018 --ignore DL3028 --ignore DL3059 --ignore DL4001 --ignore DL4006 --ignore SC2015 --ignore SC2016 --ignore SC2039 --ignore SC2086 --ignore SC1091 --ignore SC3046"
 REPOSITORY_TRIVY_ARGUMENTS:
@@ -32,8 +35,9 @@ GITHUB_STATUS_REPORTER: false
 PLUGINS:
   - https://raw.githubusercontent.com/oxsecurity/megalinter/main/.automation/test/mega-linter-plugin-test/test.megalinter-descriptor.yml
 PRE_COMMANDS:
-  - command: echo "This is MegaLinter PRE_COMMAND on own MegaLinter ! :)"
-    cwd: "root"
+# Run eslint formatter on all files
+  - command: npx eslint --fix .
+    cwd: "workspace"
 POST_COMMANDS:
   - command: echo "This is MegaLinter POST_COMMAND on own MegaLinter ! :)"
     cwd: "workspace"
