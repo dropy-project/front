@@ -15,7 +15,7 @@ const RetrievedDropyMapMarker = ({ dropy, onPress }) => (
     <View style={{ ...styles.container, width: (dropy.mediaType === MEDIA_TYPES.TEXT ? 250 : 150), height: (dropy.mediaType === MEDIA_TYPES.TEXT ? 250 : 150) }}>
       <View style={{ ...styles.visibleContainer, width: (dropy.mediaType === MEDIA_TYPES.TEXT ? 200 : 100), height: (dropy.mediaType === MEDIA_TYPES.TEXT ? 200 : 100) }}>
         <View style={styles.mediaContainer}>
-          <DropyMediaViewer dropy={dropy} />
+          <DropyMediaViewer dropy={dropy} isIntoDropyMapMarker={true} />
         </View>
       </View>
     </View>

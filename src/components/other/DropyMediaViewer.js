@@ -8,7 +8,7 @@ import Styles, { Colors, Fonts } from '../../styles/Styles';
 import MEDIA_TYPES from '../../utils/mediaTypes';
 import LoadingSpinner from '../effect/LoadingSpinner';
 
-const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
+const DropyMediaViewer = ({ dropy, isIntoDropyMapMarker, style = StyleSheet.absoluteFillObject }) => {
   const [loading, setLoading] = useState(true);
   const [imageSource, setImageSource] = useState(null);
   const [dropyText, setDropyText] = useState('');
@@ -78,7 +78,7 @@ const DropyMediaViewer = ({ dropy, style = StyleSheet.absoluteFillObject }) => {
             <LoadingSpinner />
           </View>
         )}
-        <Text style={styles.dropyText} numberOfLines={7}>{dropyText}</Text>
+        <Text style={styles.dropyText} numberOfLines={isIntoDropyMapMarker ? 7 : null}>{dropyText}</Text>
       </ScrollView>
     );
   }
