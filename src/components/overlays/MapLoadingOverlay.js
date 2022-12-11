@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Text } from 'react-native';
+import { Animated, Linking, StyleSheet, Text } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import DropyLogo from '../../assets/svgs/dropy_logo.svg';
+import GlassButton from '../input/GlassButton';
 
-const MapLoadingOverlay = ({ visible = true }) => {
+const MapLoadingOverlay = ({ visible = true, isGeolocationPermissionGranted = false }) => {
   const [render, setRender] = useState(visible);
 
   const opacityAnimatedValue = useRef(new Animated.Value(visible ? 1 : 0)).current;
@@ -36,7 +37,11 @@ const MapLoadingOverlay = ({ visible = true }) => {
         opacity: opacityAnimatedValue,
       }}>
       <AnimatedLogo />
-      <Text style={{ ...Fonts.bold(12, Colors.purple2) }}>Seeking for your location...</Text>
+      <Text style={{ ...Fonts.bold(12, Colors.purple2) }}>{isGeolocationPermissionGranted ? 'Recherche de votre position...' : 'La géolocalisation n\'est pas autorisée'}</Text>
+
+      {!isGeolocationPermissionGranted && (
+        <GlassButton onPress={() => Linking.openSettings()} buttonText={'Ouvrir les paramètres'} disabled={false} style={styles.openSettingsButton} fontSize={12} />
+      )}
     </Animated.View>
   );
 };
@@ -70,3 +75,16 @@ const AnimatedLogo = () => {
     </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  openSettingsButton: {
+    height: 50,
+    width: '55%',
+    position: 'absolute',
+    bottom: '25%',
+    borderRadius: 23,
+    ...Styles.hardShadows,
+    ...Styles.center,
+    paddingHorizontal: 20,
+  },
+});
