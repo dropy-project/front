@@ -18,7 +18,7 @@ export const reportUser = async (userId, sendAlert, dropyId = undefined) => {
   } catch (error) {
     if (error.response.status === 401) {
       sendAlert({
-        title: 'Mollo l\'asticôt !',
+        title: 'Mollo l\'asticot !',
         description: 'Tu ne peux pas signaler plus d\'une fois par heure',
       });
       return;
