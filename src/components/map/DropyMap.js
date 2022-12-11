@@ -51,7 +51,7 @@ const DropyMap = ({
   const [currentZoom, setCurrentZoom] = useState(0);
   const [currentHeading, setCurrentHeading] = useState(0);
   const [headingLocked, setHeadingLocked] = useState(false);
-  const [locactionGranted, setLocationGranted] = useState(true);
+  const [locationGranted, setLocationGranted] = useState(true);
 
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
@@ -106,7 +106,7 @@ const DropyMap = ({
     if (userCoordinates == null)
       return;
 
-    setGeolocationStatus();
+    checkLocationPermission();
     setMapCameraPosition();
   }, [
     userCoordinates,
@@ -158,8 +158,7 @@ const DropyMap = ({
     return newLockedValue;
   });
 
-  // Rename the function below to something more appropriate
-  const setGeolocationStatus = async () => {
+  const checkLocationPermission = async () => {
     let result;
     if (Platform.OS === 'ios')
       result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
@@ -243,7 +242,7 @@ const DropyMap = ({
 
       <EnergyPopup />
       <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
-      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locactionGranted}/>
+      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationGranted}/>
       <LinearGradient
         pointerEvents='none'
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.1)']}

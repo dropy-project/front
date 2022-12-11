@@ -37,7 +37,7 @@ const MapLoadingOverlay = ({ visible = true, isGeolocationPermissionGranted = fa
         opacity: opacityAnimatedValue,
       }}>
       <AnimatedLogo />
-      <Text style={{ ...Fonts.bold(12, Colors.purple2) }}>Recherche de votre position...</Text>
+      <Text style={{ ...Fonts.bold(12, Colors.purple2) }}>{isGeolocationPermissionGranted ? 'Recherche de votre position...' : 'La géolocalisation n\'est pas autorisée'}</Text>
 
       {!isGeolocationPermissionGranted && (
         <GlassButton onPress={() => Linking.openSettings()} buttonText={'Ouvrir les paramètres'} disabled={false} style={styles.openSettingsButton} fontSize={12} />
