@@ -180,7 +180,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         ...styles.tabsContainer,
         transform: [{ translateY: tabBarTranslateY }],
       }}>
-        <TabBarItem text='Gallerie' onPress={onMuseumOpenPressed}>
+        <TabBarItem text='Galerie' onPress={onMuseumOpenPressed}>
           <Ionicons
             name='md-bookmark-outline'
             size={iconsSize}
