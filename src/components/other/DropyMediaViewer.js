@@ -72,7 +72,7 @@ const DropyMediaViewer = ({ dropy, isIntoDropyMapMarker, style = StyleSheet.abso
 
   if (dropy.mediaType === MEDIA_TYPES.TEXT) {
     return (
-      <ScrollView style={{ ...style, maxHeight: 300 }} contentContainerStyle={styles.textContentContainer}>
+      <ScrollView style={{ ...style }} contentContainerStyle={styles.textContentContainer}>
         {loading && (
           <View style={{ ...StyleSheet.absoluteFillObject, ...Styles.center }}>
             <LoadingSpinner />
