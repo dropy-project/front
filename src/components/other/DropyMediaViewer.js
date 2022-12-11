@@ -78,7 +78,7 @@ const DropyMediaViewer = ({ dropy, isIntoDropyMapMarker, style = StyleSheet.abso
             <LoadingSpinner />
           </View>
         )}
-        <Text style={styles.dropyText} numberOfLines={isIntoDropyMapMarker ? 7 : null}>{dropyText}</Text>
+        <Text style={{ ...styles.dropyText, textAlign: (isIntoDropyMapMarker ? 'center' : 'justify') }} numberOfLines={isIntoDropyMapMarker ? 7 : null}>{dropyText}</Text>
       </ScrollView>
     );
   }
@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
   dropyText: {
     ...Fonts.bold(17, Colors.darkerGrey),
     marginHorizontal: responsiveWidth(7),
-    textAlign: 'justify',
     width: '85%',
   },
   displayImage: {
