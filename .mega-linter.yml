@@ -35,8 +35,9 @@ GITHUB_STATUS_REPORTER: false
 PLUGINS:
   - https://raw.githubusercontent.com/oxsecurity/megalinter/main/.automation/test/mega-linter-plugin-test/test.megalinter-descriptor.yml
 PRE_COMMANDS:
-# Run eslint formatter on all files
-  - command: npx eslint --fix .
+  - command: npm install
+    cwd: "workspace"
+  - command: npm run lint:fix
     cwd: "workspace"
 POST_COMMANDS:
   - command: echo "This is MegaLinter POST_COMMAND on own MegaLinter ! :)"
