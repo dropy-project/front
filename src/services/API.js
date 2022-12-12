@@ -3,7 +3,6 @@ import crypto from 'crypto-js';
 import Storage from '../utils/storage';
 import AppInfo from '../../app.json';
 
-
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
 const API_BASE_URL = `https://${DOMAIN_PREFIX}api.dropy-app.com`;
 
@@ -31,7 +30,7 @@ const register = async (displayName, email, password, newsLetter) => {
   const response = await axios.post('/register', {
     displayName,
     email,
-    hashedPassword,
+    password: hashedPassword,
     newsLetter,
   });
 
@@ -49,7 +48,7 @@ const login = async (email, password) => {
   const hashedPassword = crypto.SHA256(password).toString();
   const response = await axios.post('/login', {
     email,
-    hashedPassword,
+    password: hashedPassword,
   });
 
   const { accessToken, refreshToken, expires, profile: user } = response.data;
