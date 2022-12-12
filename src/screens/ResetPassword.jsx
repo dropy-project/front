@@ -1,9 +1,10 @@
 import React from 'react';
+import { Text, View } from 'react-native';
 
 const ResetPassword = () => (
-  <div>
-    ResetPassword
-  </div>
+  <View>
+    <Text>ResetPassword</Text>
+  </View>
 );
 
 export default ResetPassword;
