@@ -207,9 +207,37 @@ export default function Onboarding({ navigation }) {
     }
   };
 
+  const checkEmailAvailable = async () => {
+    setLoading(true);
+    try {
+      const response = await API.checkEmailAvailable(email);
+      setLoading(false);
+      if (!response.data)
+        emailInputRef.current?.setInvalid('An account already exists with this email');
+      return response.data;
+    } catch (error) {
+      setLoading(false);
+      console.error('Error while checking if an email is available', email, error);
+    }
+  };
+
+  const validationEmailAndPasswordRegister = async () => {
+    const emailValid = emailInputRef.current?.isValid() && await checkEmailAvailable(email);
+    const passwordValid = passwordInputRef.current?.isValid();
+    const passwordConfirmationValid = passwordConfirmationInputRef.current?.isValid();
+    const inputsValid = emailValid && passwordValid && passwordConfirmationValid;
+    const samePasswords = passwordInputRef.current?.getValue() === passwordConfirmationInputRef.current?.getValue();
+    if (inputsValid && !samePasswords) {
+      passwordInputRef.current?.setInvalid('Passwords does not match');
+      passwordConfirmationInputRef.current?.setInvalid('Passwords does not match');
+    }
+    const everythingValid = inputsValid && samePasswords;
+    everythingValid && viewSliderRef.current?.goToView(5);
+    everythingValid && Keyboard.dismiss();
+  };
+
   const handleLogin = async () => {
     const emailValid = loginEmailInputRef.current?.isValid();
-
     if (!emailValid) {
       console.log('email not valid');
       return;
@@ -491,20 +519,7 @@ export default function Onboarding({ navigation }) {
           </View>
           <LoadingGlassButton
             loading={loading}
-            onPress={() => {
-              const emailValid = emailInputRef.current?.isValid();
-              const passwordValid = passwordInputRef.current?.isValid();
-              const passwordConfirmationValid = passwordConfirmationInputRef.current?.isValid();
-              const inputsValid = emailValid && passwordValid && passwordConfirmationValid;
-              const samePasswords = passwordInputRef.current?.getValue() === passwordConfirmationInputRef.current?.getValue();
-              if (inputsValid && !samePasswords) {
-                passwordInputRef.current?.setInvalid('Passwords does not match');
-                passwordConfirmationInputRef.current?.setInvalid('Passwords does not match');
-              }
-              const everythingValid = inputsValid && samePasswords;
-              everythingValid && viewSliderRef.current?.goToView(5);
-              everythingValid && Keyboard.dismiss();
-            }}
+            onPress={validationEmailAndPasswordRegister}
             disabled={email === '' || password === '' || passwordConfirmation === ''}
           />
         </View>
