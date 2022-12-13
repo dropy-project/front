@@ -550,7 +550,7 @@ export default function Onboarding({ navigation }) {
               {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n'est pas lancée !'}
             </Text>
             <Text style={{ ...styles.subtitle, ...Fonts.regular(10.5, Colors.grey), marginVertical: 3 }}>
-              {'Ce mode utilise la géolocalisation en arrière plan,\nmais tkt on n\'est pas la pour t\'espionner.'}
+              {'Ce mode utilise la géolocalisation en arrière plan.'}
             </Text>
             <TouchableOpacity>
               <Text style={{ ...Fonts.regular(13, '#44a0eb'), marginTop: 5, textDecorationLine: 'underline' }}>en savoir plus</Text>
