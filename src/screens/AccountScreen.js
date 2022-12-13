@@ -13,10 +13,10 @@ const AccountScreen = ({ navigation }) => {
 
   const handleDeleteAccount = async () => {
     const confirmed = await sendAlert({
-      title: 'Es-tu sûr·e ?',
-      description: 'Ton compte et toutes tes données seront supprimés définitivement.',
+      title: 'Attention !',
+      description: 'Ton compte et toutes tes données seront définitivement supprimés.',
       denyText: 'Annuler',
-      validateText: 'Supprimer définitivement',
+      validateText: 'Supprimer',
     });
 
     if (!confirmed)
