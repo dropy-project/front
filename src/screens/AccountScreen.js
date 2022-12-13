@@ -55,7 +55,7 @@ const AccountScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navigateContainer} disabled>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Restaurer les achâts</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Restaurer les achats</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
