@@ -17,12 +17,9 @@ const ResetPasswordScreen = ({ navigation }) => (
         <View style={styles.form}>
           <Text style={styles.title}>Réinitialiser son mot de passe</Text>
           <FormInput
-            //ref={emailInputRef}
-            //onEdited={setEmail}
             placeholder='Email'
             inputStyle={{ backgroundColor: Colors.lighterGrey }}
             isEmail
-            //defaultValue={email}
             autoComplete='email'
           />
         </View>
