@@ -75,7 +75,7 @@ const BlockedUsersScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} />
-      <GoBackHeader text='Personnes bloquées' />
+      <GoBackHeader text='Utilisateurs bloqués' />
       {loading ? (
         <View style={{ height: responsiveHeight(80), ...Styles.center }}>
           <LoadingSpinner />
