@@ -40,7 +40,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
     const result = await sendAlert({
       title: 'Ne pas répondre ?',
       description: 'Tu ne pourras plus revoir et répondre à ce drop, tu es sûr·e ?',
-      validateText: 'Je suis sûr·e',
+      validateText: 'Ne pas répondre',
       denyText: 'Non, je veux répondre',
     });
     if (result)
