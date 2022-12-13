@@ -68,7 +68,7 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
     } catch (error) {
       sendAlert({
         title: 'Oh non...',
-        description: 'Je n\'ai pas réussi à charger les drops autour de toi...\nVérifie ta connexion internet !',
+        description: 'Nous n\'avons pas réussi à charger les drops autour de toi...\nVérifie ta connexion internet !',
       });
       console.error('Error while fetching user dropies', error?.response?.data || error);
     }
