@@ -12,20 +12,24 @@ const ResetPassword = ({ navigation }) => (
   <SafeAreaView style={styles.container}>
     <GoBackHeader text='Reset Password' />
     <View style={styles.content}>
-      <SimpleLineIcons name='key' size={74} color={Colors.purple1} />
-      <Text>Réinitialiser son mot de passe</Text>
-      <FormInput
+      <View style={styles.icon}>
+        <SimpleLineIcons name='key' size={74} color={Colors.purple1} />
+      </View>
+      <View style={styles.formBox}>
+        <Text>Réinitialiser son mot de passe</Text>
+        <FormInput
         //ref={emailInputRef}
         //onEdited={setEmail}
-        placeholder='Email'
-        inputStyle={{ backgroundColor: Colors.lighterGrey }}
-        isEmail
-        //defaultValue={email}
-        autoComplete='email'
-      />
+          placeholder='Email'
+          inputStyle={{ backgroundColor: Colors.lighterGrey }}
+          isEmail
+          //defaultValue={email}
+          autoComplete='email'
+        />
+        <Text>Un lien permettant de créer ton nouveau mot de passe te sera ensuite envoyé sur ton adresse email.</Text>
+        <GlassButton buttonText='Envoyer' style={styles.backButton} onPress={() => navigation.goBack()} fontSize={17} />
+      </View>
     </View>
-    <Text>Un lien permettant de créer ton nouveau mot de passe te sera ensuite envoyé sur ton adresse email.</Text>
-    <GlassButton buttonText='Envoyer' style={styles.backButton} onPress={() => navigation.goBack()} fontSize={17} />
   </SafeAreaView>
 );
 
@@ -41,7 +45,19 @@ const styles = StyleSheet.create({
   content: {
     width: responsiveWidth(100),
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 20,
-    height: '80%',
+    height: '90%',
+    backgroundColor: Colors.lightGrey,
+  },
+  icon: {
+    backgroundColor: Colors.red,
+  },
+  formBox: {
+    justifyContent: 'space-between',
+    width: '80%',
+    height: '60%',
+    margin: 30,
+    backgroundColor: Colors.green,
   },
 });
