@@ -100,29 +100,26 @@ export default EnergyTooltip;
 const styles = StyleSheet.create({
   tooltipContainer: {
     ...Styles.center,
+    ...Styles.hardShadows,
     position: 'absolute',
     bottom: 15,
     left: -210,
     right: 0,
-    height: 110,
     width: 210,
     borderRadius: 10,
     backgroundColor: Colors.purple2,
-    ...Styles.hardShadows,
+    padding: 10,
   },
   titleView: {
     alignItems: 'center',
     flexDirection: 'row',
     width: '90%',
-    marginTop: 7,
-    marginLeft: 5,
   },
   energyValue: {
     ...Fonts.bold(12, Colors.white),
-    marginLeft: 5,
   },
   description: {
     ...Fonts.bold(11, Colors.white),
-    margin: 8,
+    marginTop: 5,
   },
 });

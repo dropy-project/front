@@ -227,6 +227,19 @@ const DropyMap = ({
         {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
       </OSMapView>
 
+      <EnergyPopup />
+      <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
+      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationGranted}/>
+      <LinearGradient
+        pointerEvents='none'
+        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.1)']}
+        start={{ x: 0.5, y: 0.8 }}
+        end={{ x: 0.5, y: 1 }}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <DebugText marginBottom={100}>{JSON.stringify(userCoordinates, null, 2)}</DebugText>
+      <DebugText marginBottom={300}>{JSON.stringify(dropiesAround, null, 2)}</DebugText>
+
       <SafeAreaView style={styles.controlsView}>
         <FadeInWrapper visible={!museumVisible}>
           <EnergyTooltip>
@@ -245,19 +258,6 @@ const DropyMap = ({
           </TouchableOpacity>
         </FadeInWrapper>
       </SafeAreaView>
-
-      <EnergyPopup />
-      <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
-      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationGranted}/>
-      <LinearGradient
-        pointerEvents='none'
-        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.1)']}
-        start={{ x: 0.5, y: 0.8 }}
-        end={{ x: 0.5, y: 1 }}
-        style={StyleSheet.absoluteFillObject}
-      />
-      <DebugText marginBottom={100}>{JSON.stringify(userCoordinates, null, 2)}</DebugText>
-      <DebugText marginBottom={300}>{JSON.stringify(dropiesAround, null, 2)}</DebugText>
     </>
   );
 };

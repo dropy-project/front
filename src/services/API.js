@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import crypto from 'crypto-js';
 import Storage from '../utils/storage';
 import AppInfo from '../../app.json';
 
@@ -25,10 +26,11 @@ const init = async () => {
 const getHeaders = () => axios.defaults.headers.common;
 
 const register = async (displayName, email, password, newsLetter) => {
+  const hashedPassword = crypto.SHA256(password).toString();
   const response = await axios.post('/register', {
     displayName,
     email,
-    password,
+    password: hashedPassword,
     newsLetter,
   });
 
@@ -43,9 +45,10 @@ const register = async (displayName, email, password, newsLetter) => {
 };
 
 const login = async (email, password) => {
+  const hashedPassword = crypto.SHA256(password).toString();
   const response = await axios.post('/login', {
     email,
-    password,
+    password: hashedPassword,
   });
 
   const { accessToken, refreshToken, expires, profile: user } = response.data;
