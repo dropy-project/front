@@ -84,7 +84,7 @@ const GetDropyScreen = ({ navigation, route }) => {
       <View style={styles.containerImage}>
         <Text style={styles.topText}>{'Tu viens de trouver'}</Text>
         <DropyLogo height={87} width={87} />
-        <Text style={styles.bottomText}>un drop</Text>
+        <Text style={styles.bottomText}>un nouveau drop !</Text>
         <Animated.View style={{ ...styles.largeCircle, transform: [{ scale: Animated.multiply(breathing, circleAnimation) }] }} />
         <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle) }] }} />
         <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle) }] }} />
