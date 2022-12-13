@@ -27,7 +27,7 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
     if (text.length < 20) {
       sendAlert({
         title: 'Tu n\'a que ça à dire ?',
-        description: 'Soit courageux et donne nous plus d\'infos !',
+        description: 'Sois courageux et donne nous plus d\'infos !',
         validateText: 'Je peux faire mieux !',
       });
       return;
@@ -35,7 +35,7 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
 
     if (text.length < 100) {
       const result = await sendAlert({
-        title: 'Court mais efficace ?',
+        title: 'Court mais efficace !',
         description: 'Penses-tu que ton message est assez long pour être compris ?',
         denyText: 'Envoyer quand même',
         validateText: 'Je peux faire mieux !',

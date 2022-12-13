@@ -46,7 +46,7 @@ const ProfileEditScreen = () => {
 
   const onPressEditPicture = () => {
     showActionSheetWithOptions({
-      options: ['Prendre une photo', 'Choisir depuis la gallerie', 'Supprimer', 'Annuler'],
+      options: ['Prendre une photo', 'Choisir depuis la galerie', 'Supprimer', 'Annuler'],
       cancelButtonIndex: 3,
       destructiveButtonIndex: 2,
       title: 'Définir une nouvelle photo de profil',
@@ -122,7 +122,7 @@ const ProfileEditScreen = () => {
     } catch (error) {
       sendAlert({
         title: 'Flûte !',
-        description: 'La suppression a échoué...\nVérifie ta connexion internet',
+        description: 'La suppression a échouée...\nVérifie ta connexion internet',
       });
       console.error('Error while deleting profile picture', error?.response?.data || error);
     } finally {
@@ -157,7 +157,7 @@ const ProfileEditScreen = () => {
       navigation.goBack();
     } catch (error) {
       sendAlert({
-        title: 'Patatras !',
+        title: 'Patatra !',
         description: 'Impossible de mettre à jour ton profil...\nVérifie ta connexion internet',
       });
       console.error('Error while updating profile', error?.response?.data || error);
@@ -174,7 +174,7 @@ const ProfileEditScreen = () => {
     }
 
     const result = await sendAlert({
-      title: 'Es-tu sûr·e ?',
+      title: 'Attention !',
       description: 'Tes modifications ne seront pas sauvegardées si tu quittes la page',
       validateText: 'Sauvegarder et quitter',
       denyText: 'Annuler',
