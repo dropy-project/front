@@ -107,7 +107,7 @@ const ViewSlider = ({ children, onViewIndexChanged = () => {} }, ref) => {
           hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
         >
           <Text style={{ marginBottom: 10, ...Fonts.bold(13, Colors.lightGrey) }}>
-            {'Déjà inscrit·e ?'}
+            {'J\'ai déjà un compte'}
           </Text>
         </TouchableOpacity>
       )}
