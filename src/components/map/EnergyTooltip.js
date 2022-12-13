@@ -100,15 +100,15 @@ export default EnergyTooltip;
 const styles = StyleSheet.create({
   tooltipContainer: {
     ...Styles.center,
+    ...Styles.hardShadows,
     position: 'absolute',
     bottom: 15,
     left: -210,
     right: 0,
-    height: 110,
+    height: '90%',
     width: 210,
     borderRadius: 10,
     backgroundColor: Colors.purple2,
-    ...Styles.hardShadows,
   },
   titleView: {
     alignItems: 'center',
