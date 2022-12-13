@@ -97,11 +97,11 @@ export default function Onboarding({ navigation }) {
 
   const onPressEditPicture = () => {
     const options = profilePicturePath == null ? {
-      options: ['Prendre une photo', 'Choisir depuis la gallerie', 'Annuler'],
+      options: ['Prendre une photo', 'Choisir depuis la galerie', 'Annuler'],
       cancelButtonIndex: 2,
       title: 'Comment veux-tu créer ta photo de profil ?',
     } : {
-      options: ['Prendre une photo', 'Choisir depuis la gallerie', 'Supprimer', 'Annuler'],
+      options: ['Prendre une photo', 'Choisir depuis la galerie', 'Supprimer', 'Annuler'],
       destructiveButtonIndex: 2,
       cancelButtonIndex: 3,
       title: 'Comment veux-tu créer ta photo de profil ?',
@@ -190,7 +190,7 @@ export default function Onboarding({ navigation }) {
       }
       sendAlert({
         title: 'Oups, une erreur est survenue...',
-        description: 'Vérifie ta connexion internet et réessaye.',
+        description: 'Vérifie ta connexion internet et réessaie.',
         validateText: 'Ok',
       });
       console.error(error.response.data);
@@ -255,7 +255,7 @@ export default function Onboarding({ navigation }) {
       }
       if (error.response.status === 403) {
         sendAlert({
-          title: 'Flute, mauvais mot de passe',
+          title: 'Flûte, mauvais mot de passe',
           description: 'Vérifie ton mot de passe',
           validateText: 'Ok',
         });
@@ -263,7 +263,7 @@ export default function Onboarding({ navigation }) {
       }
       sendAlert({
         title: 'Sacrebleu, une erreur est survenue...',
-        description: 'Vérifie ta connexion internet et réessaye.',
+        description: 'Vérifie ta connexion internet et réessaie.',
         validateText: 'Ok',
       });
       console.error(error.response.data);
@@ -426,7 +426,7 @@ export default function Onboarding({ navigation }) {
           <Text style={{ fontSize: 40 }}>👋</Text>
           <View style={{ ...Styles.center }}>
             <Text style={{ ...styles.title, fontSize: 35 }}>Salut !</Text>
-            <Text style={{ ...styles.subtitle, fontSize: 20 }}>Prêt·e à droper ?</Text>
+            <Text style={{ ...styles.subtitle, fontSize: 20 }}>Lance toi dans l\aventure Dropy</Text>
           </View>
           <LoadingGlassButton
             onPress={() => viewSliderRef.current?.goToView(2)}
@@ -459,7 +459,7 @@ export default function Onboarding({ navigation }) {
 
         <View style={styles.view}>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>Montre ton jolie sourire !</Text>
+            <Text style={styles.title}>Montre ton plus beau sourire !</Text>
             <Text style={styles.subtitle}>Choisis une photo de profil</Text>
           </View>
           <TouchableOpacity onPress={onPressEditPicture} style={{ ...Styles.center, width: 100, height: 100, borderRadius: 30, backgroundColor: Colors.purple3, overflow: 'hidden' }}>
@@ -545,9 +545,9 @@ export default function Onboarding({ navigation }) {
 
         <View style={styles.view}>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>{'Reste à l\'affut !'}</Text>
+            <Text style={styles.title}>{'Reste à l\'affût !'}</Text>
             <Text style={styles.subtitle}>
-              {'Active le mode radar pour être prévenu·e quand tu marches sur un drop !'}
+              {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n'est pas lancée !'}
             </Text>
             <Text style={{ ...styles.subtitle, ...Fonts.regular(10.5, Colors.grey), marginVertical: 3 }}>
               {'Ce mode utilise la géolocalisation en arrière plan,\nmais tkt on n\'est pas la pour t\'espionner.'}
