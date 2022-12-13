@@ -48,7 +48,7 @@ const BlockedUsersScreen = ({ navigation }) => {
 
   const unblockUser = async (userId) => {
     const confirmed = await sendAlert({
-      title: 'Es-tu sûr·e ?',
+      title: 'Attention !',
       description: 'Cet utilisateur ne sera plus bloqué et pourra te contacter à nouveau.',
       denyText: 'Annuler',
       validateText: 'Débloquer',
