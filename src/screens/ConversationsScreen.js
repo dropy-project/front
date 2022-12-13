@@ -32,7 +32,7 @@ const ConversationsScreen = ({ navigation }) => {
   const handleLongPress = async (conversation) => {
     const confirmed = await sendAlert({
       title: 'Fermer la conversation',
-      description: `Es-tu sûr·e de fermer ta conversation avec ${conversation.user.displayName} ?`,
+      description: `Veux-tu vraiment fermer ta conversation avec ${conversation.user.displayName} ?`,
       validateText: 'Fermer',
     });
 
