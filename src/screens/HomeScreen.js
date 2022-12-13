@@ -123,7 +123,7 @@ const HomeScreen = ({ navigation, route }) => {
                   color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey}
                 />
                 <Text allowFontScaling={false} style={styles.backgroundGeolocationText}>
-                Mode radar {backgroundGeolocationEnabled ? 'activée' : 'desactivée'}
+                  Mode radar {backgroundGeolocationEnabled ? 'activée' : 'desactivée'}
                 </Text>
               </View>
             </Animated.View>

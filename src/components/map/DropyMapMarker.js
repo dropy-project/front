@@ -48,7 +48,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
               ellipsizeMode='clip'
               allowFontScaling={false}
               style={{ ...Fonts.bold(8, Colors.lightGrey), fontSize: 7 }}>
-                DROP
+              DROP
             </Text>
             <Text
               numberOfLines={1}
@@ -65,7 +65,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
               ellipsizeMode='clip'
               allowFontScaling={false}
               style={{ ...Fonts.bold(10, Colors.white), fontSize: 12 }}>
-                OUVRIR
+              OUVRIR
             </Text>
           </View>
         )}

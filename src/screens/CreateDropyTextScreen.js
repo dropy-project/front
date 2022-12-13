@@ -61,7 +61,8 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.inputContainer}
-      ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <TextInput placeholder='Que voudrais-tu dire au monde ?'
             multiline={true}
             placeholderTextColor={Colors.lightGrey}
@@ -69,7 +70,8 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
             blurOnSubmit
             autoFocus
             onChangeText={(text) => setText(text)}
-            value={text}/>
+            value={text}
+          />
         </TouchableWithoutFeedback>
         <GlassButton
           fontSize={13}

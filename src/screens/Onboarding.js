@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
@@ -197,9 +197,37 @@ export default function Onboarding({ navigation }) {
     }
   };
 
+  const checkEmailAvailable = async () => {
+    setLoading(true);
+    try {
+      const response = await API.checkEmailAvailable(email);
+      setLoading(false);
+      if (!response.data)
+        emailInputRef.current?.setInvalid('An account already exists with this email');
+      return response.data;
+    } catch (error) {
+      setLoading(false);
+      console.error('Error while checking if an email is available', email, error);
+    }
+  };
+
+  const validationEmailAndPasswordRegister = async () => {
+    const emailValid = emailInputRef.current?.isValid() && await checkEmailAvailable(email);
+    const passwordValid = passwordInputRef.current?.isValid();
+    const passwordConfirmationValid = passwordConfirmationInputRef.current?.isValid();
+    const inputsValid = emailValid && passwordValid && passwordConfirmationValid;
+    const samePasswords = passwordInputRef.current?.getValue() === passwordConfirmationInputRef.current?.getValue();
+    if (inputsValid && !samePasswords) {
+      passwordInputRef.current?.setInvalid('Le mot de passe en dessous n\'est pas identique');
+      passwordConfirmationInputRef.current?.setInvalid('Le mot de passe au dessus ment');
+    }
+    const everythingValid = inputsValid && samePasswords;
+    everythingValid && viewSliderRef.current?.goToView(5);
+    everythingValid && Keyboard.dismiss();
+  };
+
   const handleLogin = async () => {
     const emailValid = loginEmailInputRef.current?.isValid();
-
     if (!emailValid) {
       console.log('email not valid');
       return;
@@ -481,20 +509,7 @@ export default function Onboarding({ navigation }) {
           </View>
           <LoadingGlassButton
             loading={loading}
-            onPress={() => {
-              const emailValid = emailInputRef.current?.isValid();
-              const passwordValid = passwordInputRef.current?.isValid();
-              const passwordConfirmationValid = passwordConfirmationInputRef.current?.isValid();
-              const inputsValid = emailValid && passwordValid && passwordConfirmationValid;
-              const samePasswords = passwordInputRef.current?.getValue() === passwordConfirmationInputRef.current?.getValue();
-              if (inputsValid && !samePasswords) {
-                passwordInputRef.current?.setInvalid('Le mot de passe en dessous n\'est pas identique');
-                passwordConfirmationInputRef.current?.setInvalid('Le mot de passe au dessus ment');
-              }
-              const everythingValid = inputsValid && samePasswords;
-              everythingValid && viewSliderRef.current?.goToView(5);
-              everythingValid && Keyboard.dismiss();
-            }}
+            onPress={validationEmailAndPasswordRegister}
             disabled={email === '' || password === '' || passwordConfirmation === ''}
           />
         </View>

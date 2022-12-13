@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { PERMISSIONS, request } from 'react-native-permissions';
 import { useInitializedGeolocation } from '../../hooks/useGeolocation';
 import useOverlay from '../../hooks/useOverlay';
 
@@ -51,6 +52,7 @@ const DropyMap = ({
   const [currentZoom, setCurrentZoom] = useState(0);
   const [currentHeading, setCurrentHeading] = useState(0);
   const [headingLocked, setHeadingLocked] = useState(false);
+  const [locationGranted, setLocationGranted] = useState(true);
 
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
@@ -70,7 +72,7 @@ const DropyMap = ({
       if (result.error != null) {
         if (result.status === 406) {
           await sendAlert({
-            title: 'Oh non, tu es à cours d'énergie !',
+            title: 'Oh non, tu es à cours d\'énergie !',
             description: 'N\'attends pas, recharge la en posant un drop !',
             validateText: 'Ok !',
           });
@@ -105,6 +107,7 @@ const DropyMap = ({
     if (userCoordinates == null)
       return;
 
+    checkLocationPermission();
     setMapCameraPosition();
   }, [
     userCoordinates,
@@ -155,6 +158,18 @@ const DropyMap = ({
       forceCameraToLockHeading();
     return newLockedValue;
   });
+
+  const checkLocationPermission = async () => {
+    let result;
+    if (Platform.OS === 'ios')
+      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    else
+      result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    if (result === 'granted')
+      setLocationGranted(true);
+    else
+      setLocationGranted(false);
+  };
 
   return (
     <>
@@ -233,7 +248,7 @@ const DropyMap = ({
 
       <EnergyPopup />
       <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
-      <MapLoadingOverlay visible={geolocationInitialized === false} />
+      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationGranted}/>
       <LinearGradient
         pointerEvents='none'
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.1)']}
