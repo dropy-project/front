@@ -8,7 +8,7 @@ import Styles, { Colors, Fonts } from '../styles/Styles';
 import FormInput from '../components/input/FormInput';
 import GlassButton from '../components/input/GlassButton';
 
-const ResetPassword = ({ navigation }) => (
+const ResetPasswordScreen = ({ navigation }) => (
   <SafeAreaView style={styles.container}>
     <GoBackHeader text='Reset Password' />
     <View style={styles.content}>
@@ -33,7 +33,7 @@ const ResetPassword = ({ navigation }) => (
   </SafeAreaView>
 );
 
-export default ResetPassword;
+export default ResetPasswordScreen;
 
 const styles = StyleSheet.create({
   container: {
