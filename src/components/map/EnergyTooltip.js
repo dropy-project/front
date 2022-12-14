@@ -75,10 +75,10 @@ const EnergyTooltip = ({ style, children }) => {
         >
           <View style={styles.titleView}>
             <MaterialCommunityIcons name='lightning-bolt' size={20} color={Colors.white} />
-            <Text allowFontScaling={false} style={styles.energyValue}>{user.energy} / 90</Text>
+            <Text style={styles.energyValue}>{user.energy} / 90</Text>
           </View>
           <View>
-            <Text allowFontScaling={false} style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
+            <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
           </View>
         </TouchableOpacity>
       </Animated.View>
