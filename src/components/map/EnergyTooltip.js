@@ -18,6 +18,7 @@ const EnergyTooltip = ({ style, children }) => {
   const tooltipAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [isPressed, _setIsPressed] = useState(false);
+  const [render, setRender] = useState(false);
 
   useEffect(() => {
     handleInitialDisplay();
@@ -33,6 +34,7 @@ const EnergyTooltip = ({ style, children }) => {
     _setIsPressed(true);
     setTimeout(() => {
       setIsPressed(false);
+      setRender(false);
     }, 5000);
   };
 
@@ -50,6 +52,7 @@ const EnergyTooltip = ({ style, children }) => {
   const setIsPressed = (value) => {
     Haptics.impactLight();
     _setIsPressed(value);
+    setRender(value);
   };
 
   const scaleAnimatedValue = tooltipAnimatedValue.interpolate({
@@ -64,7 +67,7 @@ const EnergyTooltip = ({ style, children }) => {
 
   return (
     <View style={{ ...Styles.center, ...style }}>
-      <Animated.View style={{
+      { render && <Animated.View style={{
         ...styles.tooltipContainer,
         opacity: tooltipAnimatedValue,
         transform: [{ scale: scaleAnimatedValue }, { translateX: translateAnimatedValue }],
@@ -81,7 +84,7 @@ const EnergyTooltip = ({ style, children }) => {
             <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
           </View>
         </TouchableOpacity>
-      </Animated.View>
+      </Animated.View> }
       <TouchableOpacity
         activeOpacity={0.8}
         delayPressOut={isPressed ? 2000 : 0}
