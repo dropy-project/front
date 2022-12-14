@@ -46,7 +46,7 @@ const EnergyPopup = () => {
 
   return (
     <Animated.View style={{ ...styles.conainter, transform: [{ scale: visibleAnimatedValue }] }}>
-      <Text style={styles.lastEnergyIncrement}>{user?.lastEnergyIncrement >= 0 ? `+ ${user?.lastEnergyIncrement}` : user?.lastEnergyIncrement}</Text>
+      <Text allowFontScaling={false} style={styles.lastEnergyIncrement}>{user?.lastEnergyIncrement >= 0 ? `+ ${user?.lastEnergyIncrement}` : user?.lastEnergyIncrement}</Text>
       <MaterialCommunityIcons name='lightning-bolt' size={24} color='white' />
     </Animated.View>
   );
