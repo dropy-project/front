@@ -15,6 +15,7 @@ const log = (...params) => {
 import AppInfo from '../../app.json';
 import API from '../services/API';
 import Storage from '../utils/storage';
+import DoubleConnectionOverlay from '../components/overlays/DoubleConnectionOverlay';
 
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
 const SOCKET_BASE_URL = `https://${DOMAIN_PREFIX}socket.dropy-app.com`;
@@ -29,6 +30,7 @@ const SocketContextProvider = ({ children }) => {
   const chatSocket = useRef(null);
 
   const [initialized, setInitialized] = useState(false);
+  const [doubleConnectionLocked, setDoubleConnectionLocked] = useState(false);
 
   const [dropySocketConnected, setDropySocketConnected] = useState(false);
   const [chatSocketConnected, setChatSocketConnected] = useState(false);
@@ -70,6 +72,11 @@ const SocketContextProvider = ({ children }) => {
     });
     chatSocket.current.on('disconnect', () => {
       setChatSocketConnected(false);
+    });
+    chatSocket.current.on('double_connection', async () => {
+      log('Double connection detected by host, destroying all sockets');
+      destroyAllSocket();
+      setDoubleConnectionLocked(true);
     });
 
     log('Sockets initilized');
@@ -140,6 +147,7 @@ const SocketContextProvider = ({ children }) => {
         {children}
       </SocketContext.Provider>
       <ReconnectingOverlay visible={!allSocketsConnected && user != null} />
+      {doubleConnectionLocked && <DoubleConnectionOverlay />}
     </View>
   );
 };
