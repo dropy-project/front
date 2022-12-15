@@ -28,7 +28,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
     const interval = setInterval(updateTimeString, intervalDuration);
 
     return () => clearInterval(interval);
-  }, [dropy?.isUserDropy]);
+  }, [dropy]);
 
   if (!dropy.reachable && !dropy?.isUserDropy)
     return <RadarMarker dropy={dropy} />;

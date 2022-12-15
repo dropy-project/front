@@ -3,7 +3,14 @@
 // https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philosophy-of-Operation
 //
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import BackgroundGeolocation from 'react-native-background-geolocation';
@@ -15,6 +22,35 @@ import Storage from '../utils/storage';
 import { UserContext } from './UserContextProvider';
 
 export const BackgroundGeolocationContext = createContext(null);
+
+const setupBackgroundGeolocation = async (authTokens) => {
+  const { accessToken, refreshToken, expires } = authTokens;
+
+  const backgroundGeolocationReady = await BackgroundGeolocation.ready({
+    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
+    useSignificantChangesOnly: true,
+
+    logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
+
+    stopOnTerminate: false,
+    startOnBoot: true,
+
+    maxRecordsToPersist: 1,
+
+    url: API.userBackgroundGeolocationPingUrl(),
+    authorization: {
+      strategy: 'JWT',
+      accessToken,
+      refreshToken,
+      expires,
+      refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1`,
+      refreshPayload: {
+        refreshToken: '{refreshToken}',
+      },
+    },
+  });
+  return backgroundGeolocationReady;
+};
 
 const BackgroundGolocationProvider = ({ children }) => {
   const { user } = useContext(UserContext);
@@ -51,7 +87,7 @@ const BackgroundGolocationProvider = ({ children }) => {
       activityChangeSubscriber.remove();
       authorizationChangeSubscriber.remove();
     };
-  }, [user]);
+  }, [initializeBackgroundGeolocation, user]);
 
   useEffect(() => {
     if (!initialized)
@@ -65,7 +101,7 @@ const BackgroundGolocationProvider = ({ children }) => {
       BackgroundGeolocation.stop();
   }, [backgroundGeolocationEnabled, initialized]);
 
-  const initializeBackgroundGeolocation = async () => {
+  const initializeBackgroundGeolocation = useCallback(async () => {
     if (initialized === true)
       return;
 
@@ -82,38 +118,9 @@ const BackgroundGolocationProvider = ({ children }) => {
 
     log(`Initialized successfully (started : ${enable})`);
     setInitialized(true);
-  };
+  }, [enableAfterInit, initialized]);
 
-  const setupBackgroundGeolocation = async (authTokens) => {
-    const { accessToken, refreshToken, expires } = authTokens;
-
-    const backgroundGeolocationReady = await BackgroundGeolocation.ready({
-      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
-      useSignificantChangesOnly: true,
-
-      logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
-
-      stopOnTerminate: false,
-      startOnBoot: true,
-
-      maxRecordsToPersist: 1,
-
-      url: API.userBackgroundGeolocationPingUrl(),
-      authorization: {
-        strategy: 'JWT',
-        accessToken,
-        refreshToken,
-        expires,
-        refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1`,
-        refreshPayload: {
-          refreshToken: '{refreshToken}',
-        },
-      },
-    });
-    return backgroundGeolocationReady;
-  };
-
-  const setBackgroundGeolocationEnabled = async (enabled = false) => {
+  const setBackgroundGeolocationEnabled = useCallback(async (enabled = false) => {
     try {
       if (enabled) {
         await BackgroundGeolocation.requestPermission();
@@ -128,13 +135,15 @@ const BackgroundGolocationProvider = ({ children }) => {
       _setBackgroundGeolocationEnabled(false);
       Alert.alert('dropy needs permissions', 'Please enable location services as \'Always\' for this app in settings.');
     }
-  };
+  }, [initializeBackgroundGeolocation, user]);
+
+  const value = useMemo(() => ({
+    backgroundGeolocationEnabled,
+    setBackgroundGeolocationEnabled,
+  }), [backgroundGeolocationEnabled, setBackgroundGeolocationEnabled]);
 
   return (
-    <BackgroundGeolocationContext.Provider value={{
-      backgroundGeolocationEnabled,
-      setBackgroundGeolocationEnabled,
-    }}>
+    <BackgroundGeolocationContext.Provider value={value}>
       {children}
       {logs != null && (
         <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.8)', ...Styles.center }}>

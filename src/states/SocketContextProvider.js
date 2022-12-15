@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
 
 import { Manager } from 'socket.io-client';
@@ -38,49 +38,49 @@ const SocketContextProvider = ({ children }) => {
   const allSocketsConnected = dropySocketConnected && chatSocketConnected;
 
   useEffectForegroundOnly(() => {
+    const initilizeSockets = async () => {
+      if (user == null) {
+        destroyAllSocket();
+        return;
+      }
+      if (initialized === true)
+        return;
+
+      const customUrls = await Storage.getItem('@custom_urls');
+      manager.current = new Manager(customUrls?.socket ?? SOCKET_BASE_URL, {
+        transports: ['websocket'],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: 10,
+        extraHeaders: API.getHeaders(),
+      });
+
+      dropySocket.current = manager.current.socket('/dropy');
+      chatSocket.current = manager.current.socket('/chat');
+
+      dropySocket.current.on('connect', () => {
+        setDropySocketConnected(true);
+      });
+      chatSocket.current.on('connect', () => {
+        setChatSocketConnected(true);
+      });
+      dropySocket.current.on('disconnect', () => {
+        setDropySocketConnected(false);
+      });
+      chatSocket.current.on('disconnect', () => {
+        setChatSocketConnected(false);
+      });
+      chatSocket.current.on('double_connection', async () => {
+        log('Double connection detected by host, destroying all sockets');
+        destroyAllSocket();
+        setDoubleConnectionLocked(true);
+      });
+
+      log('Sockets initilized');
+      setInitialized(true);
+    };
+
     initilizeSockets();
-  }, [user]);
-
-  const initilizeSockets = async () => {
-    if (user == null) {
-      destroyAllSocket();
-      return;
-    }
-    if (initialized === true)
-      return;
-
-    const customUrls = await Storage.getItem('@custom_urls');
-    manager.current = new Manager(customUrls?.socket ?? SOCKET_BASE_URL, {
-      transports: ['websocket'],
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 10,
-      extraHeaders: API.getHeaders(),
-    });
-
-    dropySocket.current = manager.current.socket('/dropy');
-    chatSocket.current = manager.current.socket('/chat');
-
-    dropySocket.current.on('connect', () => {
-      setDropySocketConnected(true);
-    });
-    chatSocket.current.on('connect', () => {
-      setChatSocketConnected(true);
-    });
-    dropySocket.current.on('disconnect', () => {
-      setDropySocketConnected(false);
-    });
-    chatSocket.current.on('disconnect', () => {
-      setChatSocketConnected(false);
-    });
-    chatSocket.current.on('double_connection', async () => {
-      log('Double connection detected by host, destroying all sockets');
-      destroyAllSocket();
-      setDoubleConnectionLocked(true);
-    });
-
-    log('Sockets initilized');
-    setInitialized(true);
 
     return () => {
       dropySocket.current?.off('connect');
@@ -92,7 +92,7 @@ const SocketContextProvider = ({ children }) => {
       chatSocket.current?.disconnect();
       log('Sockets destroyed');
     };
-  };
+  }, [user]);
 
   const destroyAllSocket = () => {
     if (!initialized)
@@ -133,13 +133,15 @@ const SocketContextProvider = ({ children }) => {
     return appStateListener.remove;
   }, []);
 
+  const value = useMemo(() => ({
+    dropySocket: dropySocket.current,
+    chatSocket: chatSocket.current,
+    connected: allSocketsConnected,
+  }), [allSocketsConnected]);
+
   return (
     <View style={StyleSheet.absoluteFillObject}>
-      <SocketContext.Provider value={{
-        dropySocket: dropySocket.current,
-        chatSocket: chatSocket.current,
-        connected: allSocketsConnected,
-      }}>
+      <SocketContext.Provider value={value}>
         {children}
       </SocketContext.Provider>
       <ReconnectingOverlay visible={!allSocketsConnected && user != null} />
