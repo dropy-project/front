@@ -26,7 +26,7 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
 
     if (text.length < 20) {
       sendAlert({
-        title: 'Tu n\'a que ça à dire ?',
+        title: 'Tu n\'as que ça à dire ?',
         description: 'Sois courageux et donne nous plus d\'infos !',
         validateText: 'Je peux faire mieux !',
       });
