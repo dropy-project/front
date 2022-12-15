@@ -9,8 +9,6 @@ import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 
 import useConversationsSocket from '../hooks/useConversationsSocket';
 
-import Haptics from '../utils/haptics';
-
 import Notification from '../components/overlays/Notification';
 
 export const extractNotificationPayload = (notification) => {
@@ -58,17 +56,13 @@ const NotificationProvider = ({ children }) => {
       completion({ alert: false, sound: false, badge: false });
 
       const payload = extractNotificationPayload(notification);
-      if (payload == null)
-        return;
 
       const notifData = {
         title: notification.title,
         body: notification.body ?? notification?.payload?.message,
         id: new Date().getTime(),
-        onPress: () => openChat(payload),
+        onPress: isNaN(payload) ? () => {} : () => openChat(payload),
       };
-
-      Haptics.impactLight();
 
       setNotificationsStack((old) => {
         const newStack = [...(old ?? []), notifData];

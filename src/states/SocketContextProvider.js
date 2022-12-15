@@ -107,31 +107,27 @@ const SocketContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!initialized)
-      return;
-    if (allSocketsConnected)
-      return;
-    if (dropySocket.current?.connected === false) {
-      log('Reconnecting dropy socket');
-      dropySocket.current.connect();
-    }
-    if (chatSocket.current?.connected === false) {
-      log('Reconnecting chat socket');
-      chatSocket.current?.connect();
-    }
-  }, [allSocketsConnected]);
-
-  useEffect(() => {
     const appStateListener = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'active') {
-        if (dropySocket.current?.connected === false)
+        if (dropySocket.current?.connected === false) {
           setDropySocketConnected(false);
-
-        if (chatSocket.current?.connected === false)
+          setTimeout(() => {
+            log('Reconnecting dropy socket');
+            dropySocket.current.connect();
+          }, 1000);
+        }
+        if (chatSocket.current?.connected === false) {
           setChatSocketConnected(false);
-
-        if (dropySocket.current?.connected && chatSocket.current?.connected)
+          setTimeout(() => {
+            log('Reconnecting chat socket');
+            chatSocket.current.connect();
+          }, 1000);
+        }
+        if (dropySocket.current?.connected && chatSocket.current?.connected) {
+          setDropySocketConnected(true);
+          setChatSocketConnected(true);
           log('Sockets are connected');
+        }
       }
     });
     return appStateListener.remove;
