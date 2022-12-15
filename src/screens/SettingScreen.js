@@ -111,7 +111,7 @@ const SettingsScreen = ({ navigation }) => {
         <View style={{ ...styles.linkContainer, paddingTop: 0 }}>
           <View style={{ flex: 0.9 }}>
             <Text style={{ ...Fonts.regular(12, Colors.grey) }}>
-              {'Sois prévenu quand tu marche près d\'un drop sans avoir à ouvrir l\'appli.'}
+              {'Sois prévenu quand tu marches près d\'un drop sans avoir à ouvrir l\'appli.'}
             </Text>
             <Text style={{ ...Fonts.bold(11, Colors.purple2), marginTop: 2 }}>
               {'(Fortement recommandé)'}
