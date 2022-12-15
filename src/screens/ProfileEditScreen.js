@@ -122,7 +122,7 @@ const ProfileEditScreen = () => {
     } catch (error) {
       sendAlert({
         title: 'Flûte !',
-        description: 'La suppression a échouée...\nVérifie ta connexion internet',
+        description: 'La suppression a échoué...\nVérifie ta connexion internet',
       });
       console.error('Error while deleting profile picture', error?.response?.data || error);
     } finally {
