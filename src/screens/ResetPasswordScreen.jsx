@@ -5,16 +5,33 @@ import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import GoBackHeader from '../components/other/GoBackHeader';
 import Styles, { Colors, Fonts } from '../styles/Styles';
+import API from '../services/API';
+import useOverlay from '../hooks/useOverlay';
+
 import FormInput from '../components/input/FormInput';
 import GlassButton from '../components/input/GlassButton';
-import API from '../services/API';
 
 const ResetPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
 
-  const sendRequest = () => {
-    API.requestResetPassword(email);
-    navigation.goBack();
+  const { sendAlert } = useOverlay();
+
+  const sendRequest = async () => {
+    try {
+      const response = await API.checkEmailAvailable(email);
+      if (!response.data) {
+        API.requestResetPassword(email);
+        navigation.goBack();
+      } else {
+        sendAlert({
+          title: 'Oh non...',
+          description: 'Cet email n\'existe pas ! \n Entre un email valide',
+        });
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Error while checking if an email is available', email, error);
+    }
   };
 
   return (
