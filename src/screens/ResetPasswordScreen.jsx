@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
@@ -7,28 +7,40 @@ import GoBackHeader from '../components/other/GoBackHeader';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import FormInput from '../components/input/FormInput';
 import GlassButton from '../components/input/GlassButton';
+import API from '../services/API';
 
-const ResetPasswordScreen = ({ navigation }) => (
-  <SafeAreaView style={styles.container}>
-    <GoBackHeader text='Reset Password' />
-    <View style={styles.content}>
-      <View style={styles.formBox}>
-        <SimpleLineIcons name='key' size={74} color={Colors.purple1} style={{ transform: [{ rotate: '180deg' }] }} />
-        <View style={styles.form}>
-          <Text style={styles.title}>Réinitialiser son mot de passe</Text>
-          <FormInput
-            placeholder='Email'
-            inputStyle={{ backgroundColor: Colors.lighterGrey }}
-            isEmail
-            autoComplete='email'
-          />
+const ResetPasswordScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+
+  const sendRequest = () => {
+    API.requestResetPassword(email);
+    navigation.goBack();
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <GoBackHeader text='Reset Password' />
+      <View style={styles.content}>
+        <View style={styles.formBox}>
+          <SimpleLineIcons name='key' size={74} color={Colors.purple1} style={{ transform: [{ rotate: '180deg' }] }} />
+          <View style={styles.form}>
+            <Text style={styles.title}>Réinitialiser son mot de passe</Text>
+            <FormInput
+              placeholder='Email'
+              inputStyle={{ backgroundColor: Colors.lighterGrey }}
+              onEdited={setEmail}
+              isEmail
+              defaultValue={email}
+              autoComplete='email'
+            />
+          </View>
+          <Text style={styles.description}>Un lien permettant de créer ton nouveau mot de passe te sera ensuite envoyé sur ton adresse email.</Text>
+          <GlassButton buttonText='Envoyer' style={styles.backButton} onPress={() => sendRequest()} fontSize={17} />
         </View>
-        <Text style={styles.description}>Un lien permettant de créer ton nouveau mot de passe te sera ensuite envoyé sur ton adresse email.</Text>
-        <GlassButton buttonText='Envoyer' style={styles.backButton} onPress={() => navigation.goBack()} fontSize={17} />
       </View>
-    </View>
-  </SafeAreaView>
-);
+    </SafeAreaView>
+  );
+};
 
 export default ResetPasswordScreen;
 
