@@ -89,9 +89,9 @@ const BackgroundGolocationProvider = ({ children }) => {
 
     const backgroundGeolocationReady = await BackgroundGeolocation.ready({
       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
-      useSignificantChangesOnly: true,
+      distanceFilter: 80,
 
-      logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
+      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
 
       stopOnTerminate: false,
       startOnBoot: true,

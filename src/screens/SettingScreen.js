@@ -11,6 +11,7 @@ import {
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
@@ -97,6 +98,33 @@ const SettingsScreen = ({ navigation }) => {
         }
       ],
     });
+  };
+
+  const uploadBackgroundGeolocationLogs = async () => {
+    const result = await sendAlert({
+      title: 'Upload logs',
+      description: 'Are you sure you want to upload your logs ?',
+      validateText: 'Yes',
+      cancelText: 'No',
+    });
+    if (!result)
+      return;
+    const url = API.uploadBackgroundGeolocationLogsUrl();
+    try {
+      const state = await BackgroundGeolocation.setConfig({
+        headers: API.getHeaders(),
+      });
+      console.log('BackgroundGeolocation setConfig', state);
+      const result = await BackgroundGeolocation.logger.uploadLog(url);
+      sendAlert({
+        title: 'Logs uploaded',
+        description: 'Your logs have been uploaded',
+        validateText: 'Ok',
+      });
+      console.log('Logs uploaded', result);
+    } catch (error) {
+      console.error('Error while uploading background geolocation logs', error, url);
+    }
   };
 
   return (
@@ -250,6 +278,9 @@ const SettingsScreen = ({ navigation }) => {
           <>
             <DebugUrlsMenu />
             <KeyboardSpacer />
+            <TouchableOpacity onPress={uploadBackgroundGeolocationLogs} style={{ marginTop: 10 }}>
+              <Text style={{ ...Fonts.bold(12, Colors.lightGrey) }}>Upload BGGeoloc log files</Text>
+            </TouchableOpacity>
           </>
         )}
       </ScrollView>

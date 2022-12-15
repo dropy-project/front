@@ -5,6 +5,7 @@ import AppInfo from '../../app.json';
 
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
 const API_BASE_URL = `https://${DOMAIN_PREFIX}api.dropy-app.com`;
+const CONTENT_BASE_URL = `https://${DOMAIN_PREFIX}content.dropy-app.com`;
 
 let axios = null;
 
@@ -71,6 +72,8 @@ const postUserDeviceToken = (deviceToken) => {
 };
 
 const userBackgroundGeolocationPingUrl = () => `${axios.defaults.baseURL}/user/backgroundGeolocationPing`;
+
+const uploadBackgroundGeolocationLogsUrl = () => `${CONTENT_BASE_URL}/log/logFiles`;
 
 const getDropyMedia = async (dropyId) => {
   const result = await axios.get(`/dropy/${dropyId}/media`);
@@ -225,6 +228,7 @@ const API = {
   login,
   refreshTokenUrl,
   userBackgroundGeolocationPingUrl,
+  uploadBackgroundGeolocationLogsUrl,
   getDropyMedia,
   getDropy,
   postUserDeviceToken,
