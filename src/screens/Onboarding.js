@@ -426,7 +426,7 @@ export default function Onboarding({ navigation }) {
           <Text style={{ fontSize: 40 }}>👋</Text>
           <View style={{ ...Styles.center }}>
             <Text style={{ ...styles.title, fontSize: 35 }}>Salut !</Text>
-            <Text style={{ ...styles.subtitle, fontSize: 20 }}>Lance toi dans l\aventure Dropy</Text>
+            <Text style={{ ...styles.subtitle, fontSize: 20 }}>Lance toi dans l\'aventure Dropy</Text>
           </View>
           <LoadingGlassButton
             onPress={() => viewSliderRef.current?.goToView(2)}
