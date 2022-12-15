@@ -18,6 +18,7 @@ const EnergyTooltip = ({ style, children }) => {
   const tooltipAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [isPressed, _setIsPressed] = useState(false);
+  const [render, setRender] = useState(false);
 
   useEffect(() => {
     handleInitialDisplay();
@@ -37,13 +38,19 @@ const EnergyTooltip = ({ style, children }) => {
   };
 
   useEffect(() => {
+    setRender(true);
     const anim = Animated.timing(tooltipAnimatedValue, {
       toValue: isPressed ? 1 : 0,
       duration: 200,
       easing: Easing.bezier(.89, .17, .57, 1.23),
       useNativeDriver: true,
     });
-    anim.start();
+
+    anim.start(() => {
+      if (!isPressed)
+        setRender(false);
+    });
+
     return anim.stop;
   }, [isPressed]);
 
@@ -64,7 +71,7 @@ const EnergyTooltip = ({ style, children }) => {
 
   return (
     <View style={{ ...Styles.center, ...style }}>
-      <Animated.View style={{
+      { render && <Animated.View style={{
         ...styles.tooltipContainer,
         opacity: tooltipAnimatedValue,
         transform: [{ scale: scaleAnimatedValue }, { translateX: translateAnimatedValue }],
@@ -81,7 +88,7 @@ const EnergyTooltip = ({ style, children }) => {
             <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
           </View>
         </TouchableOpacity>
-      </Animated.View>
+      </Animated.View> }
       <TouchableOpacity
         activeOpacity={0.8}
         delayPressOut={isPressed ? 2000 : 0}
@@ -100,29 +107,26 @@ export default EnergyTooltip;
 const styles = StyleSheet.create({
   tooltipContainer: {
     ...Styles.center,
+    ...Styles.hardShadows,
     position: 'absolute',
     bottom: 15,
     left: -210,
     right: 0,
-    height: 110,
     width: 210,
     borderRadius: 10,
     backgroundColor: Colors.purple2,
-    ...Styles.hardShadows,
+    padding: 10,
   },
   titleView: {
     alignItems: 'center',
     flexDirection: 'row',
     width: '90%',
-    marginTop: 7,
-    marginLeft: 5,
   },
   energyValue: {
     ...Fonts.bold(12, Colors.white),
-    marginLeft: 5,
   },
   description: {
     ...Fonts.bold(11, Colors.white),
-    margin: 8,
+    marginTop: 5,
   },
 });
