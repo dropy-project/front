@@ -34,25 +34,29 @@ const EnergyTooltip = ({ style, children }) => {
     _setIsPressed(true);
     setTimeout(() => {
       setIsPressed(false);
-      setRender(false);
     }, 5000);
   };
 
   useEffect(() => {
+    setRender(true);
     const anim = Animated.timing(tooltipAnimatedValue, {
       toValue: isPressed ? 1 : 0,
       duration: 200,
       easing: Easing.bezier(.89, .17, .57, 1.23),
       useNativeDriver: true,
     });
-    anim.start();
+
+    anim.start(() => {
+      if (!isPressed)
+        setRender(false);
+    });
+
     return anim.stop;
   }, [isPressed]);
 
   const setIsPressed = (value) => {
     Haptics.impactLight();
     _setIsPressed(value);
-    setRender(value);
   };
 
   const scaleAnimatedValue = tooltipAnimatedValue.interpolate({
