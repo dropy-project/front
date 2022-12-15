@@ -35,6 +35,10 @@ const ResetPasswordScreen = ({ navigation }) => {
       const response = await API.checkEmailAvailable(email);
       if (!response.data) {
         API.requestResetPassword(email);
+        sendAlert({
+          title: 'Email envoyé !',
+          description: 'Un email t\'a été envoyé pour réinitialiser ton mot de passe',
+        });
         navigation.goBack();
       } else {
         sendAlert({
