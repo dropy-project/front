@@ -61,7 +61,7 @@ const AccountScreen = ({ navigation }) => {
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navigateContainer} onPress={() => navigation.navigate('ResetPassword')}>
+        <TouchableOpacity style={styles.navigateContainer} onPress={() => navigation.navigate('ResetPasswordScreen')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Reset password</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
