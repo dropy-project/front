@@ -45,7 +45,7 @@ const ReconnectingOverlay = ({ visible }) => {
         <View style={styles.alertContainer}>
           {customUrls && <DebugUrlsMenu />}
           <View style={Styles.center}>
-            <Text style={{ ...Fonts.bold(15, Colors.white) }}>{'On ta perdu...'}</Text>
+            <Text style={{ ...Fonts.bold(15, Colors.white) }}>{'On t\'as perdu...'}</Text>
             <Text style={{ ...Fonts.regular(13, Colors.white), marginTop: 7 }}>{'Ne bouge pas, on te reconnecte !'}</Text>
           </View>
           <LoadingSpinner color={Colors.white} />
