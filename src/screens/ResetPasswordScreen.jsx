@@ -17,6 +17,20 @@ const ResetPasswordScreen = ({ navigation }) => {
   const { sendAlert } = useOverlay();
 
   const sendRequest = async () => {
+    if (email === '') {
+      sendAlert({
+        title: 'Oh non...',
+        description: 'La champ est vide ! \n Entre un email valide',
+      });
+      return;
+    }
+    if (!email.includes('@')) {
+      sendAlert({
+        title: 'Oh non...',
+        description: 'Cet email n\'est pas valide ! \n Entre un email valide',
+      });
+      return;
+    }
     try {
       const response = await API.checkEmailAvailable(email);
       if (!response.data) {
@@ -30,6 +44,11 @@ const ResetPasswordScreen = ({ navigation }) => {
       }
       return response.data;
     } catch (error) {
+      sendAlert({
+        description: 'Check your internet connection',
+        title: 'Oups an error has occured',
+        validateText: 'Ok',
+      });
       console.error('Error while checking if an email is available', email, error);
     }
   };
