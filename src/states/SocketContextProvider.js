@@ -81,18 +81,18 @@ const SocketContextProvider = ({ children }) => {
     };
 
     initilizeSockets();
-
-    return () => {
-      dropySocket.current?.off('connect');
-      chatSocket.current?.off('connect');
-      dropySocket.current?.off('disconnect');
-      chatSocket.current?.off('disconnect');
-
-      dropySocket.current?.disconnect();
-      chatSocket.current?.disconnect();
-      log('Sockets destroyed');
-    };
   }, [user]);
+
+  useEffect(() => () => {
+    dropySocket.current?.off('connect');
+    chatSocket.current?.off('connect');
+    dropySocket.current?.off('disconnect');
+    chatSocket.current?.off('disconnect');
+
+    dropySocket.current?.disconnect();
+    chatSocket.current?.disconnect();
+    log('Sockets shutdown');
+  }, []);
 
   const destroyAllSocket = () => {
     if (!initialized)

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
@@ -529,7 +529,7 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.title}>We need you to Turn on geolocation</Text>
             <Text style={styles.subtitle}>{'Or you won\'t be able to use the app'}</Text>
           </View>
-          <MaterialIcons name='location-pin' size={60} color={Colors.grey} />
+          <Ionicons name='location-outline' size={60} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestGeolocationPermissions(() => viewSliderRef.current?.goToView(6))}
@@ -542,7 +542,7 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.title}>{'Don\'t miss your personnal messages '}</Text>
             <Text style={styles.subtitle}>Turn on notifications</Text>
           </View>
-          <MaterialCommunityIcons name='bell-ring' size={50} color={Colors.grey} />
+          <Ionicons name='md-chatbubbles-outline' size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestNotificationsPermissions(

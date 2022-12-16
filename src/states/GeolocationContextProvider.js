@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
 import Geolocation from 'react-native-geolocation-service';
 import CompassHeading from 'react-native-compass-heading';
 import Geohash from 'ngeohash';
@@ -15,6 +15,7 @@ const GeolocationProvider = ({ children }) => {
   const [userCoordinates, setUserCoordinates] = useState(null);
   const [compassHeading, setCompassHeading] = useState(0);
   const [initialized, setInitialized] = useState(false);
+  const geolocationWacthIdRef = useRef(null);
 
   useEffect(() => {
     if (user == null)
@@ -51,13 +52,13 @@ const GeolocationProvider = ({ children }) => {
 
     setInitialized(true);
 
-    const geolocationWatchId = registerGeolocationListener();
-
-    return () => {
-      Geolocation.clearWatch(geolocationWatchId);
-      CompassHeading.stop();
-    };
+    geolocationWacthIdRef.current = registerGeolocationListener();
   }, [user, initialized]);
+
+  useEffect(() => () => {
+    Geolocation.clearWatch(geolocationWacthIdRef.current);
+    CompassHeading.stop();
+  }, []);
 
   const value = useMemo(() => ({
     userCoordinates,

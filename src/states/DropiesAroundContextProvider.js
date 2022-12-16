@@ -41,7 +41,7 @@ const DropiesAroundContextProvider = ({ children }) => {
     const isUserDropy = rawDropy.emitterId === user.id;
     const isInEmitRestrictedRange = distanceFromUser < EMIT_LIMIT_DISTANCE_METERS && isUserDropy;
     return { ...rawDropy, isUserDropy, reachable, isInEmitRestrictedRange };
-  }, [user.id, userCoordinates]);
+  }, [user?.id, userCoordinates]);
 
   useEffect(() => {
     if (dropySocket == null) {

@@ -61,32 +61,30 @@ const BackgroundGolocationProvider = ({ children }) => {
   const [logs, setLogs] = useState(null);
 
   useEffect(() => {
-    if (user == null)
-      return;
-
     const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, () => {});
-
     const motionChangeSubscriber = BackgroundGeolocation.onMotionChange(() => {});
-
     const activityChangeSubscriber = BackgroundGeolocation.onActivityChange(() => {});
-
     const authorizationChangeSubscriber = BackgroundGeolocation.onAuthorization((event) => {
       if (event.success)
         console.log('[authorization] SUCCESS: ', event.response);
       else
         console.error('[authorization] ERROR: ', event.error);
     });
-
-    initializeBackgroundGeolocation().catch((error) => {
-      console.error('Background geolocation loading error', error);
-    });
-
     return () => {
       locationSubscriber.remove();
       motionChangeSubscriber.remove();
       activityChangeSubscriber.remove();
       authorizationChangeSubscriber.remove();
     };
+  }, []);
+
+  useEffect(() => {
+    if (user == null)
+      return;
+
+    initializeBackgroundGeolocation().catch((error) => {
+      console.error('Background geolocation loading error', error);
+    });
   }, [initializeBackgroundGeolocation, user]);
 
   useEffect(() => {
