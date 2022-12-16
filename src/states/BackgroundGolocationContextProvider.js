@@ -11,7 +11,7 @@ import React, {
   useMemo,
   useState
 } from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import BackgroundGeolocation from 'react-native-background-geolocation';
 
@@ -131,7 +131,6 @@ const BackgroundGolocationProvider = ({ children }) => {
     } catch (error) {
       log('Permission granting failed', error);
       _setBackgroundGeolocationEnabled(false);
-      Alert.alert('dropy needs permissions', 'Please enable location services as \'Always\' for this app in settings.');
     }
   }, [initializeBackgroundGeolocation, user]);
 

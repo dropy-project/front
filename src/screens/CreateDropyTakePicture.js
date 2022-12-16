@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { openCamera } from 'react-native-image-crop-picker';
-import { Linking } from 'react-native';
 import MEDIA_TYPES from '../utils/mediaTypes';
 import { compressImage } from '../utils/files';
 import useOverlay from '../hooks/useOverlay';
+import { missingCameraPersmissionAlert } from '../utils/mediaPermissionsAlerts';
 
 const CreateDropyTakePicture = ({ navigation }) => {
   const { sendAlert } = useOverlay();
@@ -32,17 +32,8 @@ const CreateDropyTakePicture = ({ navigation }) => {
       });
     } catch (error) {
       navigation.goBack();
-
-      if (error.code === 'E_NO_CAMERA_PERMISSION') {
-        const alertResult = await sendAlert({
-          title: 'Camera not granted...',
-          description: 'Enable camera access in your settings',
-          validateText: 'Open settings',
-          denyText: 'Ok !',
-        });
-        if (alertResult)
-          Linking.openSettings();
-      }
+      if (error.code === 'E_NO_CAMERA_PERMISSION')
+        missingCameraPersmissionAlert(sendAlert);
       console.error('Open camera error', error);
     }
   };

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { Linking } from 'react-native';
 import { openPicker } from 'react-native-image-crop-picker';
 import useOverlay from '../hooks/useOverlay';
 import { compressImage } from '../utils/files';
+import { missingLibraryPermissionAlert as missingLibraryPersmissionAlert } from '../utils/mediaPermissionsAlerts';
 import MEDIA_TYPES from '../utils/mediaTypes';
 
 const CreateDropyFromLibrary = ({ navigation }) => {
@@ -31,16 +31,8 @@ const CreateDropyFromLibrary = ({ navigation }) => {
         },
       });
     } catch (error) {
-      if (error.code === 'E_NO_LIBRARY_PERMISSION') {
-        const alertResult = await sendAlert({
-          title: 'LIbrary access not granted...',
-          description: 'Enable access in your settings',
-          validateText: 'Open settings',
-          denyText: 'Ok !',
-        });
-        if (alertResult)
-          Linking.openSettings();
-      }
+      if (error.code === 'E_NO_LIBRARY_PERMISSION')
+        missingLibraryPersmissionAlert(sendAlert);
       console.error('Open image library error', error);
       navigation.goBack();
     }

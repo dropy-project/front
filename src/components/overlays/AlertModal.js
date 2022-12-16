@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     ...Styles.hardShadows,
     ...Styles.center,
+    shadowColor: Colors.purple1,
     paddingHorizontal: 18,
     paddingVertical: 10,
   },

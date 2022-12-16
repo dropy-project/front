@@ -9,7 +9,7 @@ export const DotIndicator = ({ currentIndex, isSkippable = false, onPressSkip })
     ))}
     {isSkippable && (
       <TouchableOpacity style={styles.skipBtn} onPress={onPressSkip}>
-        <Text style={styles.skipText}>skip</Text>
+        <Text style={styles.skipText}>Passer</Text>
       </TouchableOpacity>
     )}
   </View>

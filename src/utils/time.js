@@ -13,9 +13,9 @@ export const createDropTimeString = (dropLifeTime) => {
   if (dropLifeTime <= ONE_DAY)
     return `${Math.floor(dropLifeTime / ONE_HOUR)}h`;
   if (dropLifeTime <= ONE_YEAR)
-    return `${Math.floor(dropLifeTime / ONE_DAY)}d`;
+    return `${Math.floor(dropLifeTime / ONE_DAY)}j`;
 
-  return `${Math.floor(dropLifeTime / ONE_YEAR)}y`;
+  return `${Math.floor(dropLifeTime / ONE_YEAR)}a`;
 };
 
 export const messageTimeString = (_date) => {
@@ -47,12 +47,12 @@ export const chunckHeaderTimeString = (_date) => {
   const minutes = formatTwoDigits(date.getMinutes());
 
   if (dayDiff < 1)
-    return `Today at ${hours}:${minutes}`;
+    return `Aujourd'hui à ${hours}:${minutes}`;
 
   if (dayDiff === 1)
-    return `Yesterday at ${hours}:${minutes}`;
+    return `Hier à ${hours}:${minutes}`;
 
-  return `${dayDiff} days ago at ${hours}:${minutes}`;
+  return `Il y a ${dayDiff}j à ${hours}:${minutes}`;
 };
 
 export const sinceDayMonth = (date) => {
@@ -63,18 +63,18 @@ export const sinceDayMonth = (date) => {
   const diffMonths = Math.floor(diff / ONE_MONTH);
   const diffYears = Math.floor(diff / ONE_YEAR);
   if (diffDays < 1)
-    return 'today';
+    return 'aujourd\'hui';
 
   if (diffDays < 7)
-    return `${diffDays} days`;
+    return `${diffDays} jour${diffDays > 1 ? 's' : ''}`;
 
   if (diffDays < 31)
-    return `${Math.floor(diffDays / 7)} weeks`;
+    return `${Math.floor(diffDays / 7)} semaine${Math.floor(diffDays / 7) > 1 ? 's' : ''}`;
 
   if (diffMonths < 12)
-    return `${diffMonths} months`;
+    return `${diffMonths} mois`;
 
-  return `${diffYears} years`;
+  return `${diffYears} année${diffYears > 1 ? 's' : ''}`;
 };
 
 const formatTwoDigits = (n) => n < 10 ? `0${n}` : n;

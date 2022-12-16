@@ -22,7 +22,7 @@ const ChatHeader = ({ conversation, otherUserConnected, popToTopOnQuit }) => {
 
   const handleOptionsButtonPress = () => {
     showActionSheetWithOptions({
-      options: ['Report user', 'Block user', 'Cancel'],
+      options: ['Signaler', 'Bloquer ', 'Annuler'],
       destructiveButtonIndex: 1,
       cancelButtonIndex: 2,
       title: conversation?.user?.displayName,
