@@ -13,10 +13,11 @@ import {
 } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
+import Config from 'react-native-config';
 import DropyLogo from '../assets/svgs/dropy_logo_grey.svg';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import OnboardingLines from '../assets/svgs/onboarding_lines.svg';
@@ -34,8 +35,13 @@ import FormCheckBox from '../components/input/FormCheckBox';
 import GlassButton from '../components/input/GlassButton';
 import LoadingSpinner from '../components/effect/LoadingSpinner';
 import DebugUrlsMenu from '../components/other/DebugUrlsMenu';
+import { missingCameraPersmissionAlert, missingLibraryPermissionAlert } from '../utils/mediaPermissionsAlerts';
 
 const DEBUG = __DEV__;
+const devUsername = Config.DEV_ACCOUNT_USERNAME ?? '';
+const devEmail = Config.DEV_ACCOUNT_EMAIL ?? '';
+const devPassword = Config.DEV_ACCOUNT_PASSWORD ?? '';
+
 
 export default function Onboarding({ navigation }) {
   const { setBackgroundGeolocationEnabled } = useContext(BackgroundGeolocationContext);
@@ -56,11 +62,11 @@ export default function Onboarding({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
-  const [displayName, setDisplayName] = useState(DEBUG ? 'Michel Debug' : '');
+  const [displayName, setDisplayName] = useState(DEBUG ? devUsername : '');
   const [profilePicturePath, setProfilePicturePath] = useState(null);
-  const [email, setEmail] = useState(DEBUG ? 'michel.debug@dropy-app.com' : '');
-  const [password, setPassword] = useState(DEBUG ? 'Michel1234supersecu!@#$' : '');
-  const [passwordConfirmation, setPasswordConfirmation] = useState(DEBUG ? 'Michel1234supersecu!@#$' : '');
+  const [email, setEmail] = useState(DEBUG ? devEmail : '');
+  const [password, setPassword] = useState(DEBUG ? devPassword : '');
+  const [passwordConfirmation, setPasswordConfirmation] = useState(DEBUG ? devPassword : '');
 
   const [termsChecked, setTermsChecked] = useState(false);
   const [newsletterChecked, setNewsletterChecked] = useState(false);
@@ -91,14 +97,14 @@ export default function Onboarding({ navigation }) {
 
   const onPressEditPicture = () => {
     const options = profilePicturePath == null ? {
-      options: ['Take a photo', 'Choose from library', 'Cancel'],
+      options: ['Prendre une photo', 'Choisir depuis la galerie', 'Annuler'],
       cancelButtonIndex: 2,
-      title: 'Where do you want to get your picture from?',
+      title: 'Comment veux-tu créer ta photo de profil ?',
     } : {
-      options: ['Take a photo', 'Choose from library', 'Delete picture', 'Cancel'],
+      options: ['Prendre une photo', 'Choisir depuis la galerie', 'Supprimer', 'Annuler'],
       destructiveButtonIndex: 2,
       cancelButtonIndex: 3,
-      title: 'Where do you want to get your picture from?',
+      title: 'Comment veux-tu créer ta photo de profil ?',
     };
 
     showActionSheetWithOptions(options, (buttonIndex) => {
@@ -123,16 +129,8 @@ export default function Onboarding({ navigation }) {
       const filePath = await compressImage(image.path);
       setProfilePicturePath(filePath);
     } catch (error) {
-      if (error.code === 'E_NO_LIBRARY_PERMISSION') {
-        const alertResult = await sendAlert({
-          title: 'Library access not granted...',
-          description: 'Enable access in your settings',
-          validateText: 'Open settings',
-          denyText: 'Ok !',
-        });
-        if (alertResult)
-          Linking.openSettings();
-      }
+      if (error.code === 'E_NO_LIBRARY_PERMISSION')
+        missingLibraryPermissionAlert(sendAlert);
       console.error('Open camera error', error);
     }
   };
@@ -148,16 +146,8 @@ export default function Onboarding({ navigation }) {
       const filePath = await compressImage(image.path);
       setProfilePicturePath(filePath);
     } catch (error) {
-      if (error.code === 'E_NO_CAMERA_PERMISSION') {
-        const alertResult = await sendAlert({
-          title: 'Camera not granted...',
-          description: 'Enable camera access in your settings',
-          validateText: 'Open settings',
-          denyText: 'Ok !',
-        });
-        if (alertResult)
-          Linking.openSettings();
-      }
+      if (error.code === 'E_NO_CAMERA_PERMISSION')
+        missingCameraPersmissionAlert(sendAlert);
       console.error('Open camera error', error);
     }
   };
@@ -190,17 +180,17 @@ export default function Onboarding({ navigation }) {
       setLoading(false);
       if (error.response.status === 409) {
         const validated = await sendAlert({
-          title: 'This email is already registered',
-          description: 'You can login instead',
-          validateText: 'Login',
+          title: 'Cet email est déjà utilisé...',
+          description: 'Si tu as déjà un compte, connecte-toi !',
+          validateText: 'Se connecter',
           denyText: 'Ok',
         });
         validated && viewSliderRef.current?.goToView(0);
         return;
       }
       sendAlert({
-        title: 'Oups an error has occured',
-        description: 'Check your internet connection',
+        title: 'Oups, une erreur est survenue...',
+        description: 'Vérifie ta connexion internet et réessaie.',
         validateText: 'Ok',
       });
       console.error(error.response.data);
@@ -228,8 +218,8 @@ export default function Onboarding({ navigation }) {
     const inputsValid = emailValid && passwordValid && passwordConfirmationValid;
     const samePasswords = passwordInputRef.current?.getValue() === passwordConfirmationInputRef.current?.getValue();
     if (inputsValid && !samePasswords) {
-      passwordInputRef.current?.setInvalid('Passwords does not match');
-      passwordConfirmationInputRef.current?.setInvalid('Passwords does not match');
+      passwordInputRef.current?.setInvalid('Le mot de passe en dessous n\'est pas identique');
+      passwordConfirmationInputRef.current?.setInvalid('Le mot de passe au dessus ment');
     }
     const everythingValid = inputsValid && samePasswords;
     everythingValid && viewSliderRef.current?.goToView(5);
@@ -257,23 +247,23 @@ export default function Onboarding({ navigation }) {
       setLoading(false);
       if (error.response.status === 404) {
         sendAlert({
-          description: 'Check your email',
-          title: 'This account does not exists',
+          title: 'Ce compte n\'existe pas',
+          description: 'Vérifie ton email',
           validateText: 'Ok',
         });
         return;
       }
       if (error.response.status === 403) {
         sendAlert({
-          description: 'Check your email and password',
-          title: 'Oups... invalid credentials',
+          title: 'Flûte, mauvais mot de passe',
+          description: 'Vérifie ton mot de passe',
           validateText: 'Ok',
         });
         return;
       }
       sendAlert({
-        description: 'Check your internet connection',
-        title: 'Oups an error has occured',
+        title: 'Sacrebleu, une erreur est survenue...',
+        description: 'Vérifie ta connexion internet et réessaie.',
         validateText: 'Ok',
       });
       console.error(error.response.data);
@@ -301,15 +291,15 @@ export default function Onboarding({ navigation }) {
     switch (result) {
       case RESULTS.UNAVAILABLE:
         await sendAlert({
-          description: 'You\'re device does not support location services',
-          title: 'Location not supported',
+          title: 'Il y a un problème...',
+          description: 'Ton téléphone ne supporte pas la géolocalisation',
         });
         break;
       case RESULTS.DENIED:
-        notGrantedAlert('Location access');
+        geolocationNotGrantedAlert();
         break;
       case RESULTS.BLOCKED:
-        notGrantedAlert('Location access');
+        geolocationNotGrantedAlert();
         break;
       case RESULTS.GRANTED:
         onSuccess();
@@ -351,11 +341,11 @@ export default function Onboarding({ navigation }) {
     }
   };
 
-  const notGrantedAlert = async (serviceName) => {
+  const geolocationNotGrantedAlert = async () => {
     const alertResult = await sendAlert({
-      title: `${serviceName} not granted`,
-      description: `You need to grant ${serviceName.toLowerCase()} in your settings`,
-      validateText: 'Open settings',
+      title: `Fichtre, tu dois autoriser la géolocalisation !`,
+      description: 'Sinon l\'application ne fonctionnera pas correctement...',
+      validateText: 'Ouvrir les paramètres',
     });
     alertResult && Linking.openSettings();
   };
@@ -404,11 +394,11 @@ export default function Onboarding({ navigation }) {
       <ViewSlider ref={viewSliderRef} onViewIndexChanged={setCurrentViewIndex}>
 
         <View style={styles.view}>
-          <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Welcome back !</Text>
+          <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Bon retour !</Text>
           <View style={{ width: '80%' }}>
             <FormInput
               ref={loginEmailInputRef}
-              placeholder='Email'
+              placeholder='Ton email'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               onEdited={setEmail}
               isEmail
@@ -416,7 +406,7 @@ export default function Onboarding({ navigation }) {
               autoComplete='email'
             />
             <FormInput
-              placeholder='Password'
+              placeholder='Ton mot de passe ultra secret'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               onEdited={setPassword}
@@ -427,7 +417,7 @@ export default function Onboarding({ navigation }) {
           <LoadingGlassButton
             onPress={handleLogin}
             disabled={email.length === 0 || password.length === 0}
-            text='Login'
+            text='Connexion'
             loading={loading}
           />
         </View>
@@ -435,8 +425,8 @@ export default function Onboarding({ navigation }) {
         <View style={styles.view}>
           <Text style={{ fontSize: 40 }}>👋</Text>
           <View style={{ ...Styles.center }}>
-            <Text style={{ ...styles.title, fontSize: 35 }}>Hey there</Text>
-            <Text style={{ ...styles.subtitle, fontSize: 20 }}>ready to drop ?</Text>
+            <Text style={{ ...styles.title, fontSize: 35 }}>Salut !</Text>
+            <Text style={{ ...styles.subtitle, fontSize: 20 }}>Lance toi dans l\'aventure Dropy</Text>
           </View>
           <LoadingGlassButton
             onPress={() => viewSliderRef.current?.goToView(2)}
@@ -444,10 +434,10 @@ export default function Onboarding({ navigation }) {
         </View>
 
         <View style={styles.view}>
-          <Text style={styles.title}>{'Let\'s start gently'}</Text>
+          <Text style={styles.title}>{'Commençons tranquillement !'}</Text>
           <View style={{ width: '80%' }}>
             <FormInput
-              placeholder="What's your name"
+              placeholder="Comment t'appelles-tu ?"
               maxLength={25}
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               onEdited={setDisplayName}
@@ -469,8 +459,8 @@ export default function Onboarding({ navigation }) {
 
         <View style={styles.view}>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>Show me your smile !</Text>
-            <Text style={styles.subtitle}>Set a profile picture</Text>
+            <Text style={styles.title}>Montre ton plus beau sourire !</Text>
+            <Text style={styles.subtitle}>Choisis une photo de profil</Text>
           </View>
           <TouchableOpacity onPress={onPressEditPicture} style={{ ...Styles.center, width: 100, height: 100, borderRadius: 30, backgroundColor: Colors.purple3, overflow: 'hidden' }}>
             {profilePicturePath ? (
@@ -487,12 +477,12 @@ export default function Onboarding({ navigation }) {
         </View>
 
         <View style={{ ...styles.view }}>
-          <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Secure your account !</Text>
+          <Text style={{ ...Fonts.bold(20, Colors.darkGrey) }}>Sécurisons ton compte !</Text>
           <View style={{ width: '80%' }}>
             <FormInput
               ref={emailInputRef}
               onEdited={setEmail}
-              placeholder='Email'
+              placeholder='Ton email'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isEmail
               defaultValue={email}
@@ -501,7 +491,7 @@ export default function Onboarding({ navigation }) {
             <FormInput
               ref={passwordInputRef}
               onEdited={setPassword}
-              placeholder='Password'
+              placeholder='Ton mot de passe ultra sécurisé'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={password}
@@ -510,7 +500,7 @@ export default function Onboarding({ navigation }) {
             <FormInput
               ref={passwordConfirmationInputRef}
               onEdited={setPasswordConfirmation}
-              placeholder='Password confirmation'
+              placeholder='Confirme ton mot de passe'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               isPassword
               defaultValue={passwordConfirmation}
@@ -526,21 +516,21 @@ export default function Onboarding({ navigation }) {
 
         <View style={styles.view}>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>We need you to Turn on geolocation</Text>
-            <Text style={styles.subtitle}>{'Or you won\'t be able to use the app'}</Text>
+            <Text style={styles.title}>Active la géolocalisation</Text>
+            <Text style={styles.subtitle}>{'Sinon tu ne pourras pas utiliser l\'app'}</Text>
           </View>
           <MaterialIcons name='location-pin' size={60} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestGeolocationPermissions(() => viewSliderRef.current?.goToView(6))}
-            text='Turn on'
+            text='Activer'
           />
         </View>
 
         <View style={styles.view}>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>{'Don\'t miss your personnal messages '}</Text>
-            <Text style={styles.subtitle}>Turn on notifications</Text>
+            <Text style={styles.title}>{'Ne rate aucun message'}</Text>
+            <Text style={styles.subtitle}>Active les notifications</Text>
           </View>
           <MaterialCommunityIcons name='bell-ring' size={50} color={Colors.grey} />
           <LoadingGlassButton
@@ -549,40 +539,45 @@ export default function Onboarding({ navigation }) {
               () => viewSliderRef.current?.goToView(7),
               () => viewSliderRef.current?.goToView(8)
             )}
-            text='Turn on'
+            text='Activer'
           />
         </View>
 
         <View style={styles.view}>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>{'Don\'t miss drops around you'}</Text>
-            <Text style={styles.subtitle}>Turn on background geolocation and get notified when there are drops around you</Text>
+            <Text style={styles.title}>{'Reste à l\'affût !'}</Text>
+            <Text style={styles.subtitle}>
+              {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n'est pas lancée !'}
+            </Text>
+            <Text style={{ ...styles.subtitle, ...Fonts.regular(10.5, Colors.grey), marginVertical: 3 }}>
+              {'Ce mode utilise la géolocalisation en arrière plan.'}
+            </Text>
             <TouchableOpacity>
-              <Text style={{ ...Fonts.regular(13, '#44a0eb'), marginTop: 5, textDecorationLine: 'underline' }}>learn more</Text>
+              <Text style={{ ...Fonts.regular(13, '#44a0eb'), marginTop: 5, textDecorationLine: 'underline' }}>en savoir plus</Text>
             </TouchableOpacity>
           </View>
-          <FontAwesome5 name='satellite' size={50} color={Colors.grey} />
+          <MaterialCommunityIcons name='radar' size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestBackgroundGeolocationPermissions(
               () => viewSliderRef.current?.goToView(8)
             )}
-            text='Turn on'
+            text='Activer'
           />
         </View>
 
         <View style={styles.view}>
           <Text style={styles.emoji}>😃</Text>
-          <Text style={{ ...Fonts.bold(30, Colors.darkGrey) }}>Almost there !</Text>
+          <Text style={{ ...Fonts.bold(30, Colors.darkGrey) }}>Tu y es presque !</Text>
           <View style={{ marginBottom: 30, ...Styles.center }}>
-            <FormCheckBox text={'I agree with dropy\'s {terms & conditions}'} onChanged={setTermsChecked} textUrl='https://dropy-app.com/privacy-policy.html'/>
-            <FormCheckBox text={'subscribe to dropy\'s newsletter'} onChanged={setNewsletterChecked}/>
+            <FormCheckBox text={'Accepter les {termes et conditions} de Dropy'} onChanged={setTermsChecked} textUrl='https://dropy-app.com/privacy-policy.html'/>
+            <FormCheckBox text={'S\'abonner à la newsletter de Dropy'} onChanged={setNewsletterChecked}/>
           </View>
           <LoadingGlassButton
             loading={loading}
             onPress={handleRegister}
             disabled={!termsChecked}
-            text='Start'
+            text="C'est parti !"
           />
         </View>
       </ViewSlider>
@@ -640,11 +635,12 @@ const styles = StyleSheet.create({
   title: {
     ...Fonts.bold(20, Colors.darkGrey),
     textAlign: 'center',
+    maxWidth: responsiveWidth(80),
   },
   subtitle: {
     ...Fonts.bold(13, Colors.darkGrey),
-    marginTop: 5,
+    marginTop: 10,
     textAlign: 'center',
-    maxWidth: responsiveWidth(80),
+    maxWidth: responsiveWidth(85),
   },
 });

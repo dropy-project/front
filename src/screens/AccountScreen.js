@@ -1,8 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import GoBackHeader from '../components/other/GoBackHeader';
 import useOverlay from '../hooks/useOverlay';
 import API from '../services/API';
@@ -14,10 +13,10 @@ const AccountScreen = ({ navigation }) => {
 
   const handleDeleteAccount = async () => {
     const confirmed = await sendAlert({
-      title: 'Are you sure?',
-      description: 'Your account and all your data will be deleted!',
-      denyText: 'Cancel',
-      validateText: 'Delete',
+      title: 'Attention !',
+      description: 'Ton compte et toutes tes données seront définitivement supprimés.',
+      denyText: 'Annuler',
+      validateText: 'Supprimer',
     });
 
     if (!confirmed)
@@ -38,8 +37,8 @@ const AccountScreen = ({ navigation }) => {
       });
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We couldn\'t delete your account..\nCheck your internet connection!',
+        title: 'Erreur',
+        description: 'Le serveur est injoignable...\nVérifie ta connexion internet',
       });
       console.error('Error while deleting user', error?.response?.data || error);
     }
@@ -47,22 +46,22 @@ const AccountScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader text='Account' />
+      <GoBackHeader text='Mon compte' />
       <View style={styles.content}>
         <TouchableOpacity style={{ ...styles.navigateContainer, marginTop: 10 }} disabled>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Subscription</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Abonnement</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navigateContainer} disabled>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Restore purchase</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Restaurer les achats</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navigateContainer} disabled>
-          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Reset password</Text>
+          <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Changer mon mot de passe</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
@@ -70,7 +69,7 @@ const AccountScreen = ({ navigation }) => {
       </View>
       <View style={styles.spacer} />
       <TouchableOpacity onPress={handleDeleteAccount}>
-        <Text style={{ ...Fonts.regular(12, Colors.lightGrey) }}> Delete my account </Text>
+        <Text style={{ ...Fonts.regular(12, Colors.lightGrey) }}>Supprimer mon compte</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

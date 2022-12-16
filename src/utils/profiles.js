@@ -1,10 +1,10 @@
 import API from '../services/API';
 
 export const PRONOUNS = {
-  UNKNOWN: 'I prefer not to tell',
-  HE_HIM: 'He/Him',
-  SHE_HER: 'She/Her',
-  OTHER: 'Other',
+  UNKNOWN: 'Je préfère ne pas le dire',
+  HE_HIM: 'Il',
+  SHE_HER: 'Elle',
+  OTHER: 'Autre',
 };
 
 export const reportUser = async (userId, sendAlert, dropyId = undefined) => {
@@ -12,20 +12,20 @@ export const reportUser = async (userId, sendAlert, dropyId = undefined) => {
     const response = await API.reportUser(userId, dropyId);
     console.log('Report API response : ', response.data);
     sendAlert({
-      title: 'User reported',
-      description: 'Your report has been shipped !',
+      title: 'Utilisateur signalé !',
+      description: 'Ton signalement a bien été pris en compte.',
     });
   } catch (error) {
     if (error.response.status === 401) {
       sendAlert({
-        title: 'Take it easy !',
-        description: 'You can only report a user once per hour.',
+        title: 'Mollo l\'asticot !',
+        description: 'Tu ne peux pas signaler plus d\'une fois par heure',
       });
       return;
     }
     sendAlert({
-      title: 'Oh no...',
-      description: 'We couldn\'t send your report...\nCheck your internet connection!',
+      title: 'Pas de bol...',
+      description: 'Ton signalement n\'a pas pu être pris en compte...\nVérifie ta connexion internet',
     });
     console.error('Error while reporting user', error?.response?.data || error);
   }
@@ -38,8 +38,8 @@ export const blockUser = async (userId, sendAlert, navigation) => {
     navigation?.popToTop();
   } catch (error) {
     sendAlert({
-      title: 'Oh no...',
-      description: 'We couldn\'t block this user...\nCheck your internet connection!',
+      title: 'Pas de bol...',
+      description: 'Ton signalement n\'a pas pu être pris en compte...\nVérifie ta connexion internet',
     });
     console.error('Error while reporting user', error?.response?.data || error);
   }

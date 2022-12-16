@@ -82,14 +82,14 @@ const GetDropyScreen = ({ navigation, route }) => {
       <GoBackHeader onPressGoBack={() => navigation.navigate('Home')} />
       <ParticleEmitter particlesColor={Colors.lighterGrey} />
       <View style={styles.containerImage}>
-        <Text style={styles.topText}>{'You\'ve just found'}</Text>
+        <Text style={styles.topText}>{'Tu viens de trouver'}</Text>
         <DropyLogo height={87} width={87} />
-        <Text style={styles.bottomText}>A new Drop</Text>
+        <Text style={styles.bottomText}>un nouveau drop !</Text>
         <Animated.View style={{ ...styles.largeCircle, transform: [{ scale: Animated.multiply(breathing, circleAnimation) }] }} />
         <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle) }] }} />
         <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle) }] }} />
       </View>
-      <FooterConfirmation dropy={dropy} onPress={() => handleConfirmation(dropy)} textButton='Open !'/>
+      <FooterConfirmation dropy={dropy} onPress={() => handleConfirmation(dropy)} textButton='Ouvrir le drop !'/>
     </SafeAreaView>
   );
 };

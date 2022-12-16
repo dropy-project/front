@@ -67,8 +67,8 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
       setSelectedDropyIndex(0);
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We couldn\'t find your drops...\nCheck your internet connection!',
+        title: 'Oh non...',
+        description: 'Nous n\'avons pas réussi à charger les drops autour de toi...\nVérifie ta connexion internet !',
       });
       console.error('Error while fetching user dropies', error?.response?.data || error);
     }
@@ -110,7 +110,7 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
                 color={Colors.white}
               />
               <Text style={{ ...Fonts.bold(17, Colors.white), marginTop: 20, maxWidth: '60%', textAlign: 'center' }}>
-                {'You haven\'t found any drops yet'}
+                {'Tu n\'as pas encore récupéré de drops !'}
               </Text>
             </View>
           ) : (
