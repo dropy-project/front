@@ -423,6 +423,15 @@ export default function Onboarding({ navigation }) {
               defaultValue={password}
               autoComplete='password'
             />
+            <TouchableOpacity
+              style={{ ...Styles.center, position: 'relative', top: 20, width: '100%' }}
+              onPress={() => navigation.navigate('ResetPasswordScreen')}
+              hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+            >
+              <Text style={{ marginBottom: 10, ...Fonts.bold(13, Colors.lightGrey) }}>
+                Mot de passe oublié
+              </Text>
+            </TouchableOpacity>
           </View>
           <LoadingGlassButton
             onPress={handleLogin}
