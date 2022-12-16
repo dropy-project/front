@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';

@@ -11,6 +11,8 @@
 
 Intaller dépendances : `npm i`
 
+Installer husky : `npx husky install`
+
 IOS :
 - `sudo xcode-select --switch /Applications/Xcode.app`
 - `cd ios && pos install`
