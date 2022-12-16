@@ -49,8 +49,8 @@ const ResetPasswordScreen = ({ navigation }) => {
       return response.data;
     } catch (error) {
       sendAlert({
-        description: 'Check your internet connection',
-        title: 'Oups an error has occured',
+        description: 'Vérifie ta connexion internet',
+        title: 'Oups une erreur est survenue',
         validateText: 'Ok',
       });
       console.error('Error while checking if an email is available', email, error);
