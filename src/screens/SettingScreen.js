@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
   Linking,
   SafeAreaView,
@@ -11,7 +11,7 @@ import {
   View
 } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
@@ -38,12 +38,31 @@ const SettingsScreen = ({ navigation }) => {
   const notificatinsSettingsRef = useRef(null);
 
   useEffect(() => {
+    const fetchNotificationsSettings = async () => {
+      try {
+        const response = await API.getNotificationsSettings(user);
+        setNotificationsSettings(response.data);
+      } catch (error) {
+        sendAlert({
+          title: 'Flûte !',
+          description: 'Tous les paramètres n\'ont pas pu être récupérés',
+          validateText: 'Ok',
+        });
+        console.error(
+          'Error while fetch notifications settings',
+          error.response?.data || error
+        );
+        navigation.goBack();
+      }
+    };
+
     fetchNotificationsSettings();
     const unsubscribe = navigation.addListener('blur', () => {
       if (notificatinsSettingsRef.current != null)
         postNotificationsSettings(notificatinsSettingsRef.current);
     });
     return unsubscribe;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -51,25 +70,7 @@ const SettingsScreen = ({ navigation }) => {
       notificatinsSettingsRef.current = notificationsSettings;
   }, [notificationsSettings]);
 
-  const fetchNotificationsSettings = async () => {
-    try {
-      const response = await API.getNotificationsSettings(user);
-      setNotificationsSettings(response.data);
-    } catch (error) {
-      sendAlert({
-        title: 'Flûte !',
-        description: 'Tous les paramètres n\'ont pas pu être récupérés',
-        validateText: 'Ok',
-      });
-      console.error(
-        'Error while fetch notifications settings',
-        error.response?.data || error
-      );
-      navigation.goBack();
-    }
-  };
-
-  const postNotificationsSettings = async (settings) => {
+  const postNotificationsSettings = useCallback(async (settings) => {
     console.log('postNotificationsSettings', settings);
     try {
       await API.postNotificationsSettings(settings);
@@ -84,7 +85,7 @@ const SettingsScreen = ({ navigation }) => {
         error.response?.data || error
       );
     }
-  };
+  }, [sendAlert]);
 
   const logout = async () => {
     await postNotificationsSettings(notificatinsSettingsRef.current);
@@ -107,7 +108,14 @@ const SettingsScreen = ({ navigation }) => {
       <GoBackHeader text='Paramètres' />
 
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text style={styles.titleText}>{'Mode radar'}</Text>
+        <View style={styles.geolocationTitleContainer}>
+          <Text style={{ ...Fonts.bold(13, Colors.darkGrey) }}>{'Mode radar'}</Text>
+          <MaterialCommunityIcons
+            name='radar' size={20}
+            color={backgroundGeolocationEnabled ? Colors.mainBlue : Colors.grey}
+            style={{ marginLeft: 5 }}
+          />
+        </View>
         <View style={{ ...styles.linkContainer, paddingTop: 0 }}>
           <View style={{ flex: 0.9 }}>
             <Text style={{ ...Fonts.regular(12, Colors.grey) }}>
@@ -270,6 +278,12 @@ const styles = StyleSheet.create({
     width: responsiveWidth(100),
     alignItems: 'center',
     paddingBottom: 25,
+  },
+  geolocationTitleContainer: {
+    width: '80%',
+    flexDirection: 'row',
+    marginBottom: 10,
+    marginTop: 20,
   },
   titleText: {
     ...Fonts.bold(13, Colors.darkGrey),
