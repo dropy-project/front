@@ -31,8 +31,8 @@ Sentry.init({
 
   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
   // We recommend adjusting this value in production.
+  // eslint-disable-next-line no-undef
   tracesSampleRate: __DEV__ ? 1.0 : 0.5,
-  debug: __DEV__,
 });
 
 const NavigationApp = () => (

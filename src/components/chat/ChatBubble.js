@@ -55,7 +55,7 @@ const Bubble = ({ isLeft, content, date, read, showDate, hourDifference }) => {
           right: isLeft ? undefined : '7%',
           left: isLeft ? '7%' : undefined,
         }}>
-          {(read && !isLeft) && 'Read • '}{messageTimeString(date)}
+          {(read && !isLeft) && 'Lu • '}{messageTimeString(date)}
         </Text>
       )}
       <DebugText showBoundingBox date={date}>{hourDifference}h diff | txt : [{content}]</DebugText>

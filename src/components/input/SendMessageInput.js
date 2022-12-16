@@ -28,7 +28,7 @@ const SendMessageInput = ({ sendMessage, onFocus }) => {
       <View style={styles.bottomContainer}>
         <TextInput
           onFocus={onFocus}
-          placeholder='Send a message...'
+          placeholder='Envoyer un message...'
           placeholderTextColor={Colors.lightGrey}
           style={styles.textInput}
           onChangeText={(text) => setTextInputContent(text)}

@@ -11,6 +11,8 @@
 
 Intaller dépendances : `npm i`
 
+Installer husky : `npx husky install`
+
 IOS :
 - `sudo xcode-select --switch /Applications/Xcode.app`
 - `cd ios && pos install`
@@ -26,6 +28,18 @@ ANDROID :
 - Rentrer les url d'API et de Socket
     - api : `http://<ip-locale-ordi>:<port-api>`
     - socket: `http://<ip-locale-socket>:<port-socket>`
+
+## Env
+
+> .env à la racine du projet
+
+```
+SECRET_ENCRYPTION_KEY=<secret_encryption_key>
+
+DEV_ACCOUNT_USERNAME=<username>
+DEV_ACCOUNT_EMAIL=<email>
+DEV_ACCOUNT_PASSWORD=<password>
+```
 
 ## Release Checklist
 
@@ -83,11 +97,3 @@ Depuis xcode:
 6. Ajouter une attestation -> chiffrement = oui car protocol https dans l'app
 7. Ajouter la build au groupe de test
 8. Lancer une review TestFlight
-
-## Env
-
-> .env à la racine du projet
-
-```
-SECRET_ENCRYPTION_KEY=<secret_encryption_key>
-```
