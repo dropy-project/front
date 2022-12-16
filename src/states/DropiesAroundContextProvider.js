@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import useSocket from '../hooks/useSocket';
 import { coordinatesDistance } from '../utils/coordinates';
 import { UserContext } from './UserContextProvider';
@@ -12,13 +19,12 @@ export const DropiesAroundContext = createContext(null);
 const DropiesAroundContextProvider = ({ children }) => {
   const { user } = useContext(UserContext);
   const { userCoordinates } = useContext(GeolocationContext);
-
   const { dropySocket } = useSocket();
 
   const [dropiesAround, setDropiesAround] = useState([]);
   const [canEmitDropy, setCanEmitDropy] = useState(true);
 
-  const processDropy = (rawDropy) => {
+  const processDropy = useCallback((rawDropy) => {
     const dropyCoordinates = {
       latitude: rawDropy.latitude,
       longitude: rawDropy.longitude,
@@ -35,7 +41,7 @@ const DropiesAroundContextProvider = ({ children }) => {
     const isUserDropy = rawDropy.emitterId === user.id;
     const isInEmitRestrictedRange = distanceFromUser < EMIT_LIMIT_DISTANCE_METERS && isUserDropy;
     return { ...rawDropy, isUserDropy, reachable, isInEmitRestrictedRange };
-  };
+  }, [user?.id, userCoordinates]);
 
   useEffect(() => {
     if (dropySocket == null) {
@@ -78,7 +84,7 @@ const DropiesAroundContextProvider = ({ children }) => {
       dropySocket.off('dropy_created');
       dropySocket.off('dropy_retrieved');
     };
-  }, [dropySocket]);
+  }, [dropySocket, processDropy]);
 
   useEffect(() => {
     if (userCoordinates?.geoHashs == null)
@@ -99,50 +105,57 @@ const DropiesAroundContextProvider = ({ children }) => {
 
       setDropiesAround(newDropies ?? []);
     });
-  }, [userCoordinates?.geoHashs[0], user, dropySocket, dropySocket?.connected]);
+  }, [
+    userCoordinates?.geoHashs,
+    user,
+    dropySocket,
+    dropySocket?.connected,
+    processDropy
+  ]);
 
   useEffect(() => {
     if (userCoordinates == null)
       return;
+
+    const checkForDropiesInRange = async () => {
+      const updatedDropies = dropiesAround.map((dropy) => processDropy(dropy));
+
+      const restrictedRange = updatedDropies.some((dropy) => dropy.isInEmitRestrictedRange);
+      setCanEmitDropy(!restrictedRange);
+
+      const requireStateUpdate = updatedDropies.some((dropy, index) => dropy.reachable !== dropiesAround[index].reachable);
+      if (requireStateUpdate)
+        setDropiesAround(updatedDropies);
+    };
+
     checkForDropiesInRange();
-  }, [userCoordinates]);
+  }, [dropiesAround, processDropy, userCoordinates]);
 
-  const checkForDropiesInRange = async () => {
-    const updatedDropies = dropiesAround.map((dropy) => processDropy(dropy));
-
-    const restrictedRange = updatedDropies.some((dropy) => dropy.isInEmitRestrictedRange);
-    setCanEmitDropy(!restrictedRange);
-
-    const requireStateUpdate = updatedDropies.some((dropy, index) => dropy.reachable !== dropiesAround[index].reachable);
-    if (requireStateUpdate)
-      setDropiesAround(updatedDropies);
-  };
-
-  const createDropy = (latitude, longitude, mediaType, content) => {
+  const createDropy = useCallback((latitude, longitude, mediaType, content) => {
     setCanEmitDropy(false);
     return new Promise((resolve) => {
       dropySocket.emit('dropy_created', { latitude, longitude, mediaType, content }, resolve);
     });
-  };
+  }, [dropySocket]);
 
-  const retrieveDropy = (dropyId) => new Promise((resolve) => {
+  const retrieveDropy = useCallback((dropyId) => new Promise((resolve) => {
     dropySocket.emit('dropy_retrieved', { dropyId }, (response) => {
       if (response.error == null)
         setDropiesAround((olds) => olds.filter((dropy) => dropy.id !== dropyId));
 
       resolve(response);
     });
-  });
+  }), [dropySocket]);
+
+  const value = useMemo(() => ({
+    dropiesAround,
+    createDropy,
+    retrieveDropy,
+    canEmitDropy,
+  }), [dropiesAround, createDropy, retrieveDropy, canEmitDropy]);
 
   return (
-    <DropiesAroundContext.Provider
-      value={{
-        dropiesAround,
-        createDropy,
-        retrieveDropy,
-        canEmitDropy,
-      }}
-    >
+    <DropiesAroundContext.Provider value={value}>
       {children}
     </DropiesAroundContext.Provider>
   );

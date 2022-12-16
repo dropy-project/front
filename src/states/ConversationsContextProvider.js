@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import useSocket from '../hooks/useSocket';
 import { decryptMessage } from '../utils/encrypt';
 import { messageTimeString } from '../utils/time';
@@ -26,17 +26,8 @@ const ConversationsContextProvider = ({ children }) => {
         return;
       }
 
-      createOrUpdateConversation(response.data);
-    });
-
-    chatSocket.on('close_conversation', (response) => {
-      if (response.error != null) {
-        console.error('Conversation has not been closed correctly.', response.error);
-        return;
-      }
-
-      const closedConversationId = response.data.id;
-      setConversations((old) => old.filter((conversation) => conversation.id !== closedConversationId));
+      const conversation = response.data;
+      createOrUpdateConversation(conversation);
     });
 
     return () => {
@@ -44,25 +35,25 @@ const ConversationsContextProvider = ({ children }) => {
       chatSocket.off('conversation_updated');
       chatSocket.off('close_conversation');
     };
-  }, [chatSocket]);
+  }, [chatSocket, createOrUpdateConversation, listConversations]);
 
-  const createOrUpdateConversation = (conversation) => {
+  const createOrUpdateConversation = useCallback((conversation) => {
+    const updatedConversation = {
+      ...conversation,
+      lastMessageDate: messageTimeString(conversation.lastMessageDate),
+      lastMessagePreview: decryptMessage(conversation.lastMessagePreview),
+    };
+
     setConversations((old) => {
-      const updatedConversation = {
-        ...conversation,
-        lastMessageDate: messageTimeString(conversation.lastMessageDate),
-        lastMessagePreview: decryptMessage(conversation.lastMessagePreview),
-      };
-
       const newConversations = [updatedConversation, ...old.filter((c) => c.id !== conversation.id)];
 
       const sortedConversations = newConversations.sort((a, b) => new Date(b.lastMessageDate) - new Date(a.lastMessageDate));
 
       return sortedConversations;
     });
-  };
+  }, []);
 
-  const listConversations = () => {
+  const listConversations = useCallback(() => {
     if (chatSocket == null)
       return;
     setLoading(true);
@@ -83,16 +74,16 @@ const ConversationsContextProvider = ({ children }) => {
       setConversations(datedConversations);
       setLoading(false);
     });
-  };
+  }, [chatSocket]);
 
-  const closeConversation = (conversationId) => {
+  const closeConversation = useCallback((conversationId) => {
     setConversations((old) => old.filter((conversation) => conversation.id !== conversationId));
     return new Promise((resolve) => {
       chatSocket.emit('close_conversation', conversationId, resolve);
     });
-  };
+  }, [chatSocket]);
 
-  const createConversation = (dropyId) => new Promise((resolve, reject) => {
+  const createConversation = useCallback((dropyId) => new Promise((resolve, reject) => {
     if (chatSocket == null)
       return resolve();
     chatSocket.emit('create_conversation', { dropyId }, (response) => {
@@ -103,9 +94,9 @@ const ConversationsContextProvider = ({ children }) => {
       createOrUpdateConversation(conversation);
       resolve(conversation);
     });
-  });
+  }), [chatSocket, createOrUpdateConversation]);
 
-  const markConversationAsRead = (conversationId) => {
+  const markConversationAsRead = useCallback((conversationId) => {
     setConversations((old) => old.map((conversation) => {
       if (conversation.id === conversationId) {
         return {
@@ -115,29 +106,40 @@ const ConversationsContextProvider = ({ children }) => {
       }
       return conversation;
     }));
-  };
+  }, []);
 
-  const openChat = (conversationId) => {
+  const openChat = useCallback((conversationId) => {
     const conversation = conversations.find((c) => c.id === conversationId);
     if (conversation == null)
       return;
     navigation.navigate('Chat', { conversation });
     markConversationAsRead(conversationId);
-  };
+  }, [conversations, markConversationAsRead, navigation]);
 
-  const conversationIsOpen = (conversationId) => conversations.find((c) => c.id === conversationId) != null;
+  const conversationIsOpen = useCallback((conversationId) => conversations.find((c) => c.id === conversationId) != null, [conversations]);
+
+  const value = useMemo(() => ({
+    loading,
+    conversations,
+    closeConversation,
+    markConversationAsRead,
+    listConversations,
+    createConversation,
+    openChat,
+    conversationIsOpen,
+  }), [
+    loading,
+    conversations,
+    closeConversation,
+    markConversationAsRead,
+    listConversations,
+    createConversation,
+    openChat,
+    conversationIsOpen
+  ]);
 
   return (
-    <ConversationsContext.Provider value={{
-      loading,
-      conversations,
-      closeConversation,
-      markConversationAsRead,
-      listConversations,
-      createConversation,
-      openChat,
-      conversationIsOpen,
-    }}>
+    <ConversationsContext.Provider value={value}>
       {children}
     </ConversationsContext.Provider>
   );

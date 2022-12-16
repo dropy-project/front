@@ -6,7 +6,6 @@ import Styles, { Colors, Fonts } from '../../styles/Styles';
 import DropyPopup from '../../assets/svgs/dropyPopup.svg';
 import { createDropTimeString } from '../../utils/time';
 
-
 const DropyMapMarker = ({ dropy, onPress }) => {
   const [dropTimeString, setDropTimeString] = useState('0s');
 
@@ -28,7 +27,7 @@ const DropyMapMarker = ({ dropy, onPress }) => {
     const interval = setInterval(updateTimeString, intervalDuration);
 
     return () => clearInterval(interval);
-  }, [dropy?.isUserDropy]);
+  }, [dropy]);
 
   if (!dropy.reachable && !dropy?.isUserDropy)
     return <RadarMarker dropy={dropy} />;

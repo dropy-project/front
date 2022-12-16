@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
@@ -426,7 +426,7 @@ export default function Onboarding({ navigation }) {
           <Text style={{ fontSize: 40 }}>👋</Text>
           <View style={{ ...Styles.center }}>
             <Text style={{ ...styles.title, fontSize: 35 }}>Salut !</Text>
-            <Text style={{ ...styles.subtitle, fontSize: 20 }}>Lance toi dans l\'aventure Dropy</Text>
+            <Text style={{ ...styles.subtitle, fontSize: 20 }}>{'Lance toi dans l\'aventure Dropy'}</Text>
           </View>
           <LoadingGlassButton
             onPress={() => viewSliderRef.current?.goToView(2)}
@@ -519,7 +519,7 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.title}>Active la géolocalisation</Text>
             <Text style={styles.subtitle}>{'Sinon tu ne pourras pas utiliser l\'app'}</Text>
           </View>
-          <MaterialIcons name='location-pin' size={60} color={Colors.grey} />
+          <Ionicons name='location-outline' size={60} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestGeolocationPermissions(() => viewSliderRef.current?.goToView(6))}
@@ -532,7 +532,7 @@ export default function Onboarding({ navigation }) {
             <Text style={styles.title}>{'Ne rate aucun message'}</Text>
             <Text style={styles.subtitle}>Active les notifications</Text>
           </View>
-          <MaterialCommunityIcons name='bell-ring' size={50} color={Colors.grey} />
+          <Ionicons name='md-chatbubbles-outline' size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestNotificationsPermissions(
@@ -547,7 +547,7 @@ export default function Onboarding({ navigation }) {
           <View style={{ marginBottom: 30, ...Styles.center }}>
             <Text style={styles.title}>{'Reste à l\'affût !'}</Text>
             <Text style={styles.subtitle}>
-              {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n'est pas lancée !'}
+              {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n\'est pas lancée !'}
             </Text>
             <Text style={{ ...styles.subtitle, ...Fonts.regular(10.5, Colors.grey), marginVertical: 3 }}>
               {'Ce mode utilise la géolocalisation en arrière plan.'}

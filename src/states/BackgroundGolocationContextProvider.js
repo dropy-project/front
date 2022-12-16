@@ -3,7 +3,14 @@
 // https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philosophy-of-Operation
 //
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import BackgroundGeolocation from 'react-native-background-geolocation';
@@ -16,6 +23,35 @@ import { UserContext } from './UserContextProvider';
 
 export const BackgroundGeolocationContext = createContext(null);
 
+const setupBackgroundGeolocation = async (authTokens) => {
+  const { accessToken, refreshToken, expires } = authTokens;
+
+  const backgroundGeolocationReady = await BackgroundGeolocation.ready({
+    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
+    useSignificantChangesOnly: true,
+
+    logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
+
+    stopOnTerminate: false,
+    startOnBoot: true,
+
+    maxRecordsToPersist: 1,
+
+    url: API.userBackgroundGeolocationPingUrl(),
+    authorization: {
+      strategy: 'JWT',
+      accessToken,
+      refreshToken,
+      expires,
+      refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1`,
+      refreshPayload: {
+        refreshToken: '{refreshToken}',
+      },
+    },
+  });
+  return backgroundGeolocationReady;
+};
+
 const BackgroundGolocationProvider = ({ children }) => {
   const { user } = useContext(UserContext);
 
@@ -25,33 +61,31 @@ const BackgroundGolocationProvider = ({ children }) => {
   const [logs, setLogs] = useState(null);
 
   useEffect(() => {
-    if (user == null)
-      return;
-
     const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, () => {});
-
     const motionChangeSubscriber = BackgroundGeolocation.onMotionChange(() => {});
-
     const activityChangeSubscriber = BackgroundGeolocation.onActivityChange(() => {});
-
     const authorizationChangeSubscriber = BackgroundGeolocation.onAuthorization((event) => {
       if (event.success)
         console.log('[authorization] SUCCESS: ', event.response);
       else
         console.error('[authorization] ERROR: ', event.error);
     });
-
-    initializeBackgroundGeolocation().catch((error) => {
-      console.error('Background geolocation loading error', error);
-    });
-
     return () => {
       locationSubscriber.remove();
       motionChangeSubscriber.remove();
       activityChangeSubscriber.remove();
       authorizationChangeSubscriber.remove();
     };
-  }, [user]);
+  }, []);
+
+  useEffect(() => {
+    if (user == null)
+      return;
+
+    initializeBackgroundGeolocation().catch((error) => {
+      console.error('Background geolocation loading error', error);
+    });
+  }, [initializeBackgroundGeolocation, user]);
 
   useEffect(() => {
     if (!initialized)
@@ -65,7 +99,7 @@ const BackgroundGolocationProvider = ({ children }) => {
       BackgroundGeolocation.stop();
   }, [backgroundGeolocationEnabled, initialized]);
 
-  const initializeBackgroundGeolocation = async () => {
+  const initializeBackgroundGeolocation = useCallback(async () => {
     if (initialized === true)
       return;
 
@@ -82,43 +116,9 @@ const BackgroundGolocationProvider = ({ children }) => {
 
     log(`Initialized successfully (started : ${enable})`);
     setInitialized(true);
-  };
+  }, [enableAfterInit, initialized]);
 
-  const setupBackgroundGeolocation = async (authTokens) => {
-    const { accessToken, refreshToken, expires } = authTokens;
-
-    const backgroundGeolocationReady = await BackgroundGeolocation.ready({
-      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
-      useSignificantChangesOnly: true,
-
-      logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
-
-      stopOnTerminate: false,
-      startOnBoot: true,
-
-      maxRecordsToPersist: 1,
-
-      url: API.userBackgroundGeolocationPingUrl(),
-      authorization: {
-        strategy: 'JWT',
-        accessToken,
-        refreshToken,
-        expires,
-        refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1`,
-        refreshPayload: {
-          refreshToken: '{refreshToken}',
-        },
-      },
-      backgroundPermissionRationale: {
-        title: 'Autorise la géolocalisation en arrière-plan',
-        message: 'Il est conseillé d\'activer la géolocalisation en arrière-plan pour que tu puisses profiter pleinement de ton application. ',
-        positiveAction: 'Autoriser',
-      },
-    });
-    return backgroundGeolocationReady;
-  };
-
-  const setBackgroundGeolocationEnabled = async (enabled = false) => {
+  const setBackgroundGeolocationEnabled = useCallback(async (enabled = false) => {
     try {
       if (enabled) {
         await BackgroundGeolocation.requestPermission();
@@ -132,13 +132,15 @@ const BackgroundGolocationProvider = ({ children }) => {
       log('Permission granting failed', error);
       _setBackgroundGeolocationEnabled(false);
     }
-  };
+  }, [initializeBackgroundGeolocation, user]);
+
+  const value = useMemo(() => ({
+    backgroundGeolocationEnabled,
+    setBackgroundGeolocationEnabled,
+  }), [backgroundGeolocationEnabled, setBackgroundGeolocationEnabled]);
 
   return (
-    <BackgroundGeolocationContext.Provider value={{
-      backgroundGeolocationEnabled,
-      setBackgroundGeolocationEnabled,
-    }}>
+    <BackgroundGeolocationContext.Provider value={value}>
       {children}
       {logs != null && (
         <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.8)', ...Styles.center }}>

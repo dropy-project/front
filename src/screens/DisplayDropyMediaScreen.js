@@ -39,7 +39,7 @@ const DisplayDropyMediaScreen = ({ navigation, route }) => {
   const confirmGoBack = async () => {
     const result = await sendAlert({
       title: 'Ne pas répondre ?',
-      description: 'Tu ne pourras plus voir ce drop ni commencer à discuter avec l\'utilisateur qui l'a créé',
+      description: 'Tu ne pourras plus voir ce drop ni commencer à discuter avec l\'utilisateur qui l\'a créé',
       validateText: 'Ne pas répondre',
       denyText: 'Non, je veux répondre',
     });
