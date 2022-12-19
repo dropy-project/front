@@ -32,7 +32,7 @@
     "react": "17.0.2",
     "react-native": "0.68.5",
     "react-native-background-fetch": "^4.1.5",
-    "react-native-background-geolocation": "^4.7.1",
+    "react-native-background-geolocation": "^4.9.4",
     "react-native-compass-heading": "^1.4.1",
     "react-native-config": "^1.4.11",
     "react-native-device-info": "^10.1.1",
