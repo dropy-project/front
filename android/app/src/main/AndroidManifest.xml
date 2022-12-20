@@ -20,8 +20,7 @@
       android:networkSecurityConfig="@xml/network_security_config"
     >
       <!-- react-native-background-geolocation licence -->
-      <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="a00033c1ddcf3039dfac381c994b023212b784dfd0d85143b89d0834dae6a95d
-" />
+      <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="a00033c1ddcf3039dfac381c994b023212b784dfd0d85143b89d0834dae6a95d" />
 
       <service android:name="com.transistorsoft.locationmanager.service.TrackingService" android:foregroundServiceType="location" />
       <service android:name="com.transistorsoft.locationmanager.service.LocationRequestService" android:foregroundServiceType="location" />

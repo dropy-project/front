@@ -19,6 +19,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         android:networkSecurityConfig="@xml/network_security_config"
     >
+        <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="a00033c1ddcf3039dfac381c994b023212b784dfd0d85143b89d0834dae6a95d" />
 
         <meta-data
         android:name="com.google.android.geo.API_KEY"
