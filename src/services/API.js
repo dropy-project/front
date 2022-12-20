@@ -219,6 +219,11 @@ const checkEmailAvailable = async (email) => {
   return response;
 };
 
+const getUnretrievedDropyInfos = async (dropyId) => {
+  const response = await axios.get(`/dropy/unretrievedDropyInfos/${dropyId}`);
+  return response;
+};
+
 const API = {
   getHeaders,
   register,
@@ -249,6 +254,7 @@ const API = {
   init,
   deleteAccount,
   checkEmailAvailable,
+  getUnretrievedDropyInfos,
 };
 
 export default API;

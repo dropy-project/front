@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
@@ -14,12 +14,25 @@ import DropyLogo from '../assets/svgs/dropy_logo.svg';
 import ParticleEmitter from '../components/effect/ParticleEmitter';
 import FooterConfirmation from '../components/other/FooterConfirmation';
 import GoBackHeader from '../components/other/GoBackHeader';
+import API from '../services/API';
+import useCurrentUser from '../hooks/useCurrentUser';
+import useOverlay from '../hooks/useOverlay';
+import useDropiesAroundSocket from '../hooks/useDropiesAroundSocket';
+
 
 const GetDropyScreen = ({ navigation, route }) => {
   const { dropy = null } = route.params || {};
+  const { setUser } = useCurrentUser();
+  const { sendBottomAlert, sendAlert } = useOverlay();
+  const { retrieveDropy } = useDropiesAroundSocket();
 
   const circleAnimation = useRef(new Animated.Value(0)).current;
   const circleBreathing = useRef(new Animated.Value(0)).current;
+  const [dropyInfo, setDropyInfo] = useState(undefined);
+
+  useEffect(() => {
+    getDropyInfo(dropy);
+  }, []);
 
   useEffect(() => {
     const anim = Animated.sequence([
@@ -70,11 +83,49 @@ const GetDropyScreen = ({ navigation, route }) => {
     outputRange: [0.97, 1],
   });
 
-  const handleConfirmation = (dropy) => {
-    navigation.reset({
-      index: 1,
-      routes: [{ name: 'Home' }, { name: 'DisplayDropyMedia', params: { dropy, showBottomModal: true } }],
-    });
+  const getDropyInfo = async (dropy) => {
+    try {
+      const response = await API.getUnretrievedDropyInfos(dropy.id);
+      setDropyInfo(response.data);
+    } catch (error) {
+      console.error(`Error when retrieving data from a drop not retrieved`, error);
+    }
+  };
+
+  const handleConfirmation = async (dropy) => {
+    try {
+      const result = await retrieveDropy(dropy.id);
+      console.log(result.data);
+      if (result.error != null) {
+        if (result.status === 406) {
+          await sendAlert({
+            title: 'Oh non, tu es à cours d\'énergie !',
+            description: 'N\'attends pas, recharge la en posant un drop !',
+            validateText: 'Ok !',
+          });
+          return;
+        }
+        throw result.error;
+      }
+
+      navigation.reset({
+        index: 1,
+        routes: [{ name: 'Home' }, { name: 'DisplayDropyMedia', params: { dropy: result.data, showBottomModal: true } }],
+      });
+      setTimeout(() => {
+        setUser((oldUser) => ({
+          ...oldUser,
+          energy: result.data.newEnergy,
+          lastEnergyIncrement: result.data.newEnergy - result.data.oldEnergy,
+        }));
+      }, 500);
+    } catch (error) {
+      console.error('Dropy pressed error', error);
+      sendBottomAlert({
+        title: 'Oups...',
+        description: 'Le drop a été perdu en chemin\nVérifie ta connexion internet',
+      });
+    }
   };
 
   return (
@@ -89,7 +140,7 @@ const GetDropyScreen = ({ navigation, route }) => {
         <Animated.View style={{ ...styles.largerCircle, transform: [{ scale: Animated.multiply(breathing, bigCircle) }] }} />
         <Animated.View style={{ ...styles.bigCircle, transform: [{ scale: Animated.multiply(breathing, largeCircle) }] }} />
       </View>
-      <FooterConfirmation dropy={dropy} onPress={() => handleConfirmation(dropy)} textButton='Ouvrir le drop !'/>
+      { dropyInfo && <FooterConfirmation dropy={dropyInfo} onPress={() => handleConfirmation(dropyInfo)} textButton='Ouvrir le drop !'/>}
     </SafeAreaView>
   );
 };
