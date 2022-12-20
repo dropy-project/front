@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useCallback, useMemo, useState } from 'react';
 import AlertModal from '../components/overlays/AlertModal';
 import BottomModal from '../components/overlays/BottomModal';
 import Haptics from '../utils/haptics';
@@ -9,7 +9,7 @@ const OverlayContextProvider = ({ children }) => {
   const [showAlertModal, setShowAlertModal] = useState(null);
   const [showBottomAlert, setShowBottomAlert] = useState(null);
 
-  const sendAlert = ({ title, description, denyText, validateText = 'Ok' }) => {
+  const sendAlert = useCallback(({ title, description, denyText, validateText = 'Ok' }) => {
     if (title == null) {
       console.warn('sendAlert: title is required');
       return;
@@ -35,9 +35,9 @@ const OverlayContextProvider = ({ children }) => {
         },
       });
     });
-  };
+  }, []);
 
-  const sendBottomAlert = ({ title, description }) => {
+  const sendBottomAlert = useCallback(({ title, description }) => {
     if (title == null) {
       console.warn('sendBottomAlert: title is required');
       return;
@@ -57,13 +57,15 @@ const OverlayContextProvider = ({ children }) => {
         },
       });
     });
-  };
+  }, []);
+
+  const value = useMemo(() => ({
+    sendAlert,
+    sendBottomAlert,
+  }), [sendAlert, sendBottomAlert]);
 
   return (
-    <OverlayContext.Provider value={{
-      sendAlert,
-      sendBottomAlert,
-    }}>
+    <OverlayContext.Provider value={value}>
       {children}
       <BottomModal visible={showBottomAlert != null} data={showBottomAlert} />
       <AlertModal visible={showAlertModal != null} data={showAlertModal} />

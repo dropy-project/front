@@ -9,8 +9,6 @@ import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 
 import useConversationsSocket from '../hooks/useConversationsSocket';
 
-import Haptics from '../utils/haptics';
-
 import Notification from '../components/overlays/Notification';
 
 export const extractNotificationPayload = (notification) => {
@@ -37,63 +35,74 @@ const NotificationProvider = ({ children }) => {
   const { openChat } = useConversationsSocket();
 
   useEffectForegroundOnly(() => {
-    if (user == null)
+    if (user == null) {
+      setInitialized(false);
       return;
+    }
+
     if (initialized)
       return;
+
     setInitialized(true);
+
+    const setupNotifications = () => {
+      Notifications.registerRemoteNotifications();
+
+      const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
+        console.error('Notification registration error', event);
+      });
+
+      const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
+        console.log('Notification received in foreground', notification);
+        completion({ alert: false, sound: false, badge: false });
+
+        const payload = extractNotificationPayload(notification);
+
+        const notifData = {
+          title: notification.title,
+          body: notification.body ?? notification?.payload?.message,
+          id: new Date().getTime(),
+          onPress: isNaN(payload) ? () => {} : () => openChat(payload),
+        };
+
+        setNotificationsStack((old) => {
+          const newStack = [...(old ?? []), notifData];
+          return newStack;
+        });
+      });
+
+      const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
+        completion();
+
+        const payload = extractNotificationPayload(notification);
+        if (payload == null)
+          return;
+
+        setPendingConversationToOpen(payload);
+      });
+
+      Notifications.ios.setBadgeCount(0);
+
+      return () => {
+        registrationFailedEvent.remove();
+        receivedForegroundEvent.remove();
+        openedEvent.remove();
+      };
+    };
     setupNotifications();
+
+    const sendDeviceToken = async () => {
+      Notifications.events().registerRemoteNotificationsRegistered((event) => {
+        console.log('Device token:', event.deviceToken);
+        API.postUserDeviceToken(event.deviceToken).then((response) => {
+          console.log('Device token sent to server:', response.data);
+        }).catch((error) => {
+          console.error('Send device token error', error);
+        });
+      });
+    };
     sendDeviceToken();
   }, [user]);
-
-  const setupNotifications = () => {
-    Notifications.registerRemoteNotifications();
-
-    const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
-      console.error('Notification registration error', event);
-    });
-
-    const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
-      console.log('Notification received in foreground', notification);
-      completion({ alert: false, sound: false, badge: false });
-
-      const payload = extractNotificationPayload(notification);
-      if (payload == null)
-        return;
-
-      const notifData = {
-        title: notification.title,
-        body: notification.body ?? notification?.payload?.message,
-        id: new Date().getTime(),
-        onPress: () => openChat(payload),
-      };
-
-      Haptics.impactLight();
-
-      setNotificationsStack((old) => {
-        const newStack = [...(old ?? []), notifData];
-        return newStack;
-      });
-    });
-
-    const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
-      completion();
-
-      const payload = extractNotificationPayload(notification);
-      if (payload == null)
-        return;
-
-      setPendingConversationToOpen(payload);
-    });
-
-    Notifications.ios.setBadgeCount(0);
-
-    return () => {
-      registrationFailedEvent.remove();
-      receivedForegroundEvent.remove();
-      openedEvent.remove();
-    };
-  };
 
   useEffectForegroundOnly(() => {
     if (pendingConversationToOpen != null) {
@@ -101,17 +110,6 @@ const NotificationProvider = ({ children }) => {
       setPendingConversationToOpen(null);
     }
   }, [pendingConversationToOpen]);
-
-  const sendDeviceToken = async () => {
-    Notifications.events().registerRemoteNotificationsRegistered((event) => {
-      console.log('Device token:', event.deviceToken);
-      API.postUserDeviceToken(event.deviceToken).then((response) => {
-        console.log('Device token sent to server:', response.data);
-      }).catch((error) => {
-        console.error('Send device token error', error);
-      });
-    });
-  };
 
   const handleNotificationDone = () => {
     setNotificationsStack((old) => {

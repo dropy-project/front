@@ -15,24 +15,25 @@ const UserProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
+    const loadCustomUrls = async () => {
+      const customUrls = await Storage.getItem('@custom_urls');
+      if (!customUrls)
+        return;
+      setCustomUrls(customUrls);
+    };
+
     loadCustomUrls();
   }, []);
 
-  const loadCustomUrls = async () => {
-    const customUrls = await Storage.getItem('@custom_urls');
-    if (!customUrls)
-      return;
-    setCustomUrls(customUrls);
-  };
-
   return (
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <UserContext.Provider value={{
       user,
-      setUser,
       developerMode,
-      setDeveloperMode,
       customUrls,
+      setDeveloperMode,
       setCustomUrls,
+      setUser,
     }}>
       {children}
     </UserContext.Provider>

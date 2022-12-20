@@ -70,15 +70,15 @@ const Splash = ({ navigation, route }) => {
 
       if (!isCompatibleWithServer) {
         sendAlert({
-          title: 'Server version is not compatible',
-          description: 'Please update the app to the latest version',
+          title: 'Version incompatible',
+          description: 'Mets à jour ton application.',
         });
       }
       return isCompatibleWithServer;
     } catch (error) {
       sendAlert({
-        title: 'We could not connect to the server',
-        description: 'Please check your internet connection and try again.',
+        title: 'Mince...',
+        description: 'La connexion au serveur a échoué.',
       });
     }
     return false;

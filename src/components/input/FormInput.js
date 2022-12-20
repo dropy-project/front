@@ -47,27 +47,27 @@ const FormInput = (props, ref) => {
     const notEmpty = value?.trim() !== '';
     const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
     if (!emailValid)
-      setValidityErrorMessage('This is not a valid email');
+      setValidityErrorMessage('Cet email n\'est pas valide');
 
     const maxLengthValid = (!maxLength || value?.trim().length <= maxLength);
     if (!maxLengthValid)
-      setValidityErrorMessage(`Maximum length is ${maxLength}`);
+      setValidityErrorMessage(`La taille max est de ${maxLength}`);
 
     const minLengthValid = (!minLength || value?.trim().length >= minLength);
     if (!minLengthValid)
-      setValidityErrorMessage(`Must be at least ${minLength} characters`);
+      setValidityErrorMessage(`Doit contenir au moins ${minLength} caractères`);
 
     const passwordLengthValid = !isPassword || value?.trim().length >= 6;
     if (!passwordLengthValid)
-      setValidityErrorMessage('Must be at least 6 characters');
+      setValidityErrorMessage('Doit contenir au moins 6 caractères');
 
     const passwordContainsNumber = !isPassword || /\d/.test(value);
     if (!passwordContainsNumber)
-      setValidityErrorMessage('Must contain at least one number');
+      setValidityErrorMessage('Doit contenir au moins un chiffre');
 
     const passwordContainsUppercase = !isPassword || /[A-Z]/.test(value);
     if (!passwordContainsUppercase)
-      setValidityErrorMessage('Must contain at least one uppercase letter');
+      setValidityErrorMessage('Doit contenir au moins une majuscule');
 
     const inputValid = value != null && notEmpty && emailValid && maxLengthValid && minLengthValid && passwordLengthValid && passwordContainsNumber && passwordContainsUppercase;
     setValid(inputValid);

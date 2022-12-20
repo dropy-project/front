@@ -40,8 +40,8 @@ const UserDropiesScreen = ({ navigation }) => {
       setLoading(false);
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We couldn\'t find your drops...\nCheck your internet connection!',
+        title: 'Patatra !',
+        description: 'Impossible de récupérer tes drops.\nVérifie ta connexion internet',
       });
       console.error('Error while fetching user dropies', error?.response?.data || error);
       navigation.goBack();
@@ -50,10 +50,10 @@ const UserDropiesScreen = ({ navigation }) => {
 
   const deleteDropy = async (dropyId) => {
     const confirmed = await sendAlert({
-      title: 'Are you sure?',
-      description: 'No one will be able to see it anymore!',
-      denyText: 'Cancel',
-      validateText: 'Delete',
+      title: 'Attention !',
+      description: 'Plus personne ne pourra voir ton drop',
+      denyText: 'Annuler',
+      validateText: 'Supprimer',
     });
 
     if (!confirmed)
@@ -66,8 +66,8 @@ const UserDropiesScreen = ({ navigation }) => {
       setDropies((old) => old.filter((dropy) => dropy.id !== dropyId));
     } catch (error) {
       sendAlert({
-        title: 'Oh no...',
-        description: 'We couldn\'t find your drops...\nCheck your internet connection!',
+        title: 'Pas de bol !',
+        description: 'Ton drop n\'a pas pu être supprimé.\nVérifie ta connexion internet',
       });
       console.error('Error while fetching user dropies', error?.response?.data || error);
       navigation.goBack();
@@ -77,7 +77,7 @@ const UserDropiesScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} />
-      <GoBackHeader text='My drops' />
+      <GoBackHeader text='Mes drops' />
       {loading ? (
         <View style={{ height: responsiveHeight(80), ...Styles.center }}>
           <LoadingSpinner />
@@ -90,7 +90,7 @@ const UserDropiesScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollViewContent}
           ListEmptyComponent={() => (
             <View style={{ height: responsiveHeight(80), ...Styles.center }}>
-              <Text style={{ ...Fonts.regular(13, Colors.darkGrey) }}>{'You don\'t have dropped anything yet'}</Text>
+              <Text style={{ ...Fonts.regular(13, Colors.darkGrey), textAlign: 'center' }}>{'C\'est plutôt vide par ici !\nTu n\'as pas encore trouvé de drop...'}</Text>
             </View>
           )}
           renderItem={({ item: dropy, index }) => (
@@ -110,7 +110,7 @@ const UserDropiesScreen = ({ navigation }) => {
                   <View>
                     <Text style={{ ...Fonts.bold(12, Colors.white) }}>Dropped {chunckHeaderTimeString(dropy.creationDate).toLowerCase()}</Text>
                     <Text style={{ ...Fonts.regular(10, Colors.white), marginTop: 2 }}>
-                      {dropy?.retriever?.id == null ? 'Not found' : `Found by @${dropy?.retriever?.username}`}
+                      {dropy?.retriever?.id == null ? 'Pas encore trouvé' : `Trouvé par @${dropy?.retriever?.username}`}
                     </Text>
                   </View>
                   <TouchableOpacity onPress={() => deleteDropy(dropy.id)}>

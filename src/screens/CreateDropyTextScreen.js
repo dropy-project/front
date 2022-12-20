@@ -26,19 +26,19 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
 
     if (text.length < 20) {
       sendAlert({
-        title: 'That\'s it?',
-        description: 'Hey this is a bit short !\nBe a hero and add more details to your drop !',
-        validateText: 'OK',
+        title: 'Tu n\'as que ça à dire ?',
+        description: 'Sois courageux et donne nous plus d\'infos !',
+        validateText: 'Je peux faire mieux !',
       });
       return;
     }
 
     if (text.length < 100) {
       const result = await sendAlert({
-        title: 'Short but efficient!',
-        description: 'Nothing more to say ?\nThink of who\'s gonna see this drop!',
-        denyText: 'Send anyway!',
-        validateText: 'I can do longer!',
+        title: 'Court mais efficace !',
+        description: 'Penses-tu que ton message est assez long pour être compris ?',
+        denyText: 'Envoyer quand même',
+        validateText: 'Je peux faire mieux !',
       });
       if (result)
         return;
@@ -56,15 +56,14 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} text={'Tips: open your heart !'}/>
+      <GoBackHeader onPressGoBack={ () => navigation.navigate('Home')} text={'Ouvre ton coeur !'}/>
       <MaterialCommunityIcons name='draw-pen' size={80} color={Colors.mainBlue} style={{ ...Styles.blueShadow, ...styles.penIcon }}/>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.inputContainer}
       >
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <TextInput
-            placeholder='What do you want to tell anybody ? '
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <TextInput placeholder='Que voudrais-tu dire au monde ?'
             multiline={true}
             placeholderTextColor={Colors.lightGrey}
             style={styles.textInput}
@@ -75,8 +74,9 @@ const CreateDropyTextScreen = ({ navigation, route }) => {
           />
         </TouchableWithoutFeedback>
         <GlassButton
+          fontSize={13}
           style={styles.largeButton}
-          buttonText={'start'}
+          buttonText={'Confirmer'}
           onPress={handleTextSubmit}
         />
       </KeyboardAvoidingView>
@@ -108,8 +108,8 @@ const styles = StyleSheet.create({
     height: 150,
   },
   largeButton: {
-    width: 228,
-    height: 57,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     marginBottom: 20,
   },
   penIcon: {
