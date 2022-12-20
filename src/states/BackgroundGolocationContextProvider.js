@@ -23,16 +23,15 @@ import { UserContext } from './UserContextProvider';
 
 export const BackgroundGeolocationContext = createContext(null);
 
-const setupBackgroundGeolocation = async (authTokens) => {
+const setupBackgroundGeolocation = async (authTokens, username = 'unknown') => {
   const { accessToken, refreshToken, expires } = authTokens;
 
   const backgroundGeolocationReady = await BackgroundGeolocation.ready({
-    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
-    useSignificantChangesOnly: true,
+    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
+    elasticityMultiplier: 2,
 
     logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
 
-    stopOnTerminate: false,
     startOnBoot: true,
 
     maxRecordsToPersist: 1,
@@ -43,7 +42,7 @@ const setupBackgroundGeolocation = async (authTokens) => {
       accessToken,
       refreshToken,
       expires,
-      refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1`,
+      refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1&username=${username}`,
       refreshPayload: {
         refreshToken: '{refreshToken}',
       },
@@ -110,13 +109,13 @@ const BackgroundGolocationProvider = ({ children }) => {
       return;
     }
 
-    const state = await setupBackgroundGeolocation(authTokens);
+    const state = await setupBackgroundGeolocation(authTokens, user.username);
     const enable = enableAfterInit || state.enabled;
     _setBackgroundGeolocationEnabled(enable);
 
     log(`Initialized successfully (started : ${enable})`);
     setInitialized(true);
-  }, [enableAfterInit, initialized]);
+  }, [enableAfterInit, initialized, user.username]);
 
   const setBackgroundGeolocationEnabled = useCallback(async (enabled = false) => {
     try {
