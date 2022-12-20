@@ -12,7 +12,13 @@ const FormSelect = (props, ref) => {
 
   return (
     <View style={{ ...styles.container, opacity: disabled ? 0.5 : 1 }}>
-      <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>{title}</Text>
+      <Text
+        style={{ ...Fonts.bold(12, Colors.darkGrey), flex: 0.95 }}
+        adjustsFontSizeToFit
+        numberOfLines={1}
+      >
+        {title}
+      </Text>
       <Switch
         disabled={disabled}
         value={value}

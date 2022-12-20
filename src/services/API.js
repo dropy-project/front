@@ -219,6 +219,11 @@ const checkEmailAvailable = async (email) => {
   return response;
 };
 
+const requestResetPassword = async (email) => {
+  const response = await axios.post('/requestResetPassword', { email });
+  return response;
+};
+
 const getUnretrievedDropyInfos = async (dropyId) => {
   const response = await axios.get(`/dropy/unretrievedDropyInfos/${dropyId}`);
   return response;
@@ -254,6 +259,7 @@ const API = {
   init,
   deleteAccount,
   checkEmailAvailable,
+  requestResetPassword,
   getUnretrievedDropyInfos,
 };
 
