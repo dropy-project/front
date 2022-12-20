@@ -29,24 +29,25 @@ const UserDropiesScreen = ({ navigation }) => {
   const [dropies, setDropies] = useState([]);
 
   useEffect(() => {
-    loadDropies();
-  }, []);
+    const loadDropies = async () => {
+      try {
+        setLoading(true);
+        const response = await API.getUserDropies();
+        setDropies(response.data);
+        setLoading(false);
+      } catch (error) {
+        sendAlert({
+          title: 'Patatra !',
+          description: 'Impossible de récupérer tes drops.\nVérifie ta connexion internet',
+        });
+        console.error('Error while fetching user dropies', error?.response?.data || error);
+        navigation.goBack();
+      }
+    };
 
-  const loadDropies = async () => {
-    try {
-      setLoading(true);
-      const response = await API.getUserDropies();
-      setDropies(response.data);
-      setLoading(false);
-    } catch (error) {
-      sendAlert({
-        title: 'Patatra !',
-        description: 'Impossible de récupérer tes drops.\nVérifie ta connexion internet',
-      });
-      console.error('Error while fetching user dropies', error?.response?.data || error);
-      navigation.goBack();
-    }
-  };
+    loadDropies();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const deleteDropy = async (dropyId) => {
     const confirmed = await sendAlert({
@@ -108,7 +109,7 @@ const UserDropiesScreen = ({ navigation }) => {
                 />
                 <View style={styles.infoContainer}>
                   <View>
-                    <Text style={{ ...Fonts.bold(12, Colors.white) }}>Dropped {chunckHeaderTimeString(dropy.creationDate).toLowerCase()}</Text>
+                    <Text style={{ ...Fonts.bold(12, Colors.white) }}>Posé {chunckHeaderTimeString(dropy.creationDate).toLowerCase()}</Text>
                     <Text style={{ ...Fonts.regular(10, Colors.white), marginTop: 2 }}>
                       {dropy?.retriever?.id == null ? 'Pas encore trouvé' : `Trouvé par @${dropy?.retriever?.username}`}
                     </Text>
