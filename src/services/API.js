@@ -219,6 +219,11 @@ const checkEmailAvailable = async (email) => {
   return response;
 };
 
+const requestResetPassword = async (email) => {
+  const response = await axios.post('/requestResetPassword', { email });
+  return response;
+};
+
 const API = {
   getHeaders,
   register,
@@ -249,6 +254,7 @@ const API = {
   init,
   deleteAccount,
   checkEmailAvailable,
+  requestResetPassword,
 };
 
 export default API;
