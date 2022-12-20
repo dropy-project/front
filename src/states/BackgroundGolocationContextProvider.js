@@ -115,7 +115,7 @@ const BackgroundGolocationProvider = ({ children }) => {
 
     log(`Initialized successfully (started : ${enable})`);
     setInitialized(true);
-  }, [enableAfterInit, initialized, user.username]);
+  }, [enableAfterInit, initialized, user?.username]);
 
   const setBackgroundGeolocationEnabled = useCallback(async (enabled = false) => {
     try {
