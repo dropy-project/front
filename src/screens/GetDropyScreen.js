@@ -95,7 +95,6 @@ const GetDropyScreen = ({ navigation, route }) => {
   const handleConfirmation = async (dropy) => {
     try {
       const result = await retrieveDropy(dropy.id);
-      console.log(result.data);
       if (result.error != null) {
         if (result.status === 406) {
           await sendAlert({
@@ -108,10 +107,6 @@ const GetDropyScreen = ({ navigation, route }) => {
         throw result.error;
       }
 
-      navigation.reset({
-        index: 1,
-        routes: [{ name: 'Home' }, { name: 'DisplayDropyMedia', params: { dropy: result.data, showBottomModal: true } }],
-      });
       setTimeout(() => {
         setUser((oldUser) => ({
           ...oldUser,
@@ -119,6 +114,10 @@ const GetDropyScreen = ({ navigation, route }) => {
           lastEnergyIncrement: result.data.newEnergy - result.data.oldEnergy,
         }));
       }, 500);
+      navigation.reset({
+        index: 1,
+        routes: [{ name: 'Home' }, { name: 'DisplayDropyMedia', params: { dropy: result.data.dropy, showBottomModal: true } }],
+      });
     } catch (error) {
       console.error('Dropy pressed error', error);
       sendBottomAlert({
