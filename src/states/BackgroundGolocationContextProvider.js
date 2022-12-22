@@ -35,6 +35,14 @@ const setupBackgroundGeolocation = async (authTokens) => {
 
     maxRecordsToPersist: 1,
 
+    locationAuthorizationAlert: {
+      titleWhenNotEnabled: 'Impossible d\'activer le mode radar',
+      cancelButton: 'Pas de mode radar pour moi :(',
+      settingsButton: 'Ouvrir les paramètres',
+      instructions: 'Pour activer le mode radar tu dois autoriser la géolocalisation même quand l\'application est fermée.',
+      titleWhenOff: 'Il faut activer la géolocalisation "tous le temps" pour le mode radar.',
+    },
+
     url: API.userBackgroundGeolocationPingUrl(),
     authorization: {
       strategy: 'JWT',
