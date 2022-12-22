@@ -3,6 +3,8 @@ import { Gesture, GestureDetector, State } from 'react-native-gesture-handler';
 import MapView from 'react-native-maps';
 import { Map } from '../../styles/Styles';
 
+const ZOOM_DELTA = Map.MAX_ZOOM - Map.MIN_ZOOM;
+
 /**
  * Android Map uses a custom gesture handler.
  * This is because rn-maps does not support screen centered rotation on Android.
@@ -13,7 +15,7 @@ const AndroidMap = (props, ref) => {
   const isUpdatingCamera = useRef(false);
 
   const lastGestureRotationRef = useRef(0);
-  const lastGestureZoomRef = useRef(0);
+  const lastGestureZoomRef = useRef((Map.INITIAL_ZOOM - Map.MIN_ZOOM) / ZOOM_DELTA);
 
   const { onZoomChange, onHeadingChange, onGestureStart, onGestureEnd } = props;
 
@@ -41,7 +43,7 @@ const AndroidMap = (props, ref) => {
 
       const addedZoom = e.scale - 1;
       const newZoomNormalized = lastGestureZoomRef.current + addedZoom;
-      const newZoomMapScale = (newZoomNormalized * (Map.MAX_ZOOM - Map.MIN_ZOOM)) + Map.MIN_ZOOM;
+      const newZoomMapScale = (newZoomNormalized * ZOOM_DELTA) + Map.MIN_ZOOM;
 
       setCameraPropertySync(newZoomMapScale, 'zoom');
 

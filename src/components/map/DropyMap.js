@@ -49,8 +49,8 @@ const DropyMap = ({
 
   const { developerMode, setUser } = useCurrentUser();
 
-  const zoomAnimatedValue = useRef(new Animated.Value(0)).current;
-  const headingAnimatedValue = useRef(new Animated.Value(0)).current;
+  const zoomAnimatedValue = useRef(new Animated.Value(Map.INITIAL_ZOOM)).current;
+  const headingAnimatedValue = useRef(new Animated.Value(compassHeading)).current;
 
   const mapHeadingValueRef = useRef(0);
 
