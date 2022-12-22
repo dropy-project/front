@@ -70,11 +70,11 @@ const SocketContextProvider = ({ children }) => {
       chatSocket.current.on('disconnect', () => {
         setChatSocketConnected(false);
       });
-      chatSocket.current.on('double_connection', async () => {
-        log('Double connection detected by host, destroying all sockets');
-        destroyAllSocket();
-        setDoubleConnectionLocked(true);
-      });
+      // chatSocket.current.on('double_connection', async () => {
+      //   log('Double connection detected by host, destroying all sockets');
+      //   destroyAllSocket();
+      //   setDoubleConnectionLocked(true);
+      // });
 
       log('Sockets initilized');
       setInitialized(true);
