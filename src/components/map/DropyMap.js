@@ -49,8 +49,8 @@ const DropyMap = ({
 
   const { developerMode, setUser } = useCurrentUser();
 
-  const zoomAnimatedValue = useRef(new Animated.Value(Map.INITIAL_ZOOM)).current;
-  const headingAnimatedValue = useRef(new Animated.Value(compassHeading)).current;
+  const sonarZoomAnimatedValue = useRef(new Animated.Value(Map.INITIAL_ZOOM)).current;
+  const sonarHeadingAnimatedValue = useRef(new Animated.Value(compassHeading)).current;
 
   const mapHeadingValueRef = useRef(0);
 
@@ -145,7 +145,7 @@ const DropyMap = ({
 
     if (forceZoom) {
       setShowZoomButton(false);
-      Animated.timing(zoomAnimatedValue, {
+      Animated.timing(sonarZoomAnimatedValue, {
         toValue: Map.MAX_ZOOM,
         duration: 200,
         useNativeDriver: true,
@@ -153,7 +153,7 @@ const DropyMap = ({
     }
 
     if (forceHeading) {
-      Animated.timing(headingAnimatedValue, {
+      Animated.timing(sonarHeadingAnimatedValue, {
         toValue: compassHeading,
         duration: 200,
         useNativeDriver: true,
@@ -200,7 +200,7 @@ const DropyMap = ({
 
   const onMapZoomChange = (zoom) => {
     // High frequency event, should not be used to update state
-    zoomAnimatedValue.setValue(zoom);
+    sonarZoomAnimatedValue.setValue(zoom);
     if (zoom === Map.MAX_ZOOM && showZoomButton)
       setShowZoomButton(false);
     else if (!showZoomButton)
@@ -211,15 +211,15 @@ const DropyMap = ({
   const onMapHeadingChange = (heading) => {
     // High frequency event, should not be used to update state
     mapHeadingValueRef.current = heading;
-    headingAnimatedValue.setValue(compassHeading - heading);
+    sonarHeadingAnimatedValue.setValue(compassHeading - heading);
     if (headingLocked)
       setHeadingLocked(false);
   };
 
   useEffect(() => {
     const sonarHeading = headingLocked ? 0 : compassHeading - mapHeadingValueRef.current;
-    headingAnimatedValue.setValue(sonarHeading);
-  }, [compassHeading, headingAnimatedValue, headingLocked]);
+    sonarHeadingAnimatedValue.setValue(sonarHeading);
+  }, [compassHeading, sonarHeadingAnimatedValue, headingLocked]);
 
   return (
     <>
@@ -281,8 +281,8 @@ const DropyMap = ({
 
       <EnergyPopup />
       <Sonar
-        zoomAnimatedValue={zoomAnimatedValue}
-        headingAnimatedValue={headingAnimatedValue}
+        zoomAnimatedValue={sonarZoomAnimatedValue}
+        headingAnimatedValue={sonarHeadingAnimatedValue}
         visible={!museumVisible}
         compassHeading={compassHeading}
       />
