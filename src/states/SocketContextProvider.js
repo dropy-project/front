@@ -65,12 +65,23 @@ const SocketContextProvider = ({ children }) => {
       chatSocket.current.on('connect', () => {
         setChatSocketConnected(true);
       });
+
+      dropySocket.current.on('connect_error', (err) => {
+        setDropySocketConnected(false);
+        console.error('Dropy socket connection error', err);
+      });
+      chatSocket.current.on('connect_error', (err) => {
+        setChatSocketConnected(false);
+        console.error('Chat socket connection error', err);
+      });
+
       dropySocket.current.on('disconnect', () => {
         setDropySocketConnected(false);
       });
       chatSocket.current.on('disconnect', () => {
         setChatSocketConnected(false);
       });
+
       chatSocket.current.on('double_connection', async () => {
         log('Double connection detected by host, destroying all sockets');
         destroyAllSocket();
@@ -89,6 +100,8 @@ const SocketContextProvider = ({ children }) => {
     chatSocket.current?.off('connect');
     dropySocket.current?.off('disconnect');
     chatSocket.current?.off('disconnect');
+    dropySocket.current?.off('connect_error');
+    chatSocket.current?.off('connect_error');
 
     dropySocket.current?.disconnect();
     chatSocket.current?.disconnect();
@@ -111,15 +124,17 @@ const SocketContextProvider = ({ children }) => {
     if (dropySocket.current?.connected === false) {
       setDropySocketConnected(false);
       setTimeout(() => {
+        dropySocket.current?.disconnect();
         log('Reconnecting dropy socket');
-        dropySocket.current.connect();
+        dropySocket.current.connect({ forceNew: true });
       }, 1000);
     }
     if (chatSocket.current?.connected === false) {
       setChatSocketConnected(false);
       setTimeout(() => {
+        chatSocket.current?.disconnect();
         log('Reconnecting chat socket');
-        chatSocket.current.connect();
+        chatSocket.current.connect({ forceNew: true });
       }, 1000);
     }
     if (dropySocket.current?.connected && chatSocket.current?.connected) {
