@@ -224,6 +224,11 @@ const requestResetPassword = async (email) => {
   return response;
 };
 
+const getUnretrievedDropyInfos = async (dropyId) => {
+  const response = await axios.get(`/dropy/unretrievedDropyInfos/${dropyId}`);
+  return response;
+};
+
 const API = {
   getHeaders,
   register,
@@ -255,6 +260,7 @@ const API = {
   deleteAccount,
   checkEmailAvailable,
   requestResetPassword,
+  getUnretrievedDropyInfos,
 };
 
 export default API;

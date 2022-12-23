@@ -8,19 +8,18 @@ import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { PERMISSIONS, request, requestLocationAccuracy } from 'react-native-permissions';
 import { useInitializedGeolocation } from '../../hooks/useGeolocation';
-import useOverlay from '../../hooks/useOverlay';
 
 import Haptics from '../../utils/haptics';
 
-import useCurrentUser from '../../hooks/useCurrentUser';
 import Styles, { Colors, Map } from '../../styles/Styles';
+import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
 import AnimatedFlask from '../effect/AnimatedFlask';
 import MapLoadingOverlay from '../overlays/MapLoadingOverlay';
 import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
-import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
 import useOnAppFocused from '../../hooks/useOnAppFocused';
+import useCurrentUser from '../../hooks/useCurrentUser';
 import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
@@ -47,12 +46,8 @@ const DropyMap = ({
   retrievedDropies = null,
 }) => {
   const navigation = useNavigation();
-
-  const { sendBottomAlert, sendAlert } = useOverlay();
-
   const {
     dropiesAround,
-    retrieveDropy,
   } = useDropiesAroundSocket();
 
   const {
@@ -61,7 +56,7 @@ const DropyMap = ({
     initialized: geolocationInitialized,
   } = useInitializedGeolocation();
 
-  const { developerMode, setUser } = useCurrentUser();
+  const { developerMode } = useCurrentUser();
 
   const sonarZoomAnimatedValue = useRef(new Animated.Value(Map.INITIAL_ZOOM)).current;
   const sonarHeadingAnimatedValue = useRef(new Animated.Value(compassHeading)).current;
@@ -78,45 +73,15 @@ const DropyMap = ({
   const [mapIsReady, setMapIsReady] = useState(false);
 
   const handleDropyPressed = async (dropy) => {
-    try {
-      if (dropy == null)
-        return;
-      if (userCoordinates == null)
-        return;
-      if (dropy?.isUserDropy)
-        return;
+    if (dropy == null)
+      return;
+    if (userCoordinates == null)
+      return;
+    if (dropy?.isUserDropy)
+      return;
 
-      Haptics.impactHeavy();
-
-      const result = await retrieveDropy(dropy.id);
-      if (result.error != null) {
-        if (result.status === 406) {
-          await sendAlert({
-            title: 'Oh non, tu es à cours d\'énergie !',
-            description: 'N\'attends pas, recharge la en posant un drop !',
-            validateText: 'Ok !',
-          });
-          return;
-        }
-        throw result.error;
-      }
-
-      navigation.navigate('GetDropy', { dropy: result.data.dropy });
-
-      setTimeout(() => {
-        setUser((oldUser) => ({
-          ...oldUser,
-          energy: result.data.newEnergy,
-          lastEnergyIncrement: result.data.newEnergy - result.data.oldEnergy,
-        }));
-      }, 500);
-    } catch (error) {
-      console.error('Dropy pressed error', error);
-      sendBottomAlert({
-        title: 'Oups...',
-        description: 'Le drop a été perdu en chemin\nVérifie ta connexion internet',
-      });
-    }
+    Haptics.impactHeavy();
+    navigation.navigate('GetDropy', { dropy });
   };
 
   useEffect(() => {
