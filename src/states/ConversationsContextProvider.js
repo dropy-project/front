@@ -46,6 +46,8 @@ const ConversationsContextProvider = ({ children }) => {
     };
 
     setConversations((old) => {
+      if (old == null)
+        return [updatedConversation];
       const newConversations = [updatedConversation, ...old.filter((c) => c.id !== conversation.id)];
 
       const sortedConversations = newConversations.sort((a, b) => new Date(b.lastMessageDate) - new Date(a.lastMessageDate));
@@ -85,7 +87,13 @@ const ConversationsContextProvider = ({ children }) => {
   }, [openChat, openChatIdOnConvsLoaded, conversations]);
 
   const closeConversation = useCallback((conversationId) => {
-    setConversations((old) => old.filter((conversation) => conversation.id !== conversationId));
+    setConversations((old) => {
+      if (old == null)
+        return null;
+      return old.filter((conversation) => conversation.id !== conversationId
+      );
+    });
+
     return new Promise((resolve) => {
       chatSocket.emit('close_conversation', conversationId, resolve);
     });
