@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
@@ -10,27 +10,26 @@ import useOverlay from '../hooks/useOverlay';
 
 import FormInput from '../components/input/FormInput';
 import GlassButton from '../components/input/GlassButton';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 const ResetPasswordScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
+  const { user } = useCurrentUser();
+
+  const [email, setEmail] = useState(user?.email || '');
+
+  const emailInputRef = useRef();
 
   const { sendAlert } = useOverlay();
 
   const sendRequest = async () => {
-    if (email === '') {
-      sendAlert({
-        title: 'Oh non...',
-        description: 'La champ est vide ! \n Entre un email valide',
-      });
-      return;
-    }
-    if (!email.includes('@')) {
+    if (!emailInputRef.current?.isValid()) {
       sendAlert({
         title: 'Oh non...',
         description: 'Cet email n\'est pas valide ! \n Entre un email valide',
       });
       return;
     }
+
     try {
       const response = await API.checkEmailAvailable(email);
       if (!response.data) {
@@ -66,6 +65,7 @@ const ResetPasswordScreen = ({ navigation }) => {
           <View style={styles.form}>
             <Text style={styles.title}>Réinitialiser son mot de passe</Text>
             <FormInput
+              ref={emailInputRef}
               placeholder='Email'
               inputStyle={{ backgroundColor: Colors.lighterGrey }}
               onEdited={setEmail}
