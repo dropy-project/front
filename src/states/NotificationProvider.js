@@ -97,7 +97,7 @@ const NotificationProvider = ({ children }) => {
         API.postUserDeviceToken(event.deviceToken).then((response) => {
           console.log('Device token sent to server:', response.data);
         }).catch((error) => {
-          console.error('Send device token error', error);
+          console.error('Send device token error', error?.response?.data ?? error);
         });
       });
     };

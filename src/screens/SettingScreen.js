@@ -13,6 +13,7 @@ import {
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { AntDesign, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import AppInfo from '../../app.json';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
@@ -88,6 +89,7 @@ const SettingsScreen = ({ navigation }) => {
   }, [sendAlert]);
 
   const logout = async () => {
+    await BackgroundGeolocation.stop();
     await postNotificationsSettings(notificatinsSettingsRef.current);
     notificatinsSettingsRef.current = null;
     await API.logout();
