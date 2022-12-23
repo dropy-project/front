@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
-import { PERMISSIONS, request } from 'react-native-permissions';
+import { PERMISSIONS, request, requestLocationAccuracy } from 'react-native-permissions';
 import { useInitializedGeolocation } from '../../hooks/useGeolocation';
 import useOverlay from '../../hooks/useOverlay';
 
@@ -20,12 +20,26 @@ import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
 import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
+import useOnAppFocused from '../../hooks/useOnAppFocused';
 import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
 import DropyMapMarker from './DropyMapMarker';
 import MapDebugger from './MapDebugger';
 import OSMapView from './OSMapView';
+
+const hasLocationPermissions = async () => {
+  let locationGranted = false;
+  if (Platform.OS === 'ios') {
+    const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    const accuracy = await requestLocationAccuracy({ purposeKey: 'LocationFullAccuracy' });
+    locationGranted = result === 'granted' && accuracy === 'full';
+  } else {
+    const result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    locationGranted = result === 'granted';
+  }
+  return locationGranted;
+};
 
 const DropyMap = ({
   museumVisible,
@@ -119,7 +133,6 @@ const DropyMap = ({
     if (mapHasGesture)
       return;
 
-    checkLocationPermission();
     setMapCameraPosition();
   }, [
     userCoordinates,
@@ -186,17 +199,13 @@ const DropyMap = ({
     return newLockedValue;
   });
 
-  const checkLocationPermission = async () => {
-    let result;
-    if (Platform.OS === 'ios')
-      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    else
-      result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-    if (result === 'granted')
-      setLocationGranted(true);
-    else
-      setLocationGranted(false);
-  };
+  useOnAppFocused(() => {
+    hasLocationPermissions().then(setLocationGranted);
+  });
+
+  useEffect(() => {
+    hasLocationPermissions().then(setLocationGranted);
+  }, []);
 
   const onMapZoomChange = (zoom) => {
     // High frequency event, should not be used to update state
