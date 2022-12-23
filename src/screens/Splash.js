@@ -4,6 +4,7 @@ import { Notifications } from 'react-native-notifications';
 import useCurrentUser from '../hooks/useCurrentUser';
 import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 import useOverlay from '../hooks/useOverlay';
+import useConversationsSocket from '../hooks/useConversationsSocket';
 
 import API from '../services/API';
 
@@ -14,6 +15,7 @@ const Splash = ({ navigation, route }) => {
   const { cancelAutoLogin = false } = route.params ?? {};
 
   const { setUser, user } = useCurrentUser();
+  const { openChat } = useConversationsSocket();
 
   const { sendAlert } = useOverlay();
 
@@ -99,18 +101,15 @@ const Splash = ({ navigation, route }) => {
   };
 
   const handleLoginSuccess = async () => {
+    navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+
     const initialNotification = await Notifications.getInitialNotification();
+    if (initialNotification == null)
+      return;
 
-    const payload = extractNotificationPayload(initialNotification);
-
-    if (payload?.user?.displayName != null) {
-      console.log('Login success with notification payload', payload);
-      navigation.reset({
-        index: 2,
-        routes: [{ name: 'Home' }, { name: 'Conversations' }, { name: 'Chat', params: { conversation: payload } }],
-      });
-    } else
-      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    const conversationId = extractNotificationPayload(initialNotification);
+    openChat(conversationId);
+    console.log('Login success with notification payload', conversationId);
   };
 
   return null;

@@ -10,6 +10,7 @@ const ConversationsContextProvider = ({ children }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState([]);
+  const [openIdOnLoad, setOpenIdOnLoad] = useState(null);
 
   const { chatSocket } = useSocket();
 
@@ -76,6 +77,13 @@ const ConversationsContextProvider = ({ children }) => {
     });
   }, [chatSocket]);
 
+  useEffect(() => {
+    if (openIdOnLoad !== null && conversations.length > 0) {
+      openChat(openIdOnLoad);
+      setOpenIdOnLoad(null);
+    }
+  }, [openChat, openIdOnLoad, conversations]);
+
   const closeConversation = useCallback((conversationId) => {
     setConversations((old) => old.filter((conversation) => conversation.id !== conversationId));
     return new Promise((resolve) => {
@@ -109,9 +117,16 @@ const ConversationsContextProvider = ({ children }) => {
   }, []);
 
   const openChat = useCallback((conversationId) => {
+    if (conversations == null || conversations.length === 0) {
+      console.log(`Conversations are not loaded yet, ${conversationId} will be opened on load end`);
+      setOpenIdOnLoad(conversationId);
+      return;
+    }
+
     const conversation = conversations.find((c) => c.id === conversationId);
     if (conversation == null)
       return;
+
     navigation.navigate('Chat', { conversation });
     markConversationAsRead(conversationId);
   }, [conversations, markConversationAsRead, navigation]);
