@@ -9,7 +9,7 @@ export const CENTER_ICON_SIZE = 15;
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-const Sonar = ({ visible, heading, zoom, compassHeading }) => {
+const Sonar = ({ visible, headingAnimatedValue, zoomAnimatedValue }) => {
   const visibleAnimatedValue = useRef(new Animated.Value(0)).current;
   const sonarWaveAnimatedValue = useRef(new Animated.Value(0)).current;
 
@@ -56,10 +56,16 @@ const Sonar = ({ visible, heading, zoom, compassHeading }) => {
     outputRange: [1, 0],
   });
 
-  const zoomScale = Math.max(
-    0.3,
-    ((zoom || 1) - Map.MIN_ZOOM) / (Map.MAX_ZOOM - Map.MIN_ZOOM)
-  );
+  const sonarScale = zoomAnimatedValue.interpolate({
+    inputRange: [Map.MIN_ZOOM, Map.MAX_ZOOM],
+    outputRange: [0.3, 1],
+    extrapolate: 'clamp',
+  });
+
+  const sonarRotation = headingAnimatedValue.interpolate({
+    inputRange: [0, 360],
+    outputRange: ['0deg', '360deg'],
+  });
 
   return (
     <Animated.View
@@ -67,13 +73,13 @@ const Sonar = ({ visible, heading, zoom, compassHeading }) => {
       style={{
         ...Styles.center,
         ...StyleSheet.absoluteFillObject,
-        transform: [{ translateY: CENTER_ICON_SIZE / 2 }, { scale: Animated.multiply(zoomScale, visibleAnimatedValue) }],
+        transform: [{ translateY: CENTER_ICON_SIZE / 2 }, { scale: Animated.multiply(sonarScale, visibleAnimatedValue) }],
       }}>
-      <View
+      <Animated.View
         pointerEvents='none'
         style={{
           ...styles.directionPointerContainer,
-          transform: [{ rotate: `${(-heading || 0) + compassHeading}deg` }, { translateY: -10 }],
+          transform: [{ rotate: sonarRotation }, { translateY: -10 }],
         }}>
         <View pointerEvents='none' style={styles.directionPointer}>
           <Svg viewBox='0 0 177 148' width={33} height={33}>
@@ -95,7 +101,7 @@ const Sonar = ({ visible, heading, zoom, compassHeading }) => {
             </LinearGradient>
           </Svg>
         </View>
-      </View>
+      </Animated.View>
       <AnimatedSvg
         pointerEvents='none'
         style={{
