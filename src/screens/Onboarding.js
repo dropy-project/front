@@ -6,6 +6,7 @@ import {
   Linking,
   Platform,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -352,6 +353,7 @@ export default function Onboarding({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle='dark-content' />
 
       {currentViewIndex === 0 && (
         <GoBackHeader inverted onPressGoBack={() => {

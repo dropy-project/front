@@ -1,7 +1,5 @@
-//
 // Philosophy of Operation
 // https://github.com/transistorsoft/react-native-background-geolocation/wiki/Philosophy-of-Operation
-//
 
 import React, {
   createContext,
@@ -23,7 +21,7 @@ import { UserContext } from './UserContextProvider';
 
 export const BackgroundGeolocationContext = createContext(null);
 
-const setupBackgroundGeolocation = async (authTokens, username = 'unknown') => {
+const setupBackgroundGeolocation = async (authTokens) => {
   const { accessToken, refreshToken, expires } = authTokens;
 
   const backgroundGeolocationReady = await BackgroundGeolocation.ready({
@@ -32,9 +30,18 @@ const setupBackgroundGeolocation = async (authTokens, username = 'unknown') => {
 
     logLevel: BackgroundGeolocation.LOG_LEVEL_WARNING,
 
+    stopOnTerminate: false,
     startOnBoot: true,
 
     maxRecordsToPersist: 1,
+
+    locationAuthorizationAlert: {
+      titleWhenNotEnabled: 'Impossible d\'activer le mode radar',
+      cancelButton: 'Pas de mode radar pour moi :(',
+      settingsButton: 'Ouvrir les paramètres',
+      instructions: 'Pour activer le mode radar tu dois autoriser la géolocalisation même quand l\'application est fermée.',
+      titleWhenOff: 'Il faut activer la géolocalisation "tous le temps" pour le mode radar.',
+    },
 
     url: API.userBackgroundGeolocationPingUrl(),
     authorization: {
@@ -42,7 +49,7 @@ const setupBackgroundGeolocation = async (authTokens, username = 'unknown') => {
       accessToken,
       refreshToken,
       expires,
-      refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1&username=${username}`,
+      refreshUrl: `${API.refreshTokenUrl()}?fromBackgroundGeolocation=1`,
       refreshPayload: {
         refreshToken: '{refreshToken}',
       },
@@ -63,12 +70,8 @@ const BackgroundGolocationProvider = ({ children }) => {
     const locationSubscriber = BackgroundGeolocation.onLocation(() => {}, () => {});
     const motionChangeSubscriber = BackgroundGeolocation.onMotionChange(() => {});
     const activityChangeSubscriber = BackgroundGeolocation.onActivityChange(() => {});
-    const authorizationChangeSubscriber = BackgroundGeolocation.onAuthorization((event) => {
-      if (event.success)
-        console.log('[authorization] SUCCESS: ', event.response);
-      else
-        console.error('[authorization] ERROR: ', event.error);
-    });
+    const authorizationChangeSubscriber = BackgroundGeolocation.onAuthorization(() => {});
+
     return () => {
       locationSubscriber.remove();
       motionChangeSubscriber.remove();
@@ -78,13 +81,28 @@ const BackgroundGolocationProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (user == null)
+    if (initialized === true)
       return;
+    const initializeBackgroundGeolocation = async () => {
+      const authTokens = await Storage.getItem('@auth_tokens');
+
+      if (authTokens == null) {
+        log('Could not initialize : no auth tokens');
+        return;
+      }
+
+      const state = await setupBackgroundGeolocation(authTokens);
+      const enable = enableAfterInit || state.enabled;
+      _setBackgroundGeolocationEnabled(enable);
+
+      log(`Initialized successfully (started : ${enable})`);
+      setInitialized(true);
+    };
 
     initializeBackgroundGeolocation().catch((error) => {
       console.error('Background geolocation loading error', error);
     });
-  }, [initializeBackgroundGeolocation, user]);
+  }, [initialized, enableAfterInit, user]);
 
   useEffect(() => {
     if (!initialized)
@@ -98,32 +116,11 @@ const BackgroundGolocationProvider = ({ children }) => {
       BackgroundGeolocation.stop();
   }, [backgroundGeolocationEnabled, initialized]);
 
-  const initializeBackgroundGeolocation = useCallback(async () => {
-    if (initialized === true)
-      return;
-
-    const authTokens = await Storage.getItem('@auth_tokens');
-
-    if (authTokens == null) {
-      log('Could not initialize : no auth tokens');
-      return;
-    }
-
-    const state = await setupBackgroundGeolocation(authTokens, user.username);
-    const enable = enableAfterInit || state.enabled;
-    _setBackgroundGeolocationEnabled(enable);
-
-    log(`Initialized successfully (started : ${enable})`);
-    setInitialized(true);
-  }, [enableAfterInit, initialized, user?.username]);
-
   const setBackgroundGeolocationEnabled = useCallback(async (enabled = false) => {
     try {
       if (enabled) {
         await BackgroundGeolocation.requestPermission();
-        if (user != null)
-          await initializeBackgroundGeolocation();
-        else
+        if (user == null)
           setEnableAfterInit(true);
       }
       _setBackgroundGeolocationEnabled(enabled);
@@ -131,7 +128,7 @@ const BackgroundGolocationProvider = ({ children }) => {
       log('Permission granting failed', error);
       _setBackgroundGeolocationEnabled(false);
     }
-  }, [initializeBackgroundGeolocation, user]);
+  }, [user]);
 
   const value = useMemo(() => ({
     backgroundGeolocationEnabled,

@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Manager } from 'socket.io-client';
 
@@ -16,6 +16,7 @@ import AppInfo from '../../app.json';
 import API from '../services/API';
 import Storage from '../utils/storage';
 import DoubleConnectionOverlay from '../components/overlays/DoubleConnectionOverlay';
+import useOnAppFocused from '../hooks/useOnAppFocused';
 
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
 const SOCKET_BASE_URL = `https://${DOMAIN_PREFIX}socket.dropy-app.com`;
@@ -119,34 +120,29 @@ const SocketContextProvider = ({ children }) => {
     log('Sockets destroyed');
   };
 
-  useEffect(() => {
-    const appStateListener = AppState.addEventListener('change', (nextAppState) => {
-      if (nextAppState === 'active') {
-        if (dropySocket.current?.connected === false) {
-          setDropySocketConnected(false);
-          setTimeout(() => {
-            dropySocket.current?.disconnect();
-            log('Reconnecting dropy socket');
-            dropySocket.current.connect({ forceNew: true });
-          }, 1000);
-        }
-        if (chatSocket.current?.connected === false) {
-          setChatSocketConnected(false);
-          setTimeout(() => {
-            chatSocket.current?.disconnect();
-            log('Reconnecting chat socket');
-            chatSocket.current.connect({ forceNew: true });
-          }, 1000);
-        }
-        if (dropySocket.current?.connected && chatSocket.current?.connected) {
-          setDropySocketConnected(true);
-          setChatSocketConnected(true);
-          log('Sockets are connected');
-        }
-      }
-    });
-    return appStateListener.remove;
-  }, []);
+  useOnAppFocused(() => {
+    if (dropySocket.current?.connected === false) {
+      setDropySocketConnected(false);
+      setTimeout(() => {
+        dropySocket.current?.disconnect();
+        log('Reconnecting dropy socket');
+        dropySocket.current.connect({ forceNew: true });
+      }, 1000);
+    }
+    if (chatSocket.current?.connected === false) {
+      setChatSocketConnected(false);
+      setTimeout(() => {
+        chatSocket.current?.disconnect();
+        log('Reconnecting chat socket');
+        chatSocket.current.connect({ forceNew: true });
+      }, 1000);
+    }
+    if (dropySocket.current?.connected && chatSocket.current?.connected) {
+      setDropySocketConnected(true);
+      setChatSocketConnected(true);
+      log('Sockets are connected');
+    }
+  });
 
   const value = useMemo(() => ({
     dropySocket: dropySocket.current,

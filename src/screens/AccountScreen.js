@@ -1,6 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import GoBackHeader from '../components/other/GoBackHeader';
 import useOverlay from '../hooks/useOverlay';
@@ -24,6 +25,7 @@ const AccountScreen = ({ navigation }) => {
 
     try {
       const response = await API.deleteAccount();
+      await BackgroundGeolocation.stop();
       console.log(response.data);
       await API.logout();
       navigation.reset({
