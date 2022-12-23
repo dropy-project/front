@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Notifications } from 'react-native-notifications';
 import { Platform } from 'react-native';
 
@@ -27,8 +27,7 @@ export const extractNotificationPayload = (notification) => {
 const NotificationProvider = ({ children }) => {
   const { user } = useCurrentUser();
 
-  const [initialized, setInitialized] = useState(false);
-  const [pendingConversationToOpen, setPendingConversationToOpen] = useState(null);
+  const tokenSent = useRef(false);
 
   const [notificationsStack, setNotificationsStack] = useState(null);
 
@@ -36,80 +35,81 @@ const NotificationProvider = ({ children }) => {
 
   useEffectForegroundOnly(() => {
     if (user == null) {
-      setInitialized(false);
+      tokenSent.current = false;
       return;
     }
-
-    if (initialized)
+    if (tokenSent.current)
       return;
+    tokenSent.current = true;
 
-    setInitialized(true);
-
-    const setupNotifications = () => {
-      Notifications.registerRemoteNotifications();
-
-      const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
-        console.error('Notification registration error', event);
+    const remoteNotificationEvent = Notifications.events().registerRemoteNotificationsRegistered((event) => {
+      console.log('Device token:', event.deviceToken);
+      API.postUserDeviceToken(event.deviceToken).then((response) => {
+        console.log('Device token sent to server:', response.data);
+      }).catch((error) => {
+        console.error('Send device token error', error);
       });
+    });
 
-      const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
-        console.log('Notification received in foreground', notification);
-        completion({ alert: false, sound: false, badge: false });
-
-        const payload = extractNotificationPayload(notification);
-
-        const notifData = {
-          title: notification.title,
-          body: notification.body ?? notification?.payload?.message,
-          id: new Date().getTime(),
-          onPress: isNaN(payload) ? () => {} : () => openChat(payload),
-        };
-
-        setNotificationsStack((old) => {
-          const newStack = [...(old ?? []), notifData];
-          return newStack;
-        });
-      });
-
-      const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
-        completion();
-
-        const payload = extractNotificationPayload(notification);
-        if (payload == null)
-          return;
-
-        setPendingConversationToOpen(payload);
-      });
-
-      Notifications.ios.setBadgeCount(0);
-
-      return () => {
-        registrationFailedEvent.remove();
-        receivedForegroundEvent.remove();
-        openedEvent.remove();
-      };
+    return () => {
+      remoteNotificationEvent.remove();
     };
-    setupNotifications();
-
-    const sendDeviceToken = async () => {
-      Notifications.events().registerRemoteNotificationsRegistered((event) => {
-        console.log('Device token:', event.deviceToken);
-        API.postUserDeviceToken(event.deviceToken).then((response) => {
-          console.log('Device token sent to server:', response.data);
-        }).catch((error) => {
-          console.error('Send device token error', error?.response?.data ?? error);
-        });
-      });
-    };
-    sendDeviceToken();
   }, [user]);
 
   useEffectForegroundOnly(() => {
-    if (pendingConversationToOpen != null) {
-      openChat(pendingConversationToOpen);
-      setPendingConversationToOpen(null);
-    }
-  }, [pendingConversationToOpen]);
+    Notifications.ios.setBadgeCount(0);
+    Notifications.registerRemoteNotifications();
+
+    const registrationFailedEvent = Notifications.events().registerRemoteNotificationsRegistrationFailed((event) => {
+      console.error('Notification registration error', event);
+    });
+
+    return () => {
+      registrationFailedEvent.remove();
+    };
+  }, []);
+
+  useEffectForegroundOnly(() => {
+    const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
+      console.log('Notification received in foreground', notification);
+      completion({ alert: false, sound: true, badge: false });
+
+      const payload = extractNotificationPayload(notification);
+
+      const notifData = {
+        title: notification.title,
+        body: notification.body ?? notification?.payload?.message,
+        id: new Date().getTime(),
+        onPress: isNaN(payload) ? () => {} : () => openChat(payload),
+      };
+
+      setNotificationsStack((old) => {
+        const newStack = [...(old ?? []), notifData];
+        return newStack;
+      });
+    });
+
+    return () => {
+      receivedForegroundEvent.remove();
+    };
+  }, []);
+
+  useEffectForegroundOnly(() => {
+    const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
+      completion();
+      Notifications.ios.setBadgeCount(0);
+
+      const payload = extractNotificationPayload(notification);
+      if (payload == null)
+        return;
+
+      openChat(payload);
+    });
+
+    return () => {
+      openedEvent.remove();
+    };
+  }, [openChat]);
 
   const handleNotificationDone = () => {
     setNotificationsStack((old) => {
