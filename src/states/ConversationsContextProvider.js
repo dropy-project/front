@@ -9,8 +9,8 @@ export const ConversationsContext = createContext(null);
 const ConversationsContextProvider = ({ children }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
-  const [conversations, setConversations] = useState([]);
-  const [openIdOnLoad, setOpenIdOnLoad] = useState(null);
+  const [conversations, setConversations] = useState(null);
+  const [openChatIdOnConvsLoaded, setOpenChatIdOnConvsLoaded] = useState(null);
 
   const { chatSocket } = useSocket();
 
@@ -78,11 +78,11 @@ const ConversationsContextProvider = ({ children }) => {
   }, [chatSocket]);
 
   useEffect(() => {
-    if (openIdOnLoad !== null && conversations.length > 0) {
-      openChat(openIdOnLoad);
-      setOpenIdOnLoad(null);
+    if (openChatIdOnConvsLoaded !== null && conversations.length > 0) {
+      openChat(openChatIdOnConvsLoaded);
+      setOpenChatIdOnConvsLoaded(null);
     }
-  }, [openChat, openIdOnLoad, conversations]);
+  }, [openChat, openChatIdOnConvsLoaded, conversations]);
 
   const closeConversation = useCallback((conversationId) => {
     setConversations((old) => old.filter((conversation) => conversation.id !== conversationId));
@@ -117,9 +117,9 @@ const ConversationsContextProvider = ({ children }) => {
   }, []);
 
   const openChat = useCallback((conversationId) => {
-    if (conversations == null || conversations.length === 0) {
+    if (conversations == null) {
       console.log(`Conversations are not loaded yet, ${conversationId} will be opened on load end`);
-      setOpenIdOnLoad(conversationId);
+      setOpenChatIdOnConvsLoaded(conversationId);
       return;
     }
 
@@ -131,11 +131,15 @@ const ConversationsContextProvider = ({ children }) => {
     markConversationAsRead(conversationId);
   }, [conversations, markConversationAsRead, navigation]);
 
-  const conversationIsOpen = useCallback((conversationId) => conversations.find((c) => c.id === conversationId) != null, [conversations]);
+  const conversationIsOpen = useCallback((conversationId) => {
+    if (conversations == null)
+      return false;
+    return conversations.find((c) => c.id === conversationId) != null;
+  }, [conversations]);
 
   const value = useMemo(() => ({
     loading,
-    conversations,
+    conversations: conversations || [],
     closeConversation,
     markConversationAsRead,
     listConversations,
