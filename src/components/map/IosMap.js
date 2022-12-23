@@ -10,8 +10,6 @@ const IosMap = (props, ref) => {
 
   const mapRef = useRef(null);
 
-  const lastCamera = useRef(null);
-
   useImperativeHandle(ref, () => ({
     getMapRef: () => mapRef.current,
   }));
@@ -26,15 +24,8 @@ const IosMap = (props, ref) => {
     if (camera == null)
       return;
 
-    if (lastCamera.current == null) {
-      lastCamera.current = camera;
-      return;
-    }
-
     onZoomChange(camera.zoom);
     onHeadingChange(camera.heading);
-
-    lastCamera.current = camera;
   };
 
   const onRegionChangeComplete = async (_, { isGesture }) => {

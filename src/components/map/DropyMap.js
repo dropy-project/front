@@ -207,7 +207,6 @@ const DropyMap = ({
       setShowZoomButton(true);
   };
 
-
   const onMapHeadingChange = (heading) => {
     // High frequency event, should not be used to update state
     mapHeadingValueRef.current = heading;
