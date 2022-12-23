@@ -82,11 +82,13 @@ const SocketContextProvider = ({ children }) => {
         setChatSocketConnected(false);
       });
 
-      chatSocket.current.on('double_connection', async () => {
-        log('Double connection detected by host, destroying all sockets');
-        destroyAllSocket();
-        setDoubleConnectionLocked(true);
-      });
+      // Waiting for https://github.com/dropy-project/back/issues/206
+      // to be fixed
+      // chatSocket.current.on('double_connection', async () => {
+      //   log('Double connection detected by host, destroying all sockets');
+      //   destroyAllSocket();
+      //   setDoubleConnectionLocked(true);
+      // });
 
       log('Sockets initilized');
       setInitialized(true);

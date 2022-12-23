@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Platform, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Animated, Platform, SafeAreaView, StyleSheet } from 'react-native';
 
 import { PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
@@ -7,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { PERMISSIONS, request, requestLocationAccuracy } from 'react-native-permissions';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useInitializedGeolocation } from '../../hooks/useGeolocation';
 import useOverlay from '../../hooks/useOverlay';
 
