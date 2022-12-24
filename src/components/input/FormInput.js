@@ -45,7 +45,7 @@ const FormInput = (props, ref) => {
     setPartialValidity(partialValidation);
 
     const notEmpty = value?.trim() !== '';
-    const emailValid = (!isEmail || EMAIL_REGEX.test(value.trim()));
+    const emailValid = (!isEmail || EMAIL_REGEX.test(value));
     if (!emailValid)
       setValidityErrorMessage('Cet email n\'est pas valide');
 
