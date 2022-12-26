@@ -13,6 +13,7 @@ import {
 
 import * as Sentry from '@sentry/react-native';
 import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet';
+import SplashScreen from 'react-native-splash-screen';
 
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
@@ -23,6 +24,7 @@ import OverlayContextProvider from './src/states/OverlayContextProvider';
 import SocketContextProvider from './src/states/SocketContextProvider';
 import ConversationsContextProvider from './src/states/ConversationsContextProvider';
 import DropiesAroundContextProvider from './src/states/DropiesAroundContextProvider';
+
 
 Sentry.init({
   dsn: 'https://19407e7c32a2487689649a399a55c564@o1315355.ingest.sentry.io/6567185',
@@ -60,6 +62,8 @@ const NavigationApp = () => (
 const ConnectedNavigationApp = connectActionSheet(NavigationApp);
 
 export default function App() {
+  SplashScreen.hide();
+
   const [fontsLoaded] = useFonts({
     SpaceGrotesk_300Light,
     SpaceGrotesk_400Regular,
