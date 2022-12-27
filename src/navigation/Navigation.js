@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import CreateDropyTextScreen from '../screens/CreateDropyTextScreen';
 import CreateDropyFromLibrary from '../screens/CreateDropyFromLibrary';
 import GetDropyScreen from '../screens/GetDropyScreen';
+import Splash from '../screens/Splash';
 import CreateDropyTakePicture from '../screens/CreateDropyTakePicture';
 import ChatScreen from '../screens/ChatScreen';
 import DisplayDropyMediaScreen from '../screens/DisplayDropyMediaScreen';
@@ -31,6 +32,7 @@ export default function Navigation() {
         },
       }}
     >
+      <MainStack.Screen name='Splash' component={Splash} />
       <MainStack.Screen name='Register' component={RegisterScreen} />
       <MainStack.Screen name='Home' component={HomeScreen} />
       <MainStack.Screen name='Conversations' component={ConversationsScreen}/>
