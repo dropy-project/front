@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
-import AnimatedSplash from 'react-native-animated-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 
 import {
