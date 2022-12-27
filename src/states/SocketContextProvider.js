@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Manager } from 'socket.io-client';
 
@@ -16,6 +16,7 @@ import AppInfo from '../../app.json';
 import API from '../services/API';
 import Storage from '../utils/storage';
 import DoubleConnectionOverlay from '../components/overlays/DoubleConnectionOverlay';
+import useOnAppFocused from '../hooks/useOnAppFocused';
 
 const DOMAIN_PREFIX = AppInfo.productionMode ? '' : 'preprod-';
 const SOCKET_BASE_URL = `https://${DOMAIN_PREFIX}socket.dropy-app.com`;
@@ -64,17 +65,30 @@ const SocketContextProvider = ({ children }) => {
       chatSocket.current.on('connect', () => {
         setChatSocketConnected(true);
       });
+
+      dropySocket.current.on('connect_error', (err) => {
+        setDropySocketConnected(false);
+        console.error('Dropy socket connection error', err);
+      });
+      chatSocket.current.on('connect_error', (err) => {
+        setChatSocketConnected(false);
+        console.error('Chat socket connection error', err);
+      });
+
       dropySocket.current.on('disconnect', () => {
         setDropySocketConnected(false);
       });
       chatSocket.current.on('disconnect', () => {
         setChatSocketConnected(false);
       });
-      chatSocket.current.on('double_connection', async () => {
-        log('Double connection detected by host, destroying all sockets');
-        destroyAllSocket();
-        setDoubleConnectionLocked(true);
-      });
+
+      // Waiting for https://github.com/dropy-project/back/issues/206
+      // to be fixed
+      // chatSocket.current.on('double_connection', async () => {
+      //   log('Double connection detected by host, destroying all sockets');
+      //   destroyAllSocket();
+      //   setDoubleConnectionLocked(true);
+      // });
 
       log('Sockets initilized');
       setInitialized(true);
@@ -88,6 +102,8 @@ const SocketContextProvider = ({ children }) => {
     chatSocket.current?.off('connect');
     dropySocket.current?.off('disconnect');
     chatSocket.current?.off('disconnect');
+    dropySocket.current?.off('connect_error');
+    chatSocket.current?.off('connect_error');
 
     dropySocket.current?.disconnect();
     chatSocket.current?.disconnect();
@@ -106,32 +122,29 @@ const SocketContextProvider = ({ children }) => {
     log('Sockets destroyed');
   };
 
-  useEffect(() => {
-    const appStateListener = AppState.addEventListener('change', (nextAppState) => {
-      if (nextAppState === 'active') {
-        if (dropySocket.current?.connected === false) {
-          setDropySocketConnected(false);
-          setTimeout(() => {
-            log('Reconnecting dropy socket');
-            dropySocket.current.connect();
-          }, 1000);
-        }
-        if (chatSocket.current?.connected === false) {
-          setChatSocketConnected(false);
-          setTimeout(() => {
-            log('Reconnecting chat socket');
-            chatSocket.current.connect();
-          }, 1000);
-        }
-        if (dropySocket.current?.connected && chatSocket.current?.connected) {
-          setDropySocketConnected(true);
-          setChatSocketConnected(true);
-          log('Sockets are connected');
-        }
-      }
-    });
-    return appStateListener.remove;
-  }, []);
+  useOnAppFocused(() => {
+    if (dropySocket.current?.connected === false) {
+      setDropySocketConnected(false);
+      setTimeout(() => {
+        dropySocket.current?.disconnect();
+        log('Reconnecting dropy socket');
+        dropySocket.current.connect({ forceNew: true });
+      }, 1000);
+    }
+    if (chatSocket.current?.connected === false) {
+      setChatSocketConnected(false);
+      setTimeout(() => {
+        chatSocket.current?.disconnect();
+        log('Reconnecting chat socket');
+        chatSocket.current.connect({ forceNew: true });
+      }, 1000);
+    }
+    if (dropySocket.current?.connected && chatSocket.current?.connected) {
+      setDropySocketConnected(true);
+      setChatSocketConnected(true);
+      log('Sockets are connected');
+    }
+  });
 
   const value = useMemo(() => ({
     dropySocket: dropySocket.current,

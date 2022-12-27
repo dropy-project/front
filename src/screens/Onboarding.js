@@ -6,6 +6,7 @@ import {
   Linking,
   Platform,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -203,7 +204,7 @@ export default function Onboarding({ navigation }) {
       const response = await API.checkEmailAvailable(email);
       setLoading(false);
       if (!response.data)
-        emailInputRef.current?.setInvalid('An account already exists with this email');
+        emailInputRef.current?.setInvalid('Un compte existe déjà avec cet email');
       return response.data;
     } catch (error) {
       setLoading(false);
@@ -352,6 +353,7 @@ export default function Onboarding({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle='dark-content' />
 
       {currentViewIndex === 0 && (
         <GoBackHeader inverted onPressGoBack={() => {

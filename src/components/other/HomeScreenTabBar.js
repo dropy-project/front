@@ -1,18 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  Easing,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 
 import { Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Svg, { Path } from 'react-native-svg';
 
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Haptics from '../../utils/haptics';
 
 import Styles, { Colors, Fonts } from '../../styles/Styles';
@@ -57,7 +51,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         setRenderMenuOverlay(false);
     });
     return anim.stop;
-  }, [dropyMenuIsOpen]);
+  }, [dropyMenuIsOpen, wheelAnimatedValue]);
 
   useEffect(() => {
     Haptics.impactLight();
@@ -68,7 +62,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
     });
     anim.start();
     return anim.stop;
-  }, [museumVisible]);
+  }, [museumVisible, tabBarAnimatedValue]);
 
   useEffect(() => {
     Haptics.impactLight();
@@ -84,7 +78,7 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
         setRenderMuseumCloseButton(false);
     });
     return anim.stop;
-  }, [museumVisible]);
+  }, [mainButtonAnimatedValue, museumVisible]);
 
   const plusIconRotation = wheelAnimatedValue.interpolate({
     inputRange: [0, 1],
@@ -354,8 +348,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   tabBtn: {
+    width: responsiveWidth(30),
     alignItems: 'center',
-    width: '30%',
   },
   icons: {
     ...Styles.softShadows,

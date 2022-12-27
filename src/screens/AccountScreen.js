@@ -1,6 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import GoBackHeader from '../components/other/GoBackHeader';
 import useOverlay from '../hooks/useOverlay';
@@ -24,6 +25,7 @@ const AccountScreen = ({ navigation }) => {
 
     try {
       const response = await API.deleteAccount();
+      await BackgroundGeolocation.stop();
       console.log(response.data);
       await API.logout();
       navigation.reset({
@@ -48,7 +50,7 @@ const AccountScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <GoBackHeader text='Mon compte' />
       <View style={styles.content}>
-        <TouchableOpacity style={{ ...styles.navigateContainer, marginTop: 10 }} disabled>
+        {/* <TouchableOpacity style={{ ...styles.navigateContainer, marginTop: 10 }} disabled>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Abonnement</Text>
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
@@ -59,7 +61,7 @@ const AccountScreen = ({ navigation }) => {
           <View style={styles.navigateArrow}>
             <AntDesign name='arrowright' size={24} color={Colors.white} />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity style={styles.navigateContainer} onPress={() => navigation.navigate('ResetPasswordScreen')}>
           <Text style={{ ...Fonts.bold(12, Colors.darkGrey) }}>Changer mon mot de passe</Text>
           <View style={styles.navigateArrow}>

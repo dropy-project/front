@@ -1,25 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Platform, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Animated, Platform, SafeAreaView, StyleSheet } from 'react-native';
 
 import { PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
-import { PERMISSIONS, request } from 'react-native-permissions';
+import { PERMISSIONS, request, requestLocationAccuracy } from 'react-native-permissions';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useInitializedGeolocation } from '../../hooks/useGeolocation';
-import useOverlay from '../../hooks/useOverlay';
 
 import Haptics from '../../utils/haptics';
 
-import useCurrentUser from '../../hooks/useCurrentUser';
 import Styles, { Colors, Map } from '../../styles/Styles';
+import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
 import AnimatedFlask from '../effect/AnimatedFlask';
 import MapLoadingOverlay from '../overlays/MapLoadingOverlay';
 import DebugText from '../other/DebugText';
 import FadeInWrapper from '../effect/FadeInWrapper';
 import EnergyPopup from '../overlays/EnergyPopup';
-import useDropiesAroundSocket from '../../hooks/useDropiesAroundSocket';
+import useOnAppFocused from '../../hooks/useOnAppFocused';
+import useCurrentUser from '../../hooks/useCurrentUser';
 import EnergyTooltip from './EnergyTooltip';
 import RetrievedDropyMapMarker from './RetrievedDropyMapMarker';
 import Sonar from './Sonar';
@@ -27,18 +28,27 @@ import DropyMapMarker from './DropyMapMarker';
 import MapDebugger from './MapDebugger';
 import OSMapView from './OSMapView';
 
+const hasLocationPermissions = async () => {
+  let locationGranted = false;
+  if (Platform.OS === 'ios') {
+    const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    const accuracy = await requestLocationAccuracy({ purposeKey: 'LocationFullAccuracy' });
+    locationGranted = result === 'granted' && accuracy === 'full';
+  } else {
+    const result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    locationGranted = result === 'granted';
+  }
+  return locationGranted;
+};
+
 const DropyMap = ({
   museumVisible,
   selectedDropyIndex = null,
   retrievedDropies = null,
 }) => {
   const navigation = useNavigation();
-
-  const { sendBottomAlert, sendAlert } = useOverlay();
-
   const {
     dropiesAround,
-    retrieveDropy,
   } = useDropiesAroundSocket();
 
   const {
@@ -47,56 +57,32 @@ const DropyMap = ({
     initialized: geolocationInitialized,
   } = useInitializedGeolocation();
 
-  const { developerMode, setUser } = useCurrentUser();
+  const { developerMode } = useCurrentUser();
 
-  const [currentZoom, setCurrentZoom] = useState(0);
-  const [currentHeading, setCurrentHeading] = useState(0);
+  const sonarZoomAnimatedValue = useRef(new Animated.Value(Map.INITIAL_ZOOM)).current;
+  const sonarHeadingAnimatedValue = useRef(new Animated.Value(compassHeading)).current;
+
+  const mapHeadingValueRef = useRef(0);
+
+  const [mapHasGesture, setMapHasGesture] = useState(false);
+
   const [headingLocked, setHeadingLocked] = useState(false);
+  const [showZoomButton, setShowZoomButton] = useState(false);
   const [locationGranted, setLocationGranted] = useState(true);
 
   const osMap = useRef(null);
   const [mapIsReady, setMapIsReady] = useState(false);
 
   const handleDropyPressed = async (dropy) => {
-    try {
-      if (dropy == null)
-        return;
-      if (userCoordinates == null)
-        return;
-      if (dropy?.isUserDropy)
-        return;
+    if (dropy == null)
+      return;
+    if (userCoordinates == null)
+      return;
+    if (dropy?.isUserDropy)
+      return;
 
-      Haptics.impactHeavy();
-
-      const result = await retrieveDropy(dropy.id);
-      if (result.error != null) {
-        if (result.status === 406) {
-          await sendAlert({
-            title: 'Oh non, tu es à cours d\'énergie !',
-            description: 'N\'attends pas, recharge la en posant un drop !',
-            validateText: 'Ok !',
-          });
-          return;
-        }
-        throw result.error;
-      }
-
-      navigation.navigate('GetDropy', { dropy: result.data.dropy });
-
-      setTimeout(() => {
-        setUser((oldUser) => ({
-          ...oldUser,
-          energy: result.data.newEnergy,
-          lastEnergyIncrement: result.data.newEnergy - result.data.oldEnergy,
-        }));
-      }, 500);
-    } catch (error) {
-      console.error('Dropy pressed error', error);
-      sendBottomAlert({
-        title: 'Oups...',
-        description: 'Le drop a été perdu en chemin\nVérifie ta connexion internet',
-      });
-    }
+    Haptics.impactHeavy();
+    navigation.navigate('GetDropy', { dropy });
   };
 
   useEffect(() => {
@@ -107,14 +93,20 @@ const DropyMap = ({
     if (userCoordinates == null)
       return;
 
-    checkLocationPermission();
+    // During user gesture, map self positioning is disabled, this prevent
+    // the camera to skip following user interaction which is frustrating for the user.
+    // When the user release the gesture, the map is repositioned to the user position.
+    if (mapHasGesture)
+      return;
+
     setMapCameraPosition();
   }, [
     userCoordinates,
     compassHeading,
     mapIsReady,
     selectedDropyIndex,
-    retrievedDropies
+    retrievedDropies,
+    mapHasGesture
   ]);
 
   const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
@@ -130,8 +122,22 @@ const DropyMap = ({
       };
     }
 
-    setCurrentZoom(forceZoom ? Map.MAX_ZOOM : currentCamera.zoom);
-    setCurrentHeading(forceHeading ? compassHeading : currentCamera.heading);
+    if (forceZoom) {
+      setShowZoomButton(false);
+      Animated.timing(sonarZoomAnimatedValue, {
+        toValue: Map.MAX_ZOOM,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }
+
+    if (forceHeading) {
+      Animated.timing(sonarHeadingAnimatedValue, {
+        toValue: compassHeading,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }
 
     // eslint-disable-next-line no-undef
     requestAnimationFrame(() => {
@@ -159,26 +165,46 @@ const DropyMap = ({
     return newLockedValue;
   });
 
-  const checkLocationPermission = async () => {
-    let result;
-    if (Platform.OS === 'ios')
-      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    else
-      result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-    if (result === 'granted')
-      setLocationGranted(true);
-    else
-      setLocationGranted(false);
+  useOnAppFocused(() => {
+    hasLocationPermissions().then(setLocationGranted);
+  });
+
+  useEffect(() => {
+    hasLocationPermissions().then(setLocationGranted);
+  }, []);
+
+  const onMapZoomChange = (zoom) => {
+    // High frequency event, should not be used to update state
+    sonarZoomAnimatedValue.setValue(zoom);
+    if (zoom === Map.MAX_ZOOM && showZoomButton)
+      setShowZoomButton(false);
+    else if (!showZoomButton)
+      setShowZoomButton(true);
   };
+
+  const onMapHeadingChange = (heading) => {
+    // High frequency event, should not be used to update state
+    mapHeadingValueRef.current = heading;
+    sonarHeadingAnimatedValue.setValue(compassHeading - heading);
+    if (headingLocked)
+      setHeadingLocked(false);
+  };
+
+  useEffect(() => {
+    const sonarHeading = headingLocked ? 0 : compassHeading - mapHeadingValueRef.current;
+    sonarHeadingAnimatedValue.setValue(sonarHeading);
+  }, [compassHeading, sonarHeadingAnimatedValue, headingLocked]);
 
   return (
     <>
       <OSMapView
         ref={osMap}
         provider={PROVIDER_GOOGLE}
-        setCurrentZoom={setCurrentZoom}
-        setCurrentHeading={setCurrentHeading}
+        onZoomChange={onMapZoomChange}
+        onHeadingChange={onMapHeadingChange}
         setHeadingLocked={setHeadingLocked}
+        onGestureStart={() => setMapHasGesture(true)}
+        onGestureEnd={() => setMapHasGesture(false)}
         style={StyleSheet.absoluteFillObject}
         zoomEnabled={Platform.OS === 'ios' && !museumVisible}
         minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
@@ -228,7 +254,12 @@ const DropyMap = ({
       </OSMapView>
 
       <EnergyPopup />
-      <Sonar zoom={currentZoom} heading={currentHeading} visible={!museumVisible} compassHeading={compassHeading} />
+      <Sonar
+        zoomAnimatedValue={sonarZoomAnimatedValue}
+        headingAnimatedValue={sonarHeadingAnimatedValue}
+        visible={!museumVisible}
+        compassHeading={compassHeading}
+      />
       <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationGranted}/>
       <LinearGradient
         pointerEvents='none'
@@ -245,7 +276,7 @@ const DropyMap = ({
           <EnergyTooltip>
             <AnimatedFlask />
           </EnergyTooltip>
-          <FadeInWrapper visible={currentZoom < Map.MAX_ZOOM - 0.1}>
+          <FadeInWrapper visible={showZoomButton}>
             <TouchableOpacity
               onPress={() => setMapCameraPosition(headingLocked, true)}
               style={styles.lockButton}

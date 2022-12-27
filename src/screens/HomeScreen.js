@@ -5,11 +5,11 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View
 } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Styles, { Colors, Fonts } from '../styles/Styles';
 
 import { BackgroundGeolocationContext } from '../states/BackgroundGolocationContextProvider';
@@ -86,7 +86,7 @@ const HomeScreen = ({ navigation, route }) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [backgroundGeolocIconAnimatedValue, navigation]);
 
   const iconScale = backgroundGeolocIconAnimatedValue.interpolate({
     inputRange: [0, 0.1, 1],
