@@ -23,6 +23,7 @@ export const Colors = {
 
   red: '#f28888',
   green: '#8FDCB7',
+  yellow: '#FFD700',
 
   androidShadows: '#1d1d57',
   androidSoftShadows: '#697180',

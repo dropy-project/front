@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Marker } from 'react-native-maps';
+import { FontAwesome5 } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 
 import DropyPopup from '../../assets/svgs/dropyPopup.svg';
@@ -66,6 +67,11 @@ const DropyMapMarker = ({ dropy, onPress }) => {
               style={{ ...Fonts.bold(10, Colors.white), fontSize: 12 }}>
               OUVRIR
             </Text>
+            {dropy.premium && (
+              <View style={styles.premiumCircle}>
+                <FontAwesome5 name='crown' size={9} color={Colors.yellow} style={{ transform: [{ rotate: '45deg' }] }}/>
+              </View>
+            )}
           </View>
         )}
       </View>
@@ -126,5 +132,18 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 6,
     ...Styles.center,
+  },
+
+  premiumCircle: {
+    height: 18,
+    width: 18,
+    borderRadius: 45,
+    backgroundColor: 'white',
+    position: 'absolute',
+    right: -10,
+    top: -8,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
