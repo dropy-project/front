@@ -46,6 +46,22 @@ const AccountScreen = ({ navigation }) => {
     }
   };
 
+  const handleRequestUserPersonalData = async () => {
+    try {
+      await API.requestUserPersonalData();
+      sendAlert({
+        title: 'Succès',
+        description: 'Toutes vos informations vont vous être envoyées par mail',
+      });
+    } catch (error) {
+      sendAlert({
+        title: 'Erreur',
+        description: 'Le serveur est injoignable...\nVérifie ta connexion internet',
+      });
+      console.error('Error while user request his personal data', error?.response?.data || error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <GoBackHeader text='Mon compte' />
@@ -70,6 +86,9 @@ const AccountScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.spacer} />
+      <TouchableOpacity onPress={handleRequestUserPersonalData}>
+        <Text style={{ ...Fonts.regular(12, Colors.lightGrey) }}>Demander toutes mes données</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={handleDeleteAccount}>
         <Text style={{ ...Fonts.regular(12, Colors.lightGrey) }}>Supprimer mon compte</Text>
       </TouchableOpacity>

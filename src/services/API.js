@@ -229,6 +229,11 @@ const getUnretrievedDropyInfos = async (dropyId) => {
   return response;
 };
 
+const requestUserPersonalData = async () => {
+  const response = await axios.get('/user/requestUserPersonalData');
+  return response;
+};
+
 const API = {
   getHeaders,
   register,
@@ -261,6 +266,7 @@ const API = {
   checkEmailAvailable,
   requestResetPassword,
   getUnretrievedDropyInfos,
+  requestUserPersonalData,
 };
 
 export default API;
