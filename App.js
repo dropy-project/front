@@ -1,7 +1,7 @@
-/* eslint-disable camelcase */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
+/* eslint-disable camelcase */
 import {
   SpaceGrotesk_300Light,
   SpaceGrotesk_400Regular,
@@ -13,7 +13,6 @@ import {
 
 import * as Sentry from '@sentry/react-native';
 import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet';
-import SplashScreen from 'react-native-splash-screen';
 
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
@@ -62,8 +61,6 @@ const NavigationApp = () => (
 const ConnectedNavigationApp = connectActionSheet(NavigationApp);
 
 export default function App() {
-  SplashScreen.hide();
-
   const [fontsLoaded] = useFonts({
     SpaceGrotesk_300Light,
     SpaceGrotesk_400Regular,

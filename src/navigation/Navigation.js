@@ -32,7 +32,7 @@ export default function Navigation() {
         },
       }}
     >
-      <MainStack.Screen name='Splash' component={Splash} />
+      <MainStack.Screen name='Splash' component={Splash} options={{ ...TransitionPresets.ModalFadeTransition }} />
       <MainStack.Screen name='Register' component={RegisterScreen} />
       <MainStack.Screen name='Home' component={HomeScreen} />
       <MainStack.Screen name='Conversations' component={ConversationsScreen}/>
@@ -47,7 +47,7 @@ export default function Navigation() {
       <MainStack.Screen name='Settings' component={SettingsScreen} />
       <MainStack.Screen name='BlockedUsers' component={BlockedUsersScreen} />
       <MainStack.Screen name='UserDropies' component={UserDropiesScreen} />
-      <MainStack.Screen name='Onboarding' component={Onboarding} />
+      <MainStack.Screen name='Onboarding' component={Onboarding} options={{ ...TransitionPresets.ModalFadeTransition }} />
       <MainStack.Screen name='Account' component={AccountScreen} />
       <MainStack.Screen name='ResetPasswordScreen' component={ResetPasswordScreen} />
     </MainStack.Navigator>

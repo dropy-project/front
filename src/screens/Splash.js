@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Notifications } from 'react-native-notifications';
 
+import SplashScreen from 'react-native-splash-screen';
+import { StyleSheet, View } from 'react-native';
 import useCurrentUser from '../hooks/useCurrentUser';
-import useEffectForegroundOnly from '../hooks/useEffectForegroundOnly';
 import useOverlay from '../hooks/useOverlay';
 import useConversationsSocket from '../hooks/useConversationsSocket';
 
@@ -10,6 +11,7 @@ import API from '../services/API';
 
 import { extractNotificationPayload } from '../states/NotificationProvider';
 import Storage from '../utils/storage';
+import { Colors } from '../styles/Styles';
 
 const Splash = ({ navigation, route }) => {
   const { cancelAutoLogin = false } = route.params ?? {};
@@ -19,7 +21,7 @@ const Splash = ({ navigation, route }) => {
 
   const { sendAlert } = useOverlay();
 
-  useEffectForegroundOnly(() => {
+  useEffect(() => {
     launch();
   }, []);
 
@@ -29,6 +31,7 @@ const Splash = ({ navigation, route }) => {
   }, [user]);
 
   const navigateToOnboarding = () => {
+    SplashScreen.hide();
     navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
   };
 
@@ -91,10 +94,8 @@ const Splash = ({ navigation, route }) => {
     if (userTokenData == null)
       return null;
 
-
     if (userTokenData.expires < Date.now())
       await API.refreshToken(userTokenData.refreshToken);
-
 
     const response = await API.getUserProfile();
     return response.data;
@@ -102,6 +103,8 @@ const Splash = ({ navigation, route }) => {
 
   const handleLoginSuccess = async () => {
     navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+
+    SplashScreen.hide();
 
     const initialNotification = await Notifications.getInitialNotification();
     if (initialNotification == null)
@@ -112,7 +115,9 @@ const Splash = ({ navigation, route }) => {
     console.log('Login success with notification payload', conversationId);
   };
 
-  return null;
+  return (
+    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.purple2 }} />
+  );
 };
 
 export default Splash;
