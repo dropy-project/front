@@ -24,9 +24,8 @@ const AccountScreen = ({ navigation }) => {
       return;
 
     try {
-      const response = await API.deleteAccount();
+      await API.deleteAccount();
       await BackgroundGeolocation.stop();
-      console.log(response.data);
       await API.logout();
       navigation.reset({
         index: 0,

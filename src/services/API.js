@@ -199,6 +199,7 @@ const deleteAccount = async () => {
 };
 
 const logout = async () => {
+  await axios.get('/user/logout');
   await init();
   const removedItem = await Storage.removeItem('@auth_tokens');
   return removedItem;
