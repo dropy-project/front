@@ -195,13 +195,15 @@ const getUserProfile = async () => {
 
 const deleteAccount = async () => {
   const response = await axios.delete('/user/delete');
+  await API.logout();
   return response;
 };
 
 const logout = async () => {
+  const response = await axios.get('/user/logout');
   await init();
   const removedItem = await Storage.removeItem('@auth_tokens');
-  return removedItem;
+  return removedItem, response;
 };
 
 const getNotificationsSettings = async () => {
