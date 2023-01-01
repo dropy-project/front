@@ -213,6 +213,16 @@ const DropyMap = ({
         pitchEnabled={false}
         showsCompass={false}
         moveOnMarkerPress={false}
+        showsIndoors={false}
+        showsBuildings={false}
+        showsScale={false}
+        showsPointsOfInterest={false}
+        showsMyLocationButton={false}
+        zoomTapEnabled={false}
+        zoomControlEnabled={false}
+        toolbarEnabled={false}
+        // Below fix for https://github.com/dropy-project/front/issues/411
+        onPress={() => Platform.OS === 'android' && setMapCameraPosition()}
         initialCamera={{
           center: {
             latitude: userCoordinates?.latitude ?? 0,
@@ -223,7 +233,6 @@ const DropyMap = ({
           zoom: Map.INITIAL_ZOOM,
           altitude: 0,
         }}
-        showsPointsOfInterest={false}
         onMapLoaded={() => setMapIsReady(true)}
       >
         {retrievedDropies == null ? (
