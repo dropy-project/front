@@ -293,7 +293,7 @@ PODS:
     - glog
   - react-native-blur (4.3.0):
     - React-Core
-  - react-native-compass-heading (1.4.1):
+  - react-native-compass-heading (1.4.2):
     - React
   - react-native-config (1.4.11):
     - react-native-config/App (= 1.4.11)
@@ -319,6 +319,8 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-splash-screen (3.3.0):
+    - React-Core
   - React-perflogger (0.68.5)
   - React-RCTActionSheet (0.68.5):
     - React-Core/RCTActionSheetHeaders (= 0.68.5)
@@ -399,12 +401,12 @@ PODS:
     - SDWebImageWebPCoder (~> 0.8.4)
   - RNGestureHandler (2.8.0):
     - React-Core
-  - RNImageCropPicker (0.38.1):
+  - RNImageCropPicker (0.39.0):
     - React-Core
     - React-RCTImage
-    - RNImageCropPicker/QBImagePickerController (= 0.38.1)
+    - RNImageCropPicker/QBImagePickerController (= 0.39.0)
     - TOCropViewController
-  - RNImageCropPicker/QBImagePickerController (0.38.1):
+  - RNImageCropPicker/QBImagePickerController (0.39.0):
     - React-Core
     - React-RCTImage
     - TOCropViewController
@@ -479,6 +481,7 @@ DEPENDENCIES:
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-notifications (from `../node_modules/react-native-notifications`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -610,6 +613,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-notifications"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -704,7 +709,7 @@ SPEC CHECKSUMS:
   React-jsinspector: eb202e43b3879aba9a14f3f65788aec85d4e1ea9
   React-logger: 98f663b292a60967ebbc6d803ae96c1381183b6d
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
-  react-native-compass-heading: ff2c7a7fc1064abca69dd14c44c778e4a202f092
+  react-native-compass-heading: 1a7083ff9729c9e222cec5e00112398a7868db09
   react-native-config: bcafda5b4c51491ee1b0e1d0c4e3905bc7b56c1b
   react-native-geolocation: 3ed60c3d7f613c36b777b9fd0bc3453214e1b0d5
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
@@ -713,6 +718,7 @@ SPEC CHECKSUMS:
   react-native-maps: 085f614cf14d3637b2048bb9752da5b1c27c2886
   react-native-notifications: 83b4fd4a127a6c918fc846cae90da60f84819e44
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
+  react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   React-perflogger: 0458a87ea9a7342079e7a31b0d32b3734fb8415f
   React-RCTActionSheet: 22538001ea2926dea001111dd2846c13a0730bc9
   React-RCTAnimation: 732ce66878d4aa151d56a0d142b1105aa12fd313
@@ -731,7 +737,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
-  RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
+  RNImageCropPicker: 14fe1c29298fb4018f3186f455c475ab107da332
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d

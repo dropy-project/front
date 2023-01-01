@@ -8,6 +8,7 @@
 #import <TSBackgroundFetch/TSBackgroundFetch.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import "RNNotifications.h"
+#import "RNSplashScreen.h"
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -54,6 +55,7 @@
 
   [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
+  [RNSplashScreen show];
   return YES;
 }
 

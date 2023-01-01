@@ -1,7 +1,7 @@
-/* eslint-disable camelcase */
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
+/* eslint-disable camelcase */
 import {
   SpaceGrotesk_300Light,
   SpaceGrotesk_400Regular,
@@ -14,6 +14,7 @@ import {
 import * as Sentry from '@sentry/react-native';
 import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet';
 
+import { StatusBar } from 'react-native';
 import Navigation from './src/navigation/Navigation';
 import UserProvider from './src/states/UserContextProvider';
 import GeolocationProvider from './src/states/GeolocationContextProvider';
@@ -23,6 +24,7 @@ import OverlayContextProvider from './src/states/OverlayContextProvider';
 import SocketContextProvider from './src/states/SocketContextProvider';
 import ConversationsContextProvider from './src/states/ConversationsContextProvider';
 import DropiesAroundContextProvider from './src/states/DropiesAroundContextProvider';
+import { Colors } from './src/styles/Styles';
 
 Sentry.init({
   dsn: 'https://19407e7c32a2487689649a399a55c564@o1315355.ingest.sentry.io/6567185',
@@ -37,6 +39,7 @@ Sentry.init({
 
 const NavigationApp = () => (
   <NavigationContainer>
+    <StatusBar barStyle='light-content' backgroundColor={Colors.purple3} />
     <OverlayContextProvider>
       <UserProvider>
         <BackgroundGolocationContextProvider>

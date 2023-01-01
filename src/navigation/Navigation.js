@@ -3,10 +3,11 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import RegisterScreen from '../screens/RegisterScreen';
 import ConversationsScreen from '../screens/ConversationsScreen';
 import HomeScreen from '../screens/HomeScreen';
-import Splash from '../screens/Splash';
+
 import CreateDropyTextScreen from '../screens/CreateDropyTextScreen';
 import CreateDropyFromLibrary from '../screens/CreateDropyFromLibrary';
 import GetDropyScreen from '../screens/GetDropyScreen';
+import Splash from '../screens/Splash';
 import CreateDropyTakePicture from '../screens/CreateDropyTakePicture';
 import ChatScreen from '../screens/ChatScreen';
 import DisplayDropyMediaScreen from '../screens/DisplayDropyMediaScreen';
@@ -31,7 +32,7 @@ export default function Navigation() {
         },
       }}
     >
-      <MainStack.Screen name='Splash' component={Splash} />
+      <MainStack.Screen name='Splash' component={Splash} options={{ ...TransitionPresets.ModalFadeTransition }} />
       <MainStack.Screen name='Register' component={RegisterScreen} />
       <MainStack.Screen name='Home' component={HomeScreen} />
       <MainStack.Screen name='Conversations' component={ConversationsScreen}/>
@@ -46,7 +47,7 @@ export default function Navigation() {
       <MainStack.Screen name='Settings' component={SettingsScreen} />
       <MainStack.Screen name='BlockedUsers' component={BlockedUsersScreen} />
       <MainStack.Screen name='UserDropies' component={UserDropiesScreen} />
-      <MainStack.Screen name='Onboarding' component={Onboarding} />
+      <MainStack.Screen name='Onboarding' component={Onboarding} options={{ ...TransitionPresets.ModalFadeTransition }} />
       <MainStack.Screen name='Account' component={AccountScreen} />
       <MainStack.Screen name='ResetPasswordScreen' component={ResetPasswordScreen} />
     </MainStack.Navigator>

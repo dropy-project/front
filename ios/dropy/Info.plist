@@ -43,15 +43,15 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to acces your camera</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow $(PRODUCT_NAME) to use the location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow $(PRODUCT_NAME) to use the location</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>LocationFullAccuracy</key>
 		<string>On a besoin de ta position exacte !</string>
 	</dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to use the location</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to use the location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use the location</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -69,13 +69,13 @@
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>SplashScreen</string>
+	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
 	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleDarkContent</string>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
