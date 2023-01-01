@@ -151,15 +151,15 @@ const MuseumOverlay = ({ visible = false, setSelectedDropyIndex, setRetrievedDro
 
                     <View style={styles.dropInfosContainer}>
                       <View style={styles.dropInfo}>
-                        <Text style={{ ...Fonts.bold(10, Colors.grey) }}>Dropped :</Text>
+                        <Text style={{ ...Fonts.bold(10, Colors.grey) }}>Posé :</Text>
                         <Text style={{ ...Fonts.bold(11, Colors.darkGrey), marginTop: 3 }}>
-                          {createDropTimeString(new Date() - new Date(dropy.creationDate))} ago - {dropy.emitter.displayName}
+                          Il y a {createDropTimeString(new Date() - new Date(dropy.creationDate))} - {dropy.emitter.displayName}
                         </Text>
                       </View>
                       <View style={styles.dropInfo}>
-                        <Text style={{ ...Fonts.bold(10, Colors.grey) }}>Found :</Text>
+                        <Text style={{ ...Fonts.bold(10, Colors.grey) }}>Trouvé :</Text>
                         <Text style={{ ...Fonts.bold(11, Colors.darkGrey), marginTop: 3 }}>
-                          {createDropTimeString(new Date() - new Date(dropy.creationDate))} ago - {dropy.retriever.displayName}
+                          Il y a {createDropTimeString(new Date() - new Date(dropy.creationDate))} - {dropy.retriever.displayName}
                         </Text>
                       </View>
                     </View>
