@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Notifications } from 'react-native-notifications';
 
 import SplashScreen from 'react-native-splash-screen';
-import { StyleSheet, View } from 'react-native';
+import { AppState, StyleSheet, View } from 'react-native';
 import useCurrentUser from '../hooks/useCurrentUser';
 import useOverlay from '../hooks/useOverlay';
 import useConversationsSocket from '../hooks/useConversationsSocket';
@@ -36,6 +36,11 @@ const Splash = ({ navigation, route }) => {
   };
 
   const launch = async () => {
+    if (AppState.currentState !== 'active') {
+      console.log('App launch cancelled : app started in background');
+      return;
+    }
+
     const ready = await appIsReady();
     console.log(`Splash launch : app is ready -> ${ready}`);
 
