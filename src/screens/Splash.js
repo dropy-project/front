@@ -36,8 +36,8 @@ const Splash = ({ navigation, route }) => {
   };
 
   const launch = async () => {
-    if (AppState.currentState !== 'active') {
-      console.log('App launch cancelled : app started in background');
+    if (AppState.currentState !== 'active' && AppState.currentState !== 'unknown') {
+      console.log(`App launch cancelled : app started in ${AppState.currentState}`);
       return;
     }
 
