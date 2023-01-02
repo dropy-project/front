@@ -27,7 +27,7 @@
     "crypto-js": "v3.1.9-1",
     "expo": "^45.0.5",
     "expo-font": "^10.1.0",
-    "expo-haptics": "^11.2.0",
+    "expo-haptics": "^12.1.0",
     "metro-config": "^0.73.6",
     "ngeohash": "^0.6.3",
     "react": "17.0.2",
