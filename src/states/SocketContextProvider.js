@@ -123,6 +123,8 @@ const SocketContextProvider = ({ children }) => {
   };
 
   useOnAppFocused(() => {
+    if (initialized === false)
+      return;
     if (dropySocket.current?.connected === false) {
       setDropySocketConnected(false);
       setTimeout(() => {

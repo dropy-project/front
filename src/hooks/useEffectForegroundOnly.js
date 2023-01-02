@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
+import useOnAppFocused from './useOnAppFocused';
 
 /**
  * Accepts a function that contains imperative, possibly effectful code.
@@ -11,32 +12,25 @@ import { AppState } from 'react-native';
  * @param {*} deps If present, effect will only activate if the values in the list change.
  */
 const useEffectForegroundOnly = (effect, deps) => {
-  const appState = useRef(AppState.currentState);
-  const needRefresh = useRef(false);
+  const refreshRequired = useRef(false);
+  const effectReturnRef = useRef(null);
+
+  useOnAppFocused(() => {
+    if (refreshRequired.current === true) {
+      refreshRequired.current = false;
+      effectReturnRef.current = effect();
+    }
+  }, [effect, ...deps]);
 
   useEffect(() => {
-    let effectReturn = () => {};
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      appState.current = nextAppState;
+    refreshRequired.current = false;
+    if (AppState.currentState === 'active')
+      return effect();
+    refreshRequired.current = true;
 
-      if (nextAppState === 'active' && needRefresh.current) {
-        effectReturn = effect() ?? (() => {});
-        needRefresh.current = false;
-      }
-    });
-
-    return () => {
-      effectReturn();
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (appState.current === 'active') {
-      effect();
-      needRefresh.current = false;
-    } else
-      needRefresh.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // return the future cleanup function (It will be define when the app go back to foreground)
+    return () => effectReturnRef.current;
   }, deps);
 };
 
