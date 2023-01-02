@@ -57,6 +57,9 @@ const NotificationProvider = ({ children }) => {
   }, [user]);
 
   useEffectForegroundOnly(() => {
+    if (user == null)
+      return;
+
     Notifications.ios.setBadgeCount(0);
     Notifications.registerRemoteNotifications();
 
@@ -67,9 +70,12 @@ const NotificationProvider = ({ children }) => {
     return () => {
       registrationFailedEvent.remove();
     };
-  }, []);
+  }, [user]);
 
   useEffectForegroundOnly(() => {
+    if (user == null)
+      return;
+
     const receivedForegroundEvent = Notifications.events().registerNotificationReceivedForeground((notification, completion) => {
       console.log('Notification received in foreground', notification);
       completion({ alert: false, sound: true, badge: false });
@@ -92,9 +98,12 @@ const NotificationProvider = ({ children }) => {
     return () => {
       receivedForegroundEvent.remove();
     };
-  }, []);
+  }, [user]);
 
   useEffectForegroundOnly(() => {
+    if (user == null)
+      return;
+
     const openedEvent = Notifications.events().registerNotificationOpened((notification, completion) => {
       completion();
       Notifications.ios.setBadgeCount(0);
@@ -109,7 +118,7 @@ const NotificationProvider = ({ children }) => {
     return () => {
       openedEvent.remove();
     };
-  }, [openChat]);
+  }, [openChat, user]);
 
   const handleNotificationDone = () => {
     setNotificationsStack((old) => {

@@ -31,10 +31,12 @@ const EnergyTooltip = ({ style, children }) => {
 
     Storage.setItem('@energy_tooltip_initial_display', true);
 
-    _setIsPressed(true);
     setTimeout(() => {
-      setIsPressed(false);
-    }, 5000);
+      _setIsPressed(true);
+      setTimeout(() => {
+        setIsPressed(false);
+      }, 8000);
+    }, 3000);
   };
 
   useEffect(() => {

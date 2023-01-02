@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  TouchableOpacity as RNTouchableOpacity,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 
 import { Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -192,9 +199,9 @@ const HomeScreenTabBar = ({ onMuseumOpenPressed, onMuseumClosePressed, museumVis
       </Animated.View>
       {renderMenuOverlay && (
         <>
-          <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => setDropyMenuIsOpen(false)}>
+          <RNTouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => setDropyMenuIsOpen(false)}>
             <Animated.View style={{ ...styles.backgroundOverlay, opacity: wheelAnimatedValue }} />
-          </TouchableOpacity>
+          </RNTouchableOpacity>
           <DropyWheel isOpen={dropyMenuIsOpen} menuAnimatedValue={wheelAnimatedValue}>
             <TouchableOpacity style={styles.dropySelectionButton} onPress={handleAddPicture}>
               <SimpleLineIcons name='picture' size={30} color={Colors.grey} />
@@ -330,6 +337,8 @@ const styles = StyleSheet.create({
     height: responsiveHeight(100),
     width: responsiveWidth(100),
     bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: 'rgba(0,0,0,0.8)',
   },
   backgroundSvg: {
