@@ -106,6 +106,7 @@ const HomeScreen = ({ navigation, route }) => {
         retrievedDropies={retrievedDropies}
         museumVisible={museumOverlayVisible}
         selectedDropyIndex={selectedDropyIndex}
+        onSwipeMuseum={() => setMuseumOverlayVisible(true)}
       />
 
       <SafeAreaView style={styles.avatarContainer}>

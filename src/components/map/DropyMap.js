@@ -7,7 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { PERMISSIONS, request, requestLocationAccuracy } from 'react-native-permissions';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Directions, Gesture, GestureDetector, TouchableOpacity } from 'react-native-gesture-handler';
 import { useInitializedGeolocation } from '../../hooks/useGeolocation';
 
 import Haptics from '../../utils/haptics';
@@ -45,6 +45,7 @@ const DropyMap = ({
   museumVisible,
   selectedDropyIndex = null,
   retrievedDropies = null,
+  onSwipeMuseum = () => {},
 }) => {
   const navigation = useNavigation();
   const {
@@ -195,72 +196,82 @@ const DropyMap = ({
     sonarHeadingAnimatedValue.setValue(sonarHeading);
   }, [compassHeading, sonarHeadingAnimatedValue, headingLocked]);
 
+  const flingRight = Gesture.Fling()
+    .direction(Directions.RIGHT)
+    .onEnd(onSwipeMuseum);
+
+  const flingLeft = Gesture.Fling()
+    .direction(Directions.LEFT)
+    .onEnd(() => navigation.navigate('Conversations'));
+
   return (
     <>
-      <OSMapView
-        ref={osMap}
-        provider={PROVIDER_GOOGLE}
-        onZoomChange={onMapZoomChange}
-        onHeadingChange={onMapHeadingChange}
-        setHeadingLocked={setHeadingLocked}
-        onGestureStart={() => setMapHasGesture(true)}
-        onGestureEnd={() => setMapHasGesture(false)}
-        style={StyleSheet.absoluteFillObject}
-        zoomEnabled={Platform.OS === 'ios' && !museumVisible}
-        minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
-        maxZoomLevel={Map.MAX_ZOOM}
-        scrollEnabled={false}
-        pitchEnabled={false}
-        showsCompass={false}
-        moveOnMarkerPress={false}
-        showsIndoors={false}
-        showsBuildings={false}
-        showsScale={false}
-        showsPointsOfInterest={false}
-        showsMyLocationButton={false}
-        zoomTapEnabled={false}
-        zoomControlEnabled={false}
-        toolbarEnabled={false}
-        // Below fix for https://github.com/dropy-project/front/issues/411
-        onPress={() => Platform.OS === 'android' && setMapCameraPosition()}
-        initialCamera={{
-          center: {
-            latitude: userCoordinates?.latitude ?? 0,
-            longitude: userCoordinates?.longitude ?? 0,
-          },
-          heading: compassHeading || 0,
-          pitch: Map.INITIAL_PITCH,
-          zoom: Map.INITIAL_ZOOM,
-          altitude: 0,
-        }}
-        onMapLoaded={() => setMapIsReady(true)}
-      >
-        {retrievedDropies == null ? (
-          <>
-            {dropiesAround.map((dropy) => (
-              <DropyMapMarker
-                key={`${dropy.id}_${dropy.reachable}`}
-                dropy={dropy}
-                onPress={() => handleDropyPressed(dropy)}
-              />
-            ))}
-          </>
-        ) : (
-          <>
-            {retrievedDropies[selectedDropyIndex ?? 0] != null && (
-              <RetrievedDropyMapMarker
-                key={retrievedDropies[selectedDropyIndex ?? 0].id}
-                dropy={retrievedDropies[selectedDropyIndex ?? 0]}
-                onPress={() => navigation.navigate('DisplayDropyMedia', {
-                  dropy: retrievedDropies[selectedDropyIndex ?? 0],
-                  showBottomModal: false,
-                })}
-              />
-            )}
-          </>
-        )}
-        {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
-      </OSMapView>
+      <GestureDetector gesture={Gesture.Race(flingRight, flingLeft)}>
+        <OSMapView
+          ref={osMap}
+          provider={PROVIDER_GOOGLE}
+          onZoomChange={onMapZoomChange}
+          onHeadingChange={onMapHeadingChange}
+          setHeadingLocked={setHeadingLocked}
+          onGestureStart={() => setMapHasGesture(true)}
+          onGestureEnd={() => setMapHasGesture(false)}
+          style={StyleSheet.absoluteFillObject}
+          zoomEnabled={Platform.OS === 'ios' && !museumVisible}
+          minZoomLevel={developerMode ? Map.MIN_ZOOM_DEVELOPER : Map.MIN_ZOOM}
+          maxZoomLevel={Map.MAX_ZOOM}
+          scrollEnabled={false}
+          pitchEnabled={false}
+          showsCompass={false}
+          moveOnMarkerPress={false}
+          showsIndoors={false}
+          showsBuildings={false}
+          showsScale={false}
+          showsPointsOfInterest={false}
+          showsMyLocationButton={false}
+          zoomTapEnabled={false}
+          zoomControlEnabled={false}
+          toolbarEnabled={false}
+          // Below fix for https://github.com/dropy-project/front/issues/411
+          onPress={() => Platform.OS === 'android' && setMapCameraPosition()}
+          initialCamera={{
+            center: {
+              latitude: userCoordinates?.latitude ?? 0,
+              longitude: userCoordinates?.longitude ?? 0,
+            },
+            heading: compassHeading || 0,
+            pitch: Map.INITIAL_PITCH,
+            zoom: Map.INITIAL_ZOOM,
+            altitude: 0,
+          }}
+          onMapLoaded={() => setMapIsReady(true)}
+        >
+          {retrievedDropies == null ? (
+            <>
+              {dropiesAround.map((dropy) => (
+                <DropyMapMarker
+                  key={`${dropy.id}_${dropy.reachable}`}
+                  dropy={dropy}
+                  onPress={() => handleDropyPressed(dropy)}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {retrievedDropies[selectedDropyIndex ?? 0] != null && (
+                <RetrievedDropyMapMarker
+                  key={retrievedDropies[selectedDropyIndex ?? 0].id}
+                  dropy={retrievedDropies[selectedDropyIndex ?? 0]}
+                  onPress={() => navigation.navigate('DisplayDropyMedia', {
+                    dropy: retrievedDropies[selectedDropyIndex ?? 0],
+                    showBottomModal: false,
+                  })}
+                />
+              )}
+            </>
+          )}
+          {developerMode && <MapDebugger userCoordinates={userCoordinates} />}
+        </OSMapView>
+      </GestureDetector>
 
       <EnergyPopup />
       <Sonar
