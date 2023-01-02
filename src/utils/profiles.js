@@ -1,10 +1,10 @@
 import API from '../services/API';
 
 export const PRONOUNS = {
-  UNKNOWN: 'Je préfère ne pas le dire',
-  HE_HIM: 'Il',
-  SHE_HER: 'Elle',
-  OTHER: 'Autre',
+  UNKNOWN: 'je préfère ne pas le dire',
+  HE_HIM: 'il',
+  SHE_HER: 'elle',
+  OTHER: 'autre',
 };
 
 export const reportUser = async (userId, sendAlert, dropyId = undefined) => {
