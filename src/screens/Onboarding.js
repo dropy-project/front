@@ -664,7 +664,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     maxWidth: responsiveWidth(85),
-    marginBottom: 30,
+    marginBottom: 17,
   },
   list: {
     flexDirection: 'row',
