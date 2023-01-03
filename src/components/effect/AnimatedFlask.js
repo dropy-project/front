@@ -104,6 +104,7 @@ const AnimatedFlask = ({ color = Colors.purple2, size = 60 }) => {
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         ...Styles.center,
+        ...Styles.hardShadows,
       }}>
         <View
           style={{
