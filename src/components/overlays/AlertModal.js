@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   denyButton: {
+    flex: 1,
     height: 50,
     width: '50%',
     borderRadius: 25,
