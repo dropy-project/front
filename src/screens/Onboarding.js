@@ -556,14 +556,14 @@ export default function Onboarding({ navigation }) {
 
         <View style={styles.view}>
           <View style={{ ...Styles.center }}>
-            <View style={styles.line}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={{ ...styles.title, marginRight: 10 }}>{'Mode Radar'}</Text>
               <MaterialCommunityIcons name='radar' size={30} color={Colors.mainBlue}/>
             </View>
             <Text style={styles.subtitle}>
               {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n\'est pas lancée !'}
             </Text>
-            <View style={styles.test}>
+            <View style={styles.list}>
               <View style={{ alignItems: 'center' }}>
                 <FontAwesome name='battery-full' size={24} style={{ color: Colors.purple1, paddingVertical: 3 }}/>
                 <FontAwesome5 name='shield-alt' size={24} style={{ color: Colors.purple1, paddingVertical: 3 }}/>
@@ -666,12 +666,7 @@ const styles = StyleSheet.create({
     maxWidth: responsiveWidth(85),
     marginBottom: 30,
   },
-  line: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 3,
-  },
-  test: {
+  list: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
