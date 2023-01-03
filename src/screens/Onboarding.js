@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
@@ -555,19 +555,30 @@ export default function Onboarding({ navigation }) {
         </View>
 
         <View style={styles.view}>
-          <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>{'Reste à l\'affût !'}</Text>
+          <View style={{ ...Styles.center }}>
+            <View style={styles.line}>
+              <Text style={{ ...styles.title, marginRight: 10 }}>{'Mode Radar'}</Text>
+              <MaterialCommunityIcons name='radar' size={30} color={Colors.mainBlue}/>
+            </View>
             <Text style={styles.subtitle}>
               {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n\'est pas lancée !'}
             </Text>
-            <Text style={{ ...styles.subtitle, ...Fonts.regular(10.5, Colors.grey), marginVertical: 3 }}>
-              {'Ce mode utilise la géolocalisation en arrière plan.'}
-            </Text>
+            <View style={styles.test}>
+              <View style={{ alignItems: 'center' }}>
+                <FontAwesome name='battery-full' size={24} style={{ color: Colors.purple1, paddingVertical: 3 }}/>
+                <FontAwesome5 name='shield-alt' size={24} style={{ color: Colors.purple1, paddingVertical: 3 }}/>
+                <MaterialCommunityIcons name='bell-ring' size={24} style={{ color: Colors.purple1, paddingVertical: 3 }}/>
+              </View>
+              <View style={{ paddingHorizontal: 10 }}>
+                <Text style={{ ...Fonts.bold(13, Colors.purple1), paddingVertical: 5 }}>{'Ne consomme pas la batterie'}</Text>
+                <Text style={{ ...Fonts.bold(13, Colors.purple1), paddingVertical: 5 }}>{'Ne dévoile pas ta position'}</Text>
+                <Text style={{ ...Fonts.bold(13, Colors.purple1), paddingVertical: 5 }}>{'Détecte les drops pour toi'}</Text>
+              </View>
+            </View>
             <TouchableOpacity>
               <Text style={{ ...Fonts.regular(13, '#44a0eb'), marginTop: 5, textDecorationLine: 'underline' }}>en savoir plus</Text>
             </TouchableOpacity>
           </View>
-          <MaterialCommunityIcons name='radar' size={50} color={Colors.grey} />
           <LoadingGlassButton
             loading={loading}
             onPress={() => requestBackgroundGeolocationPermissions(
@@ -653,5 +664,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     maxWidth: responsiveWidth(85),
+    marginBottom: 30,
+  },
+  line: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 3,
+  },
+  test: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
 });
