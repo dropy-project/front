@@ -18,7 +18,7 @@ const GlassButton = ({ children, onPress, buttonText, style, disabled, fontSize 
         letterSpacing: 1,
         textAlign: 'center',
         opacity: disabled ? 0.5 : 1,
-      }}>
+      }} adjustsFontSizeToFit numberOfLines={2}>
         {buttonText}
       </Text>
     ) : children
