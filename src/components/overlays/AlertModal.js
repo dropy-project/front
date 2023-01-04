@@ -62,7 +62,7 @@ const AlertModal = ({ visible, data }) => {
         <View style={styles.buttonContainer}>
           {lastData?.denyText != null && (
             <TouchableOpacity style={styles.denyButton} onPress={lastData?.onPressDeny}>
-              <Text style={{ ...Fonts.bold(14, Colors.darkGrey), letterSpacing: 1, textAlign: 'center' }}>{lastData?.denyText}</Text>
+              <Text style={{ ...Fonts.bold(14, Colors.darkGrey), letterSpacing: 1, textAlign: 'center' }} adjustsFontSizeToFit numberOfLines={2}>{lastData?.denyText}</Text>
             </TouchableOpacity>
           )}
           <GlassButton
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   denyButton: {
-    flex: 1,
     height: 50,
     width: '50%',
     borderRadius: 25,
