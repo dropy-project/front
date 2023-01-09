@@ -28,7 +28,7 @@
     "expo": "^45.0.5",
     "expo-font": "^10.1.0",
     "expo-haptics": "^11.2.0",
-    "metro-config": "^0.73.6",
+    "metro-config": "^0.74.0",
     "ngeohash": "^0.6.3",
     "react": "17.0.2",
     "react-native": "0.68.5",
