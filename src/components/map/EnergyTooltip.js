@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import { TapGestureHandler, useGestureHandler } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import useCurrentUser from '../../hooks/useCurrentUser';
@@ -19,6 +20,7 @@ const EnergyTooltip = ({ style, children }) => {
 
   const [isPressed, _setIsPressed] = useState(false);
   const [render, setRender] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     handleInitialDisplay();
