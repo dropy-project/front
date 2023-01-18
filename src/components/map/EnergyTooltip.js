@@ -5,10 +5,11 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
-import { TapGestureHandler, useGestureHandler } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import Haptics from '../../utils/haptics';
@@ -20,7 +21,6 @@ const EnergyTooltip = ({ style, children }) => {
 
   const [isPressed, _setIsPressed] = useState(false);
   const [render, setRender] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     handleInitialDisplay();
@@ -74,35 +74,37 @@ const EnergyTooltip = ({ style, children }) => {
   });
 
   return (
-    <View style={{ ...Styles.center, ...style }}>
-      { render && <Animated.View style={{
-        ...styles.tooltipContainer,
-        opacity: tooltipAnimatedValue,
-        transform: [{ scale: scaleAnimatedValue }, { translateX: translateAnimatedValue }],
-      }}>
+    <TouchableWithoutFeedback onPress={() => setIsPressed(false)}>
+      <View style={{ ...Styles.center, ...style }}>
+        { render && <Animated.View style={{
+          ...styles.tooltipContainer,
+          opacity: tooltipAnimatedValue,
+          transform: [{ scale: scaleAnimatedValue }, { translateX: translateAnimatedValue }],
+        }}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPressIn={() => setIsPressed(false)}
+          >
+            <View style={styles.titleView}>
+              <MaterialCommunityIcons name='lightning-bolt' size={20} color={Colors.white} />
+              <Text style={styles.energyValue}>{user.energy} / 90</Text>
+            </View>
+            <View>
+              <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
+            </View>
+          </TouchableOpacity>
+        </Animated.View> }
         <TouchableOpacity
-          activeOpacity={1}
-          onPressIn={() => setIsPressed(false)}
+          activeOpacity={0.8}
+          delayPressOut={isPressed ? 2000 : 0}
+          style={{ ...Styles.center, ...style }}
+          onPressIn={() => setIsPressed(!isPressed)}
+          onPressOut={() => setIsPressed(false)}
         >
-          <View style={styles.titleView}>
-            <MaterialCommunityIcons name='lightning-bolt' size={20} color={Colors.white} />
-            <Text style={styles.energyValue}>{user.energy} / 90</Text>
-          </View>
-          <View>
-            <Text style={styles.description}>Ton energie diminue en ramassant un drop, tu peux la remplir en posant des drops</Text>
-          </View>
+          {children}
         </TouchableOpacity>
-      </Animated.View> }
-      <TouchableOpacity
-        activeOpacity={0.8}
-        delayPressOut={isPressed ? 2000 : 0}
-        style={{ ...Styles.center, ...style }}
-        onPressIn={() => setIsPressed(!isPressed)}
-        onPressOut={() => setIsPressed(false)}
-      >
-        {children}
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
