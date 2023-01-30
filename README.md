@@ -22,12 +22,7 @@ ANDROID :
 - `cd android && ./gradlew clean`
 - `npm run android`
 
-## Utiliser l'application avec un serveur custom (Custom Urls)
-- Lancer l'app et se rendre dans les reglages
-- Activer le mode developpeur en restant appuyer sur le numero de version en bas des reglages
-- Rentrer les url d'API et de Socket
-    - api : `http://<ip-locale-ordi>:<port-api>`
-    - socket: `http://<ip-locale-socket>:<port-socket>`
+Creer un fichier .env
 
 ## Env
 
@@ -40,6 +35,16 @@ DEV_ACCOUNT_USERNAME=<username>
 DEV_ACCOUNT_EMAIL=<email>
 DEV_ACCOUNT_PASSWORD=<password>
 ```
+
+> Rebuilb l'app pour que les changements prennent effet
+
+## Utiliser l'application avec un serveur custom (Custom Urls)
+- Lancer l'app et se rendre dans les reglages
+- Activer le mode developpeur en restant appuyer sur le numero de version en bas des reglages
+- Rentrer les url d'API et de Socket
+    - api : `http://<ip-locale-ordi>:<port-api>`
+    - socket: `http://<ip-locale-socket>:<port-socket>`
+
 
 ## Release Checklist
 

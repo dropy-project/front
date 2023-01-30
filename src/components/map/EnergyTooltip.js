@@ -36,7 +36,7 @@ const EnergyTooltip = ({ style, children }) => {
       setTimeout(() => {
         setIsPressed(false);
       }, 8000);
-    }, 3000);
+    }, 5000);
   };
 
   useEffect(() => {
