@@ -5,7 +5,7 @@ import { PROVIDER_GOOGLE } from 'react-native-maps';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { useNavigation } from '@react-navigation/native';
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { PERMISSIONS, request, requestLocationAccuracy } from 'react-native-permissions';
 import { Directions, Gesture, GestureDetector, TouchableOpacity } from 'react-native-gesture-handler';
 import { useInitializedGeolocation } from '../../hooks/useGeolocation';
@@ -45,7 +45,7 @@ const DropyMap = ({
   museumVisible,
   selectedDropyIndex = null,
   retrievedDropies = null,
-  onSwipeMuseum = () => {},
+  onSwipeMuseum = () => { },
 }) => {
   const navigation = useNavigation();
   const {
@@ -68,7 +68,6 @@ const DropyMap = ({
   const [mapHasGesture, setMapHasGesture] = useState(false);
 
   const [headingLocked, setHeadingLocked] = useState(false);
-  const [showZoomButton, setShowZoomButton] = useState(false);
   const [locationGranted, setLocationGranted] = useState(true);
 
   const osMap = useRef(null);
@@ -110,7 +109,7 @@ const DropyMap = ({
     mapHasGesture
   ]);
 
-  const setMapCameraPosition = async (forceHeading = false, forceZoom = false) => {
+  const setMapCameraPosition = async (forceHeading = false) => {
     const currentCamera = await osMap.current?.getMapRef()?.getCamera();
     if (currentCamera == null)
       return;
@@ -121,15 +120,6 @@ const DropyMap = ({
         latitude: retrievedDropies[selectedDropyIndex].latitude,
         longitude: retrievedDropies[selectedDropyIndex].longitude,
       };
-    }
-
-    if (forceZoom) {
-      setShowZoomButton(false);
-      Animated.timing(sonarZoomAnimatedValue, {
-        toValue: Map.MAX_ZOOM,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
     }
 
     if (forceHeading) {
@@ -150,7 +140,7 @@ const DropyMap = ({
           },
           pitch: museumVisible ? Map.MUSEUM_PITCH : Map.INITIAL_PITCH,
           heading: headingLocked || forceHeading ? compassHeading : undefined,
-          zoom: museumVisible ? Map.MUSEUM_ZOOM : (forceZoom ? Map.MAX_ZOOM : undefined),
+          zoom: museumVisible ? Map.MUSEUM_ZOOM : undefined,
         },
         { duration: 200 }
       );
@@ -177,10 +167,6 @@ const DropyMap = ({
   const onMapZoomChange = (zoom) => {
     // High frequency event, should not be used to update state
     sonarZoomAnimatedValue.setValue(zoom);
-    if (zoom === Map.MAX_ZOOM && showZoomButton)
-      setShowZoomButton(false);
-    else if (!showZoomButton)
-      setShowZoomButton(true);
   };
 
   const onMapHeadingChange = (heading) => {
@@ -231,7 +217,7 @@ const DropyMap = ({
           zoomTapEnabled={false}
           zoomControlEnabled={false}
           toolbarEnabled={false}
-          // Below fix for https://github.com/dropy-project/front/issues/411
+          // Below fix for https://github.com/dropy-project/front/issues/411 (Tap on map moves camera)
           onPress={() => Platform.OS === 'android' && setMapCameraPosition()}
           initialCamera={{
             center: {
@@ -280,7 +266,7 @@ const DropyMap = ({
         visible={!museumVisible}
         compassHeading={compassHeading}
       />
-      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationGranted}/>
+      <MapLoadingOverlay visible={geolocationInitialized === false} isGeolocationPermissionGranted={locationGranted} />
       <LinearGradient
         pointerEvents='none'
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.1)']}
@@ -296,16 +282,17 @@ const DropyMap = ({
           <EnergyTooltip>
             <AnimatedFlask />
           </EnergyTooltip>
-          <FadeInWrapper visible={showZoomButton}>
-            <TouchableOpacity
-              onPress={() => setMapCameraPosition(headingLocked, true)}
-              style={styles.lockButton}
-            >
-              <MaterialIcons name='my-location' size={20} color={Colors.darkGrey} />
-            </TouchableOpacity>
-          </FadeInWrapper>
           <TouchableOpacity onPress={toggleHeadingLock} style={styles.lockButton}>
-            <FontAwesome5 name='compass' size={20} color={headingLocked ? Colors.darkGrey : Colors.lightGrey} />
+            {headingLocked ? (
+              <FontAwesome5 name='compass' size={20} color={Colors.darkGrey} />
+            ) : (
+              <FontAwesome
+                style={{ transform: [{ translateX: -0.5 }, { translateY: -0.5 }] }}
+                name='location-arrow'
+                size={20}
+                color={Colors.darkGrey}
+              />
+            )}
           </TouchableOpacity>
         </FadeInWrapper>
       </SafeAreaView>
@@ -328,6 +315,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 100,
     padding: 11,
+    width: 43,
+    height: 43,
     ...Styles.center,
     ...Styles.softShadows,
   },
