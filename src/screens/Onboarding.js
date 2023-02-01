@@ -564,28 +564,31 @@ export default function Onboarding({ navigation }) {
               {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n\'est pas lancée !'}
             </Text>
             <View style={styles.list}>
-              <View style={{ alignItems: 'center' }}>
-                <FontAwesome name='battery-full' size={24} style={{ color: Colors.purple1, paddingVertical: 3 }}/>
-                <FontAwesome5 name='shield-alt' size={24} style={{ color: Colors.purple1, paddingVertical: 3 }}/>
-                <MaterialCommunityIcons name='bell-ring' size={24} style={{ color: Colors.purple1, paddingVertical: 3 }}/>
+              <View style={styles.elementRadar}>
+                <FontAwesome name='battery-full' size={22} style={{ color: Colors.purple1, marginRight: 10 }}/>
+                <Text style={{ ...Fonts.bold(12, Colors.purple1) }}>{'Ne consomme pas la batterie'}</Text>
               </View>
-              <View style={{ paddingHorizontal: 10 }}>
-                <Text style={{ ...Fonts.bold(13, Colors.purple1), paddingVertical: 5 }}>{'Ne consomme pas la batterie'}</Text>
-                <Text style={{ ...Fonts.bold(13, Colors.purple1), paddingVertical: 5 }}>{'Ne dévoile pas ta position'}</Text>
-                <Text style={{ ...Fonts.bold(13, Colors.purple1), paddingVertical: 5 }}>{'Détecte les drops pour toi'}</Text>
+              <View style={styles.elementRadar}>
+                <FontAwesome5 name='shield-alt' size={22} style={{ color: Colors.purple1, marginLeft: 3, marginRight: 13 }}/>
+                <Text style={{ ...Fonts.bold(12, Colors.purple1) }}>{'Ne dévoile pas ta position'}</Text>
+              </View>
+              <View style={styles.elementRadar}>
+                <MaterialCommunityIcons name='bell-ring' size={22} style={{ color: Colors.purple1, marginLeft: 2, marginRight: 13 }}/>
+                <Text style={{ ...Fonts.bold(12, Colors.purple1) }}>{'Détecte les drops pour toi'}</Text>
               </View>
             </View>
             <TouchableOpacity>
-              <Text style={{ ...Fonts.regular(13, '#44a0eb'), marginTop: 5, textDecorationLine: 'underline' }}>en savoir plus</Text>
+              <Text style={{ ...Fonts.regular(12, '#44a0eb'), textDecorationLine: 'underline' }}>en savoir plus</Text>
             </TouchableOpacity>
+            <LoadingGlassButton
+              style={{ marginTop: 1 }}
+              loading={loading}
+              onPress={() => requestBackgroundGeolocationPermissions(
+                () => viewSliderRef.current?.goToView(8)
+              )}
+              text='Activer'
+            />
           </View>
-          <LoadingGlassButton
-            loading={loading}
-            onPress={() => requestBackgroundGeolocationPermissions(
-              () => viewSliderRef.current?.goToView(8)
-            )}
-            text='Activer'
-          />
         </View>
 
         <View style={styles.view}>
@@ -608,10 +611,10 @@ export default function Onboarding({ navigation }) {
   );
 }
 
-const LoadingGlassButton = ({ loading, onPress, disabled, text }) => (
+const LoadingGlassButton = ({ loading, onPress, disabled, text, style }) => (
   <GlassButton
     onPress={onPress}
-    style={text ? { ...styles.nextButton, paddingVertical: 15, width: 150 } : styles.nextButton}
+    style={text ? { ...styles.nextButton, paddingVertical: 15, width: 150, style } : { ...styles.nextButton, style }}
     disabled={disabled}
   >
     {text ? (
@@ -666,9 +669,14 @@ const styles = StyleSheet.create({
     maxWidth: responsiveWidth(85),
     marginBottom: 17,
   },
-  list: {
+  elementRadar: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
+  buttonRadar: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginBottom: 40,
+  }
 });
