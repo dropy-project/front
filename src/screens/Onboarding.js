@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { PERMISSIONS, request, requestNotifications, RESULTS } from 'react-native-permissions';
@@ -555,26 +555,42 @@ export default function Onboarding({ navigation }) {
         </View>
 
         <View style={styles.view}>
-          <View style={{ marginBottom: 30, ...Styles.center }}>
-            <Text style={styles.title}>{'Reste à l\'affût !'}</Text>
+          <View style={{ ...Styles.center }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ ...styles.title, marginRight: 10 }}>{'Mode Radar'}</Text>
+              <MaterialCommunityIcons name='radar' size={30} color={Colors.mainBlue}/>
+            </View>
             <Text style={styles.subtitle}>
               {'Active le mode radar pour ne manquer aucun drop, même quand l\'application n\'est pas lancée !'}
             </Text>
-            <Text style={{ ...styles.subtitle, ...Fonts.regular(10.5, Colors.grey), marginVertical: 3 }}>
-              {'Ce mode utilise la géolocalisation en arrière plan.'}
-            </Text>
-            <TouchableOpacity>
-              <Text style={{ ...Fonts.regular(13, '#44a0eb'), marginTop: 5, textDecorationLine: 'underline' }}>en savoir plus</Text>
-            </TouchableOpacity>
+            <View style={styles.list}>
+              <View style={styles.elementRadar}>
+                <FontAwesome name='battery-full' size={22} style={{ color: Colors.purple1, marginRight: 10 }}/>
+                <Text style={{ ...Fonts.bold(12, Colors.purple1) }}>{'Ne consomme pas la batterie'}</Text>
+              </View>
+              <View style={styles.elementRadar}>
+                <FontAwesome5 name='shield-alt' size={22} style={{ color: Colors.purple1, marginLeft: 3, marginRight: 13 }}/>
+                <Text style={{ ...Fonts.bold(12, Colors.purple1) }}>{'Ne dévoile pas ta position'}</Text>
+              </View>
+              <View style={styles.elementRadar}>
+                <MaterialCommunityIcons name='bell-ring' size={22} style={{ color: Colors.purple1, marginLeft: 2, marginRight: 13 }}/>
+                <Text style={{ ...Fonts.bold(12, Colors.purple1) }}>{'Détecte les drops pour toi'}</Text>
+              </View>
+            </View>
+            <View style={{ marginTop: '10%' }}>
+              <TouchableOpacity>
+                <Text style={{ ...Fonts.regular(12, '#44a0eb'), textDecorationLine: 'underline', textAlign: 'center' }}>en savoir plus</Text>
+              </TouchableOpacity>
+              <LoadingGlassButton
+                marginTopValue='4%'
+                loading={loading}
+                onPress={() => requestBackgroundGeolocationPermissions(
+                  () => viewSliderRef.current?.goToView(8)
+                )}
+                text='Activer'
+              />
+            </View>
           </View>
-          <MaterialCommunityIcons name='radar' size={50} color={Colors.grey} />
-          <LoadingGlassButton
-            loading={loading}
-            onPress={() => requestBackgroundGeolocationPermissions(
-              () => viewSliderRef.current?.goToView(8)
-            )}
-            text='Activer'
-          />
         </View>
 
         <View style={styles.view}>
@@ -597,10 +613,10 @@ export default function Onboarding({ navigation }) {
   );
 }
 
-const LoadingGlassButton = ({ loading, onPress, disabled, text }) => (
+const LoadingGlassButton = ({ loading, onPress, disabled, text, marginTopValue }) => (
   <GlassButton
     onPress={onPress}
-    style={text ? { ...styles.nextButton, paddingVertical: 15, width: 150 } : styles.nextButton}
+    style={text ? { ...styles.nextButton, paddingVertical: 15, width: 150, marginTop: marginTopValue ? marginTopValue : '10%' } : { ...styles.nextButton }}
     disabled={disabled}
   >
     {text ? (
@@ -641,7 +657,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginBottom: 40,
-    marginTop: '10%',
   },
   title: {
     ...Fonts.bold(20, Colors.darkGrey),
@@ -653,5 +668,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     maxWidth: responsiveWidth(85),
+    marginBottom: 17,
+  },
+  elementRadar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
 });
