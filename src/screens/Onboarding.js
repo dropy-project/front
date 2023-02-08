@@ -577,17 +577,19 @@ export default function Onboarding({ navigation }) {
                 <Text style={{ ...Fonts.bold(12, Colors.purple1) }}>{'Détecte les drops pour toi'}</Text>
               </View>
             </View>
-            <TouchableOpacity>
-              <Text style={{ ...Fonts.regular(12, '#44a0eb'), textDecorationLine: 'underline' }}>en savoir plus</Text>
-            </TouchableOpacity>
-            <LoadingGlassButton
-              style={{ marginTop: 1 }}
-              loading={loading}
-              onPress={() => requestBackgroundGeolocationPermissions(
-                () => viewSliderRef.current?.goToView(8)
-              )}
-              text='Activer'
-            />
+            <View style={{ marginTop: '10%' }}>
+              <TouchableOpacity>
+                <Text style={{ ...Fonts.regular(12, '#44a0eb'), textDecorationLine: 'underline', textAlign: 'center' }}>en savoir plus</Text>
+              </TouchableOpacity>
+              <LoadingGlassButton
+                marginTopValue='4%'
+                loading={loading}
+                onPress={() => requestBackgroundGeolocationPermissions(
+                  () => viewSliderRef.current?.goToView(8)
+                )}
+                text='Activer'
+              />
+            </View>
           </View>
         </View>
 
@@ -611,10 +613,10 @@ export default function Onboarding({ navigation }) {
   );
 }
 
-const LoadingGlassButton = ({ loading, onPress, disabled, text, style }) => (
+const LoadingGlassButton = ({ loading, onPress, disabled, text, marginTopValue }) => (
   <GlassButton
     onPress={onPress}
-    style={text ? { ...styles.nextButton, paddingVertical: 15, width: 150, style } : { ...styles.nextButton, style }}
+    style={text ? { ...styles.nextButton, paddingVertical: 15, width: 150, marginTop: marginTopValue ? marginTopValue : '10%' } : { ...styles.nextButton }}
     disabled={disabled}
   >
     {text ? (
@@ -655,7 +657,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginBottom: 40,
-    marginTop: '10%',
   },
   title: {
     ...Fonts.bold(20, Colors.darkGrey),
@@ -674,9 +675,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  buttonRadar: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginBottom: 40,
-  }
 });
