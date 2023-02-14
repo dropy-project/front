@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import { Marker } from 'react-native-maps';
+import { Circle, Marker } from 'react-native-maps';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Styles, { Colors, Fonts } from '../../styles/Styles';
 
@@ -39,6 +39,15 @@ const DropyMapMarker = ({ dropy, onPress }) => {
       onPress={onPress}
       tracksViewChanges={dropy.isUserDropy}
     >
+      {dropy.isUserDropy && (
+        <Circle
+          center={{ latitude: dropy.latitude, longitude: dropy.longitude }}
+          radius={1000}
+          strokeWidth={2}
+          strokeColor={Colors.red}
+          fillColor='rgba(255,0,0,0.8)'
+        />
+      )}
       <View style={styles.container}>
         <DropyPopup style={styles.svgBackground}></DropyPopup>
         {dropy.isUserDropy ? (
