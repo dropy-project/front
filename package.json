@@ -31,7 +31,7 @@
     "metro-config": "^0.74.1",
     "ngeohash": "^0.6.3",
     "react": "17.0.2",
-    "react-native": "0.68.5",
+    "react-native": "0.68.7",
     "react-native-background-fetch": "^4.1.7",
     "react-native-background-geolocation": "^4.9.4",
     "react-native-compass-heading": "^1.4.2",
